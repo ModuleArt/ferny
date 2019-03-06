@@ -41,7 +41,7 @@ body {
   padding: 0;
   margin: 0;
   background-color: var(--color-back);
-  min-width: 1280px;
+  /* min-width: 1280px; */
 }
 
 a {
@@ -55,6 +55,7 @@ label {
 .container {
   position: relative;
   min-height: calc(100vh - 280px);
+  padding: 8px;
 }
 
 /*
@@ -94,7 +95,7 @@ label.subtitle {
 .app-icon {
   border: 8px var(--color-top) solid;
   border-radius: 4px;
-  margin: 8px;
+  margin-right: 8px;
   float: left;
   box-shadow: 0 0 8px var(--color-back-overdark);
   background-color: var(--color-top);
@@ -106,12 +107,41 @@ label.subtitle {
 }
 
 hr {
-  margin: 64px;
+  margin: 32px;
   border: solid 2px var(--color-top-overlight);
 }
 
-.page-table td img {
-  border: 4px dotted var(--color-top-overlight);
+.screenshot, .title-img   {
+  display: inline-block;
+  box-shadow: 0 0 8px var(--color-back-overdark);
+  border-radius: 4px;
+  margin-bottom: 4px;
+}
+
+.title-img {
+  vertical-align: top;
+  margin-bottom: 32px;
+}
+
+.description {
+  display: inline-block;
+  max-width: 640px;
+  margin-bottom: 32px;
+}
+
+.main {
+  vertical-align: top;
+  display: inline-block;
+}
+
+.description label {
+  display: block;
+  text-align: left;
+  margin-top: -12px;
+}
+
+.description .title {
+  margin-top: -20px;
 }
 
 /*
@@ -125,6 +155,7 @@ hr {
 .home-icon {
   border-radius: 4px;
   box-shadow: 0 0 8px var(--color-back-overdark);
+  display: block;
 }
 
 .tile {
@@ -135,7 +166,8 @@ hr {
   padding: 8px;
   cursor: pointer;
   transition: 0.25s;
-  margin: 8px;
+  display: inline-block;
+  margin-top: 4px;
 }
 
 .tile:hover {
@@ -149,7 +181,9 @@ hr {
 .tile label {
   color: var(--color-back);
   cursor: pointer;
-  margin: 8px;
+  /* margin: 8px; */
+  margin-top: -8px;
+  float: left;
 }
 
 .tile .icon {
@@ -182,19 +216,20 @@ hr {
   z-index: 100;
   width: 100%;
   background-color: var(--color-back-overlight);
-  margin-bottom: 64px;
+  margin-bottom: 32px;
 }
 
-.navbar-links {
+#navbar-links {
   height: inherit;
   float: right;
 }
 
-.navbar-btn {
-  width: 244px;
+#navbar-menu-btn {
+  display: none !important;
+  float: right;
 }
 
-.navbar-btn, .navbar-links-btn {
+.navbar-btn, #navbar-menu-btn, .navbar-links-btn, .footer-btn {
   padding: 24px;
   display: inline-block;
   transition: 0.25s;
@@ -223,7 +258,7 @@ hr {
   padding: 12px 32px 12px 12px;
 }
 
-.navbar-btn:hover, .navbar-links-btn:hover {
+.navbar-btn:hover, .navbar-links-btn:hover, .footer-btn:hover {
   transform: translateY(-8px);
 }
 
@@ -246,7 +281,7 @@ hr {
   opacity: 0;
   position: absolute;
   background-color: var(--color-top);
-  width: 192px;
+  width: 240px;
   height: inherit;
   transition: 0.25s;
   border-radius: 4px;
@@ -276,12 +311,12 @@ hr {
   border-color: var(--color-top) transparent transparent transparent;
 }
 
-.navbar-btn.bottom .navbar-btn-tooltip {
+.footer-btn .navbar-btn-tooltip {
   bottom: 72px;
   top: auto;
 }
 
-.navbar-btn.right {
+.footer-btn.right {
   float: right;
 }
 
@@ -314,7 +349,7 @@ hr {
 footer {
   position: relative;
   background-color: var(--color-back-overlight);
-  margin-top: 64px;
+  margin-top: 32px;
 }
 
 /*
@@ -387,4 +422,36 @@ footer {
 
 .btn.blue {
   background-color: var(--color-blue);
+}
+
+/*
+          ███    ███ ███████ ██████  ██  █████
+          ████  ████ ██      ██   ██ ██ ██   ██
+          ██ ████ ██ █████   ██   ██ ██ ███████
+          ██  ██  ██ ██      ██   ██ ██ ██   ██
+          ██      ██ ███████ ██████  ██ ██   ██
+*/
+
+@media only screen and (max-width: 900px) {
+  .navbar-btn {
+    display: none;
+  }
+
+  #navbar-menu-btn {
+    display: block !important;
+  }
+
+  #navbar-links {
+    display: none;
+    float: none;
+    text-align: center;
+  }
+
+  .screenshot {
+    width: 100%;
+  }
+
+  .title-img {
+    width: 100%;
+  }
 }
