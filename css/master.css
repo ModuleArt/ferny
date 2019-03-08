@@ -68,47 +68,26 @@ label {
 
 
 label.title {
-  font-size: 48px;
+  font-size: 36px;
 }
 
 label.subtitle {
   font-size: 24px;
 }
 
-.title-table td {
-  padding: 16px;
-}
-
-.page-table td {
-  width: 50%;
-  padding: 16px;
-}
-
-.page-table td.left {
-  text-align: left;
-}
-
-.page-table td.right {
-  text-align: right;
-}
-
 .app-icon {
-  border: 8px var(--color-top) solid;
+  border: 4px var(--color-top) solid;
   border-radius: 4px;
-  margin-right: 8px;
+  margin: 8px 8px 8px 0;
   float: left;
   box-shadow: 0 0 8px var(--color-back-overdark);
   background-color: var(--color-top);
 }
 
-.page-img {
-  padding: 16px;
-  filter: drop-shadow(0 0 8px var(--color-back-overdark));
-}
-
 hr {
   margin: 32px;
-  border: solid 2px var(--color-top-overlight);
+  border: none;
+  border-bottom: dotted 4px var(--color-top-overlight);
 }
 
 .screenshot, .title-img   {
@@ -125,23 +104,37 @@ hr {
 
 .description {
   display: inline-block;
-  max-width: 640px;
+  width: 480px;
   margin-bottom: 32px;
+  padding: 16px;
 }
 
 .main {
   vertical-align: top;
   display: inline-block;
+  margin-bottom: 32px;
+}
+
+.main-name {
+  text-align: left;
+  display: block;
+  margin-bottom: 16px;
+}
+
+.main-name label {
+  text-align: left;
 }
 
 .description label {
   display: block;
   text-align: left;
-  margin-top: -12px;
 }
 
-.description .title {
-  margin-top: -20px;
+.updates {
+  display: inline-block;
+  width: 480px;
+  vertical-align: top;
+  padding: 16px;
 }
 
 /*
@@ -159,7 +152,7 @@ hr {
 }
 
 .tile {
-  width: 400px;
+  max-width: 400px;
   background-color: var(--color-top);
   border-radius: 4px;
   box-shadow: 0 0 8px var(--color-back-overdark);
@@ -447,11 +440,11 @@ footer {
     text-align: center;
   }
 
-  .screenshot {
+  .tile, .description, .title-img, .updates, .screenshot {
     width: 100%;
   }
 
-  .title-img {
-    width: 100%;
+  .tile .preview {
+    width: calc(100% - 32px);
   }
 }
