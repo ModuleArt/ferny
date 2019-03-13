@@ -72,7 +72,7 @@ label.title {
 }
 
 label.subtitle {
-  font-size: 24px;
+  font-size: 22px;
 }
 
 .app-icon {
@@ -105,8 +105,9 @@ hr {
 .description {
   display: inline-block;
   width: 480px;
-  margin-bottom: 32px;
-  padding: 16px;
+  margin: 4px;
+  padding: 8px;
+  border-left: var(--color-top) solid 2px;
 }
 
 .main {
@@ -125,7 +126,7 @@ hr {
   text-align: left;
 }
 
-.description label {
+.description label, .updates label {
   display: block;
   text-align: left;
 }
@@ -134,7 +135,9 @@ hr {
   display: inline-block;
   width: 480px;
   vertical-align: top;
-  padding: 16px;
+  padding: 8px;
+  margin: 4px;
+  border-left: var(--color-top) solid 2px;
 }
 
 /*
@@ -145,10 +148,27 @@ hr {
              ██    ██ ███████ ███████
 */
 
+.home {
+  margin-top: 16px;
+  display: inline-block;
+  width: 400px;
+}
+
+.home label {
+  display: block;
+  vertical-align: bottom;
+}
+
+.home-link {
+  padding: 2px;
+  display: inline-block;
+}
+
 .home-icon {
+  margin-top: -16px;
   border-radius: 4px;
   box-shadow: 0 0 8px var(--color-back-overdark);
-  display: block;
+  float: left;
 }
 
 .tile {
@@ -446,5 +466,9 @@ footer {
 
   .tile .preview {
     width: calc(100% - 32px);
+  }
+
+  .home {
+    width: 100%;
   }
 }
