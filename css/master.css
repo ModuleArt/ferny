@@ -208,7 +208,7 @@ label.link:hover {
 .home {
   margin-top: 16px;
   display: inline-block;
-  width: 400px;
+  width: calc(50% - 4px);
 }
 
 .home label {
@@ -229,19 +229,26 @@ label.link:hover {
 }
 
 .tile {
-  max-width: 400px;
-  background-color: var(--color-top);
-  border-radius: 4px;
-  box-shadow: 0 0 8px var(--color-back-overdark);
+  width: calc(50% - 4px);
+  /* background-color: var(--color-top); */
+  /* border: 2px solid var(--color-over); */
+  border-radius: var(--px-radius);
+  /* border-left: 2px solid var(--color-top); */
+  /* box-shadow: 0 0 8px var(--color-back-overdark); */
   padding: 8px;
-  cursor: pointer;
   transition: 0.25s;
   display: inline-block;
-  margin-top: 4px;
+  margin-bottom: 4px;
+  vertical-align: top;
 }
 
-.tile:hover {
-  transform: translateY(-8px);
+.tile.enabled {
+  cursor: pointer;
+}
+
+.tile.enabled:hover {
+  transform: translateY(8px);
+  background-color: var(--color-over);
 }
 
 .header {
@@ -249,28 +256,42 @@ label.link:hover {
 }
 
 .tile label {
-  color: var(--color-back);
-  cursor: pointer;
+  /* color: var(--color-back); */
   /* margin: 8px; */
   margin-top: -8px;
   float: left;
+  color: var(--color-top);
+}
+
+.tile.enabled label {
+  cursor: pointer;
 }
 
 .tile .icon {
   float: left;
+  border-radius: var(--px-radius);
 }
 
 .tile .platform {
   margin: 0;
   margin-top: -8px;
   padding: 8px 8px 0 0;
-  float: right;
+  float: left;
 }
 
 .tile .preview {
-  filter: drop-shadow(0 0 8px var(--color-back-overdark));
-  margin: 12px;
-  margin-top: 20px;
+  box-shadow: 0 0 var(--px-shadow) var(--color-shadow);
+  /* margin: 12px; */
+  margin-top: 8px;
+  width: 100%;
+  margin-bottom: -4px;
+  border-radius: var(--px-radius);
+}
+
+.idea {
+  border-radius: 0;
+  border-left: 2px solid var(--color-top);
+  margin-bottom: 16px;
 }
 
 /*
@@ -469,10 +490,6 @@ footer {
   .main-img {
     width: 100%;
     margin-top: 16px;
-  }
-
-  .tile .preview {
-    width: calc(100% - 32px);
   }
 
   .home {
