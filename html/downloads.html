@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Downloads</title>
+    <link rel="shortcut icon" type="image/png" href="../imgs/icons16/download.png"/>
+    <link rel="stylesheet" href="../css/downloads.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <center>
+      <div class="block-title show">
+        <img name="download" class="theme-icon">
+        <label>Downloads</label>
+      </div>
+      <div class="container">
+        <div class="block-title">
+          <img name="search" class="theme-icon">
+          <label>Search</label>
+        </div>
+        <input type="text" id="search" placeholder="Search downloads">
+
+        <hr>
+
+        <div class="block-title show">
+          <img name="archive" class="theme-icon">
+          <label>Archive</label>
+        </div>
+        <div class="nav-btn" onclick="clearArchive()">
+          <img class="theme-icon" name="delete">
+          <label>Clear</label>
+        </div>
+        <div id="sidebar-downloads"></div>
+      </div>
+    </center>
+    <script type="text/javascript">
+      const { ipcRenderer } = require('electron');
+
+      // appearance
+      function changeTheme(color) {
+        document.body.style.backgroundColor = color;
+
+        if(checkIfDark(color)) {
+          setIconsStyle('light');
+
+          document.documentElement.style.setProperty('--color-top', 'white');
+          document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.2)');
+        } else {
+          setIconsStyle('dark');
+
+          document.documentElement.style.setProperty('--color-top', 'black');
+          document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.1)');
+        }
+      }
+      function setIconsStyle(str) {
+        var icons = document.getElementsByClassName('theme-icon');
+
+        for(var i = 0; i < icons.length; i++) {
+          icons[i].src = "../themes/" + str + "/icons/" + icons[i].name + ".png";
+        }
+      }
+      function checkIfDark(color) {
+          var r, g, b, hsp;
+          if (String(color).match(/^rgb/)) {
+              color = String(color).match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/);
+
+              r = color[1];
+              g = color[2];
+              b = color[3];
+          } else {
+              color = +("0x" + color.slice(1).replace(
+              color.length < 5 && /./g, '$&$&'));
+
+              r = color >> 16;
+              g = color >> 8 & 255;
+              b = color & 255;
+          }
+
+          hsp = Math.sqrt(0.299 * (r * r) + 0.587 * (g * g) + 0.114 * (b * b));
+
+          if (hsp > 127.5) {
+              return false;
+          } else {
+              return true;
+          }
+      }
+      function loadTheme() {
+        var fs = require("fs");
+        var ppath = require('persist-path')('ArrowBrowser');
+
+        try {
+          var themeColor = fs.readFileSync(ppath + "\\json\\theme.json");
+          changeTheme(themeColor);
+        } catch (e) {
+
+        }
+      }
+      function loadBorderRadius() {
+        var fs = require("fs");
+        var ppath = require('persist-path')('ArrowBrowser');
+
+        try {
+          var borderRadius = fs.readFileSync(ppath + "\\json\\radius.json");
+          changeBorderRadius(borderRadius);
+
+          var radios = document.getElementsByName("border-radius");
+          for(var i = 0; i < radios.length; i++) {
+            if(radios[i].value == borderRadius) {
+              radios[i].checked = true;
+            }
+          }
+        } catch (e) {
+
+        }
+      }
+      function changeBorderRadius(size) {
+        document.documentElement.style.setProperty('--px-radius', size + 'px');
+      }
+
+      // downloads
+      function loadDownloads() {
+        var fs = require("fs");
+        var ppath = require('persist-path')('ArrowBrowser');
+
+        try {
+          var jsonstr = fs.readFileSync(ppath + "\\json\\downloads.json");
+          var arr = JSON.parse(jsonstr);
+          var i;
+          for (i = 0; i < arr.length; i++) {
+            let Data = {
+              index: arr[i].index,
+              url: arr[i].url,
+              name: arr[i].name,
+              path: arr[i].path
+            };
+            createDownload(arr[i].index, arr[i].url, arr[i].name, arr[i].path);
+          }
+        } catch (e) {
+
+        }
+      }
+      function createDownload(index, url, name, path) {
+        var div = document.createElement('div');
+        div.classList.add('download');
+        div.id = "download-" + index;
+        div.innerHTML = `
+          <label>File: </label><label class="download-label" title="` + name + `">` + name + `</label><br>
+          <label>Path: </label><label class="download-label" title="` + path + `">` + path + `</label><br>
+          <label>Url: </label><label class="download-label" title="` + url + `">` + url + `</label><br>`;
+
+        var container = document.getElementById('sidebar-downloads');
+        var dwndls = container.getElementsByClassName('download');
+        if(dwndls.length > 0) {
+          container.insertBefore(div, dwndls[0]);
+        } else {
+          container.appendChild(div);
+        }
+      }
+      function clearArchive() {
+        ipcRenderer.send('request-clear-downloads');
+
+        var dwnlds = document.getElementsByClassName('download');
+        for (var i = 0; i < dwnlds.length; i++) {
+          dwnlds[i].parentNode.removeChild(dwnlds[i]);
+          i--;
+        }
+      }
+
+/*
+          ██ ███    ██ ██ ████████
+          ██ ████   ██ ██    ██
+          ██ ██ ██  ██ ██    ██
+          ██ ██  ██ ██ ██    ██
+          ██ ██   ████ ██    ██
+*/
+
+      function init() {
+        loadDownloads();
+        loadTheme();
+        loadBorderRadius();
+
+        document.getElementById("search").addEventListener("keyup", function(event) {
+          if(document.getElementById("search").value.length > 0) {
+            var search = document.getElementById("search").value;
+            var elements = document.getElementsByClassName('download');
+            for(var i = 0; i < elements.length; i++) {
+              var labels = elements[i].getElementsByClassName('download-label');
+              var text = labels[0].innerHTML + " " + labels[1].innerHTML + " " + labels[2].innerHTML;
+              if(text.indexOf(search) != -1) {
+                elements[i].style.display = "inline-block";
+              } else {
+                elements[i].style.display = "none";
+              }
+            }
+          } else {
+            var elements = document.getElementsByClassName('download');
+            for(var i = 0; i < elements.length; i++) {
+              elements[i].style.display = "block";
+            }
+          }
+        });
+      }
+
+      document.onreadystatechange =  () => {
+        if (document.readyState == "complete") {
+          init();
+        }
+      };
+    </script>
+  </body>
+</html>

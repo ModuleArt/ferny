@@ -1,0 +1,327 @@
+/*
+          ██████   ██████   ██████  ████████
+          ██   ██ ██    ██ ██    ██    ██
+          ██████  ██    ██ ██    ██    ██
+          ██   ██ ██    ██ ██    ██    ██
+          ██   ██  ██████   ██████     ██
+*/
+
+@font-face {
+  font-family: OpenSans;
+  src: url(../fonts/OpenSans-Semibold.ttf);
+}
+
+:root{
+  --color-back: rgb(0, 0, 0);
+  --color-over: rgba(0, 0, 0, 0.1);
+  --color-top: rgb(255, 255, 255);
+
+  --color-red: rgb(255, 63, 52);
+  --color-green: rgb(11, 232, 129);
+  --color-blue: rgb(15, 188, 249);
+  --color-orange: rgb(255, 168, 1);
+
+  --px-radius: 4px;
+  --px-font: 14px;
+}
+
+* {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+	box-sizing: border-box;
+  -webkit-user-drag: none;
+
+  font-family: OpenSans;
+  font-size: var(--px-font);
+}
+
+/*
+          ██     ██ ███████ ██████  ██   ██ ██ ████████
+          ██     ██ ██      ██   ██ ██  ██  ██    ██
+          ██  █  ██ █████   ██████  █████   ██    ██
+          ██ ███ ██ ██      ██   ██ ██  ██  ██    ██
+           ███ ███  ███████ ██████  ██   ██ ██    ██
+*/
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-over);
+  border: 2px solid var(--color-over);
+  border-radius: var(--px-radius);
+}
+
+::-webkit-input-placeholder {
+  color: var(--color-top);
+}
+
+/*
+          ██████   ██████  ██████  ██    ██
+          ██   ██ ██    ██ ██   ██  ██  ██
+          ██████  ██    ██ ██   ██   ████
+          ██   ██ ██    ██ ██   ██    ██
+          ██████   ██████  ██████     ██
+*/
+
+body {
+  margin: 32px;
+}
+
+label {
+  color: var(--color-top);
+}
+
+label.subtitle {
+  font-size: 24px;
+}
+
+label.title {
+  font-size: 48px;
+}
+
+
+/*
+          ██████  ██    ██ ████████ ████████  ██████  ███    ██
+          ██   ██ ██    ██    ██       ██    ██    ██ ████   ██
+          ██████  ██    ██    ██       ██    ██    ██ ██ ██  ██
+          ██   ██ ██    ██    ██       ██    ██    ██ ██  ██ ██
+          ██████   ██████     ██       ██     ██████  ██   ████
+*/
+
+.btn-label {
+  vertical-align: super;
+  cursor: pointer;
+}
+
+.btn.colored .btn-label {
+  color: var(--color-over);
+}
+
+.btn-body {
+  padding: 6px;
+  display: inline-block;
+  height: 32px;
+  vertical-align: top;
+  border-radius: 0 4px 4px 0;
+  padding-left: 0;
+}
+
+.btn.colored .btn-body {
+  background-color: var(--color-over);
+  padding-left: 6px;
+}
+
+.btn {
+  border-radius: 4px;
+  margin: 8px;
+  transition: 0.25s;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.btn {
+  padding: 0;
+  height: 32px;
+}
+
+.btn-icon {
+  padding: 4px;
+  padding-right: 0;
+}
+
+.btn.colored .btn-icon {
+  opacity: 0.5;
+}
+
+.btn:hover {
+  opacity: 0.25;
+}
+
+.btn.green {
+  background-color: var(--color-green);
+}
+
+.btn.red {
+  background-color: var(--color-red);
+}
+
+.btn.blue {
+  background-color: var(--color-blue);
+}
+
+/*
+          ██████  ██       ██████   ██████ ██   ██
+          ██   ██ ██      ██    ██ ██      ██  ██
+          ██████  ██      ██    ██ ██      █████
+          ██   ██ ██      ██    ██ ██      ██  ██
+          ██████  ███████  ██████   ██████ ██   ██
+*/
+
+hr {
+  border: 1px solid var(--color-over);
+  margin: 16px 0;
+}
+
+.container {
+  padding: 16px;
+  margin-bottom: 32px;
+  border-radius: var(--px-radius);
+  border: 2px solid var(--color-over);
+  /* background-color: var(--color-over); */
+  max-width: 720px;
+}
+
+.block-title {
+  display: none;
+  margin-bottom: 8px;
+}
+
+.block-title.show {
+  display: block;
+}
+
+.block-title label {
+  vertical-align: super;
+}
+
+hr.dotted {
+  border: none;
+  border-bottom: 4px dotted var(--color-over);
+}
+
+/*
+          ███    ██  █████  ██    ██     ██████  ████████ ███    ██
+          ████   ██ ██   ██ ██    ██     ██   ██    ██    ████   ██
+          ██ ██  ██ ███████ ██    ██     ██████     ██    ██ ██  ██
+          ██  ██ ██ ██   ██  ██  ██      ██   ██    ██    ██  ██ ██
+          ██   ████ ██   ██   ████       ██████     ██    ██   ████
+*/
+
+.nav-btn img {
+  margin-bottom: -7px;
+}
+
+.nav-input {
+  width: 300px;
+}
+
+.nav-btn, .colors, .nav-label, .nav-input {
+  margin: 4px;
+  transition: 0.25s;
+  display: inline-block;
+}
+
+.nav-btn {
+  border-radius: var(--px-radius);
+  padding: 2px;
+  padding-right: 8px;
+  height: 32px;
+  border: 2px solid transparent;
+}
+
+.nav-btn:hover {
+  text-decoration: underline;
+}
+
+.nav-btn.green {
+  border: 2px solid var(--color-over);
+  background-color: var(--color-green);
+}
+
+.nav-btn.red {
+  border: 2px solid var(--color-over);
+  background-color: var(--color-red);
+}
+
+.nav-btn.blue {
+  border: 2px solid var(--color-over);
+  background-color: var(--color-blue);
+}
+
+.nav-btn.orange {
+  border: 2px solid var(--color-over);
+  background-color: var(--color-orange);
+}
+
+/*
+          ███████ ███████ ████████ ████████ ██ ███    ██  ██████  ███████
+          ██      ██         ██       ██    ██ ████   ██ ██       ██
+          ███████ █████      ██       ██    ██ ██ ██  ██ ██   ███ ███████
+               ██ ██         ██       ██    ██ ██  ██ ██ ██    ██      ██
+          ███████ ███████    ██       ██    ██ ██   ████  ██████  ███████
+*/
+
+.color {
+  padding: 2px 16px;
+  display: inline-block;
+  border-radius: var(--px-radius);
+  transition: 0.25s;
+  /* background-color: var(--color-over); */
+  color: var(--color-top);
+  margin-bottom: 4px;
+}
+
+.color div {
+  width: 32px;
+  height: 32px;
+  border: 2px solid var(--color-top);
+  border-radius: var(--px-radius);
+  margin-bottom: 4px;
+}
+
+.color:hover {
+  transform: scale(0.9);
+}
+
+/*
+           ██████ ██   ██ ███████  ██████ ██   ██ ██████   ██████  ██   ██
+          ██      ██   ██ ██      ██      ██  ██  ██   ██ ██    ██  ██ ██
+          ██      ███████ █████   ██      █████   ██████  ██    ██   ███
+          ██      ██   ██ ██      ██      ██  ██  ██   ██ ██    ██  ██ ██
+           ██████ ██   ██ ███████  ██████ ██   ██ ██████   ██████  ██   ██
+*/
+
+.checkbox {
+   -webkit-appearance: none;
+   -moz-appearance: none;
+   appearance: none;
+   outline: none;
+   border-radius: var(--px-radius);
+   width: 28px;
+   height: 28px;
+   padding: 4px 8px;
+   /* border: 2px solid var(--color-over); */
+   transition: 0.25s;
+}
+
+.checkbox:checked {
+  background-color: var(--color-over);
+}
+
+.checkbox::after {
+  content: "✘";
+  font-weight: bold;
+  color: var(--color-top);
+}
+
+.checkbox:checked::after {
+  content: "✔";
+}
+
+/*
+          ████████ ██   ██ ███████     ███████ ███    ██ ██████
+             ██    ██   ██ ██          ██      ████   ██ ██   ██
+             ██    ███████ █████       █████   ██ ██  ██ ██   ██
+             ██    ██   ██ ██          ██      ██  ██ ██ ██   ██
+             ██    ██   ██ ███████     ███████ ██   ████ ██████
+*/

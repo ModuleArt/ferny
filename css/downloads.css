@@ -1,0 +1,275 @@
+/*
+          ██████   ██████   ██████  ████████
+          ██   ██ ██    ██ ██    ██    ██
+          ██████  ██    ██ ██    ██    ██
+          ██   ██ ██    ██ ██    ██    ██
+          ██   ██  ██████   ██████     ██
+*/
+
+@font-face {
+  font-family: OpenSans;
+  src: url(../fonts/OpenSans-Semibold.ttf);
+}
+
+:root{
+  --color-back: rgb(0, 0, 0);
+  --color-over: rgba(0, 0, 0, 0.1);
+  --color-top: rgb(255, 255, 255);
+
+  --color-red: rgb(255, 63, 52);
+  --color-green: rgb(11, 232, 129);
+  --color-blue: rgb(15, 188, 249);
+  --color-orange: rgb(255, 168, 1);
+
+  --px-radius: 4px;
+  --px-font: 14px;
+}
+
+* {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+	box-sizing: border-box;
+  -webkit-user-drag: none;
+
+  font-family: OpenSans;
+  font-size: var(--px-font);
+}
+
+/*
+          ██     ██ ███████ ██████  ██   ██ ██ ████████
+          ██     ██ ██      ██   ██ ██  ██  ██    ██
+          ██  █  ██ █████   ██████  █████   ██    ██
+          ██ ███ ██ ██      ██   ██ ██  ██  ██    ██
+           ███ ███  ███████ ██████  ██   ██ ██    ██
+*/
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-over);
+  border: 2px solid var(--color-over);
+  border-radius: var(--px-radius);
+}
+
+::-webkit-input-placeholder {
+  color: var(--color-top);
+}
+
+/*
+          ██████   ██████  ██████  ██    ██
+          ██   ██ ██    ██ ██   ██  ██  ██
+          ██████  ██    ██ ██   ██   ████
+          ██   ██ ██    ██ ██   ██    ██
+          ██████   ██████  ██████     ██
+*/
+
+body {
+  margin: 32px;
+}
+
+label {
+  color: var(--color-top);
+}
+
+label.subtitle {
+  font-size: 24px;
+}
+
+label.title {
+  font-size: 48px;
+}
+
+/*
+          ██████  ██       ██████   ██████ ██   ██
+          ██   ██ ██      ██    ██ ██      ██  ██
+          ██████  ██      ██    ██ ██      █████
+          ██   ██ ██      ██    ██ ██      ██  ██
+          ██████  ███████  ██████   ██████ ██   ██
+*/
+
+hr {
+  border: 1px solid var(--color-over);
+}
+
+.container {
+  padding: 16px;
+  margin-bottom: 32px;
+  border-radius: var(--px-radius);
+  border: 2px solid var(--color-over);
+  /* background-color: var(--color-over); */
+  max-width: 720px;
+}
+
+.block-title {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.block-title label {
+  vertical-align: super;
+}
+
+hr.dotted {
+  border: none;
+  border-bottom: 4px dotted var(--color-over);
+}
+
+/*
+          ██ ███    ██ ██████  ██    ██ ████████
+          ██ ████   ██ ██   ██ ██    ██    ██
+          ██ ██ ██  ██ ██████  ██    ██    ██
+          ██ ██  ██ ██ ██      ██    ██    ██
+          ██ ██   ████ ██       ██████     ██
+*/
+
+input {
+  margin: 4px;
+  padding: 8px;
+  color: var(--color-top);
+  outline: none;
+  border: none;
+  height: 32px;
+  width: 296px;
+  max-width: 512px;
+  border-radius: var(--px-radius);
+  background-color: transparent;
+  text-align: center;
+  /* border: 2px var(--color-over) solid; */
+  transition: 0.25s;
+}
+
+input:focus, input:hover {
+  background-color: var(--color-over);
+}
+
+/*
+          ███    ██  █████  ██    ██     ██████  ████████ ███    ██
+          ████   ██ ██   ██ ██    ██     ██   ██    ██    ████   ██
+          ██ ██  ██ ███████ ██    ██     ██████     ██    ██ ██  ██
+          ██  ██ ██ ██   ██  ██  ██      ██   ██    ██    ██  ██ ██
+          ██   ████ ██   ██   ████       ██████     ██    ██   ████
+*/
+
+.nav-btn img {
+  margin-bottom: -7px;
+}
+
+.nav-btn {
+  /* float: right; */
+  margin-bottom: 4px;
+  transition: 0.25s;
+  display: inline-block;
+}
+
+.nav-btn {
+  height: 32px;
+  border-radius: var(--px-radius);
+  padding: 4px 16px;
+  /* border: 2px solid transparent;
+  border: 2px solid var(--color-over); */
+}
+
+.nav-btn:hover {
+  background-color: var(--color-over);
+}
+
+.nav-btn.green {
+  background-color: var(--color-green);
+}
+
+.nav-btn.red:hover {
+  background-color: var(--color-red);
+}
+
+.nav-btn.blue {
+  background-color: var(--color-blue);
+}
+
+.nav-btn.orange {
+  background-color: var(--color-orange);
+}
+
+/*
+          ██████   ██████  ██     ██ ███    ██ ██       ██████   █████  ██████
+          ██   ██ ██    ██ ██     ██ ████   ██ ██      ██    ██ ██   ██ ██   ██
+          ██   ██ ██    ██ ██  █  ██ ██ ██  ██ ██      ██    ██ ███████ ██   ██
+          ██   ██ ██    ██ ██ ███ ██ ██  ██ ██ ██      ██    ██ ██   ██ ██   ██
+          ██████   ██████   ███ ███  ██   ████ ███████  ██████  ██   ██ ██████
+*/
+
+.download {
+  /* border: 2px solid var(--color-over); */
+  margin-bottom: 4px;
+  background-color: var(--color-over);
+  border-radius: var(--px-radius);
+  text-align: left;
+  padding: 8px;
+  /* width: 296px; */
+  width: 100%;
+  display: inline-block;
+  position: relative;
+}
+
+.download:last-child {
+  margin-bottom: 0;
+}
+
+.download-label {
+  overflow:hidden;
+  position: absolute;
+  white-space: nowrap;
+  word-break: keep-all;
+  text-overflow: ellipsis;
+  width: calc(100% - 32px);
+  user-select: all;
+}
+
+#sidebar-downloads:empty::before {
+  content: "\2205  No downloads... Try to download something...";
+  color: var(--color-top);
+  height: 100px;
+  width: 100px;
+}
+
+/*
+           ██████ ██   ██ ███████  ██████ ██   ██ ██████   ██████  ██   ██
+          ██      ██   ██ ██      ██      ██  ██  ██   ██ ██    ██  ██ ██
+          ██      ███████ █████   ██      █████   ██████  ██    ██   ███
+          ██      ██   ██ ██      ██      ██  ██  ██   ██ ██    ██  ██ ██
+           ██████ ██   ██ ███████  ██████ ██   ██ ██████   ██████  ██   ██
+*/
+
+.checkbox {
+   -webkit-appearance: none;
+   -moz-appearance: none;
+   appearance: none;
+   outline: none;
+}
+
+.checkbox::after {
+  content: "✘";
+  font-weight: bold;
+  color: var(--color-top);
+}
+
+.checkbox:checked::after {
+  content: "✔";
+}
+
+/*
+          ████████ ██   ██ ███████     ███████ ███    ██ ██████
+             ██    ██   ██ ██          ██      ████   ██ ██   ██
+             ██    ███████ █████       █████   ██ ██  ██ ██   ██
+             ██    ██   ██ ██          ██      ██  ██ ██ ██   ██
+             ██    ██   ██ ███████     ███████ ██   ████ ██████
+*/

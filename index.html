@@ -1,242 +1,95 @@
 <!DOCTYPE html>
+<html>
+  <head>	
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="node_modules/dragula/dist/dragula.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <!-- <div id="loading-overlay">
+      <center id="loading-container">
+        <img src="imgs/icon32.png" id="loading-icon"> -->
+        <!-- <label id="loading-name">Arrow Browser</label> -->
+        <!-- <div id="loading-loader"></div> -->
+      <!-- </center>
+    </div> -->
 
-<!--
-					██   ██ ███████  █████  ██████
-					██   ██ ██      ██   ██ ██   ██
-					███████ █████   ███████ ██   ██
-					██   ██ ██      ██   ██ ██   ██
-					██   ██ ███████ ██   ██ ██████
--->
+    <div id="drag-zone"></div>
 
-<html lang="en" dir="ltr">
-	<head>
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta charset="utf-8">
-		<link rel="shortcut icon" type="image/png" href="imgs/apps/arrowbrowser/icon.png"/>
-		<title>ArrowBrowser ••• by ModuleArt</title>
-		<link rel="stylesheet" href="css/master.css">
-		<script src="js/jquery.js"></script>
-		<script src="js/scroll.js"></script>
-		<script src="js/navbar.js"></script>
-		<script type="text/javascript">
-			$( document ).ready(function() {
-				$('#navbar').load('html/navbar.html');
-				$('#footer').load('html/footer.html');
-			});
-		</script>
-	</head>
+    <div id="notif-panel"></div>
 
-<!--
-					███████ ████████  █████  ██████  ████████
-					██         ██    ██   ██ ██   ██    ██
-					███████    ██    ███████ ██████     ██
-					     ██    ██    ██   ██ ██   ██    ██
-					███████    ██    ██   ██ ██   ██    ██
--->
+    <center id="download-panel" style="display: none;">
+      <img class="theme-icon" name="download">
+      <label id="download-panel-title">Downloads</label>
+      <hr>
+      <div id="sidebar-downloads"></div>
+      <hr>
+      <div class="nav-btn" onclick="goToDownloadsTab(); closeDownloadPanel();">
+        <img class="theme-icon" name="downloads">
+        <label>Show all</label>
+      </div>
+      <div class="nav-btn" onclick="closeDownloadPanel();">
+        <img class="theme-icon" name="cancel">
+        <label>Close</label>
+      </div>
+    </center>
 
-	<body>
-		<div id="navbar"></div>
-		<center class="container">
+    <center id="find-panel" style="display: none;">
+      <img class="theme-icon" name="search">
+      <label id="find-panel-title">Find in page</label>
+      <hr>
+      <input type="text" id="find-input" placeholder="Text to find">
+      <div class="nav-btn" onclick="previousFindInPage()">
+        <img class="theme-icon" name="up">
+        <label>Previous</label>
+      </div>
+      <div class="nav-btn" onclick="nextFindInPage()">
+        <img class="theme-icon" name="down">
+        <label>Next</label>
+      </div>
+      <div class="nav-btn" onclick="closeFindPanel()">
+        <img class="theme-icon" name="cancel">
+        <label>Close</label>
+      </div>
+    </center>
 
-<!--
-					████████ ██ ████████ ██      ███████
-					   ██    ██    ██    ██      ██
-					   ██    ██    ██    ██      █████
-					   ██    ██    ██    ██      ██
-					   ██    ██    ██    ███████ ███████
--->
+    <div class="etabs-tabgroup" id="etabs-tabgroup">
+      <!-- <img src="imgs/titlebar-icon.png" class="title-bar-icon"> -->
+      <!-- <div class="title-bar-vr"></div> -->
+      <div class="etabs-tabs" id="etabs-tabs"></div>
+      <div class="etabs-buttons"></div>
+      <img name='down-squared' class='title-bar-btn theme-icon' id="tabs-list-btn"/>
+      <div id="window-controls"></div>
+    </div>
 
-			<div class="main">
-				<div class="main-name">
-					<img src="imgs/apps/arrowbrowser/icon.png">
-					<label class="title">ArrowBrowser</label><br>
-					<label class="subtitle">v1.2.1</label>
-					<img class="platform-icon" src="imgs/icons/windows.png">
-					<!-- <img class="platform-icon disable" src="imgs/icons/ubuntu.png">
-					<img class="platform-icon disable" src="imgs/icons/android.png"> -->
-					<label class="link" onclick="scrollToId('screenshots')">Screenshots</label>
-					<label class="link" onclick="scrollToId('updates')">Updates</label>
-				</div>
-			</div>
-			<div class="main">
-				<div class="main-desc">
-					<label><strike>Cross-platform</strike> chromium web browser.</label><br>
-	
-					<label>Features:</label>
-					<label>• Loads pages up to 2x faster than your current browser.</label>
-					<label>• <strike>A large number of themes, gradients and options.</strike></label>
-					<label>• Real dark mode. Ideal for oled / amoled displays.</label>
-					<label>• Perfect for developers. Sites look exactly like you want. The usual chromium developer tools.</label>
-				</div>
-				<div class="main-img">
-					<img src="imgs/apps/arrowbrowser/demo.png">
-				</div>
-			</div>
-			<div class="main">
-				<label class="subtitle">Download:</label><br><br>
-				<a class="btn" href="https://github.com/ModuleArt/arrowbrowser/releases/download/v1.2.1/ArrowBrowser-Setup-1.2.1.exe" title="Download installation file (Windows 10, 8.1, 7)">
-					<img src="imgs/icons/windows.png">
-					<label>Windows</label>
-				</a>
-			</div>
-			<div class="main">
-				<label class="subtitle">Other:</label><br><br>
-				<a class="btn" href="https://trello.com/b/cb5lXUgS/arrowbrowser">
-					<img src="imgs/icons/planner.png">
-					<label>Planner (Trello)</label>
-				</a>
-				<a class="btn" href="https://github.com/ModuleArt/arrowbrowser/releases">
-					<img src="imgs/icons/download.png">
-					<label>Releases (GitHub)</label>
-				</a>
-			</div>
-			
-<!--
-					███████  ██████ ██████  ███████ ███████ ███    ██ ███████ ██   ██  ██████  ████████ ███████
-					██      ██      ██   ██ ██      ██      ████   ██ ██      ██   ██ ██    ██    ██    ██
-					███████ ██      ██████  █████   █████   ██ ██  ██ ███████ ███████ ██    ██    ██    ███████
-					     ██ ██      ██   ██ ██      ██      ██  ██ ██      ██ ██   ██ ██    ██    ██         ██
-					███████  ██████ ██   ██ ███████ ███████ ██   ████ ███████ ██   ██  ██████     ██    ███████
--->
+    <div id="titlebar">
+      <img name="back" id="back-btn" class="title-bar-btn theme-icon" title="Go back">
+      <img name="forward" id="forward-btn" class="title-bar-btn theme-icon" title="Go forward">
+      <img name="refresh" id="refresh-btn" class="title-bar-btn theme-icon" title="Reload this page">
+      <img name="stop" id="stop-btn" class="title-bar-btn theme-icon" title="Stop loading this page" style="display: none">
+      <div class="title-bar-vr"></div>
+      <img name="bookmark" id="add-bookmark-btn" class="title-bar-btn theme-icon" title="Bookmark this page">
+      <input type="text" placeholder="Search Google or type a URL" id="search-input" oninput="getSuggestions()" onfocusout="removeSuggestions()">
+      <div class="title-bar-vr"></div>
+      <img name="bookmarks" id="bookmarks-btn" class="title-bar-btn theme-icon" title="Bookmarks">
+      <img name="history" id="history-btn" class="title-bar-btn theme-icon disable" title="History">
+      <img name="download" id="downloads-btn" class="title-bar-btn theme-icon" title="Downloads">
+      <div class="title-bar-vr"></div>
+      <img name="menu" id="show-sidebar-btn" class="title-bar-btn theme-icon" title="Show menu">
+    </div>
 
-			<hr>
-			<label class="title" id="screenshots">Screenshots</label><br><br>
-				
-			<div class="main">
-				<div class="screenshot">
-					<label class="subtitle">Regular</label>
-					<img src="imgs/apps/arrowbrowser/1-first.png">
-				</div>
-				<div class="screenshot">
-					<label class="subtitle">Dark mode</label>
-					<img src="imgs/apps/arrowbrowser/9-darkmode.png">
-				</div>
-				<div class="screenshot">
-					<label class="subtitle">Search suggestions</label>
-					<img src="imgs/apps/arrowbrowser/2-suggestions.png">
-				</div>
-				<div class="screenshot">
-					<label class="subtitle">Multitabs</label>
-					<img src="imgs/apps/arrowbrowser/7-multitabs.png">
-				</div>
-				<div class="screenshot">
-					<label class="subtitle">Bookmarks</label>
-					<img src="imgs/apps/arrowbrowser/3-bookmarks.png">
-				</div>
-				<div class="screenshot">
-					<label class="subtitle">Automatic updates</label>
-					<img src="imgs/apps/arrowbrowser/10-updates.png">
-				</div>
-				<div class="screenshot">
-					<label class="subtitle">Find in page</label>
-					<img src="imgs/apps/arrowbrowser/8-findinpage.png">
-				</div>
-				<div class="screenshot">
-					<label class="subtitle">Devtools</label>
-					<img src="imgs/apps/arrowbrowser/6-devtools.png">
-				</div>
-				<div class="screenshot">
-					<label class="subtitle">Downloads</label>
-					<img src="imgs/apps/arrowbrowser/4-downloads.png">
-				</div>
-				<div class="screenshot">
-					<label class="subtitle">Appearance</label>
-					<img src="imgs/apps/arrowbrowser/5-settings.png">
-				</div>
-			</div>	
+    <div class="etabs-views" id="etabs-views"></div>
+    <label id="target-url"></label>
 
-			
-			
-			<hr>
-			<label class="title" id="updates">Updates</label><br><br>
+    <div id="search-suggest">
+      <div id="search-suggest-container"></div>
+      <img name="google" class="title-bar-btn theme-icon active" title="Search with Google" onclick="searchWith(null, 'google')">
+      <img name="bing" class="title-bar-btn theme-icon" title="Search with Bing" onclick="searchWith(null, 'bing')">
+      <img name="duck-duck-go" class="title-bar-btn theme-icon" title="Search with DuckDuckGo" onclick="searchWith(null, 'duck')">
+      <img name="wikipedia" class="title-bar-btn theme-icon" title="Search with Wikipedia" onclick="searchWith(null, 'wiki')">
+      <img name="up-squared" id="close-suggest-btn" class="title-bar-btn theme-icon" title="Close search panel">
+    </div>
 
-			<div class="main">
-				<div class="updates">
-					<label>May 21 / 2019</label>
-					<label class="subtitle">Beta v1.2.1 "Design Update"</label>
-					<label>
-						• ArrowFlat UI Design 2.1 (Removed shadows and borders).<br>
-						• Decreased installer file size.
-					</label>
-					<a href="https://github.com/ModuleArt/arrowbrowser/releases/tag/v1.2.1" title="GitHub release"><img src="imgs/icons/github.png"></a>
-				</div>
-				<div class="updates">
-					<label>May 21 / 2019</label>
-					<label class="subtitle">Beta v1.2.0 "Impression Update"</label>
-					<label>
-						• New flat colors: blue, green, orange, red, light, gray, dark.<br>
-						• Smaller font: 14px.<br>
-						• Variable roundness of the corners of the interface elements.<br>
-						• Some new shortcuts.<br>
-						• The size and position of the window are maintained.<br>
-						• New download manager.<br>
-						• The application will not close during file download.<br>
-						• Find in page.<br>
-						• Removed loading screen.<br>
-						• Windows 10 controls.<br>
-						• Dynamic width of tabs.<br>
-						• Tabs list button.<br>
-						• Removed browser icon on the title bar<br>
-						• Context menu icons.<br>
-						• Removed error page.<br>
-						• Lighter substrates.<br>
-						• Welcome screen.<br>
-						• Multiple search engines on search panel (Google, Bing, DuckDuckGo, Wikipedia).
-					</label>
-					<a href="https://github.com/ModuleArt/arrowbrowser/releases/tag/v1.2.0" title="GitHub release"><img src="imgs/icons/github.png"></a>
-				</div>
-				<div class="updates">
-					<label>April 13 / 2019</label>
-					<label class="subtitle">Beta v1.1.0 "Context Update"</label>
-					<label>
-						• New outlined icons style.<br>
-						• Tab context menu.<br>
-						• Light and dark themes.<br>
-						• New bookmark manager (Drag&Drop).<br>
-						• Loading screen.<br>
-						• Zoom factor.<br>
-						• Added context menu icons.<br>
-						• New design (Shadows replaced by borders).<br>
-						• Input roles.<br>
-						• Bookmarks, settings, about in new tab.<br>
-						• Sidebar replaced by context menu (Better performance).<br>
-						• Keyboard shortcuts.<br>
-						• Notification fade animation.<br>
-						• New app icon.<br>
-						• Fullscreen mode (F11).<br>
-						• Removed download manager. It will appear later in the new form.<br>
-						• Error page.<br>
-						• New font (Open Sans).<br>
-						• 50 new background colors.
-					</label>
-					<a href="https://github.com/ModuleArt/arrowbrowser/releases/tag/v1.1.0" title="GitHub release"><img src="imgs/icons/github.png"></a>
-					<a href="https://medium.com/module-art/arrowbrowser-v1-1-0-update-6c7a125b9ddd" title="Medium story"><img src="imgs/icons/medium.png"></a>
-				</div>
-				<div class="updates">
-					<label>March 5 / 2019</label>
-					<label class="subtitle">Beta v1.0.0</label>
-					<label>Arrow Browser is available!</label>
-					<a href="https://github.com/ModuleArt/arrowbrowser/releases/tag/v1.0.0" title="GitHub release"><img src="imgs/icons/github.png"></a>
-				</div>
-			</div>
-
-<!--
-					███████  ██████   ██████  ████████ ███████ ██████
-					██      ██    ██ ██    ██    ██    ██      ██   ██
-					█████   ██    ██ ██    ██    ██    █████   ██████
-					██      ██    ██ ██    ██    ██    ██      ██   ██
-					██       ██████   ██████     ██    ███████ ██   ██
--->
-
-		</center>
-		<footer id="footer"></footer>
-	</body>
+    <script type="text/javascript" src="browser.js"></script>
+  </body>
 </html>
-
-<!--
-					████████ ██   ██ ███████     ███████ ███    ██ ██████
-					   ██    ██   ██ ██          ██      ████   ██ ██   ██
-					   ██    ███████ █████       █████   ██ ██  ██ ██   ██
-					   ██    ██   ██ ██          ██      ██  ██ ██ ██   ██
-					   ██    ██   ██ ███████     ███████ ██   ████ ██████
--->

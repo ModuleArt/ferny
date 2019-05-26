@@ -1,0 +1,368 @@
+/*
+.########...#######...#######..########
+.##.....##.##.....##.##.....##....##...
+.##.....##.##.....##.##.....##....##...
+.########..##.....##.##.....##....##...
+.##...##...##.....##.##.....##....##...
+.##....##..##.....##.##.....##....##...
+.##.....##..#######...#######.....##...
+*/
+
+@font-face {
+  font-family: OpenSans;
+  src: url(../fonts/OpenSans-Semibold.ttf);
+}
+
+:root{
+  --color-back: rgb(0, 0, 0);
+  --color-over: rgba(0, 0, 0, 0.1);
+  --color-top: rgb(255, 255, 255);
+
+  --color-red: rgb(255, 63, 52);
+  --color-green: rgb(11, 232, 129);
+  --color-blue: rgb(15, 188, 249);
+  --color-orange: rgb(255, 168, 1);
+
+  --color-shadow: rgba(0, 0, 0, 0.5);
+
+  --px-radius: 4px;
+  --px-font: 14px;
+  --px-shadow: 8px;
+}
+
+* {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+	box-sizing: border-box;
+  -webkit-user-drag: none;
+
+  font-family: OpenSans;
+  font-size: var(--px-font);
+}
+
+/*
+          ██     ██ ███████ ██████  ██   ██ ██ ████████
+          ██     ██ ██      ██   ██ ██  ██  ██    ██
+          ██  █  ██ █████   ██████  █████   ██    ██
+          ██ ███ ██ ██      ██   ██ ██  ██  ██    ██
+           ███ ███  ███████ ██████  ██   ██ ██    ██
+*/
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-over);
+  border: 2px solid var(--color-over);
+  border-radius: var(--px-radius);
+}
+
+::-webkit-input-placeholder {
+  color: var(--color-top);
+}
+
+/*
+          ██████   ██████  ██████  ██    ██
+          ██   ██ ██    ██ ██   ██  ██  ██
+          ██████  ██    ██ ██   ██   ████
+          ██   ██ ██    ██ ██   ██    ██
+          ██████   ██████  ██████     ██
+*/
+
+body {
+  margin: 32px;
+}
+
+label {
+  color: var(--color-top);
+}
+
+label.subtitle {
+  font-size: 24px;
+}
+
+label.title {
+  font-size: 48px;
+}
+
+
+/*
+          ██████  ██    ██ ████████ ████████  ██████  ███    ██
+          ██   ██ ██    ██    ██       ██    ██    ██ ████   ██
+          ██████  ██    ██    ██       ██    ██    ██ ██ ██  ██
+          ██   ██ ██    ██    ██       ██    ██    ██ ██  ██ ██
+          ██████   ██████     ██       ██     ██████  ██   ████
+*/
+
+.btn-label {
+  vertical-align: super;
+  cursor: pointer;
+}
+
+.btn.colored .btn-label {
+  color: var(--color-over);
+}
+
+.btn-body {
+  padding: 6px;
+  display: inline-block;
+  height: 32px;
+  vertical-align: top;
+  border-radius: 0 var(--px-radius) var(--px-radius) 0;
+  padding-left: 0;
+}
+
+.btn.colored .btn-body {
+  background-color: var(--color-over);
+  padding-left: 6px;
+}
+
+.btn {
+  border-radius: var(--px-radius);
+  margin: 8px;
+  transition: 0.25s;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.btn {
+  padding: 0;
+  height: 32px;
+}
+
+.btn-icon {
+  padding: 4px;
+  padding-right: 0;
+}
+
+.btn.colored .btn-icon {
+  opacity: 0.5;
+}
+
+.btn:hover {
+  opacity: 0.25;
+}
+
+.btn.green {
+  background-color: var(--color-green);
+}
+
+.btn.red {
+  background-color: var(--color-red);
+}
+
+.btn.blue {
+  background-color: var(--color-blue);
+}
+
+/*
+          ██ ███    ██ ██████  ██    ██ ████████
+          ██ ████   ██ ██   ██ ██    ██    ██
+          ██ ██ ██  ██ ██████  ██    ██    ██
+          ██ ██  ██ ██ ██      ██    ██    ██
+          ██ ██   ████ ██       ██████     ██
+*/
+
+input {
+  outline: none;
+  border: none;
+  color: var(--color-top);
+  font-size: var(--px-font);
+  height: 32px;
+  padding: 8px;
+  border-radius: var(--px-radius);
+  background-color: transparent;
+  text-align: center;
+  transition: 0.25s;
+  width: 256px;
+  margin-bottom: 4px;
+}
+
+input:hover, input:focus {
+  background-color: var(--color-over);
+}
+
+/*
+          ██████   ██████   ██████  ██   ██ ███    ███  █████  ██████  ██   ██ ███████
+          ██   ██ ██    ██ ██    ██ ██  ██  ████  ████ ██   ██ ██   ██ ██  ██  ██
+          ██████  ██    ██ ██    ██ █████   ██ ████ ██ ███████ ██████  █████   ███████
+          ██   ██ ██    ██ ██    ██ ██  ██  ██  ██  ██ ██   ██ ██   ██ ██  ██       ██
+          ██████   ██████   ██████  ██   ██ ██      ██ ██   ██ ██   ██ ██   ██ ███████
+*/
+
+#bookmarks {
+  width: 100%;
+}
+
+.bookmark {
+  display: inline-block;
+  border-radius: var(--px-radius);
+  padding: 8px;
+  margin-right: 4px;
+  margin-bottom: 4px;
+  text-decoration: none;
+  /* min-width: 150px; */
+  max-width: 296px;
+  vertical-align: top;
+  /* border: 2px var(--color-over) solid; */
+  transition: 0.25s;
+  text-align: left;
+  position: relative;
+  background-color: var(--color-over);
+}
+
+.bookmark:hover {
+  padding-right: 32px;
+}
+
+.bookmark label {
+  margin: 0 4px;
+  width: calc(50% - 24px);
+  word-break: break-all;
+}
+
+.bookmark-icon {
+  width: 16px;
+  height: 16px;
+  filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.5));
+  vertical-align: middle;
+  margin: 2px;
+}
+
+.bookmark-options {
+  transition: 0.25s;
+  position: absolute;
+  right: 6px;
+  top: 6px;
+  width: 0;
+  height: 0;
+}
+
+.bookmark:hover .bookmark-options {
+  width: 24px;
+  height: 24px;
+  /* background-color: var(--color-over); */
+}
+
+.bookmark-menu {
+  display: none;
+  margin-top: 8px;
+  margin-left: -4px;
+  margin-bottom: -8px;
+  transition: 0.25s;
+}
+
+.bookmark:hover .bookmark-menu {
+  background-color: transparent;
+}
+
+.bookmark-menu.active {
+  display: block;
+}
+
+.bookmark-menu-btn {
+  transition: 0.25s;
+  border-radius: var(--px-radius);
+  padding: 4px;
+  /* border: 2px transparent solid; */
+}
+
+.bookmark-menu-btn:hover {
+  background-color: var(--color-over);
+  /* border: 2px var(--color-over) solid; */
+}
+
+/*
+          ██████  ██       ██████   ██████ ██   ██
+          ██   ██ ██      ██    ██ ██      ██  ██
+          ██████  ██      ██    ██ ██      █████
+          ██   ██ ██      ██    ██ ██      ██  ██
+          ██████  ███████  ██████   ██████ ██   ██
+*/
+
+hr {
+  border: 1px solid var(--color-over);
+  margin: 16px 0;
+}
+
+.container {
+  padding: 16px;
+  margin-bottom: 32px;
+  border-radius: var(--px-radius);
+  border: 2px solid var(--color-over);
+  /* background-color: var(--color-over); */
+  max-width: 720px;
+}
+
+.block-title {
+  margin-bottom: 8px;
+}
+
+.block-title label {
+  vertical-align: super;
+}
+
+hr.dotted {
+  border: none;
+  border-bottom: 4px dotted var(--color-over);
+}
+
+/*
+          ███    ██  █████  ██    ██     ██████  ████████ ███    ██
+          ████   ██ ██   ██ ██    ██     ██   ██    ██    ████   ██
+          ██ ██  ██ ███████ ██    ██     ██████     ██    ██ ██  ██
+          ██  ██ ██ ██   ██  ██  ██      ██   ██    ██    ██  ██ ██
+          ██   ████ ██   ██   ████       ██████     ██    ██   ████
+*/
+
+.nav-btn img {
+  margin-bottom: -7px;
+}
+
+.nav-btn {
+  /* margin: 2px; */
+  transition: 0.25s;
+  display: inline-block;
+  height: 32px;
+  border-radius: var(--px-radius);
+  padding: 4px 16px;
+  /* border: 2px solid transparent;
+  border: 2px solid var(--color-over); */
+}
+
+.nav-btn:hover {
+  background-color: var(--color-over);
+}
+
+.nav-btn.green {
+  background-color: var(--color-green);
+}
+
+.nav-btn.red {
+  background-color: var(--color-red);
+}
+
+.nav-btn.blue {
+  background-color: var(--color-blue);
+}
+
+.nav-btn.orange {
+  background-color: var(--color-orange);
+}
+
+/*
+          ████████ ██   ██ ███████     ███████ ███    ██ ██████
+             ██    ██   ██ ██          ██      ████   ██ ██   ██
+             ██    ███████ █████       █████   ██ ██  ██ ██   ██
+             ██    ██   ██ ██          ██      ██  ██ ██ ██   ██
+             ██    ██   ██ ███████     ███████ ██   ████ ██████
+*/

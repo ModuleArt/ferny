@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="stylesheet" href="welcome.css">
+        <title>Welcome</title>
+    </head>
+    <body>
+        <div id="drag-zone"></div>
+
+        <div id="titlebar">
+            <img id="titlebar-icon" class="theme-icon" name="box">
+            <label id="titlebar-title">Welcome</label>
+            <div id="window-controls"></div>
+        </div>
+
+        <center>
+            <div id="menu">
+                <div class="nav-btn disable" onclick="prevSlide()" id="prev-btn">
+                    <img class="theme-icon" name="back">
+                    <label>Prev</label>
+                </div>
+                <div id="dots">
+                    <div class="dot active" onclick="chooseSlide(this)"></div>
+                    <div class="dot" onclick="chooseSlide(this)"></div>
+                    <div class="dot" onclick="chooseSlide(this)"></div>
+                </div>
+                <div class="nav-btn" onclick="nextSlide()" id="next-btn">
+                    <img class="theme-icon" name="forward">
+                    <label>Next</label>
+                </div>
+            </div>
+        
+            <div class="tab active">
+                <label>Welcome to</label>
+                <img class="about-icon" src="imgs/icon128.png">
+                <label class="subtitle">Arrow Browser</label><br>
+                <label id="version"></label>
+            </div>
+            <div class="tab">
+                <div class="block-title">
+                    <img name="palette" class="theme-icon">
+                    <label>Appearance</label>
+                </div>
+                <div class="container">
+                    <div class="block-title">
+                        <img name="color" class="theme-icon">
+                        <label>Background color</label>
+                    </div>
+                    <div class="nav-btn" onclick="requestTheme('rgb(255, 255, 255)')">
+                        <img class="theme-icon" name="angel">
+                        <label>White</label>
+                    </div>
+                    <div class="nav-btn" onclick="requestTheme('rgb(30, 39, 46)')">
+                        <img class="theme-icon" name="demon">
+                        <label>Dark</label>
+                    </div>
+                    <label class="link" onclick="moreSettings()">More</label>
+                    <hr>
+                    <div class="block-title">
+                        <img name="radius" class="theme-icon">
+                        <label>Borders rounding</label>
+                    </div>
+                    <div class="nav-btn" onclick="requestBorderRadius(4)">
+                        <img class="theme-icon" name="square">
+                        <label>Small</label>
+                    </div>
+                    <div class="nav-btn" onclick="requestBorderRadius(16)">
+                        <img class="theme-icon" name="circle">
+                        <label>Circle</label>
+                    </div>
+                    <label class="link" onclick="moreSettings()">More</label>
+                </div>
+            </div>
+            <div class="tab">
+                <div class="block-title">
+                    <img name="todo-list" class="theme-icon">
+                    <label>Finish</label>
+                </div>
+                <div class="container">
+                    <div class="block-title">
+                        <img name="checked" class="theme-icon">
+                        <label>All done</label>
+                    </div>
+                    <div class="nav-checkbox" style="border: none">
+                        <label class="nav-btn-label">Show this dialog at startup
+                        <input type="checkbox" class="checkbox" checked id="welcome-checkbox">
+                    </div><br><br>
+                    <div id="start-btn" onclick="finishWelcome()"><label class="subtitle">Get started</label></div>
+                </div>
+            </div>
+        </center>
+        <script type="text/javascript" src="welcome.js"></script>
+    </body>
+</html>
