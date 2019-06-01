@@ -14,9 +14,6 @@ const {
 const TabGroup = require("electron-tabs");
 const dragula = require("dragula");
 const autoSuggest = require('google-autocomplete');
-const {
-  shell
-} = require('electron');
 const sslCertificate = require('get-ssl-certificate');
 
 /*
@@ -32,13 +29,8 @@ const sslCertificate = require('get-ssl-certificate');
 let tabGroup = new TabGroup({
   newTab: {
     title: 'New Tab',
-    src: 'html/bookmarks.html', 
-    active: true,
-    webviewAttributes: {
-      nodeintegration: true
-      // nodeingtegration: false,
-      // enableBlinkFeatures: "DocumentCookie,CookieStore"
-    }
+    src: 'https://google.com', 
+    active: true
   },
   newTabButtonText: "<img name='create' class='theme-icon'/>",
   closeButtonText: "&nbsp;"
@@ -58,6 +50,23 @@ tabGroup.on("tab-added", (tab, tabGroup) => {
   tab.on("active", (tab) => {
     document.getElementById('search-input').value = webview.getURL();
     applyFindPanel();
+    if (webview.canGoBack()) {
+      document.getElementById('back-btn').classList.remove('disable');
+    } else {
+      document.getElementById('back-btn').classList.add('disable');
+    }
+    if (webview.canGoForward()) {
+      document.getElementById('forward-btn').classList.remove('disable');
+    } else {
+      document.getElementById('forward-btn').classList.add('disable');
+    }
+    if (webview.isLoading()) {
+      document.getElementById('stop-btn').style.display = "";
+      document.getElementById('refresh-btn').style.display = "none";
+    } else {
+      document.getElementById('stop-btn').style.display = "none";
+      document.getElementById('refresh-btn').style.display = "";
+    }
   });
 
   webview.addEventListener('update-target-url', (e) => {
@@ -197,19 +206,39 @@ tabGroup.on("tab-removed", (tab, tabGroup) => {
 
 // system pages
 function goToBookmarksTab() {
-  tabGroup.getActiveTab().webview.src = 'html/bookmarks.html';
+  showSidebar();
+  document.getElementById('sidebar-webview').src = 'html/bookmarks.html';
+  document.getElementById('bookmarks-btn').classList.add('active');
+  document.getElementById('downloads-btn').classList.remove('active');
+  document.getElementById('settings-btn').classList.remove('active');
+  document.getElementById('about-btn').classList.remove('active');
 }
 
 function goToAboutTab() {
-  tabGroup.getActiveTab().webview.src = 'html/about.html';
+  showSidebar();
+  document.getElementById('sidebar-webview').src = 'html/about.html';
+  document.getElementById('bookmarks-btn').classList.remove('active');
+  document.getElementById('downloads-btn').classList.remove('active');
+  document.getElementById('settings-btn').classList.remove('active');
+  document.getElementById('about-btn').classList.add('active');
 }
 
 function goToSettingsTab() {
-  tabGroup.getActiveTab().webview.src = 'html/settings.html';
+  showSidebar();
+  document.getElementById('sidebar-webview').src = 'html/settings.html';
+  document.getElementById('bookmarks-btn').classList.remove('active');
+  document.getElementById('downloads-btn').classList.remove('active');
+  document.getElementById('settings-btn').classList.add('active');
+  document.getElementById('about-btn').classList.remove('active');
 }
 
 function goToDownloadsTab() {
-  tabGroup.getActiveTab().webview.src = 'html/downloads.html';
+  showSidebar();
+  document.getElementById('sidebar-webview').src = 'html/downloads.html';
+  document.getElementById('bookmarks-btn').classList.remove('active');
+  document.getElementById('downloads-btn').classList.add('active');
+  document.getElementById('settings-btn').classList.remove('active');
+  document.getElementById('about-btn').classList.remove('active');
 }
 
 // bookmarks
@@ -235,6 +264,8 @@ function createBookmark() {
   } catch (e) {
     alert(e);
   }
+
+  document.getElementById('sidebar-webview').send('action-update-bookmarks');
 
   notif("Bookmark added", "info");
 }
@@ -280,7 +311,6 @@ function removeSuggestions() {
 
 function getSuggestions() {
   closeFindPanel();
-  closeDownloadPanel();
 
   var input = document.getElementById('search-input');
   var suggest = document.getElementById('search-suggest');
@@ -365,8 +395,8 @@ function quest(text, ops) {
 
   for (var i = 0; i < ops.length; i++) {
     var btn = document.createElement('div');
-    btn.classList.add('notif-btn');
-    btn.innerHTML = "<img name='" + ops[i].icon + "' class='theme-icon'><label class='notif-btn-label'>" + ops[i].text + "</label>";
+    btn.classList.add('nav-btn');
+    btn.innerHTML = "<img name='" + ops[i].icon + "' class='theme-icon'><label>" + ops[i].text + "</label>";
     let j = i;
     btn.onclick = function () {
       eval(ops[j].click);
@@ -376,14 +406,14 @@ function quest(text, ops) {
 
   document.getElementById('notif-panel').appendChild(div);
 
+  applyTheme(document.documentElement.style.getPropertyValue('--color-back'));
+
   if (notifPanel.childNodes.length > 5) {
     notifPanel.lastChild.classList.add('closed');
     setTimeout(function () {
       notifPanel.removeChild(notifPanel.lastChild);
     }, 250);
   }
-
-  applyTheme(document.documentElement.style.getPropertyValue('--color-back'));
 }
 
 function removeNotif(btn) {
@@ -392,253 +422,6 @@ function removeNotif(btn) {
   setTimeout(function () {
     document.getElementById('notif-panel').removeChild(div);
   }, 250);
-}
-
-// downloads
-function createDownload(index, name, url) {
-  var div = document.createElement('div');
-  div.classList.add('download');
-  div.id = "download-" + index;
-  div.innerHTML = `
-    <label>File: </label><label class="download-file" title="` + name + `">` + name + `</label><br>
-    <label class="download-status" value="starting">Starting</label><br>
-    <label>Url: </label><label class="download-link" title="` + url + `">` + url + `</label><br>
-    <div class="download-buttons"></div>`;
-
-  var container = document.getElementById('sidebar-downloads');
-  var dwndls = container.getElementsByClassName('download');
-  if (dwndls.length > 0) {
-    container.insertBefore(div, dwndls[0]);
-  } else {
-    container.appendChild(div);
-  }
-  notif('Download started: ' + name, 'info');
-}
-
-function createStoppedDownload(index, name, url, path) {
-  var div = document.createElement('div');
-  div.classList.add('download');
-  div.id = "download-" + index;
-  div.innerHTML = `
-    <label>File: </label><label class="download-file" title="` + name + `">` + name + `</label><br>
-    <label class="download-status" value="stopped">Finished</label><br>
-    <label>Url: </label><label class="download-link" title="` + url + `">` + url + `</label><br>`;
-
-  var fs = require('fs');
-  if (fs.existsSync(path.replace(/\\/g, "/"))) {
-    div.innerHTML += `
-      <div class="download-buttons">
-        <div class="nav-btn colored green" onclick="showItemInFolder('` + path.replace(/\\/g, "/") + `')">
-          <img class="nav-btn-icon theme-icon" name="download-folder">
-          <label>Folder</label>
-        </div>
-        <div class="nav-btn colored orange" onclick="openItem('` + path.replace(/\\/g, "/") + `')">
-          <img class="nav-btn-icon theme-icon" name="file">
-          <label>Open</label>
-        </div>
-        <div class="nav-btn colored red" onclick="removeDownload(` + index + `)">
-          <img class="nav-btn-icon theme-icon" name="delete">
-          <label>Remove</label>
-        </div>
-      </div>`;
-  } else {
-    div.innerHTML += `
-      <div class="download-buttons">
-        <div class="nav-btn colored blue" onclick="retryDownload(` + index + `, '` + url + `')">
-          <img class="nav-btn-icon theme-icon" name="refresh">
-          <label>Retry</label>
-        </div>
-        <div class="nav-btn colored red" onclick="removeDownload(` + index + `)">
-          <img class="nav-btn-icon theme-icon" name="delete">
-          <label>Remove</label>
-        </div>
-      </div>`;
-  }
-
-  var container = document.getElementById('sidebar-downloads');
-  var dwndls = container.getElementsByClassName('download');
-  if (dwndls.length > 0) {
-    container.insertBefore(div, dwndls[0]);
-  } else {
-    container.appendChild(div);
-  }
-
-  applyTheme(document.documentElement.style.getPropertyValue('--color-back'));
-}
-
-function setDownloadProcess(index, bytes, total, name) {
-  var div = document.getElementById('download-' + index);
-
-  var status = div.getElementsByClassName('download-status')[0];
-  status.innerHTML = "Downloading - " + bytesToSize(bytes) + " / " + bytesToSize(total) + " - " + Math.round(percentage(bytes, total)) + "%";
-
-  if (status.value != "process") {
-    status.value = "process";
-    var buttons = div.getElementsByClassName('download-buttons')[0];
-    buttons.innerHTML = `
-      <div class="nav-btn orange" onclick="pauseDownload(` + index + `)">
-        <img class="nav-btn-icon theme-icon" name="pause">
-        <label>Pause</label>
-      </div>
-      <div class="nav-btn red" onclick="cancelDownload(` + index + `)">
-        <img class="nav-btn-icon theme-icon" name="cancel">
-        <label>Cancel</label>
-      </div>`;
-  }
-
-  applyTheme(document.documentElement.style.getPropertyValue('--color-back'));
-}
-
-function setDownloadStatusPause(index, bytes, total, name) {
-  var div = document.getElementById('download-' + index);
-
-  var status = div.getElementsByClassName('download-status')[0];
-  status.innerHTML = "Pause - " + bytesToSize(bytes) + " / " + bytesToSize(total);
-
-  if (status.value != "pause") {
-    status.value = "pause";
-    var buttons = div.getElementsByClassName('download-buttons')[0];
-    buttons.innerHTML = `
-      <div class="nav-btn colored blue" onclick="resumeDownload(` + index + `)">
-        <img class="nav-btn-icon theme-icon" name="download">
-        <label>Resume</label>
-      </div>
-      <div class="nav-btn colored red" onclick="cancelDownload(` + index + `)">
-        <img class="nav-btn-icon theme-icon" name="cancel">
-        <label>Cancel</label>
-      </div>`;
-  }
-
-  applyTheme(document.documentElement.style.getPropertyValue('--color-back'));
-}
-
-function setDownloadStatusDone(index, name, path) {
-  var div = document.getElementById('download-' + index);
-
-  var status = div.getElementsByClassName('download-status')[0];
-  status.innerHTML = "Done";
-
-  status.value = "done";
-
-  var buttons = div.getElementsByClassName('download-buttons')[0];
-  buttons.innerHTML = `
-    <div class="nav-btn colored green" onclick="shell.showItemInFolder('` + path.replace(/\\/g, "/") + `')">
-      <img class="nav-btn-icon theme-icon" name="download-folder">
-      <label>Folder</label>
-    </div>
-    <div class="nav-btn colored orange" onclick="shell.openItem('` + path.replace(/\\/g, "/") + `')">
-      <img class="nav-btn-icon theme-icon" name="file">
-      <label>Open</label>
-    </div>
-    <div class="nav-btn colored red" onclick="removeDownload(` + index + `)">
-      <img class="nav-btn-icon theme-icon" name="delete">
-      <label>Remove</label>
-    </div>`;
-
-  notif('Download complete', 'success');
-}
-
-function setDownloadStatusFailed(index, state, name, link) {
-  var div = document.getElementById('download-' + index);
-
-  var status = div.getElementsByClassName('download-status')[0];
-  status.innerHTML = state.charAt(0).toUpperCase() + state.slice(1);;
-
-  status.value = "failed";
-
-  var buttons = div.getElementsByClassName('download-buttons')[0];
-  buttons.innerHTML = `
-    <div class="nav-btn colored blue" onclick="retryDownload(` + index + `, '` + link + `')">
-      <img class="nav-btn-icon theme-icon" name="refresh">
-      <label>Retry</label>
-    </div>
-    <div class="nav-btn colored red" onclick="removeDownload(` + index + `)">
-      <img class="nav-btn-icon theme-icon" name="delete">
-      <label>Remove</label>
-    </div>`;
-
-  notif('Download ' + state + ": " + name, 'error');
-}
-
-function setDownloadStatusInterrupted(index, name) {
-  var div = document.getElementById('download-' + index);
-
-  var status = div.getElementsByClassName('download-status')[0];
-  status.innerHTML = "Interrupted";
-
-  status.value = "interrupted";
-
-  var buttons = div.getElementsByClassName('download-buttons')[0];
-  buttons.innerHTML = `
-    <div class="nav-btn colored blue" onclick="resumeDownload(` + index + `)">
-      <img class="nav-btn-icon theme-icon" name="download">
-      <label>Resume</label>
-    </div>
-    <div class="nav-btn colored red" onclick="cancelDownload(` + index + `)">
-      <img class="nav-btn-icon theme-icon" name="cancel">
-      <label>Cancel</label>
-    </div>`;
-
-  notif('Download interrupted: ' + name, 'warning');
-}
-
-function removeDownload(index) {
-  ipcRenderer.send('request-remove-download', index);
-  var div = document.getElementById('download-' + index);
-  div.parentNode.removeChild(div);
-}
-
-function cancelDownload(index) {
-  ipcRenderer.send('request-cancel-download', index);
-}
-
-function pauseDownload(index) {
-  ipcRenderer.send('request-pause-download', index);
-}
-
-function resumeDownload(index) {
-  ipcRenderer.send('request-resume-download', index);
-}
-
-function retryDownload(index, link) {
-  removeDownload(index);
-  tabGroup.addTab({
-    title: 'Retry download',
-    src: link,
-    active: true
-  });
-}
-
-function showItemInFolder(path) {
-  var fs = require("fs");
-
-  if (fs.existsSync(path)) {
-    shell.showItemInFolder(path);
-  } else {
-    notif("Folder missing", "error");
-  }
-}
-
-function openItem(path) {
-  var fs = require("fs");
-
-  if (fs.existsSync(path)) {
-    shell.openItem(path);
-  } else {
-    notif("File missing", "error");
-  }
-}
-
-function closeDownloadPanel() {
-  document.getElementById("downloads-btn").classList.remove('active');
-  document.getElementById("download-panel").style.display = "none";
-}
-
-function showDownloadPanel() {
-  esc();
-
-  document.getElementById("downloads-btn").classList.add('active');
-  document.getElementById("download-panel").style.display = "";
 }
 
 // themes
@@ -697,24 +480,21 @@ function applyBorderRadius(size) {
   document.documentElement.style.setProperty('--px-radius', size + 'px');
 }
 
-// others
-function bytesToSize(bytes) {
-  var sizes = ['bytes', 'Kb', 'Mb', 'Gb', 'Tb'];
-  if (bytes == 0) return '0 Byte';
-  var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
-  return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
+// sidebar
+
+function showSidebar() {
+  document.getElementById("sidebar-btn").classList.add('active');
+  document.getElementById('sidebar').style.display = "";
+  document.getElementById('sidebar').classList.remove('hide');
 }
 
-function percentage(partialValue, totalValue) {
-  return (100 * partialValue) / totalValue;
+function hideSidebar() {
+  document.getElementById("sidebar-btn").classList.remove('active');
+  document.getElementById('sidebar').classList.add('hide');
+  setTimeout(function() {
+    document.getElementById('sidebar').style.display = "none";
+  }, 250);
 }
-
-// function deleteLoadingOverlay() {
-//   document.getElementById('loading-overlay').style.opacity = "0";
-//   setTimeout(function () {
-//     document.body.removeChild(document.getElementById('loading-overlay'));
-//   }, 500);
-// }
 
 function checkForUpdates() {
   ipcRenderer.send('request-check-for-updates');
@@ -756,7 +536,6 @@ function exitAppAnyway() {
 
 function esc() {
   removeSuggestions();
-  closeDownloadPanel();
   closeFindPanel();
 }
 
@@ -869,9 +648,6 @@ ipcRenderer.on('action-bookmark-this-page', (event, arg) => {
 // downloads menu
 ipcRenderer.on('action-open-downloads', (event, arg) => {
   goToDownloadsTab();
-});
-ipcRenderer.on('action-downloads-showpanel', (event, arg) => {
-  showDownloadPanel();
 });
 
 // main menu
@@ -1013,36 +789,50 @@ ipcRenderer.on('action-blur-window', (event, arg) => {
 ipcRenderer.on('action-focus-window', (event, arg) => {
   document.getElementById('etabs-tabgroup').classList.remove('blur');
 });
+ipcRenderer.on('action-open-url', (event, arg) => {
+  tabGroup.getActiveTab().webview.loadURL(arg);
+});
 
 // downloads
 ipcRenderer.on('action-create-download', (event, arg) => {
-  createDownload(arg.index, arg.name, arg.url);
+  // createDownload(arg.index, arg.name, arg.url);
+  document.getElementById('sidebar-webview').send('action-create-download', arg);
+  notif('Download started: ' + name, 'info');
 });
 ipcRenderer.on('action-create-stopped-download', (event, arg) => {
-  createStoppedDownload(arg.index, arg.name, arg.url, arg.path);
+  // createStoppedDownload(arg.index, arg.name, arg.url, arg.path);
+  document.getElementById('sidebar-webview').send('action-create-stopped-download', arg);
 });
 ipcRenderer.on('action-set-download-status-pause', (event, arg) => {
-  setDownloadStatusPause(arg.index, arg.bytes, arg.total, arg.name);
+  // setDownloadStatusPause(arg.index, arg.bytes, arg.total, arg.name);
+  document.getElementById('sidebar-webview').send('action-set-download-status-pause', arg);
 });
 ipcRenderer.on('action-set-download-status-done', (event, arg) => {
-  setDownloadStatusDone(arg.index, arg.name, arg.path);
+  // setDownloadStatusDone(arg.index, arg.name, arg.path);
+  document.getElementById('sidebar-webview').send('action-set-download-status-done', arg);
+  notif('Download complete', 'success');
 });
 ipcRenderer.on('action-set-download-status-failed', (event, arg) => {
-  setDownloadStatusFailed(arg.index, arg.state, arg.name, arg.url);
+  // setDownloadStatusFailed(arg.index, arg.state, arg.name, arg.url);
+  document.getElementById('sidebar-webview').send('action-set-download-status-failed', arg);
+  notif('Download ' + arg.state + ": " + arg.name, 'error');
 });
 ipcRenderer.on('action-set-download-status-interrupted', (event, arg) => {
-  setDownloadStatusInterrupted(arg.index, arg.name);
+  // setDownloadStatusInterrupted(arg.index, arg.name);
+  document.getElementById('sidebar-webview').send('action-set-download-status-interrupted', arg);
+  notif('Download interrupted: ' + arg.name, 'warning');
 });
 ipcRenderer.on('action-set-download-process', (event, arg) => {
-  setDownloadProcess(arg.index, arg.bytes, arg.total, arg.name);
+  // setDownloadProcess(arg.index, arg.bytes, arg.total, arg.name);
+  document.getElementById('sidebar-webview').send('action-set-download-process', arg);
 });
-ipcRenderer.on('action-clear-downloads', (event, arg) => {
-  var dwnlds = document.getElementsByClassName('download');
-  for (var i = 0; i < dwnlds.length; i++) {
-    dwnlds[i].parentNode.removeChild(dwnlds[i]);
-    i--;
-  }
-});
+// ipcRenderer.on('action-clear-downloads', (event, arg) => {
+//   var dwnlds = document.getElementsByClassName('download');
+//   for (var i = 0; i < dwnlds.length; i++) {
+//     dwnlds[i].parentNode.removeChild(dwnlds[i]);
+//     i--;
+//   }
+// });
 
 /*
 .####.##....##.####.########
@@ -1120,7 +910,7 @@ function init() {
     this.select();
   });
 
-  document.getElementById("show-sidebar-btn").addEventListener("click", (e) => {
+  document.getElementById("menu-btn").addEventListener("click", (e) => {
     ipcRenderer.send('request-side-menu');
   });
 
@@ -1152,18 +942,6 @@ function init() {
     tabGroup.getActiveTab().webview.stop();
   });
 
-  document.getElementById("bookmarks-btn").addEventListener("click", (e) => {
-    goToBookmarksTab();
-  });
-
-  document.getElementById("downloads-btn").addEventListener("click", (e) => {
-    if (document.getElementById("download-panel").style.display == "none") {
-      showDownloadPanel();
-    } else {
-      closeDownloadPanel();
-    }
-  });
-
   document.getElementById("find-input").addEventListener("keyup", function (event) {
     nextFindInPage();
   });
@@ -1172,11 +950,20 @@ function init() {
     removeSuggestions();
   });
 
+  document.getElementById("hide-sidebar-btn").addEventListener("click", (e) => {
+    hideSidebar();
+  });
+
+  document.getElementById("sidebar-btn").addEventListener("click", (e) => {
+    if (document.getElementById("sidebar").style.display == "none") {
+      showSidebar();
+    } else {
+      hideSidebar();
+    }
+  });
+
   document.getElementsByClassName('etabs-buttons')[0].title = "New tab";
   tabGroup.addTab();
-  goToBookmarksTab();
-
-  // deleteLoadingOverlay();
 };
 
 document.onreadystatechange = () => {

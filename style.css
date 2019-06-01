@@ -72,6 +72,17 @@
   }
 }
 
+@keyframes anim-sidebar {
+  from {
+    opacity: 0;
+    transform: translateX(64px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 /*
 ..######...######..########...#######..##.......##.......########.....###....########.
 .##....##.##....##.##.....##.##.....##.##.......##.......##.....##...##.##...##.....##
@@ -232,7 +243,7 @@
 }
 
 .notif-close {
-  transition: 0.25s;
+  /* transition: 0.25s; */
   position: absolute;
   right: 4px;
   padding: 4px;
@@ -249,20 +260,9 @@
   background-color: var(--color-over);
 }
 
-.notif-btn {
-  transition: 0.25s;
-  display: inline-block;
-  margin-top: 8px;
-  margin-right: 16px;
-}
-
-.notif-btn:hover {
-  opacity: 0.25;
-}
-
-.notif-btn-label {
-  padding-left: 4px;
-  vertical-align: super;
+.notif .nav-btn {
+  margin-right: 4px;
+  margin-top: 4px;
 }
 
 /*
@@ -322,7 +322,7 @@
 
 .title-bar-btn, #search-input {
   border-radius: var(--px-radius);
-  transition: 0.25s;
+  /* transition: 0.25s; */
   padding: 4px;
   /* border: 2px transparent solid; */
 }
@@ -334,7 +334,7 @@
 #search-input {
   vertical-align: top;
   /* background-color: transparent; */
-  width: calc(100% - 315px);
+  width: calc(100% - 269px);
 }
 
 .title-bar-btn:hover, #search-input:hover, #search-input:focus {
@@ -539,61 +539,6 @@ body.fullscreen #notif-panel {
   opacity: 0;
 }
 
-/* #sidebar {
-  position: absolute;
-  right: -300px;
-  overflow-y: hidden;
-  top: 80px;
-  height: calc(100vh - 80px);
-  width: 300px;
-  background-color: var(--color-back);
-  transition: 0.25s;
-}
-
-#sidebar.show {
-  right: 0;
-}
-
-#sidebar-menu {
-  border: 2px var(--color-over) solid;
-  overflow-y: scroll;
-  padding: 2px;
-  background-color: var(--color-over);
-  height: 100%;
-  width: 100%;
-} */
-
-/* .botbar {
-  text-align: center;
-  background-color: var(--color-over);
-  width: 100%;
-  position: fixed;
-  bottom: 0;
-  padding: 4px;
-}
-
-#toolbar {
-  height: 48px;
-  padding: 8px;
-  background-color: var(--color-over);
-}
-
-#toolbar .title-bar-btn {
-  float: right;
-}
-
-#toolbar .title-bar-btn.left {
-  float: left;
-}
-
-#trash-btn {
-  float: left;
-}
-
-#color-btn {
-  float: right;
-} */
-
 label {
   color: var(--color-top);
   word-break: break-all;
@@ -625,7 +570,7 @@ input:hover, input:focus {
 
 hr {
   border: 1px solid var(--color-over);
-  margin: 4px 0;
+  margin: 4px 8px;
 }
 
 /*
@@ -638,11 +583,6 @@ hr {
 .##....##.##.....##....###.......########.....##....##....##
 */
 
-.nav-btn {
-  transition: 0.25s;
-  display: inline-block;
-}
-
 .nav-btn img {
   margin-bottom: -7px;
 }
@@ -650,30 +590,15 @@ hr {
 .nav-btn {
   height: 32px;
   border-radius: var(--px-radius);
-  padding: 4px 16px;
-  /* border: 2px solid transparent; */
-  /* border: 2px solid var(--color-over); */
+  padding: 4px;
+  padding-right: 8px;
+  /* transition: 0.25s; */
+  display: inline-block;
 }
 
 .nav-btn:hover {
   background-color: var(--color-over);
 }
-
-/* .nav-btn.green {
-  background-color: var(--color-green);
-}
-
-.nav-btn.red {
-  background-color: var(--color-red);
-}
-
-.nav-btn.blue {
-  background-color: var(--color-blue);
-}
-
-.nav-btn.orange {
-  background-color: var(--color-orange);
-} */
 
 /*
 .########....###....########...######.
@@ -766,7 +691,7 @@ hr {
 .etabs-buttons button {
   -webkit-app-region: no-drag;
   outline: none;
-  transition: 0.25s;
+  /* transition: 0.25s; */
   float: left;
   color: var(--color-top);
   background: none;
@@ -830,7 +755,7 @@ hr {
 }
 
 .etabs-tab-buttons {
-  transition: 0.25s;
+  /* transition: 0.25s; */
   float: right;
   transform: scale(0);
 }
@@ -838,7 +763,7 @@ hr {
 .etabs-tab-buttons button {
   margin: -2px;
   outline: none;
-  transition: 0.25s;
+  /* transition: 0.25s; */
   display: inline-block;
   color: var(--color-top);
   background: none;
@@ -893,75 +818,54 @@ hr {
 }
 
 /*
-.########...#######..##......##.##....##.##........#######.....###....########.
-.##.....##.##.....##.##..##..##.###...##.##.......##.....##...##.##...##.....##
-.##.....##.##.....##.##..##..##.####..##.##.......##.....##..##...##..##.....##
-.##.....##.##.....##.##..##..##.##.##.##.##.......##.....##.##.....##.##.....##
-.##.....##.##.....##.##..##..##.##..####.##.......##.....##.#########.##.....##
-.##.....##.##.....##.##..##..##.##...###.##.......##.....##.##.....##.##.....##
-.########...#######...###..###..##....##.########..#######..##.....##.########.
+..######..####.########..########.########.....###....########.
+.##....##..##..##.....##.##.......##.....##...##.##...##.....##
+.##........##..##.....##.##.......##.....##..##...##..##.....##
+..######...##..##.....##.######...########..##.....##.########.
+.......##..##..##.....##.##.......##.....##.#########.##...##..
+.##....##..##..##.....##.##.......##.....##.##.....##.##....##.
+..######..####.########..########.########..##.....##.##.....##
 */
 
-#sidebar-downloads:empty::before {
-  content: "\2205  No downloads... Try to download something...";
-  color: var(--color-top);
-  height: 100px;
-  width: 100px;
-}
-
-#download-panel {
-  padding: 16px;
+#sidebar {
   position: absolute;
-  right: 8px;
-  top: 90px;
-  width: 400px;
-  border: 2px solid var(--color-over);
-  border-radius: var(--px-radius);
-  animation-name: anim-show;
-  animation-duration: 0.25s;
+  right: 0;
+  top: 82px;
+  width: 482px;
+  bottom: 0;
   background-color: var(--color-back);
-  z-index: 100;
-  /* box-shadow: 0 0 var(--px-shadow) var(--color-shadow); */
-  overflow-y: auto;
-  overflow-x: hidden;
-  max-height: calc(100% - 100px);
+  z-index: 5;
+  animation-name: anim-sidebar;
+  animation-duration: 0.25s;
+  border-left: 2px solid var(--color-over);
+  transition: 0.25s;
 }
 
-#download-panel-title {
-  vertical-align: super;
+#sidebar.hide {
+  opacity: 0;
+  transform: translateX(64px);
 }
 
+#sidebar-div {
+  height: 100%;
+  width: 156px;
+  padding: 4px;
+  border-right: 2px solid var(--color-over);
+  float: left;
+}
 
-.download {
-  /* border: 2px solid var(--color-over); */
+#sidebar-div div {
+  display: block;
   margin-bottom: 4px;
-  background-color: var(--color-over);
-  border-radius: var(--px-radius);
-  text-align: left;
-  padding: 8px;
 }
 
-.download:last-child {
-  margin-bottom: 0;
-}
-
-.download-buttons {
-  margin-left: -4px;
+#sidebar-div .title-bar-btn {
   margin-bottom: -4px;
-  margin-top: 4px;
 }
 
-.download-link, .download-file, .download-status {
-  overflow:hidden;
-  position: absolute;
-  white-space: nowrap;
-  word-break: keep-all;
-  text-overflow: ellipsis;
-  width: calc(100% - 32px);
-}
-
-.download-link, .download-file {
-  user-select: all;
+#sidebar-webview {
+  height: 100%;
+  width: calc(100% - 156px);
 }
 
 /*
@@ -975,9 +879,9 @@ hr {
 */
 
 #find-panel {
-  padding: 16px;
+  padding: 4px;
   position: absolute;
-  right: 8px;
+  left: 8px;
   bottom: 8px;
   width: 400px;
   border: 2px solid var(--color-over);
@@ -989,16 +893,30 @@ hr {
   /* box-shadow: 0 0 var(--px-shadow) var(--color-shadow); */
 }
 
-#find-panel-title {
-  vertical-align: super;
-}
-
 #find-input {
-  transition: 0.25s;
+  /* transition: 0.25s; */
   display: block;
   width: 100%;
   margin-bottom: 4px;
   /* border: 2px solid var(--color-over); */
+}
+
+/*
+.########..##........#######...######..##....##....########.####.########.##.......########
+.##.....##.##.......##.....##.##....##.##...##........##.....##.....##....##.......##......
+.##.....##.##.......##.....##.##.......##..##.........##.....##.....##....##.......##......
+.########..##.......##.....##.##.......#####..........##.....##.....##....##.......######..
+.##.....##.##.......##.....##.##.......##..##.........##.....##.....##....##.......##......
+.##.....##.##.......##.....##.##....##.##...##........##.....##.....##....##.......##......
+.########..########..#######...######..##....##.......##....####....##....########.########
+*/
+
+.block-title {
+  padding: 4px;
+}
+
+.block-title label {
+  vertical-align: super;
 }
 
 /*

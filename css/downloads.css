@@ -48,7 +48,7 @@
 */
 
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 12px;
 }
 
 ::-webkit-scrollbar-track {
@@ -57,8 +57,6 @@
 
 ::-webkit-scrollbar-thumb {
   background: var(--color-over);
-  border: 2px solid var(--color-over);
-  border-radius: var(--px-radius);
 }
 
 ::-webkit-input-placeholder {
@@ -74,7 +72,8 @@
 */
 
 body {
-  margin: 32px;
+  margin: 4px;
+  padding: 0;
 }
 
 label {
@@ -99,29 +98,15 @@ label.title {
 
 hr {
   border: 1px solid var(--color-over);
-}
-
-.container {
-  padding: 16px;
-  margin-bottom: 32px;
-  border-radius: var(--px-radius);
-  border: 2px solid var(--color-over);
-  /* background-color: var(--color-over); */
-  max-width: 720px;
+  margin: 4px 8px;
 }
 
 .block-title {
-  display: block;
-  margin-bottom: 8px;
+  padding: 4px;
 }
 
 .block-title label {
   vertical-align: super;
-}
-
-hr.dotted {
-  border: none;
-  border-bottom: 4px dotted var(--color-over);
 }
 
 /*
@@ -133,19 +118,18 @@ hr.dotted {
 */
 
 input {
-  margin: 4px;
+  /* margin: 4px; */
   padding: 8px;
   color: var(--color-top);
   outline: none;
   border: none;
   height: 32px;
-  width: 296px;
-  max-width: 512px;
+  width: 100%;
   border-radius: var(--px-radius);
   background-color: transparent;
   text-align: center;
   /* border: 2px var(--color-over) solid; */
-  transition: 0.25s;
+  /* transition: 0.25s; */
 }
 
 input:focus, input:hover {
@@ -153,11 +137,13 @@ input:focus, input:hover {
 }
 
 /*
-          ███    ██  █████  ██    ██     ██████  ████████ ███    ██
-          ████   ██ ██   ██ ██    ██     ██   ██    ██    ████   ██
-          ██ ██  ██ ███████ ██    ██     ██████     ██    ██ ██  ██
-          ██  ██ ██ ██   ██  ██  ██      ██   ██    ██    ██  ██ ██
-          ██   ████ ██   ██   ████       ██████     ██    ██   ████
+.##....##....###....##.....##....########..########.##....##
+.###...##...##.##...##.....##....##.....##....##....###...##
+.####..##..##...##..##.....##....##.....##....##....####..##
+.##.##.##.##.....##.##.....##....########.....##....##.##.##
+.##..####.#########..##...##.....##.....##....##....##..####
+.##...###.##.....##...##.##......##.....##....##....##...###
+.##....##.##.....##....###.......########.....##....##....##
 */
 
 .nav-btn img {
@@ -165,47 +151,34 @@ input:focus, input:hover {
 }
 
 .nav-btn {
-  /* float: right; */
-  margin-bottom: 4px;
-  transition: 0.25s;
-  display: inline-block;
-}
-
-.nav-btn {
   height: 32px;
   border-radius: var(--px-radius);
-  padding: 4px 16px;
-  /* border: 2px solid transparent;
-  border: 2px solid var(--color-over); */
+  padding: 4px;
+  padding-right: 8px;
+  /* transition: 0.25s; */
+  display: inline-block;
 }
 
 .nav-btn:hover {
   background-color: var(--color-over);
 }
 
-.nav-btn.green {
-  background-color: var(--color-green);
-}
-
-.nav-btn.red:hover {
-  background-color: var(--color-red);
-}
-
-.nav-btn.blue {
-  background-color: var(--color-blue);
-}
-
-.nav-btn.orange {
-  background-color: var(--color-orange);
-}
-
 /*
-          ██████   ██████  ██     ██ ███    ██ ██       ██████   █████  ██████
-          ██   ██ ██    ██ ██     ██ ████   ██ ██      ██    ██ ██   ██ ██   ██
-          ██   ██ ██    ██ ██  █  ██ ██ ██  ██ ██      ██    ██ ███████ ██   ██
-          ██   ██ ██    ██ ██ ███ ██ ██  ██ ██ ██      ██    ██ ██   ██ ██   ██
-          ██████   ██████   ███ ███  ██   ████ ███████  ██████  ██   ██ ██████
+.########...#######..##......##.##....##.##........#######.....###....########.
+.##.....##.##.....##.##..##..##.###...##.##.......##.....##...##.##...##.....##
+.##.....##.##.....##.##..##..##.####..##.##.......##.....##..##...##..##.....##
+.##.....##.##.....##.##..##..##.##.##.##.##.......##.....##.##.....##.##.....##
+.##.....##.##.....##.##..##..##.##..####.##.......##.....##.#########.##.....##
+.##.....##.##.....##.##..##..##.##...###.##.......##.....##.##.....##.##.....##
+.########...#######...###..###..##....##.########..#######..##.....##.########.
 */
+
+#sidebar-downloads:empty::before {
+  content: "\2205  No downloads... Try to download something...";
+  color: var(--color-top);
+  height: 100px;
+  width: 100px;
+}
 
 .download {
   /* border: 2px solid var(--color-over); */
@@ -214,9 +187,6 @@ input:focus, input:hover {
   border-radius: var(--px-radius);
   text-align: left;
   padding: 8px;
-  /* width: 296px; */
-  width: 100%;
-  display: inline-block;
   position: relative;
 }
 
@@ -224,21 +194,23 @@ input:focus, input:hover {
   margin-bottom: 0;
 }
 
-.download-label {
+.download-buttons {
+  margin-left: -4px;
+  margin-bottom: -4px;
+  margin-top: 4px;
+}
+
+.download-link, .download-file, .download-status {
   overflow:hidden;
   position: absolute;
   white-space: nowrap;
   word-break: keep-all;
   text-overflow: ellipsis;
-  width: calc(100% - 32px);
-  user-select: all;
+  width: calc(100% - 48px);
 }
 
-#sidebar-downloads:empty::before {
-  content: "\2205  No downloads... Try to download something...";
-  color: var(--color-top);
-  height: 100px;
-  width: 100px;
+.download-link, .download-file {
+  user-select: all;
 }
 
 /*

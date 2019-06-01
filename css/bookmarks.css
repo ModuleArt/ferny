@@ -45,15 +45,17 @@
 }
 
 /*
-          ██     ██ ███████ ██████  ██   ██ ██ ████████
-          ██     ██ ██      ██   ██ ██  ██  ██    ██
-          ██  █  ██ █████   ██████  █████   ██    ██
-          ██ ███ ██ ██      ██   ██ ██  ██  ██    ██
-           ███ ███  ███████ ██████  ██   ██ ██    ██
+.##......##.########.########..##....##.####.########
+.##..##..##.##.......##.....##.##...##...##.....##...
+.##..##..##.##.......##.....##.##..##....##.....##...
+.##..##..##.######...########..#####.....##.....##...
+.##..##..##.##.......##.....##.##..##....##.....##...
+.##..##..##.##.......##.....##.##...##...##.....##...
+..###..###..########.########..##....##.####....##...
 */
 
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 12px;
 }
 
 ::-webkit-scrollbar-track {
@@ -62,8 +64,6 @@
 
 ::-webkit-scrollbar-thumb {
   background: var(--color-over);
-  border: 2px solid var(--color-over);
-  border-radius: var(--px-radius);
 }
 
 ::-webkit-input-placeholder {
@@ -71,15 +71,18 @@
 }
 
 /*
-          ██████   ██████  ██████  ██    ██
-          ██   ██ ██    ██ ██   ██  ██  ██
-          ██████  ██    ██ ██   ██   ████
-          ██   ██ ██    ██ ██   ██    ██
-          ██████   ██████  ██████     ██
+.########...#######..########..##....##
+.##.....##.##.....##.##.....##..##..##.
+.##.....##.##.....##.##.....##...####..
+.########..##.....##.##.....##....##...
+.##.....##.##.....##.##.....##....##...
+.##.....##.##.....##.##.....##....##...
+.########...#######..########.....##...
 */
 
 body {
-  margin: 32px;
+  margin: 4px;
+  padding: 0;
 }
 
 label {
@@ -94,82 +97,14 @@ label.title {
   font-size: 48px;
 }
 
-
 /*
-          ██████  ██    ██ ████████ ████████  ██████  ███    ██
-          ██   ██ ██    ██    ██       ██    ██    ██ ████   ██
-          ██████  ██    ██    ██       ██    ██    ██ ██ ██  ██
-          ██   ██ ██    ██    ██       ██    ██    ██ ██  ██ ██
-          ██████   ██████     ██       ██     ██████  ██   ████
-*/
-
-.btn-label {
-  vertical-align: super;
-  cursor: pointer;
-}
-
-.btn.colored .btn-label {
-  color: var(--color-over);
-}
-
-.btn-body {
-  padding: 6px;
-  display: inline-block;
-  height: 32px;
-  vertical-align: top;
-  border-radius: 0 var(--px-radius) var(--px-radius) 0;
-  padding-left: 0;
-}
-
-.btn.colored .btn-body {
-  background-color: var(--color-over);
-  padding-left: 6px;
-}
-
-.btn {
-  border-radius: var(--px-radius);
-  margin: 8px;
-  transition: 0.25s;
-  display: inline-block;
-  cursor: pointer;
-}
-
-.btn {
-  padding: 0;
-  height: 32px;
-}
-
-.btn-icon {
-  padding: 4px;
-  padding-right: 0;
-}
-
-.btn.colored .btn-icon {
-  opacity: 0.5;
-}
-
-.btn:hover {
-  opacity: 0.25;
-}
-
-.btn.green {
-  background-color: var(--color-green);
-}
-
-.btn.red {
-  background-color: var(--color-red);
-}
-
-.btn.blue {
-  background-color: var(--color-blue);
-}
-
-/*
-          ██ ███    ██ ██████  ██    ██ ████████
-          ██ ████   ██ ██   ██ ██    ██    ██
-          ██ ██ ██  ██ ██████  ██    ██    ██
-          ██ ██  ██ ██ ██      ██    ██    ██
-          ██ ██   ████ ██       ██████     ██
+.####.##....##.########..##.....##.########
+..##..###...##.##.....##.##.....##....##...
+..##..####..##.##.....##.##.....##....##...
+..##..##.##.##.########..##.....##....##...
+..##..##..####.##........##.....##....##...
+..##..##...###.##........##.....##....##...
+.####.##....##.##.........#######.....##...
 */
 
 input {
@@ -182,8 +117,8 @@ input {
   border-radius: var(--px-radius);
   background-color: transparent;
   text-align: center;
-  transition: 0.25s;
-  width: 256px;
+  /* transition: 0.25s; */
+  width: 100%;
   margin-bottom: 4px;
 }
 
@@ -191,43 +126,53 @@ input:hover, input:focus {
   background-color: var(--color-over);
 }
 
+#search {
+  margin-bottom: 0;
+}
+
 /*
-          ██████   ██████   ██████  ██   ██ ███    ███  █████  ██████  ██   ██ ███████
-          ██   ██ ██    ██ ██    ██ ██  ██  ████  ████ ██   ██ ██   ██ ██  ██  ██
-          ██████  ██    ██ ██    ██ █████   ██ ████ ██ ███████ ██████  █████   ███████
-          ██   ██ ██    ██ ██    ██ ██  ██  ██  ██  ██ ██   ██ ██   ██ ██  ██       ██
-          ██████   ██████   ██████  ██   ██ ██      ██ ██   ██ ██   ██ ██   ██ ███████
+.########...#######...#######..##....##.##.....##....###....########..##....##..######.
+.##.....##.##.....##.##.....##.##...##..###...###...##.##...##.....##.##...##..##....##
+.##.....##.##.....##.##.....##.##..##...####.####..##...##..##.....##.##..##...##......
+.########..##.....##.##.....##.#####....##.###.##.##.....##.########..#####.....######.
+.##.....##.##.....##.##.....##.##..##...##.....##.#########.##...##...##..##.........##
+.##.....##.##.....##.##.....##.##...##..##.....##.##.....##.##....##..##...##..##....##
+.########...#######...#######..##....##.##.....##.##.....##.##.....##.##....##..######.
 */
 
 #bookmarks {
-  width: 100%;
+  display: block;
+  margin: -2px;
 }
 
 .bookmark {
   display: inline-block;
   border-radius: var(--px-radius);
   padding: 8px;
-  margin-right: 4px;
-  margin-bottom: 4px;
+  padding-right: 4px;
+  margin: 2px;
   text-decoration: none;
-  /* min-width: 150px; */
-  max-width: 296px;
+  width: calc(50% - 4px);
   vertical-align: top;
-  /* border: 2px var(--color-over) solid; */
-  transition: 0.25s;
+  /* transition: 0.25s; */
   text-align: left;
   position: relative;
   background-color: var(--color-over);
 }
 
-.bookmark:hover {
-  padding-right: 32px;
+.bookmark:hover label {
+  width: calc(100% - 60px);
 }
 
 .bookmark label {
   margin: 0 4px;
-  width: calc(50% - 24px);
-  word-break: break-all;
+  width: calc(100% - 36px);
+  overflow:hidden;
+  position: absolute;
+  white-space: nowrap;
+  word-break: keep-all;
+  text-overflow: ellipsis;
+  /* transition: 0.25s; */
 }
 
 .bookmark-icon {
@@ -245,24 +190,27 @@ input:hover, input:focus {
   top: 6px;
   width: 0;
   height: 0;
+  border-radius: var(--px-radius);
+  padding: 1px
+}
+
+.bookmark-options:hover {
+  background-color: var(--color-over);
 }
 
 .bookmark:hover .bookmark-options {
-  width: 24px;
-  height: 24px;
-  /* background-color: var(--color-over); */
+  width: 26px;
+  height: 26px;
 }
 
 .bookmark-menu {
+  border-top: 2px solid var(--color-over);
   display: none;
   margin-top: 8px;
   margin-left: -4px;
   margin-bottom: -8px;
-  transition: 0.25s;
-}
-
-.bookmark:hover .bookmark-menu {
-  background-color: transparent;
+  /* transition: 0.25s; */
+  padding-top: 4px;
 }
 
 .bookmark-menu.active {
@@ -270,58 +218,46 @@ input:hover, input:focus {
 }
 
 .bookmark-menu-btn {
-  transition: 0.25s;
+  /* transition: 0.25s; */
   border-radius: var(--px-radius);
   padding: 4px;
-  /* border: 2px transparent solid; */
 }
 
 .bookmark-menu-btn:hover {
   background-color: var(--color-over);
-  /* border: 2px var(--color-over) solid; */
 }
 
 /*
-          ██████  ██       ██████   ██████ ██   ██
-          ██   ██ ██      ██    ██ ██      ██  ██
-          ██████  ██      ██    ██ ██      █████
-          ██   ██ ██      ██    ██ ██      ██  ██
-          ██████  ███████  ██████   ██████ ██   ██
+.########..##........#######...######..##....##
+.##.....##.##.......##.....##.##....##.##...##.
+.##.....##.##.......##.....##.##.......##..##..
+.########..##.......##.....##.##.......#####...
+.##.....##.##.......##.....##.##.......##..##..
+.##.....##.##.......##.....##.##....##.##...##.
+.########..########..#######...######..##....##
 */
 
 hr {
   border: 1px solid var(--color-over);
-  margin: 16px 0;
-}
-
-.container {
-  padding: 16px;
-  margin-bottom: 32px;
-  border-radius: var(--px-radius);
-  border: 2px solid var(--color-over);
-  /* background-color: var(--color-over); */
-  max-width: 720px;
+  margin: 4px 8px;
 }
 
 .block-title {
-  margin-bottom: 8px;
+  padding: 4px;
 }
 
 .block-title label {
   vertical-align: super;
 }
 
-hr.dotted {
-  border: none;
-  border-bottom: 4px dotted var(--color-over);
-}
-
 /*
-          ███    ██  █████  ██    ██     ██████  ████████ ███    ██
-          ████   ██ ██   ██ ██    ██     ██   ██    ██    ████   ██
-          ██ ██  ██ ███████ ██    ██     ██████     ██    ██ ██  ██
-          ██  ██ ██ ██   ██  ██  ██      ██   ██    ██    ██  ██ ██
-          ██   ████ ██   ██   ████       ██████     ██    ██   ████
+.##....##....###....##.....##....########..########.##....##
+.###...##...##.##...##.....##....##.....##....##....###...##
+.####..##..##...##..##.....##....##.....##....##....####..##
+.##.##.##.##.....##.##.....##....########.....##....##.##.##
+.##..####.#########..##...##.....##.....##....##....##..####
+.##...###.##.....##...##.##......##.....##....##....##...###
+.##....##.##.....##....###.......########.....##....##....##
 */
 
 .nav-btn img {
@@ -329,40 +265,24 @@ hr.dotted {
 }
 
 .nav-btn {
-  /* margin: 2px; */
-  transition: 0.25s;
-  display: inline-block;
   height: 32px;
   border-radius: var(--px-radius);
-  padding: 4px 16px;
-  /* border: 2px solid transparent;
-  border: 2px solid var(--color-over); */
+  padding: 4px;
+  padding-right: 8px;
+  /* transition: 0.25s; */
+  display: inline-block;
 }
 
 .nav-btn:hover {
   background-color: var(--color-over);
 }
 
-.nav-btn.green {
-  background-color: var(--color-green);
-}
-
-.nav-btn.red {
-  background-color: var(--color-red);
-}
-
-.nav-btn.blue {
-  background-color: var(--color-blue);
-}
-
-.nav-btn.orange {
-  background-color: var(--color-orange);
-}
-
 /*
-          ████████ ██   ██ ███████     ███████ ███    ██ ██████
-             ██    ██   ██ ██          ██      ████   ██ ██   ██
-             ██    ███████ █████       █████   ██ ██  ██ ██   ██
-             ██    ██   ██ ██          ██      ██  ██ ██ ██   ██
-             ██    ██   ██ ███████     ███████ ██   ████ ██████
+.########.##.....##.########....########.##....##.########.
+....##....##.....##.##..........##.......###...##.##.....##
+....##....##.....##.##..........##.......####..##.##.....##
+....##....#########.######......######...##.##.##.##.....##
+....##....##.....##.##..........##.......##..####.##.....##
+....##....##.....##.##..........##.......##...###.##.....##
+....##....##.....##.########....########.##....##.########.
 */

@@ -9,213 +9,42 @@
   </head>
   <body>
     <center>
+      <label class="subtitle">Settings</label>
+      <hr>
       <div class="block-title show">
-        <img name="palette" class="theme-icon">
-        <label>Appearance</label>
+        <img name="color" class="theme-icon">
+        <label>Background color</label>
       </div>
-      <div class="container">
-        <div class="block-title show">
-          <img name="color" class="theme-icon">
-          <label>Background color</label>
-        </div>
-
-        <!-- <div class="color" onclick="requestTheme(this.style.backgroundColor)" style="background-color: rgb(255, 255, 255)">White</div>
-        <div class="color" onclick="requestTheme(this.style.backgroundColor)" style="background-color: rgb(236, 240, 241)">Clouds</div>
-        <div class="color" onclick="requestTheme(this.style.backgroundColor)" style="background-color: rgb(189, 195, 199)">Silver</div>
-        <div class="color" onclick="requestTheme(this.style.backgroundColor)" style="background-color: rgb(52, 73, 94)">Asphalt</div>
-        <div class="color" onclick="requestTheme(this.style.backgroundColor)" style="background-color: rgb(44, 62, 80)">Midnight</div>
-        <div class="color" onclick="requestTheme(this.style.backgroundColor)" style="background-color: rgb(58, 64, 76)">Arrow</div>
-        <div class="color" onclick="requestTheme(this.style.backgroundColor)" style="background-color: rgb(46, 44, 41)">Dark</div> -->
-
-        <div class="color" onclick="requestTheme('rgb(255, 255, 255)')"><div style="background-color: rgb(255, 255, 255)"></div>White</div>
-        <div class="color" onclick="requestTheme('rgb(210, 218, 226)')"><div style="background-color: rgb(210, 218, 226)"></div>Light</div>
-        <div class="color" onclick="requestTheme('rgb(72, 84, 96)')"><div style="background-color: rgb(72, 84, 96)"></div>Gray</div>
-        <div class="color" onclick="requestTheme('rgb(30, 39, 46)')"><div style="background-color: rgb(30, 39, 46)"></div>Dark</div>
-
-        <hr>
-
-        <div class="block-title show">
-          <img name="radius" class="theme-icon">
-          <label>Borders rounding</label>
-        </div>
-
-        <div class="nav-btn">
-          <label class="nav-btn-label">None
-          <input type="radio" onclick="requestBorderRadius(0)" class="checkbox" name="border-radius" value="0">
-        </div>
-        <div class="nav-btn">
-          <label class="nav-btn-label">Small
-          <input type="radio" onclick="requestBorderRadius(4)" class="checkbox" checked name="border-radius" value="4">
-        </div>
-        <div class="nav-btn">
-          <label class="nav-btn-label">Medium
-          <input type="radio" onclick="requestBorderRadius(8)" class="checkbox" name="border-radius" value="8">
-        </div>
-        <div class="nav-btn">
-          <label class="nav-btn-label">Large
-          <input type="radio" onclick="requestBorderRadius(12)" class="checkbox" name="border-radius" value="12">
-        </div>
-        <div class="nav-btn">
-          <label class="nav-btn-label">Circle
-          <input type="radio" onclick="requestBorderRadius(16)" class="checkbox" name="border-radius" value="16">
-        </div>
-
-        <!-- <hr>
-
-        <div class="block-title show">
-          <img name="font" class="theme-icon">
-          <label>Font</label>
-        </div> -->
-
+      <div class="color" onclick="requestTheme('rgb(255, 255, 255)')"><div style="background-color: rgb(255, 255, 255)"></div>White</div>
+      <div class="color" onclick="requestTheme('rgb(210, 218, 226)')"><div style="background-color: rgb(210, 218, 226)"></div>Light</div>
+      <div class="color" onclick="requestTheme('rgb(72, 84, 96)')"><div style="background-color: rgb(72, 84, 96)"></div>Gray</div>
+      <div class="color" onclick="requestTheme('rgb(30, 39, 46)')"><div style="background-color: rgb(30, 39, 46)"></div>Dark</div>
+      <hr>
+      <div class="block-title show">
+        <img name="radius" class="theme-icon">
+        <label>Borders rounding</label>
       </div>
-
-      <!-- <div class="container">
-        <div class="block-title show">
-          <img name="search" class="theme-icon">
-          <label>Search</label>
-        </div>
+      <div class="nav-checkbox">
+        <label>None
+        <input type="radio" onclick="requestBorderRadius(0)" class="checkbox" name="border-radius" value="0">
       </div>
-      <div class="container">
-        <div class="block-title show">
-          <img name="startup" class="theme-icon">
-          <label>On startup</label>
-        </div>
+      <div class="nav-checkbox">
+        <label>Small
+        <input type="radio" onclick="requestBorderRadius(4)" class="checkbox" checked name="border-radius" value="4">
       </div>
-      <div class="container">
-        <div class="block-title show">
-          <img name="security" class="theme-icon">
-          <label>Privacy and security</label>
-        </div>
+      <div class="nav-checkbox">
+        <label>Medium
+        <input type="radio" onclick="requestBorderRadius(8)" class="checkbox" name="border-radius" value="8">
       </div>
-      <div class="container">
-        <div class="block-title show">
-          <img name="download" class="theme-icon">
-          <label>Downloads</label>
-        </div>
+      <div class="nav-checkbox">
+        <label>Large
+        <input type="radio" onclick="requestBorderRadius(12)" class="checkbox" name="border-radius" value="12">
       </div>
-      <div class="container">
-        <div class="block-title show">
-          <img name="refresh" class="theme-icon">
-          <label>Reset</label>
-        </div>
-      </div> -->
+      <div class="nav-checkbox">
+        <label>Circle
+        <input type="radio" onclick="requestBorderRadius(16)" class="checkbox" name="border-radius" value="16">
+      </div>
     </center>
-    <script type="text/javascript">
-      const { ipcRenderer } = require('electron');
-
-      function requestTheme(color) {
-        changeTheme(color);
-        ipcRenderer.send('request-change-theme', color);
-      }
-
-      function requestBorderRadius(size) {
-        changeBorderRadius(size);
-        ipcRenderer.send('request-change-border-radius', size);
-      }
-
-      function changeBorderRadius(size) {
-        document.documentElement.style.setProperty('--px-radius', size + 'px');
-      }
-
-      function changeTheme(color) {
-        document.body.style.backgroundColor = color;
-
-        if(checkIfDark(color)) {
-          setIconsStyle('light');
-
-          document.documentElement.style.setProperty('--color-top', 'white');
-          document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.2)');
-        } else {
-          setIconsStyle('dark');
-
-          document.documentElement.style.setProperty('--color-top', 'black');
-          document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.1)');
-        }
-      }
-
-      function setIconsStyle(str) {
-        var icons = document.getElementsByClassName('theme-icon');
-
-        for(var i = 0; i < icons.length; i++) {
-          icons[i].src = "../themes/" + str + "/icons/" + icons[i].name + ".png";
-        }
-      }
-
-      function checkIfDark(color) {
-          var r, g, b, hsp;
-          if (String(color).match(/^rgb/)) {
-              color = String(color).match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/);
-
-              r = color[1];
-              g = color[2];
-              b = color[3];
-          } else {
-              color = +("0x" + color.slice(1).replace(
-              color.length < 5 && /./g, '$&$&'));
-
-              r = color >> 16;
-              g = color >> 8 & 255;
-              b = color & 255;
-          }
-
-          hsp = Math.sqrt(0.299 * (r * r) + 0.587 * (g * g) + 0.114 * (b * b));
-
-          if (hsp > 127.5) {
-              return false;
-          } else {
-              return true;
-          }
-      }
-
-      function loadTheme() {
-        var fs = require("fs");
-        var ppath = require('persist-path')('ArrowBrowser');
-
-        try {
-          var themeColor = fs.readFileSync(ppath + "\\json\\theme.json");
-          changeTheme(themeColor);
-        } catch (e) {
-
-        }
-      }
-
-      function loadBorderRadius() {
-        var fs = require("fs");
-        var ppath = require('persist-path')('ArrowBrowser');
-
-        try {
-          var borderRadius = fs.readFileSync(ppath + "\\json\\radius.json");
-          changeBorderRadius(borderRadius);
-
-          var radios = document.getElementsByName("border-radius");
-          for(var i = 0; i < radios.length; i++) {
-            if(radios[i].value == borderRadius) {
-              radios[i].checked = true;
-            }
-          }
-        } catch (e) {
-
-        }
-      }
-
-/*
-          ██ ███    ██ ██ ████████
-          ██ ████   ██ ██    ██
-          ██ ██ ██  ██ ██    ██
-          ██ ██  ██ ██ ██    ██
-          ██ ██   ████ ██    ██
-*/
-
-      function init() {
-        loadTheme();
-        loadBorderRadius();
-      }
-
-      document.onreadystatechange =  () => {
-        if (document.readyState == "complete") {
-          init();
-        }
-      };
-    </script>
+    <script type="text/javascript" src="../js/settings.js"></script>
   </body>
 </html>

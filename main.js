@@ -66,11 +66,7 @@ const sideMenu = Menu.buildFromTemplate([
  ] },
  // { label: 'Reading list', accelerator: 'CmdOrCtrl+R', click: () => {  }, enabled: false },
  { label: 'History', accelerator: 'CmdOrCtrl+H', click: () => {  }, enabled: false },
- { label: 'Downloads', icon: app.getAppPath() + '\\imgs\\icons16\\download.png', submenu: [
-   { label: 'Downloads', icon: app.getAppPath() + '\\imgs\\icons16\\download.png', accelerator: 'CmdOrCtrl+D', click: () => { mainWindow.webContents.send('action-downloads-showpanel'); } },
-   { type: 'separator' },
-   { label: 'Show all downloads', icon: app.getAppPath() + '\\imgs\\icons16\\downloads.png', click: () => { mainWindow.webContents.send('action-open-downloads'); } },
- ] },
+ { label: 'Downloads', icon: app.getAppPath() + '\\imgs\\icons16\\download.png', click: () => { mainWindow.webContents.send('action-open-downloads'); } },
  // { label: 'Closed tabs', accelerator: 'CmdOrCtrl+Q', click: () => {  }, enabled: false },
  { type: 'separator' },
  { label: 'Zoom', icon: app.getAppPath() + '\\imgs\\icons16\\zoom.png', submenu: [
@@ -233,6 +229,15 @@ app.on('ready', function() {
   mainWindow.webContents.once('did-finish-load', () => {
     loadAllData();
     mainWindow.show();
+
+    var data = null;
+    if (process.platform == 'win32' && process.argv.length >= 2) {
+      var openFilePath = process.argv[1];
+      // data = fs.readFileSync(openFilePath, 'utf-8');
+      // tabGroup.getActiveTab().webview.src = openFilePath;
+      mainWindow.webContents.send('action-open-url', openFilePath);
+      // console.log(process.argv);
+    }
   });
   mainWindow.on('resize', () => {
     mainWindow.webContents.send('action-resize-tabs');
@@ -354,6 +359,14 @@ app.on('ready', function() {
 ..##..##........##....##....##.....##.##.....##..##..##...###
 .####.##.........######.....##.....##.##.....##.####.##....##
 */
+
+ipcMain.on('request-notif', (event, arg) => {
+  mainWindow.webContents.send('action-notif', arg);
+});
+
+ipcMain.on('request-open-url', (event, arg) => {
+  mainWindow.webContents.send('action-open-url', arg);
+});
 
 ipcMain.on('request-open-settings', (event, arg) => {
   mainWindow.webContents.send('action-open-settings');

@@ -18,26 +18,36 @@
 
     <div id="notif-panel"></div>
 
-    <center id="download-panel" style="display: none;">
-      <img class="theme-icon" name="download">
-      <label id="download-panel-title">Downloads</label>
-      <hr>
-      <div id="sidebar-downloads"></div>
-      <hr>
-      <div class="nav-btn" onclick="goToDownloadsTab(); closeDownloadPanel();">
-        <img class="theme-icon" name="downloads">
-        <label>Show all</label>
+    <div id="sidebar" style="display: none;">
+      <div id="sidebar-div">
+        <img name='forward' class='title-bar-btn theme-icon' id="hide-sidebar-btn" title="Hide sidebar">
+        <hr>
+        <div id="bookmarks-btn" class="nav-btn active" onclick="goToBookmarksTab()">
+          <img class="theme-icon" name="bookmarks">
+          <label>Bookmarks</label>
+        </div>
+        <div id="downloads-btn" class="nav-btn" onclick="goToDownloadsTab()">
+          <img class="theme-icon" name="download">
+          <label>Downloads</label>
+        </div>
+        <hr>
+        <div id="settings-btn" class="nav-btn" onclick="goToSettingsTab()">
+          <img class="theme-icon" name="settings">
+          <label>Settings</label>
+        </div>
+        <div id="about-btn" class="nav-btn" onclick="goToAboutTab()">
+            <img class="theme-icon" name="about">
+            <label>About</label>
+          </div>
       </div>
-      <div class="nav-btn" onclick="closeDownloadPanel();">
-        <img class="theme-icon" name="cancel">
-        <label>Close</label>
-      </div>
-    </center>
+      <webview id="sidebar-webview" nodeintegration src="html/bookmarks.html"></webview>
+    </div>
 
     <center id="find-panel" style="display: none;">
-      <img class="theme-icon" name="search">
-      <label id="find-panel-title">Find in page</label>
-      <hr>
+      <div class="block-title">
+        <img name="search" class="theme-icon">
+        <label>Find in page</label>
+      </div>
       <input type="text" id="find-input" placeholder="Text to find">
       <div class="nav-btn" onclick="previousFindInPage()">
         <img class="theme-icon" name="up">
@@ -54,8 +64,6 @@
     </center>
 
     <div class="etabs-tabgroup" id="etabs-tabgroup">
-      <!-- <img src="imgs/titlebar-icon.png" class="title-bar-icon"> -->
-      <!-- <div class="title-bar-vr"></div> -->
       <div class="etabs-tabs" id="etabs-tabs"></div>
       <div class="etabs-buttons"></div>
       <img name='down-squared' class='title-bar-btn theme-icon' id="tabs-list-btn"/>
@@ -68,14 +76,12 @@
       <img name="refresh" id="refresh-btn" class="title-bar-btn theme-icon" title="Reload this page">
       <img name="stop" id="stop-btn" class="title-bar-btn theme-icon" title="Stop loading this page" style="display: none">
       <div class="title-bar-vr"></div>
-      <img name="bookmark" id="add-bookmark-btn" class="title-bar-btn theme-icon" title="Bookmark this page">
+      <img name="info" id="info-btn" class="title-bar-btn theme-icon disable" title="Website info">
       <input type="text" placeholder="Search Google or type a URL" id="search-input" oninput="getSuggestions()" onfocusout="removeSuggestions()">
+      <img name="bookmark" id="add-bookmark-btn" class="title-bar-btn theme-icon" title="Bookmark this page">
       <div class="title-bar-vr"></div>
-      <img name="bookmarks" id="bookmarks-btn" class="title-bar-btn theme-icon" title="Bookmarks">
-      <img name="history" id="history-btn" class="title-bar-btn theme-icon disable" title="History">
-      <img name="download" id="downloads-btn" class="title-bar-btn theme-icon" title="Downloads">
-      <div class="title-bar-vr"></div>
-      <img name="menu" id="show-sidebar-btn" class="title-bar-btn theme-icon" title="Show menu">
+      <img name="sidebar" id="sidebar-btn" class="title-bar-btn theme-icon" title="Sidebar (Bookmarks, history, downloads, settings)">
+      <img name="menu" id="menu-btn" class="title-bar-btn theme-icon" title="Show menu">
     </div>
 
     <div class="etabs-views" id="etabs-views"></div>
