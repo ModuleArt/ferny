@@ -149,6 +149,9 @@ var curDownloadNum = 0;
 
 var welcomeOn = 1;
 
+var startPage = "https://google.com";
+var searchEngine = "google";
+
 app.on('ready', function() {
 
 /*
@@ -270,6 +273,16 @@ app.on('ready', function() {
     }
   });
 
+/*
+.########...#######..##......##.##....##.##........#######.....###....########...######.
+.##.....##.##.....##.##..##..##.###...##.##.......##.....##...##.##...##.....##.##....##
+.##.....##.##.....##.##..##..##.####..##.##.......##.....##..##...##..##.....##.##......
+.##.....##.##.....##.##..##..##.##.##.##.##.......##.....##.##.....##.##.....##..######.
+.##.....##.##.....##.##..##..##.##..####.##.......##.....##.#########.##.....##.......##
+.##.....##.##.....##.##..##..##.##...###.##.......##.....##.##.....##.##.....##.##....##
+.########...#######...###..###..##....##.########..#######..##.....##.########...######.
+*/
+
   mainWindow.webContents.session.on('will-download', (event, item, webContents) => {
     curDownloadNum++;
 
@@ -280,7 +293,8 @@ app.on('ready', function() {
       item: item,
       url: item.getURL(),
       name: item.getFilename(),
-      path: ""
+      path: "",
+      time: item.getStartTime()
     };
 
     downloadsArray.push(Item);
@@ -289,8 +303,11 @@ app.on('ready', function() {
     let Data = {
       index: curnum,
       url: item.getURL(),
-      name: item.getFilename()
+      name: item.getFilename(),
+      time: item.getStartTime()
     };
+
+    console.log(item.getStartTime());
 
     mainWindow.webContents.send('action-create-download', Data);
 
@@ -359,6 +376,17 @@ app.on('ready', function() {
 ..##..##........##....##....##.....##.##.....##..##..##...###
 .####.##.........######.....##.....##.##.....##.####.##....##
 */
+
+ipcMain.on('request-set-search-engine', (event, arg) => {
+  searchEngine = arg;
+  saveSearchEngine();
+  mainWindow.webContents.send('action-set-search-engine', arg);
+});
+
+ipcMain.on('request-show-welcome-screen', (event, arg) => {
+  welcomeOn = 1;
+  showWelcomeWindow();
+});
 
 ipcMain.on('request-notif', (event, arg) => {
   mainWindow.webContents.send('action-notif', arg);
@@ -553,7 +581,7 @@ function showWelcomeWindow() {
     welcomeWindow.webContents.send('action-blur-window');
   });
 
-  welcomeWindow.loadFile(app.getAppPath() + '\\welcome.html');
+  welcomeWindow.loadFile(app.getAppPath() + '\\html\\welcome.html');
 
   welcomeWindow.webContents.once('did-finish-load', () => {
     // welcomeWindow.webContents.openDevTools();
@@ -576,6 +604,7 @@ function saveAllData() {
   // saveBookmarks();
   saveTheme();
   saveBorderRadius();
+  saveStartPage();
 }
 
 function saveDownloads() {
@@ -596,6 +625,18 @@ function saveTheme() {
   var fs = require('fs');
   fs.writeFileSync(app.getPath('userData') + "\\json\\theme.json", themeColor);
   console.log("saved THEMECOLOR: " + themeColor);
+}
+
+function saveStartPage() {
+  var fs = require('fs');
+  fs.writeFileSync(app.getPath('userData') + "\\json\\startpage.json", startPage);
+  console.log("saved STARTPAGE: " + startPage);
+}
+
+function saveSearchEngine() {
+  var fs = require('fs');
+  fs.writeFileSync(app.getPath('userData') + "\\json\\searchengine.json", searchEngine);
+  console.log("saved SEARCHENGINE: " + searchEngine);
 }
 
 function saveBounds() {
@@ -630,10 +671,24 @@ function loadAllData() {
     loadBounds();
     loadTheme();
     loadBorderRadius();
+    loadStartPage();
+    loadSearchEngine();
     loadDownloads();
   } else {
     fs.mkdirSync(app.getPath('userData') + "\\json");
     saveAllData();
+  }
+}
+
+function loadSearchEngine() {
+  var fs = require("fs");
+
+  try {
+    searchEngine = fs.readFileSync(app.getPath('userData') + "\\json\\searchengine.json");
+    mainWindow.webContents.send('action-set-search-engine', searchEngine);
+  } catch (e) {
+    saveSearchEngine();
+    mainWindow.webContents.send('action-notif', { type: "error", text: "Search engine read file error!" });
   }
 }
 
@@ -662,6 +717,7 @@ function loadDownloads() {
       mainWindow.webContents.send('action-create-stopped-download', Item);
     }
   } catch(err) {
+    saveDownloads();
     mainWindow.webContents.send('action-notif', { type: "error", text: "Downloads read file error!" });
   }
 }
@@ -696,7 +752,8 @@ function loadBounds() {
       });
     }
   } catch (e) {
-
+    saveBounds();
+    mainWindow.webContents.send('action-notif', { type: "error", text: "Window bounds read file error!" });
   }
 }
 
@@ -707,7 +764,8 @@ function loadTheme() {
     themeColor = fs.readFileSync(app.getPath('userData') + "\\json\\theme.json");
     mainWindow.webContents.send('action-change-theme', themeColor);
   } catch (e) {
-
+    saveTheme();
+    mainWindow.webContents.send('action-notif', { type: "error", text: "Background color read file error!" });
   }
 }
 
@@ -718,7 +776,21 @@ function loadBorderRadius() {
     borderRadius = fs.readFileSync(app.getPath('userData') + "\\json\\radius.json");
     mainWindow.webContents.send('action-change-border-radius', borderRadius);
   } catch (e) {
+    saveBorderRadius();
+    mainWindow.webContents.send('action-notif', { type: "error", text: "Borders rounging read file error!" });
+  }
+}
 
+function loadStartPage() {
+  var fs = require("fs");
+
+  try {
+    startPage = fs.readFileSync(app.getPath('userData') + "\\json\\startpage.json");
+    mainWindow.webContents.send('action-set-start-page', startPage);
+    mainWindow.webContents.send('action-open-url', startPage);
+  } catch (e) {
+    saveStartPage();
+    mainWindow.webContents.send('action-notif', { type: "error", text: "Start page file error!" });
   }
 }
 

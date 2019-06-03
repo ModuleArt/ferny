@@ -108,7 +108,7 @@ function loadDownloads() {
         name: arr[i].name,
         path: arr[i].path
       };
-      createStoppedDownload(arr[i].index, arr[i].name, arr[i].url, arr[i].path);
+      createStoppedDownload(arr[i].index, arr[i].name, arr[i].url, arr[i].path, arr[i].time);
     }
   } catch (e) {
 
@@ -116,15 +116,17 @@ function loadDownloads() {
 }
 
 // downloads
-function createDownload(index, name, url) {
+function createDownload(index, name, url, time) {
   var div = document.createElement('div');
   div.classList.add('download');
   div.id = "download-" + index;
+  div.name = "starting";
   div.innerHTML = `
+    <img class="download-icon" src="` + 'http://www.google.com/s2/favicons?domain=' + url + `"><label class="download-status">Starting</label><hr>
     <label>File: </label><label class="download-file" title="` + name + `">` + name + `</label><br>
-    <label class="download-status" value="starting">Starting</label><br>
     <label>Url: </label><label class="download-link" title="` + url + `">` + url + `</label><br>
-    <div class="download-buttons"></div>`;
+    <label>Date: </label><label class="download-date">` + epochToDate(time) + `</label> / <label>Time: </label><label class="download-time">` + epochToTime(time) + `</label><hr>
+    <center class="download-buttons"></center>`;
 
   var container = document.getElementById('sidebar-downloads');
   var dwndls = container.getElementsByClassName('download');
@@ -133,21 +135,25 @@ function createDownload(index, name, url) {
   } else {
     container.appendChild(div);
   }
+
+  // console.log(div.name);
 }
 
-function createStoppedDownload(index, name, url, path) {
+function createStoppedDownload(index, name, url, path, time) {
   var div = document.createElement('div');
   div.classList.add('download');
   div.id = "download-" + index;
+  div.name = "stopped";
   div.innerHTML = `
+    <img class="download-icon" src="` + 'http://www.google.com/s2/favicons?domain=' + url + `"><label class="download-status">Finished</label><hr>
     <label>File: </label><label class="download-file" title="` + name + `">` + name + `</label><br>
-    <label class="download-status" value="stopped">Finished</label><br>
-    <label>Url: </label><label class="download-link" title="` + url + `">` + url + `</label><br>`;
+    <label>Url: </label><label class="download-link" title="` + url + `">` + url + `</label><br>
+    <label>Date: </label><label class="download-date">` + epochToDate(time) + `</label> / <label>Time: </label><label class="download-time">` + epochToTime(time) + `</label><hr>`;
 
   var fs = require('fs');
   if (fs.existsSync(path.replace(/\\/g, "/"))) {
     div.innerHTML += `
-      <div class="download-buttons">
+      <center class="download-buttons">
         <div class="nav-btn" onclick="showItemInFolder('` + path.replace(/\\/g, "/") + `')">
           <img class="nav-btn-icon theme-icon" name="download-folder">
           <label>Folder</label>
@@ -160,7 +166,7 @@ function createStoppedDownload(index, name, url, path) {
           <img class="nav-btn-icon theme-icon" name="delete">
           <label>Remove</label>
         </div>
-      </div>`;
+      </center>`;
   } else {
     div.innerHTML += `
       <div class="download-buttons">
@@ -184,6 +190,8 @@ function createStoppedDownload(index, name, url, path) {
   }
 
   loadTheme();
+
+  // console.log(div.name);
 }
 
 function setDownloadProcess(index, bytes, total, name) {
@@ -192,8 +200,8 @@ function setDownloadProcess(index, bytes, total, name) {
   var status = div.getElementsByClassName('download-status')[0];
   status.innerHTML = "Downloading - " + bytesToSize(bytes) + " / " + bytesToSize(total) + " - " + Math.round(percentage(bytes, total)) + "%";
 
-  if (status.value != "process") {
-    status.value = "process";
+  if (div.name != "process") {
+    div.name = "process";
     var buttons = div.getElementsByClassName('download-buttons')[0];
     buttons.innerHTML = `
       <div class="nav-btn" onclick="pauseDownload(` + index + `)">
@@ -207,6 +215,8 @@ function setDownloadProcess(index, bytes, total, name) {
   }
 
   loadTheme();
+
+  // console.log(div.name);
 }
 
 function setDownloadStatusPause(index, bytes, total, name) {
@@ -215,8 +225,8 @@ function setDownloadStatusPause(index, bytes, total, name) {
   var status = div.getElementsByClassName('download-status')[0];
   status.innerHTML = "Pause - " + bytesToSize(bytes) + " / " + bytesToSize(total);
 
-  if (status.value != "pause") {
-    status.value = "pause";
+  if (div.name != "pause") {
+    div.name = "pause";
     var buttons = div.getElementsByClassName('download-buttons')[0];
     buttons.innerHTML = `
       <div class="nav-btn" onclick="resumeDownload(` + index + `)">
@@ -230,6 +240,8 @@ function setDownloadStatusPause(index, bytes, total, name) {
   } 
 
   loadTheme();
+
+  // console.log(div.name);
 }
 
 function setDownloadStatusDone(index, name, path) {
@@ -238,7 +250,7 @@ function setDownloadStatusDone(index, name, path) {
   var status = div.getElementsByClassName('download-status')[0];
   status.innerHTML = "Done";
 
-  status.value = "done";
+  div.name = "done";
 
   var buttons = div.getElementsByClassName('download-buttons')[0];
   buttons.innerHTML = `
@@ -256,6 +268,8 @@ function setDownloadStatusDone(index, name, path) {
     </div>`;
 
   loadTheme();
+
+  // console.log(div.name);
 }
 
 function setDownloadStatusFailed(index, state, name, link) {
@@ -264,7 +278,7 @@ function setDownloadStatusFailed(index, state, name, link) {
   var status = div.getElementsByClassName('download-status')[0];
   status.innerHTML = state.charAt(0).toUpperCase() + state.slice(1);;
 
-  status.value = "failed";
+  div.name = "failed";
 
   var buttons = div.getElementsByClassName('download-buttons')[0];
   buttons.innerHTML = `
@@ -278,6 +292,8 @@ function setDownloadStatusFailed(index, state, name, link) {
     </div>`;
 
   loadTheme();
+
+  // console.log(div.name);
 }
 
 function setDownloadStatusInterrupted(index, name) {
@@ -286,7 +302,7 @@ function setDownloadStatusInterrupted(index, name) {
   var status = div.getElementsByClassName('download-status')[0];
   status.innerHTML = "Interrupted";
 
-  status.value = "interrupted";
+  div.name = "interrupted";
 
   var buttons = div.getElementsByClassName('download-buttons')[0];
   buttons.innerHTML = `
@@ -300,6 +316,8 @@ function setDownloadStatusInterrupted(index, name) {
     </div>`;
 
   loadTheme();
+
+  // console.log(div.name);
 }
 
 function removeDownload(index) {
@@ -322,21 +340,31 @@ function resumeDownload(index) {
 
 function retryDownload(index, link) {
   removeDownload(index);
-  // tabGroup.addTab({
-  //   title: 'Retry download',
-  //   src: link,
-  //   active: true
-  // });
   ipcRenderer.send('request-open-url', link);
 }
 
 function clearArchive() {
-  ipcRenderer.send('request-clear-downloads');
-
   var dwnlds = document.getElementsByClassName('download');
-  for (var i = 0; i < dwnlds.length; i++) {
-    dwnlds[i].parentNode.removeChild(dwnlds[i]);
-    i--;
+  if(dwnlds.length > 0) {
+    var bool = true;
+    for (var i = 0; i < dwnlds.length; i++) {
+      if(dwnlds[i].name == "process" || dwnlds[i].name == "starting" || dwnlds[i].name == "pause") {
+        bool = false;
+        break;
+      }
+    }
+    if(bool) {
+      for(var i = 0; i < dwnlds.length; i++) {
+        dwnlds[i].parentNode.removeChild(dwnlds[i]);
+        i--;
+      }
+      ipcRenderer.send('request-clear-downloads');
+      notif("Downloads cleared", "success");
+    } else {
+      notif("First stop all downloads", "warning");
+    }
+  } else {
+    notif("The downloads are already empty", "info");
   }
 }
 
@@ -346,7 +374,7 @@ function showItemInFolder(path) {
   if (fs.existsSync(path)) {
     shell.showItemInFolder(path);
   } else {
-    notif("Folder missing", "error");
+    notif("File or folder are missing", "error");
   }
 }
 
@@ -356,7 +384,7 @@ function openItem(path) {
   if (fs.existsSync(path)) {
     shell.openItem(path);
   } else {
-    notif("File missing", "error");
+    notif("File or folder are missing", "error");
   }
 }
 
@@ -376,7 +404,28 @@ function notif(text, type) {
     text: text,
     type: type
   };
-  ipcRenderer.send('request-notf', Data)
+  ipcRenderer.send('request-notif', Data)
+}
+
+function epochToDate(time) {
+  let date = new Date(0);
+  date.setUTCSeconds(time);
+  var str = date.getDate() + " " + numberToMonth(date.getMonth()) + " " + date.getFullYear(); 
+  return str;
+}
+
+function epochToTime(time) {
+  let date = new Date(0);
+  date.setUTCSeconds(time);
+  var str = date.getHours() + ":" + date.getMinutes();
+  return str;
+}
+
+function numberToMonth(number) {
+  const monthNames = ["January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+  return monthNames[number];
 }
 
 /*
@@ -390,10 +439,10 @@ function notif(text, type) {
 */
 
 ipcRenderer.on('action-create-download', (event, arg) => {
-  createDownload(arg.index, arg.name, arg.url);
+  createDownload(arg.index, arg.name, arg.url, arg.time);
 });
 ipcRenderer.on('action-create-stopped-download', (event, arg) => {
-  createStoppedDownload(arg.index, arg.name, arg.url, arg.path);
+  createStoppedDownload(arg.index, arg.name, arg.url, arg.path, arg.time);
 });
 ipcRenderer.on('action-set-download-status-pause', (event, arg) => {
   setDownloadStatusPause(arg.index, arg.bytes, arg.total, arg.name);

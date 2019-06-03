@@ -3,7 +3,7 @@
   "productName": "ArrowBrowser",
   "companyName": "ModuleArt",
   "description": "Your web browser",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "license": "UNLICENSED",
   "author": {
     "name": "ModuleArt",
@@ -35,10 +35,13 @@
     "appId": "com.moduleart.arrowbrowser",
     "copyright": "Copyright © 2019 ModuleArt",
     "fileAssociations": {
-      "ext": [ "htm", "html", "shtml", "webp", "xht", "xhtml" ]
+      "ext": [ "htm", "html", "shtml", "webp", "xht", "xhtml" ],
+      "name": "Web page file",
+      "icon": "imgs\\files\\html.ico"
     },
     "nsis": {
-      "oneClick": false
+      "oneClick": false,
+      "installerIcon": "imgs\\installer.ico"
     },
     "win": {
       "publish": {

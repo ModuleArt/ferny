@@ -44,6 +44,56 @@
         <label>Circle
         <input type="radio" onclick="requestBorderRadius(16)" class="checkbox" name="border-radius" value="16">
       </div>
+      <img class="more-btn theme-icon" onclick="moreInfo(this)" title="More info" name="info">
+      <label class="more-label">The borders rounding of the interface elements.</label>
+      <hr>
+      <div class="block-title show">
+        <img name="create" class="theme-icon">
+        <label>New tab</label>
+      </div>
+      <input type="text" id="start-page-input" placeholder="New tab page url">
+      <div class="nav-btn" onclick="saveStartPage()">
+        <img class="theme-icon" name="save">
+        <label>Save</label>
+      </div>
+      <img class="more-btn theme-icon" onclick="moreInfo(this)" title="More info" name="info">
+      <label class="more-label">The page that will open when you create a new tab or when you start the browser.</label>
+      <hr>
+      <div class="block-title show">
+        <img name="search" class="theme-icon">
+        <label>Search engine</label>
+      </div>
+      <div class="nav-checkbox">
+        <label>Google
+        <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" checked name="search-engine" value="google">
+      </div>
+      <div class="nav-checkbox">
+        <label>Bing
+        <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" name="search-engine" value="bing">
+      </div>
+      <div class="nav-checkbox">
+        <label>DuckDuckGo
+        <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" name="search-engine" value="duckduckgo">
+      </div>
+      <div class="nav-checkbox">
+        <label>Wikipedia
+        <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" name="search-engine" value="wikipedia">
+      </div>
+      <div class="nav-checkbox">
+        <label>Yahoo
+        <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" name="search-engine" value="yahoo">
+      </div>
+      <img class="more-btn theme-icon" onclick="moreInfo(this)" title="More info" name="info">
+      <label class="more-label">Search engine used in the address bar.</label>
+      <hr>
+      <div class="block-title show">
+        <img name="box" class="theme-icon">
+        <label>Welcome</label>
+      </div>
+      <div class="nav-btn" onclick="showWelcomeScreen()">
+        <img class="nav-btn-icon theme-icon" name="show">
+        <label class="nav-btn-label">Show welcome screen</label>
+      </div>
     </center>
     <script type="text/javascript" src="../js/settings.js"></script>
   </body>

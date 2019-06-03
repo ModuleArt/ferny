@@ -1,5 +1,19 @@
 const { ipcRenderer } = require('electron');
 
+/*
+.########.##.....##.##....##..######..########.####..#######..##....##..######.
+.##.......##.....##.###...##.##....##....##.....##..##.....##.###...##.##....##
+.##.......##.....##.####..##.##..........##.....##..##.....##.####..##.##......
+.######...##.....##.##.##.##.##..........##.....##..##.....##.##.##.##..######.
+.##.......##.....##.##..####.##..........##.....##..##.....##.##..####.......##
+.##.......##.....##.##...###.##....##....##.....##..##.....##.##...###.##....##
+.##........#######..##....##..######.....##....####..#######..##....##..######.
+*/
+
+function requestSearchEngine(engine) {
+  ipcRenderer.send('request-set-search-engine', engine);
+}
+
 function requestTheme(color) {
   changeTheme(color);
   ipcRenderer.send('request-change-theme', color);
@@ -76,6 +90,37 @@ function loadTheme() {
   }
 }
 
+function loadStartPage() {
+  var fs = require("fs");
+  var ppath = require('persist-path')('ArrowBrowser');
+
+  try {
+    var startPage = fs.readFileSync(ppath + "\\json\\startpage.json");
+    document.getElementById('start-page-input').value = startPage;
+  } catch (e) {
+    alert(e);
+  }
+}
+
+function loadSearchEngine() {
+  var fs = require("fs");
+  var ppath = require('persist-path')('ArrowBrowser');
+
+  try {
+    var searchEngine = fs.readFileSync(ppath + "\\json\\searchengine.json");
+
+    var radios = document.getElementsByName("search-engine");
+    for(var i = 0; i < radios.length; i++) {
+      if(radios[i].value == searchEngine) {
+        radios[i].checked = true;
+        break;
+      }
+    }
+  } catch (e) {
+
+  }
+}
+
 function loadBorderRadius() {
   var fs = require("fs");
   var ppath = require('persist-path')('ArrowBrowser');
@@ -88,6 +133,7 @@ function loadBorderRadius() {
     for(var i = 0; i < radios.length; i++) {
       if(radios[i].value == borderRadius) {
         radios[i].checked = true;
+        break;
       }
     }
   } catch (e) {
@@ -95,17 +141,54 @@ function loadBorderRadius() {
   }
 }
 
+function showWelcomeScreen() {
+  var fs = require('fs');
+  var ppath = require('persist-path')('ArrowBrowser');
+
+  fs.writeFileSync(ppath + "\\json\\welcome.json", 1);
+
+  ipcRenderer.send("request-show-welcome-screen");
+}
+
+function saveStartPage() {
+  var url = document.getElementById('start-page-input').value;
+
+  var fs = require('fs');
+  var ppath = require('persist-path')('ArrowBrowser');
+
+  fs.writeFileSync(ppath + "\\json\\startPage.json", url);
+
+  notif("Start page saved: " + url, "success");
+}
+
+function notif(text, type) {
+  let Data = {
+    text: text,
+    type: type
+  };
+  ipcRenderer.send('request-notif', Data)
+}
+
+function moreInfo(btn) {
+  btn.classList.toggle('active');
+  btn.nextElementSibling.classList.toggle('active');
+}
+
 /*
-    ██ ███    ██ ██ ████████
-    ██ ████   ██ ██    ██
-    ██ ██ ██  ██ ██    ██
-    ██ ██  ██ ██ ██    ██
-    ██ ██   ████ ██    ██
+.####.##....##.####.########
+..##..###...##..##.....##...
+..##..####..##..##.....##...
+..##..##.##.##..##.....##...
+..##..##..####..##.....##...
+..##..##...###..##.....##...
+.####.##....##.####....##...
 */
 
 function init() {
   loadTheme();
   loadBorderRadius();
+  loadStartPage();
+  loadSearchEngine();
 }
 
 document.onreadystatechange =  () => {
@@ -113,3 +196,13 @@ document.onreadystatechange =  () => {
     init();
   }
 };
+
+/*
+.########.##.....##.########....########.##....##.########.
+....##....##.....##.##..........##.......###...##.##.....##
+....##....##.....##.##..........##.......####..##.##.....##
+....##....#########.######......######...##.##.##.##.....##
+....##....##.....##.##..........##.......##..####.##.....##
+....##....##.....##.##..........##.......##...###.##.....##
+....##....##.....##.########....########.##....##.########.
+*/

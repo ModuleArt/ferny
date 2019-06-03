@@ -121,13 +121,11 @@ label.title {
 }
 
 .about-icon {
-  /* transition: 0.25s; */
   border-radius: 50%;
   padding: 4px;
 }
 
 .about-icon:hover {
-  /* transform: scale(0.95); */
   background-color: var(--color-over);
 }
 

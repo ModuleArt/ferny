@@ -87,13 +87,15 @@
     <div class="etabs-views" id="etabs-views"></div>
     <label id="target-url"></label>
 
-    <div id="search-suggest">
+    <div id="search-suggest" style="display: none;">
       <div id="search-suggest-container"></div>
-      <img name="google" class="title-bar-btn theme-icon active" title="Search with Google" onclick="searchWith(null, 'google')">
-      <img name="bing" class="title-bar-btn theme-icon" title="Search with Bing" onclick="searchWith(null, 'bing')">
-      <img name="duck-duck-go" class="title-bar-btn theme-icon" title="Search with DuckDuckGo" onclick="searchWith(null, 'duck')">
-      <img name="wikipedia" class="title-bar-btn theme-icon" title="Search with Wikipedia" onclick="searchWith(null, 'wiki')">
-      <img name="up-squared" id="close-suggest-btn" class="title-bar-btn theme-icon" title="Close search panel">
+      <hr>
+      <img name="google" class="title-bar-btn theme-icon search-engine" title="Search with Google" onclick="searchWith(null, this.name)">
+      <img name="bing" class="title-bar-btn theme-icon search-engine" title="Search with Bing" onclick="searchWith(null, this.name)">
+      <img name="duckduckgo" class="title-bar-btn theme-icon search-engine" title="Search with DuckDuckGo" onclick="searchWith(null, this.name)">
+      <img name="wikipedia" class="title-bar-btn theme-icon search-engine" title="Search with Wikipedia" onclick="searchWith(null, this.name)">
+      <img name="yahoo" class="title-bar-btn theme-icon search-engine" title="Search with Yahoo" onclick="searchWith(null, this.name)">
+      <img name="up" id="close-suggest-btn" class="title-bar-btn theme-icon search-engine" title="Close search panel">
     </div>
 
     <script type="text/javascript" src="browser.js"></script>

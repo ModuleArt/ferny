@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <link rel="stylesheet" href="welcome.css">
+        <link rel="stylesheet" href="../css/welcome.css">
         <title>Welcome</title>
     </head>
     <body>
@@ -34,16 +34,17 @@
             </div>
         
             <div class="tab active">
-                <label>Welcome to</label>
-                <img class="about-icon" src="imgs/icon128.png">
-                <label class="subtitle">Arrow Browser</label><br>
-                <label id="version"></label>
+                <label class="subtitle">Welcome to</label>
+                <hr>
+                <div class="container">
+                    <img class="about-icon" src="../imgs/icon128.png" onclick="openAppPage()" title="App page">
+                    <label class="subtitle">ArrowBrowser</label><br>
+                    <label id="version"></label>
+                </div>
             </div>
             <div class="tab">
-                <div class="block-title">
-                    <img name="palette" class="theme-icon">
-                    <label>Appearance</label>
-                </div>
+                <label class="subtitle">Appearance</label>
+                <hr>
                 <div class="container">
                     <div class="block-title">
                         <img name="color" class="theme-icon">
@@ -75,10 +76,8 @@
                 </div>
             </div>
             <div class="tab">
-                <div class="block-title">
-                    <img name="todo-list" class="theme-icon">
-                    <label>Finish</label>
-                </div>
+                <label class="subtitle">Finish</label>
+                <hr>
                 <div class="container">
                     <div class="block-title">
                         <img name="checked" class="theme-icon">
@@ -92,6 +91,6 @@
                 </div>
             </div>
         </center>
-        <script type="text/javascript" src="welcome.js"></script>
+        <script type="text/javascript" src="../js/welcome.js"></script>
     </body>
 </html>

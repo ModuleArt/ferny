@@ -209,8 +209,18 @@ input:focus, input:hover {
   width: calc(100% - 48px);
 }
 
-.download-link, .download-file {
+.download-link, .download-file, .download-date, .download-time {
   user-select: all;
+}
+
+.download-icon {
+  width: 16px;
+  height: 16px;
+  filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.5));
+  vertical-align: middle;
+  /* margin: 2px; */
+  margin-right: 8px;
+  margin-bottom: 4px;
 }
 
 /*

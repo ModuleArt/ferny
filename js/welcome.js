@@ -50,7 +50,7 @@ function setIconsStyle(str) {
   var icons = document.getElementsByClassName('theme-icon');
 
   for(var i = 0; i < icons.length; i++) {
-    icons[i].src = "themes/" + str + "/icons/" + icons[i].name + ".png";
+    icons[i].src = "../themes/" + str + "/icons/" + icons[i].name + ".png";
   }
 }
 
@@ -208,6 +208,10 @@ function changeWelcome(bool) {
   } else {
     fs.writeFileSync(ppath + "\\json\\welcome.json", 0);
   }
+}
+
+function openAppPage() {
+  ipcRenderer.send('request-open-url', "https://moduleart.github.io/arrowbrowser");
 }
 
 /*

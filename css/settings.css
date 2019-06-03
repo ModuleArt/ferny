@@ -131,6 +131,34 @@ hr.dotted {
 }
 
 /*
+.####.##....##.########..##.....##.########
+..##..###...##.##.....##.##.....##....##...
+..##..####..##.##.....##.##.....##....##...
+..##..##.##.##.########..##.....##....##...
+..##..##..####.##........##.....##....##...
+..##..##...###.##........##.....##....##...
+.####.##....##.##.........#######.....##...
+*/
+
+input[type=text] {
+  outline: none;
+  border: none;
+  color: var(--color-top);
+  font-size: var(--px-font);
+  height: 32px;
+  padding: 8px;
+  border-radius: var(--px-radius);
+  background-color: transparent;
+  text-align: center;
+  width: 100%;
+  margin-top: 4px;
+}
+
+input[type=text]:hover, input[type=text]:focus {
+  background-color: var(--color-over);
+}
+
+/*
 .##....##....###....##.....##....########..########.##....##
 .###...##...##.##...##.....##....##.....##....##....###...##
 .####..##..##...##..##.....##....##.....##....##....####..##
@@ -149,12 +177,45 @@ hr.dotted {
   border-radius: var(--px-radius);
   padding: 4px;
   padding-right: 8px;
-  /* transition: 0.25s; */
+  margin-top: 4px;
   display: inline-block;
 }
 
 .nav-btn:hover {
   background-color: var(--color-over);
+}
+
+/*
+.##.....##..#######..########..########....########..########.##....##
+.###...###.##.....##.##.....##.##..........##.....##....##....###...##
+.####.####.##.....##.##.....##.##..........##.....##....##....####..##
+.##.###.##.##.....##.########..######......########.....##....##.##.##
+.##.....##.##.....##.##...##...##..........##.....##....##....##..####
+.##.....##.##.....##.##....##..##..........##.....##....##....##...###
+.##.....##..#######..##.....##.########....########.....##....##....##
+*/
+
+.more-btn {
+  padding: 4px;
+  border-radius: var(--px-radius);
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.more-btn:hover, .more-btn.active {
+  background-color: var(--color-over);
+}
+
+.more-label {
+  margin-top: 4px;
+  display: none;
+  padding: 4px;
+  background-color: var(--color-over);
+  border-radius: var(--px-radius);
+}
+
+.more-label.active {
+  display: block;
 }
 
 /*
@@ -168,10 +229,10 @@ hr.dotted {
 */
 
 .color {
-  padding: 2px 16px;
+  padding: 2px 8px;
   display: inline-block;
   border-radius: var(--px-radius);
-  /* transition: 0.25s; */
+  margin-top: 4px;
   color: var(--color-top);
 }
 
@@ -202,8 +263,7 @@ hr.dotted {
   padding: 4px;
   padding-left: 8px;
   border-radius: var(--px-radius);
-  /* transition: 0.25s; */
-  margin-bottom: 4px;
+  margin-top: 4px;
 }
 
 .nav-checkbox:hover {

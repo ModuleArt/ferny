@@ -29,7 +29,7 @@ const sslCertificate = require('get-ssl-certificate');
 let tabGroup = new TabGroup({
   newTab: {
     title: 'New Tab',
-    src: 'https://google.com', 
+    src: "https://google.com", 
     active: true
   },
   newTabButtonText: "<img name='create' class='theme-icon'/>",
@@ -74,16 +74,23 @@ tabGroup.on("tab-added", (tab, tabGroup) => {
   });
 
   webview.addEventListener('new-window', (e) => {
-    // console.log(e);
-    tabGroup.addTab({
-      title: 'New Tab',
-      src: e.url,
-      active: true
-    });
+    if(e.disposition == "background-tab") {
+      tabGroup.addTab({
+        title: 'New Background Tab',
+        src: e.url,
+        active: false
+      });
+    } else {
+      tabGroup.addTab({
+        title: 'New Tab',
+        src: e.url,
+        active: true
+      });
+    }
+    
   });
 
   webview.addEventListener('page-favicon-updated', (e) => {
-    // tab.setIcon('http://www.google.com/s2/favicons?domain=' + webview.getURL());
     tab.setIcon(e.favicons[0]);
   });
 
@@ -177,10 +184,6 @@ tabGroup.on("tab-added", (tab, tabGroup) => {
       // tabGroup.getActiveTab().webview.src = 'html/error.html';
     }
   });
-
-  // webview.addEventListener('focus', (e) => {
-  //   removeSuggestions();
-  // });
 
   document.getElementsByClassName('etabs-tab-buttons')[tab.getPosition(false) - 1].title = "Close tab";
   resizeTabs();
@@ -287,36 +290,48 @@ function searchWith(text, engine) {
     tabGroup.getActiveTab().webview.loadURL("https://google.com/search?q=" + text);
   } else if(engine == "bing") {
     tabGroup.getActiveTab().webview.loadURL("https://bing.com/search?q=" + text);
-  } else if(engine == "duck") {
+  } else if(engine == "duckduckgo") {
     tabGroup.getActiveTab().webview.loadURL("https://duckduckgo.com/?q=" + text);
   } else if(engine == "yahoo") {
-    location.href = "https://search.yahoo.com/search?p=" + text;
+    tabGroup.getActiveTab().webview.loadURL("https://search.yahoo.com/search?p=" + text);
   } else if(engine == "yandex") {
     location.href = "https://yandex.com/search/?text=" + text;
-  } else if(engine == "wiki") {
+  } else if(engine == "wikipedia") {
     tabGroup.getActiveTab().webview.loadURL("https://en.wikipedia.org/wiki/Special:Search?search=" + text);
   }
 }
 
 function navigateSuggest(text) {
-  searchWith(text, "google");
+  var engines = document.getElementsByClassName('search-engine');
+  for(var i = 0; i < engines.length; i++) {
+    if(engines[i].classList.contains('active')) {
+      searchWith(text, engines[i].name);
+      break;
+    }
+  }
 }
 
 function removeSuggestions() {
   setTimeout(function () {
-    document.getElementById('search-suggest').classList.remove("show");
-    document.getElementById('search-suggest-container').innerHTML = "";
-  }, 100);
+    var suggest = document.getElementById('search-suggest');
+    suggest.classList.add("hide");
+    setTimeout(function () {
+      suggest.style.display = "none";
+      // document.getElementById('search-suggest-container').innerHTML = "";
+    }, 250);
+  }, 150);
 }
 
 function getSuggestions() {
   closeFindPanel();
+  hideSidebar();
 
   var input = document.getElementById('search-input');
   var suggest = document.getElementById('search-suggest');
   var container = document.getElementById('search-suggest-container');
 
-  suggest.classList.add("show");
+  suggest.style.display = "";
+  suggest.classList.remove("hide");
 
   if (input.value.length > 0) {
     autoSuggest.getQuerySuggestions(input.value, function (err, suggestions) {
@@ -483,9 +498,14 @@ function applyBorderRadius(size) {
 // sidebar
 
 function showSidebar() {
+  closeFindPanel();
+  removeSuggestions();
+
   document.getElementById("sidebar-btn").classList.add('active');
   document.getElementById('sidebar').style.display = "";
   document.getElementById('sidebar').classList.remove('hide');
+
+  // document.getElementById('sidebar-webview').openDevTools();
 }
 
 function hideSidebar() {
@@ -537,11 +557,13 @@ function exitAppAnyway() {
 function esc() {
   removeSuggestions();
   closeFindPanel();
+  hideSidebar();
 }
 
 // find in page
 function showFindPanel() {
-  esc();
+  removeSuggestions();
+  hideSidebar();
 
   document.getElementById("find-panel").style.display = "";
   document.getElementById("find-input").select();
@@ -790,49 +812,54 @@ ipcRenderer.on('action-focus-window', (event, arg) => {
   document.getElementById('etabs-tabgroup').classList.remove('blur');
 });
 ipcRenderer.on('action-open-url', (event, arg) => {
-  tabGroup.getActiveTab().webview.loadURL(arg);
+  tabGroup.addTab({
+    title: 'New Tab',
+    src: arg,
+    active: true
+  });
+});
+ipcRenderer.on('action-set-search-engine', (event, arg) => {
+  var engines = document.getElementsByClassName('search-engine');
+  for(var i = 0; i < engines.length; i++) {
+    if(engines[i].name == arg) {
+      engines[i].classList.add('active');
+    } else {
+      engines[i].classList.remove('active');
+    }
+  }
+});
+ipcRenderer.on('action-set-start-page', (event, arg) => {
+  // startPage = arg;
+  tabGroup.options.newTab.src = arg;
+  // console.log(tabGroup);
 });
 
 // downloads
 ipcRenderer.on('action-create-download', (event, arg) => {
-  // createDownload(arg.index, arg.name, arg.url);
   document.getElementById('sidebar-webview').send('action-create-download', arg);
-  notif('Download started: ' + name, 'info');
+  notif('Download started: ' + arg.name, 'info');
 });
 ipcRenderer.on('action-create-stopped-download', (event, arg) => {
-  // createStoppedDownload(arg.index, arg.name, arg.url, arg.path);
   document.getElementById('sidebar-webview').send('action-create-stopped-download', arg);
 });
 ipcRenderer.on('action-set-download-status-pause', (event, arg) => {
-  // setDownloadStatusPause(arg.index, arg.bytes, arg.total, arg.name);
   document.getElementById('sidebar-webview').send('action-set-download-status-pause', arg);
 });
 ipcRenderer.on('action-set-download-status-done', (event, arg) => {
-  // setDownloadStatusDone(arg.index, arg.name, arg.path);
   document.getElementById('sidebar-webview').send('action-set-download-status-done', arg);
-  notif('Download complete', 'success');
+  notif('Download complete: ' + arg.name, 'success');
 });
 ipcRenderer.on('action-set-download-status-failed', (event, arg) => {
-  // setDownloadStatusFailed(arg.index, arg.state, arg.name, arg.url);
   document.getElementById('sidebar-webview').send('action-set-download-status-failed', arg);
   notif('Download ' + arg.state + ": " + arg.name, 'error');
 });
 ipcRenderer.on('action-set-download-status-interrupted', (event, arg) => {
-  // setDownloadStatusInterrupted(arg.index, arg.name);
   document.getElementById('sidebar-webview').send('action-set-download-status-interrupted', arg);
   notif('Download interrupted: ' + arg.name, 'warning');
 });
 ipcRenderer.on('action-set-download-process', (event, arg) => {
-  // setDownloadProcess(arg.index, arg.bytes, arg.total, arg.name);
   document.getElementById('sidebar-webview').send('action-set-download-process', arg);
 });
-// ipcRenderer.on('action-clear-downloads', (event, arg) => {
-//   var dwnlds = document.getElementsByClassName('download');
-//   for (var i = 0; i < dwnlds.length; i++) {
-//     dwnlds[i].parentNode.removeChild(dwnlds[i]);
-//     i--;
-//   }
-// });
 
 /*
 .####.##....##.####.########
@@ -963,7 +990,6 @@ function init() {
   });
 
   document.getElementsByClassName('etabs-buttons')[0].title = "New tab";
-  tabGroup.addTab();
 };
 
 document.onreadystatechange = () => {

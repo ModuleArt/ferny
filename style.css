@@ -83,6 +83,17 @@
   }
 }
 
+@keyframes anim-suggest {
+  from {
+    opacity: 0;
+    transform: translateY(-64px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /*
 ..######...######..########...#######..##.......##.......########.....###....########.
 .##....##.##....##.##.....##.##.....##.##.......##.......##.....##...##.##...##.....##
@@ -194,7 +205,6 @@
   border: 2px solid var(--color-over);
   animation-name: anim-show;
   animation-duration: 0.5s;
-  /* box-shadow: 0 0 var(--px-shadow) var(--color-shadow); */
 }
 
 .notif.success {
@@ -243,7 +253,6 @@
 }
 
 .notif-close {
-  /* transition: 0.25s; */
   position: absolute;
   right: 4px;
   padding: 4px;
@@ -298,14 +307,10 @@
   top: 40px;
   padding: 4px;
   height: 42px;
-  /* box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.25); */
   border-bottom: 2px solid var(--color-over);
+  z-index: 102;
+  background-color: var(--color-back);
 }
-
-/* .title-bar-icon {
-  padding: 4px;
-  float: left;
-} */
 
 .etabs-tabgroup .title-bar-vr {
   float: left;
@@ -322,24 +327,16 @@
 
 .title-bar-btn, #search-input {
   border-radius: var(--px-radius);
-  /* transition: 0.25s; */
   padding: 4px;
-  /* border: 2px transparent solid; */
 }
-
-/* .title-bar-btn {
-  padding: 6px;
-} */
 
 #search-input {
   vertical-align: top;
-  /* background-color: transparent; */
   width: calc(100% - 269px);
 }
 
 .title-bar-btn:hover, #search-input:hover, #search-input:focus {
   background-color: var(--color-over);
-  /* border: 2px var(--color-over) solid; */
 }
 
 .title-bar-btn.disable {
@@ -349,8 +346,6 @@
 
 .title-bar-btn.active {
   background-color: var(--color-over);
-  /* border: 2px var(--color-over) solid; */
-  /* box-shadow: var(--box-shadow); */
 }
 
 .title-bar-vr {
@@ -366,15 +361,9 @@
   float: right;
 }
 
-/* .etabs-tabgroup.blur #window-controls .button {
-  opacity: var(--opacity-blur);
-} */
-
 #window-controls.windows {
   display: grid;
   grid-template-columns: repeat(3, 46px);
-  /* margin-top: -6px;
-  margin-right: -6px; */
 }
 #window-controls.windows .button {
   height: 32px;
@@ -401,38 +390,39 @@
 }
 
 /*
-..######..########....###....########...######..##.....##.....######..##.....##..######....######...########..######..########
-.##....##.##.........##.##...##.....##.##....##.##.....##....##....##.##.....##.##....##..##....##..##.......##....##....##...
-.##.......##........##...##..##.....##.##.......##.....##....##.......##.....##.##........##........##.......##..........##...
-..######..######...##.....##.########..##.......#########.....######..##.....##.##...####.##...####.######....######.....##...
-.......##.##.......#########.##...##...##.......##.....##..........##.##.....##.##....##..##....##..##.............##....##...
-.##....##.##.......##.....##.##....##..##....##.##.....##....##....##.##.....##.##....##..##....##..##.......##....##....##...
-..######..########.##.....##.##.....##..######..##.....##.....######...#######...######....######...########..######.....##...
+..######..##.....##..######....######...########..######..########.####..#######..##....##..######.
+.##....##.##.....##.##....##..##....##..##.......##....##....##.....##..##.....##.###...##.##....##
+.##.......##.....##.##........##........##.......##..........##.....##..##.....##.####..##.##......
+..######..##.....##.##...####.##...####.######....######.....##.....##..##.....##.##.##.##..######.
+.......##.##.....##.##....##..##....##..##.............##....##.....##..##.....##.##..####.......##
+.##....##.##.....##.##....##..##....##..##.......##....##....##.....##..##.....##.##...###.##....##
+..######...#######...######....######...########..######.....##....####..#######..##....##..######.
 */
 
 #search-suggest {
   z-index: 101;
-  animation-name: anim-show;
+  animation-name: anim-suggest;
   animation-duration: 0.25s;
   position: absolute;
-  width: calc(100% - 323px);
-  left: 156px;
-  top: 90px;
-  border-radius: var(--px-radius);
-  display: none;
+  width: calc(100% - 265px);
+  left: 150px;
+  top: 82px;
+  border-radius: 0 0 var(--px-radius) var(--px-radius);
   background-color: var(--color-back);
-  /* box-shadow: 0 0 var(--px-shadow) var(--color-shadow); */
   padding: 4px;
   border: solid 2px var(--color-over);
+  border-top: none;
   padding-bottom: 0;
+  padding-top: 0;
+  transition: 0.25s;
 }
 
-#search-suggest.show {
-  display: block;
+#search-suggest.hide {
+  opacity: 0;
+  transform: translateY(-40px);
 }
 
 #search-suggest-container {
-  /* background-color: var(--color-over); */
   position: relative;
   width: 100%;
   height: 100%;
@@ -452,17 +442,12 @@
   border-radius: var(--px-radius);
   text-align: center;
   display: block;
-  margin-bottom: 4px;
+  margin-top: 4px;
   border: solid 2px transparent;
 }
 
-/* #search-suggest-container input:last-child {
-  margin-bottom: 0;
-} */
-
 #search-suggest-container input.active, #search-suggest-container input:hover {
   background-color: var(--color-over);
-  /* border: solid 2px var(--color-over); */
 }
 
 #search-suggest-container .title-bar-btn {
@@ -487,7 +472,6 @@ body {
   margin: 0;
   padding: 0;
   background-color: var(--color-back);
-  /* background-image: linear-gradient(to right bottom, #e66465, #9198e5); */
   background-attachment: fixed;
   overflow: hidden;
   width: 100%;
@@ -500,7 +484,6 @@ body.fullscreen #titlebar {
 
 body.fullscreen .etabs-views {
   top: 0;
-  height: 100%;
 }
 
 body.fullscreen #notif-panel {
@@ -532,7 +515,6 @@ body.fullscreen #notif-panel {
   text-overflow: ellipsis;
   max-width: calc(100% - 8px);
   border: 2px solid var(--color-over);
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
 }
 
 #target-url:empty {
@@ -592,11 +574,10 @@ hr {
   border-radius: var(--px-radius);
   padding: 4px;
   padding-right: 8px;
-  /* transition: 0.25s; */
   display: inline-block;
 }
 
-.nav-btn:hover {
+.nav-btn:hover, .nav-btn.active {
   background-color: var(--color-over);
 }
 
@@ -616,12 +597,10 @@ hr {
   background-color: var(--color-over);
   cursor: default;
   font-size: var(--px-font);
-  /* padding: 4px; */
-  /* border: 2px var(--color-over) solid; */
+  z-index: 102;
 }
 
 .etabs-tabgroup.blur {
-  /* border: 2px transparent solid; */
   opacity: 0.5;
 }
 
@@ -631,20 +610,14 @@ hr {
 
 .etabs-tab {
   -webkit-app-region: no-drag;
-  /* transition: 0.25s; */
   display: none;
   position: relative;
   color: var(--color-top);
   height: 40px;
   padding: 10px;
-  /* border-radius: var(--px-radius); */
   cursor: default;
   max-width: 256px;
   min-width: 40px;
-  /* margin-right: 4px; */
-  /* border: 2px transparent solid; */
-  /* animation-name: anim-show; */
-  /* animation-duration: 0.25s; */
 }
 
 .etabs-tab::after {
@@ -663,7 +636,6 @@ hr {
 
 .etabs-tab:hover {
   background-color: var(--color-over);
-  /* border: 2px var(--color-over) solid; */
 }
 
 .etabs-tab.gu-mirror {
@@ -677,7 +649,6 @@ hr {
 
 .etabs-tab.active {
   background-color: var(--color-back);
-  /* border: 2px var(--color-over) solid; */
 }
 
 .etabs-tab.flash {
@@ -691,7 +662,6 @@ hr {
 .etabs-buttons button {
   -webkit-app-region: no-drag;
   outline: none;
-  /* transition: 0.25s; */
   float: left;
   color: var(--color-top);
   background: none;
@@ -704,12 +674,10 @@ hr {
   margin-left: 4px;
   margin-top: 4px;
   border-radius: var(--px-radius);
-  /* border: 2px transparent solid; */
 }
 
 .etabs-buttons button:hover {
   background-color: var(--color-over);
-  /* border: 2px var(--color-over) solid; */
 }
 
 .etabs-tab-badge {
@@ -740,10 +708,10 @@ hr {
 }
 
 .etabs-tab-title {
-  overflow:hidden;
+  overflow: hidden;
   position: absolute;
   vertical-align: middle;
-  left: 32px;
+  left: 36px;
   right: 32px;
   white-space: nowrap;
   word-break: keep-all;
@@ -755,7 +723,6 @@ hr {
 }
 
 .etabs-tab-buttons {
-  /* transition: 0.25s; */
   float: right;
   transform: scale(0);
 }
@@ -763,7 +730,6 @@ hr {
 .etabs-tab-buttons button {
   margin: -2px;
   outline: none;
-  /* transition: 0.25s; */
   display: inline-block;
   color: var(--color-top);
   background: none;
@@ -771,7 +737,6 @@ hr {
   width: 24px;
   height: 24px;
   border-radius: var(--px-radius);
-  /* border: 2px transparent solid; */
   position: relative;
 }
 
@@ -797,15 +762,14 @@ hr {
 
 .etabs-tab-buttons button:hover {
   background-color: var(--color-over);
-  /* border: 2px var(--color-over) solid; */
 }
 
 .etabs-views {
   position: absolute;
   top: 82px;
-  height: calc(100vh - 84px);
-  width: 100%;
-  /* background-color: white; */
+  bottom: 0;
+  left: 0;
+  right: 0;
   z-index: -999;
 }
 
@@ -843,7 +807,7 @@ hr {
 
 #sidebar.hide {
   opacity: 0;
-  transform: translateX(64px);
+  transform: translateX(40px);
 }
 
 #sidebar-div {
@@ -890,15 +854,12 @@ hr {
   animation-duration: 0.25s;
   background-color: var(--color-back);
   z-index: 100;
-  /* box-shadow: 0 0 var(--px-shadow) var(--color-shadow); */
 }
 
 #find-input {
-  /* transition: 0.25s; */
   display: block;
   width: 100%;
   margin-bottom: 4px;
-  /* border: 2px solid var(--color-over); */
 }
 
 /*
