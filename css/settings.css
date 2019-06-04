@@ -94,6 +94,16 @@ label.title {
   font-size: 48px;
 }
 
+label.link {
+  color: var(--color-blue);
+  display: inline-block;
+  margin: 0 4px;
+}
+
+label.link:hover {
+  text-decoration: underline;
+}
+
 /*
 .########..##........#######...######..##....##
 .##.....##.##.......##.....##.##....##.##...##.

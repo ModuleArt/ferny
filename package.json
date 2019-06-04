@@ -3,7 +3,7 @@
   "productName": "ArrowBrowser",
   "companyName": "ModuleArt",
   "description": "Your web browser",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "license": "UNLICENSED",
   "author": {
     "name": "ModuleArt",
@@ -34,14 +34,42 @@
   "build": {
     "appId": "com.moduleart.arrowbrowser",
     "copyright": "Copyright © 2019 ModuleArt",
-    "fileAssociations": {
-      "ext": [ "htm", "html", "shtml", "webp", "xht", "xhtml" ],
-      "name": "Web page file",
-      "icon": "imgs\\files\\html.ico"
-    },
+    "fileAssociations": [
+      {
+        "ext": "htm",
+        "icon": "imgs\\files\\htm\\htm.ico",
+        "name": "HTM file"
+      },
+      {
+        "ext": "html",
+        "icon": "imgs\\files\\html\\html.ico",
+        "name": "HTML file"
+      },
+      {
+        "ext": "shtml",
+        "icon": "imgs\\files\\shtml\\shtml.ico",
+        "name": "SHTML file"
+      },
+      {
+        "ext": "webp",
+        "icon": "imgs\\files\\webp\\webp.ico",
+        "name": "WEBP file"
+      },
+      {
+        "ext": "xht",
+        "icon": "imgs\\files\\xht\\xht.ico",
+        "name": "XHT file"
+      },
+      {
+        "ext": "xhtml",
+        "icon": "imgs\\files\\xhtml\\xhtml.ico",
+        "name": "XHTML file"
+      }
+    ],
     "nsis": {
       "oneClick": false,
-      "installerIcon": "imgs\\installer.ico"
+      "installerIcon": "imgs\\installer.ico",
+      "uninstallerIcon": "imgs\\uninstaller.ico"
     },
     "win": {
       "publish": {

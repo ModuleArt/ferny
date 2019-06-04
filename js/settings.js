@@ -10,6 +10,12 @@ const { ipcRenderer } = require('electron');
 .##........#######..##....##..######.....##....####..#######..##....##..######.
 */
 
+function scrollToId(id) {
+  document.getElementById(id).scrollIntoView({
+	  	behavior: 'smooth'
+	});
+}
+
 function requestSearchEngine(engine) {
   ipcRenderer.send('request-set-search-engine', engine);
 }

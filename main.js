@@ -66,7 +66,7 @@ const sideMenu = Menu.buildFromTemplate([
  ] },
  // { label: 'Reading list', accelerator: 'CmdOrCtrl+R', click: () => {  }, enabled: false },
  { label: 'History', accelerator: 'CmdOrCtrl+H', click: () => {  }, enabled: false },
- { label: 'Downloads', icon: app.getAppPath() + '\\imgs\\icons16\\download.png', click: () => { mainWindow.webContents.send('action-open-downloads'); } },
+ { label: 'Downloads', accelerator: 'CmdOrCtrl+D', icon: app.getAppPath() + '\\imgs\\icons16\\download.png', click: () => { mainWindow.webContents.send('action-open-downloads'); } },
  // { label: 'Closed tabs', accelerator: 'CmdOrCtrl+Q', click: () => {  }, enabled: false },
  { type: 'separator' },
  { label: 'Zoom', icon: app.getAppPath() + '\\imgs\\icons16\\zoom.png', submenu: [
@@ -104,7 +104,7 @@ const sideMenu = Menu.buildFromTemplate([
  { type: 'separator' },
  { label: 'Settings', icon: app.getAppPath() + '\\imgs\\icons16\\settings.png', accelerator: 'CmdOrCtrl+Shift+S', click: () => { mainWindow.webContents.send('action-open-settings'); } },
  { label: 'Help', icon: app.getAppPath() + '\\imgs\\icons16\\help.png', submenu: [
-   { label: 'Key binds', accelerator: 'CmdOrCtrl+K', click: () => {  }, enabled: false },
+   { label: 'Key binds', icon: app.getAppPath() + '\\imgs\\icons16\\keyboard.png', accelerator: 'CmdOrCtrl+K', click: () => { showKeyBindsWindow(); } },
    { label: 'Check for updates', icon: app.getAppPath() + '\\imgs\\icons16\\reload.png', accelerator: 'CmdOrCtrl+U', click: () => { checkForUpdates(); } },
    { type: 'separator' },
    { label: 'About', icon: app.getAppPath() + '\\imgs\\icons16\\about.png', accelerator: 'CmdOrCtrl+Shift+A', click: () => { mainWindow.webContents.send('action-app-about'); } },
@@ -112,7 +112,7 @@ const sideMenu = Menu.buildFromTemplate([
    { type: 'separator' },
  ]},
  { label: 'More', icon: app.getAppPath() + '\\imgs\\icons16\\more.png', submenu: [
-   { label: 'Focus search field', icon: app.getAppPath() + '\\imgs\\icons16\\zoom.png', accelerator: 'CmdOrCtrl+Shift+F', click: () => { mainWindow.webContents.send('action-page-focussearch'); } },
+   { label: 'Focus address bar', icon: app.getAppPath() + '\\imgs\\icons16\\zoom.png', accelerator: 'CmdOrCtrl+Shift+F', click: () => { mainWindow.webContents.send('action-page-focussearch'); } },
    { label: 'Close active panel', icon: app.getAppPath() + '\\imgs\\icons16\\close.png', accelerator: 'Esc', click: () => { mainWindow.webContents.send('action-esc'); } },
    // { type: 'separator' },
    // { label: 'Task manager', accelerator: 'Shift+Esc', click: () => {  }, enabled: false },
@@ -140,6 +140,7 @@ const inputMenu = Menu.buildFromTemplate([
 
 var mainWindow = null;
 var welcomeWindow = null;
+var keyBindsWindow = null;
 
 var themeColor = "rgb(255, 255, 255)";
 var borderRadius = '4';
@@ -533,6 +534,10 @@ ipcMain.on('request-close-welcome', (event, arg) => {
   welcomeWindow.close();
 });
 
+ipcMain.on('request-close-keybinds', (event, arg) => {
+  keyBindsWindow.close();
+});
+
 /*
 .########.##.....##.##....##..######..########.####..#######..##....##..######.
 .##.......##.....##.###...##.##....##....##.....##..##.....##.###...##.##....##
@@ -586,6 +591,39 @@ function showWelcomeWindow() {
   welcomeWindow.webContents.once('did-finish-load', () => {
     // welcomeWindow.webContents.openDevTools();
     welcomeWindow.show();
+  });
+}
+
+function showKeyBindsWindow() {
+  keyBindsWindow = new BrowserWindow({
+    width: 480, height: 360,
+    frame: false,
+    show: false,
+    modal: true,
+    parent: mainWindow,
+    icon: app.getAppPath() + '\\imgs\\icon.ico',
+    minimizable: false,
+    resizable: false,
+    webPreferences: {
+      nodeIntegration: true
+    },
+    backgroundColor: 'rgb(0, 0, 0)'
+  }); 
+
+  keyBindsWindow.setMenu(null);
+
+  keyBindsWindow.on('focus', () => {
+    keyBindsWindow.webContents.send('action-focus-window');
+  });
+  keyBindsWindow.on('blur', () => {
+    keyBindsWindow.webContents.send('action-blur-window');
+  });
+
+  keyBindsWindow.loadFile(app.getAppPath() + '\\html\\keybinds.html');
+
+  keyBindsWindow.webContents.once('did-finish-load', () => {
+    // keyBindsWindow.webContents.openDevTools();
+    keyBindsWindow.show();
   });
 }
 
