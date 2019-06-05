@@ -121,7 +121,8 @@ label.title {
 }
 
 .about-icon {
-  border-radius: 50%;
+  border-radius: 23px;
+  padding: 4px;
 }
 
 .about-icon:hover {

@@ -225,7 +225,15 @@ label.link:hover {
 
 .key-code {
     display: inline-block;
-    width: 128px;
+    width: 160px;
+    padding: 2px;
+}
+
+.key {
+    background-color: var(--color-over);
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: var(--px-radius);
 }
 
 /*

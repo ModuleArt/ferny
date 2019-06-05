@@ -104,7 +104,7 @@ const sideMenu = Menu.buildFromTemplate([
  { type: 'separator' },
  { label: 'Settings', icon: app.getAppPath() + '\\imgs\\icons16\\settings.png', accelerator: 'CmdOrCtrl+Shift+S', click: () => { mainWindow.webContents.send('action-open-settings'); } },
  { label: 'Help', icon: app.getAppPath() + '\\imgs\\icons16\\help.png', submenu: [
-   { label: 'Key binds', icon: app.getAppPath() + '\\imgs\\icons16\\keyboard.png', accelerator: 'CmdOrCtrl+K', click: () => { showKeyBindsWindow(); } },
+   { label: 'Hotkeys', icon: app.getAppPath() + '\\imgs\\icons16\\keyboard.png', accelerator: 'CmdOrCtrl+Shift+H', click: () => { showKeyBindsWindow(); } },
    { label: 'Check for updates', icon: app.getAppPath() + '\\imgs\\icons16\\reload.png', accelerator: 'CmdOrCtrl+U', click: () => { checkForUpdates(); } },
    { type: 'separator' },
    { label: 'About', icon: app.getAppPath() + '\\imgs\\icons16\\about.png', accelerator: 'CmdOrCtrl+Shift+A', click: () => { mainWindow.webContents.send('action-app-about'); } },
@@ -181,7 +181,7 @@ app.on('ready', function() {
     mainWindow.webContents.send('action-notif', { type: "success", text: "Update is available! Download started..." });
   });
   autoUpdater.on('update-downloaded', () => {
-    mainWindow.webContents.send('action-quest', { text: "Update is downloaded!", ops: [{ text:'Install', icon:'install', click:'installUpdate(); removeNotif(this)' }, { text:'Cancel', icon:'close3', click:'removeNotif(this)' }] });
+    mainWindow.webContents.send('action-quest', { text: "Update is downloaded!", ops: [{ text:'Install', icon:'check', click:'installUpdate(); removeNotif(this);' }, { text:'Cancel', icon:'cancel', click:'removeNotif(this)' }] });
   });
 
 /*
@@ -377,6 +377,18 @@ app.on('ready', function() {
 ..##..##........##....##....##.....##.##.....##..##..##...###
 .####.##.........######.....##.....##.##.....##.####.##....##
 */
+
+ipcMain.on('request-install-update', (event, arg) => {
+  autoUpdater.quitAndInstall();
+});
+
+ipcMain.on('request-webview-context', (event, arg) => {
+  console.log(arg.url);
+  // let tabMenu = Menu.buildFromTemplate([
+  //   { label: 'Reload', icon: app.getAppPath() + '\\imgs\\icons16\\reload.png', accelerator: 'F5', click: () => { mainWindow.webContents.send('action-tabcontext-reload', arg); } }
+  // ]);
+  // tabMenu.popup(mainWindow);
+});
 
 ipcMain.on('request-set-search-engine', (event, arg) => {
   searchEngine = arg;

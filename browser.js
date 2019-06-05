@@ -69,6 +69,15 @@ tabGroup.on("tab-added", (tab, tabGroup) => {
     }
   });
 
+  webview.addEventListener('contextmenu', (event) => {
+    // event.preventDefault();
+    // let Data = {
+    //   url: event.target.href
+    // };
+    // ipcRenderer.send('request-webview-context', Data);
+    alert();
+  });
+
   webview.addEventListener('update-target-url', (e) => {
     document.getElementById('target-url').innerHTML = e.url;
   });
@@ -206,6 +215,10 @@ tabGroup.on("tab-removed", (tab, tabGroup) => {
 .##.......##.....##.##...###.##....##....##.....##..##.....##.##...###.##....##
 .##........#######..##....##..######.....##....####..#######..##....##..######.
 */
+
+function installUpdate() {
+  ipcRenderer.send('request-install-update');
+}
 
 // system pages
 function goToBookmarksTab() {
@@ -817,6 +830,7 @@ ipcRenderer.on('action-open-url', (event, arg) => {
     src: arg,
     active: true
   });
+  hideSidebar();
 });
 ipcRenderer.on('action-set-search-engine', (event, arg) => {
   var engines = document.getElementsByClassName('search-engine');

@@ -486,8 +486,16 @@ body.fullscreen .etabs-views {
   top: 0;
 }
 
+body.fullscreen .etabs-tabgroup {
+  display: none;
+}
+
 body.fullscreen #notif-panel {
   top: 8px;
+}
+
+body.fullscreen #sidebar {
+  top: 0;
 }
 
 /*
@@ -771,10 +779,6 @@ hr {
   left: 0;
   right: 0;
   z-index: -999;
-}
-
-.etabs-views.fullscreen {
-  top: 0;
 }
 
 .etab-view {
