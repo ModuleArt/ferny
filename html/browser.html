@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html>
   <head>	
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="node_modules/dragula/dist/dragula.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="../css/browser.css">
+    <link rel="stylesheet" href="../node_modules/dragula/dist/dragula.css">
   </head>
   <body>
     <div id="drag-zone"></div>
@@ -12,7 +11,9 @@
 
     <div id="sidebar" style="display: none;">
       <div id="sidebar-div">
-        <img name='forward' class='title-bar-btn theme-icon' id="hide-sidebar-btn" title="Hide sidebar">
+        <img name='forward' class='title-bar-btn theme-icon' title="Hide sidebar" onclick="hideSidebar()">
+        <img id="pin-sidebar-btn" name='pin' class='title-bar-btn theme-icon' title="Pin sidebar" onclick="pinSidebar()">
+        <img id="unpin-sidebar-btn" name='unpin' class='title-bar-btn theme-icon' title="Unpin sidebar" onclick="unpinSidebar()" style="display: none;">
         <hr>
         <div id="bookmarks-btn" class="nav-btn active" onclick="goToBookmarksTab()">
           <img class="theme-icon" name="bookmarks">
@@ -32,7 +33,7 @@
             <label>About</label>
           </div>
       </div>
-      <webview id="sidebar-webview" nodeintegration src="html/bookmarks.html"></webview>
+      <webview id="sidebar-webview" nodeintegration src="../html/bookmarks.html"></webview>
     </div>
 
     <center id="find-panel" style="display: none;">
@@ -57,9 +58,17 @@
 
     <div class="etabs-tabgroup" id="etabs-tabgroup">
       <div class="etabs-tabs" id="etabs-tabs"></div>
-      <div class="etabs-buttons"></div>
-      <img name='down-squared' class='title-bar-btn theme-icon' id="tabs-list-btn"/>
-      <div id="window-controls"></div>
+      <div class="etabs-buttons">
+        <!-- <button><img name='down-squared' class='theme-icon' id="tabs-list-btn"/></button> -->
+      </div>
+      <div id="window-controls">
+        <img name="tabs-down" id="tabs-list-btn" class="title-bar-btn theme-icon" title="Tabs list">
+        <div class="title-bar-vr"></div>
+        <img name="line" id="minimize-btn" class="title-bar-btn theme-icon" title="Minimize" onclick="minimizeWindow()">
+        <!-- <img name="square" id="unmaximize-btn" class="title-bar-btn theme-icon" title="Restore down" onclick="restoreWindow()" style="display: none"> -->
+        <img name="window" id="maximize-btn" class="title-bar-btn theme-icon" title="Maximize" onclick="toggleMaximizeWindow()">
+        <img name="cancel" id="close-btn" class="title-bar-btn theme-icon" title="Close" onclick="closeWindow()">
+      </div>
     </div>
 
     <div id="titlebar">
@@ -70,10 +79,10 @@
       <div class="title-bar-vr"></div>
       <img name="info" id="info-btn" class="title-bar-btn theme-icon disable" title="Website info">
       <input type="text" placeholder="Search Google or type a URL" id="search-input" oninput="getSuggestions()" onfocusout="removeSuggestions()">
-      <img name="bookmark" id="add-bookmark-btn" class="title-bar-btn theme-icon" title="Bookmark this page">
+      <img name="bookmark" class="title-bar-btn theme-icon" title="Bookmark this page" onclick="createBookmark()">
       <div class="title-bar-vr"></div>
-      <img name="sidebar" id="sidebar-btn" class="title-bar-btn theme-icon" title="Sidebar (Bookmarks, history, downloads, settings)">
-      <img name="menu" id="menu-btn" class="title-bar-btn theme-icon" title="Show menu">
+      <img name="bookmarks-book" id="sidebar-btn" class="title-bar-btn theme-icon" title="Sidebar (Bookmarks, history, downloads, settings)">
+      <img name="menu" id="menu-btn" class="title-bar-btn theme-icon" title="Menu">
     </div>
 
     <div class="etabs-views" id="etabs-views"></div>
@@ -87,9 +96,9 @@
       <img name="duckduckgo" class="title-bar-btn theme-icon search-engine" title="Search with DuckDuckGo" onclick="searchWith(null, this.name)">
       <img name="wikipedia" class="title-bar-btn theme-icon search-engine" title="Search with Wikipedia" onclick="searchWith(null, this.name)">
       <img name="yahoo" class="title-bar-btn theme-icon search-engine" title="Search with Yahoo" onclick="searchWith(null, this.name)">
-      <img name="up" id="close-suggest-btn" class="title-bar-btn theme-icon search-engine" title="Close search panel">
+      <img name="up" id="close-suggest-btn" class="title-bar-btn theme-icon search-engine" title="Close search panel" onclick="removeSuggestions()">
     </div>
 
-    <script type="text/javascript" src="browser.js"></script>
+    <script type="text/javascript" src="../js/browser.js"></script>
   </body>
 </html>

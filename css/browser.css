@@ -10,12 +10,12 @@
 
 @font-face {
   font-family: SegMDL2;
-  src: url(fonts/SegMDL2.ttf);
+  src: url(../fonts/SegMDL2.ttf);
 }
 
 @font-face {
   font-family: OpenSans;
-  src: url(fonts/OpenSans-Semibold.ttf);
+  src: url(../fonts/OpenSans-Semibold.ttf);
 }
 
 :root{
@@ -95,25 +95,29 @@
 }
 
 /*
-..######...######..########...#######..##.......##.......########.....###....########.
-.##....##.##....##.##.....##.##.....##.##.......##.......##.....##...##.##...##.....##
-.##.......##.......##.....##.##.....##.##.......##.......##.....##..##...##..##.....##
-..######..##.......########..##.....##.##.......##.......########..##.....##.########.
-.......##.##.......##...##...##.....##.##.......##.......##.....##.#########.##...##..
-.##....##.##....##.##....##..##.....##.##.......##.......##.....##.##.....##.##....##.
-..######...######..##.....##..#######..########.########.########..##.....##.##.....##
+.##......##.########.########..##....##.####.########
+.##..##..##.##.......##.....##.##...##...##.....##...
+.##..##..##.##.......##.....##.##..##....##.....##...
+.##..##..##.######...########..#####.....##.....##...
+.##..##..##.##.......##.....##.##..##....##.....##...
+.##..##..##.##.......##.....##.##...##...##.....##...
+..###..###..########.########..##....##.####....##...
 */
 
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 14px;
+  background-color: var(--color-over);
 }
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
 ::-webkit-scrollbar-thumb {
-  background: var(--color-over);
+  background-color: var(--color-over);
+}
+::-webkit-scrollbar-button {
+  width: 0;
+  height: 0;
+  display: none;
+}
+::-webkit-scrollbar-corner {
+  background-color: transparent;
 }
 
 ::-webkit-input-placeholder {
@@ -290,7 +294,7 @@
   left: 4px;
   right: 4px;
   top: 4px;
-  height: 40px;
+  bottom: calc(100% - 40px);
   z-index: -100;
 }
 
@@ -298,7 +302,6 @@
   left: 0;
   right: 0;
   top: 0;
-  height: 44px;
 }
 
 #titlebar {
@@ -312,17 +315,13 @@
   background-color: var(--color-back);
 }
 
-.etabs-tabgroup .title-bar-vr {
-  float: left;
-}
-
-.etabs-tabgroup .title-bar-btn {
-  margin-top: 4px;
-  margin-left: 4px;
-}
-
 .title-bar-btn {
   -webkit-app-region: no-drag;
+  /* opacity: 0; */
+}
+
+#pin-sidebar-btn, #unpin-sidebar-btn {
+  float: right;
 }
 
 .title-bar-btn, #search-input {
@@ -357,11 +356,23 @@
 }
 
 #window-controls {
-  -webkit-app-region: no-drag;
   float: right;
+  padding: 4px;
 }
 
-#window-controls.windows {
+#close-btn {
+  background-color: var(--color-over);
+  margin: -4px;
+  margin-left: 0;
+  padding: 8px;
+  border-radius: 0;
+}
+
+#close-btn:hover {
+  background-color: var(--color-red);
+}
+
+/* #window-controls.windows {
   display: grid;
   grid-template-columns: repeat(3, 46px);
 }
@@ -387,7 +398,7 @@
 }
 #window-controls.windows #close-btn:hover span {
   color: white;
-}
+} */
 
 /*
 ..######..##.....##..######....######...########..######..########.####..#######..##....##..######.
@@ -487,7 +498,7 @@ body.fullscreen .etabs-views {
 }
 
 body.fullscreen .etabs-tabgroup {
-  display: none;
+  top: -40px;
 }
 
 body.fullscreen #notif-panel {
@@ -600,7 +611,10 @@ hr {
 */
 
 .etabs-tabgroup {
-  width: 100%;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
   height: 40px;
   background-color: var(--color-over);
   cursor: default;
@@ -630,12 +644,12 @@ hr {
 
 .etabs-tab::after {
   content: "";
-  top: 0;
+  top: 12px;
   width: 2px;
-  height: 40px;
+  height: 16px;
   background-color: var(--color-over);
   position: absolute;
-  right: 0px;
+  right: 4px;
 }
 
 .etabs-tab.active::after, .etabs-tab:hover::after {
@@ -731,6 +745,7 @@ hr {
 }
 
 .etabs-tab-buttons {
+  transition: 0.25s;
   float: right;
   transform: scale(0);
 }
@@ -779,10 +794,15 @@ hr {
   left: 0;
   right: 0;
   z-index: -999;
+  background-color: white;
+}
+
+.etabs-views.pinned {
+  right: 482px;
 }
 
 .etab-view {
-  background-color: white;
+  /* background-color: white; */
 }
 
 /*

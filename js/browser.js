@@ -127,7 +127,7 @@ tabGroup.on("tab-added", (tab, tabGroup) => {
 
   webview.addEventListener('did-navigate', (e) => {
     document.getElementById('search-input').value = e.url;
-    tab.setIcon("imgs/gifs/page-loading.gif");
+    tab.setIcon("../imgs/gifs/page-loading.gif");
 
     if (webview.canGoBack()) {
       document.getElementById('back-btn').classList.remove('disable');
@@ -216,6 +216,18 @@ tabGroup.on("tab-removed", (tab, tabGroup) => {
 .##........#######..##....##..######.....##....####..#######..##....##..######.
 */
 
+function pinSidebar() {
+  document.getElementById('pin-sidebar-btn').style.display = "none";
+  document.getElementById('unpin-sidebar-btn').style.display = "";
+  document.getElementById('etabs-views').classList.add('pinned');
+}
+
+function unpinSidebar() {
+  document.getElementById('pin-sidebar-btn').style.display = "";
+  document.getElementById('unpin-sidebar-btn').style.display = "none";
+  document.getElementById('etabs-views').classList.remove('pinned');
+}
+
 function installUpdate() {
   ipcRenderer.send('request-install-update');
 }
@@ -223,7 +235,7 @@ function installUpdate() {
 // system pages
 function goToBookmarksTab() {
   showSidebar();
-  document.getElementById('sidebar-webview').src = 'html/bookmarks.html';
+  document.getElementById('sidebar-webview').src = '../html/bookmarks.html';
   document.getElementById('bookmarks-btn').classList.add('active');
   document.getElementById('downloads-btn').classList.remove('active');
   document.getElementById('settings-btn').classList.remove('active');
@@ -232,7 +244,7 @@ function goToBookmarksTab() {
 
 function goToAboutTab() {
   showSidebar();
-  document.getElementById('sidebar-webview').src = 'html/about.html';
+  document.getElementById('sidebar-webview').src = '../html/about.html';
   document.getElementById('bookmarks-btn').classList.remove('active');
   document.getElementById('downloads-btn').classList.remove('active');
   document.getElementById('settings-btn').classList.remove('active');
@@ -241,7 +253,7 @@ function goToAboutTab() {
 
 function goToSettingsTab() {
   showSidebar();
-  document.getElementById('sidebar-webview').src = 'html/settings.html';
+  document.getElementById('sidebar-webview').src = '../html/settings.html';
   document.getElementById('bookmarks-btn').classList.remove('active');
   document.getElementById('downloads-btn').classList.remove('active');
   document.getElementById('settings-btn').classList.add('active');
@@ -250,7 +262,7 @@ function goToSettingsTab() {
 
 function goToDownloadsTab() {
   showSidebar();
-  document.getElementById('sidebar-webview').src = 'html/downloads.html';
+  document.getElementById('sidebar-webview').src = '../html/downloads.html';
   document.getElementById('bookmarks-btn').classList.remove('active');
   document.getElementById('downloads-btn').classList.add('active');
   document.getElementById('settings-btn').classList.remove('active');
@@ -457,7 +469,8 @@ function setIconsStyle(str) {
   var icons = document.getElementsByClassName('theme-icon');
 
   for (var i = 0; i < icons.length; i++) {
-    icons[i].src = "themes/" + str + "/icons/" + icons[i].name + ".png";
+    icons[i].src = "../themes/" + str + "/icons/" + icons[i].name + ".png";
+    // icons[i].style.opacity = "1";
   }
 }
 
@@ -522,6 +535,7 @@ function showSidebar() {
 }
 
 function hideSidebar() {
+  unpinSidebar();
   document.getElementById("sidebar-btn").classList.remove('active');
   document.getElementById('sidebar').classList.add('hide');
   setTimeout(function() {
@@ -619,17 +633,21 @@ function applyFindPanel() {
 }
 
 // window controls
-function maximizeWindow() {
-  ipcRenderer.send('request-maximize-window');
+function toggleMaximizeWindow() {
+  ipcRenderer.send('request-toggle-maximize-window');
 }
+
+// function maximizeWindow() {
+//   ipcRenderer.send('request-maximize-window');
+// }
 
 function minimizeWindow() {
   ipcRenderer.send('request-minimize-window');
 }
 
-function restoreWindow() {
-  ipcRenderer.send('request-unmaximize-window');
-}
+// function restoreWindow() {
+//   ipcRenderer.send('request-unmaximize-window');
+// }
 
 function closeWindow() {
   ipcRenderer.send('request-quit-app');
@@ -790,13 +808,13 @@ ipcRenderer.on('action-quest', (event, arg) => {
 // window
 ipcRenderer.on('action-maximize-window', (event, arg) => {
   document.getElementById('drag-zone').classList.add('maximize');
-  document.getElementById('maximize-btn').style.display = 'none';
-  document.getElementById('unmaximize-btn').style.display = '';
+  // document.getElementById('maximize-btn').style.display = 'none';
+  // document.getElementById('unmaximize-btn').style.display = '';
 });
 ipcRenderer.on('action-unmaximize-window', (event, arg) => {
   document.getElementById('drag-zone').classList.remove('maximize');
-  document.getElementById('maximize-btn').style.display = '';
-  document.getElementById('unmaximize-btn').style.display = 'none';
+  // document.getElementById('maximize-btn').style.display = '';
+  // document.getElementById('unmaximize-btn').style.display = 'none';
 });
 ipcRenderer.on('action-resize-tabs', (event, arg) => {
   resizeTabs();
@@ -825,12 +843,20 @@ ipcRenderer.on('action-focus-window', (event, arg) => {
   document.getElementById('etabs-tabgroup').classList.remove('blur');
 });
 ipcRenderer.on('action-open-url', (event, arg) => {
+  tabGroup.getActiveTab().webview.loadURL(arg);
+  if(!document.getElementById('etabs-views').classList.contains('pinned')) {
+    hideSidebar();
+  }
+});
+ipcRenderer.on('action-open-url-in-new-tab', (event, arg) => {
   tabGroup.addTab({
     title: 'New Tab',
     src: arg,
     active: true
   });
-  hideSidebar();
+  if(!document.getElementById('etabs-views').classList.contains('pinned')) {
+    hideSidebar();
+  }
 });
 ipcRenderer.on('action-set-search-engine', (event, arg) => {
   var engines = document.getElementsByClassName('search-engine');
@@ -893,20 +919,43 @@ function init() {
   //   <img name="close" id="close-btn" class="title-bar-btn theme-icon" title="Close" onclick="closeWindow()">
   // `;
   // document.getElementById('window-controls').classList.add('arrow');
-  document.getElementById('window-controls').innerHTML = `
-    <div class="button" id="minimize-btn" title="Minimize" onclick="minimizeWindow()"><span>&#xE921;</span></div>
-    <div class="button" id="unmaximize-btn" title="Restore down" onclick="restoreWindow()" style="display: none"><span>&#xE923;</span></div>
-    <div class="button" id="maximize-btn" title="Maximize" onclick="maximizeWindow()"><span>&#xE922;</span></div>
-    <div class="button" id="close-btn" title="Close" onclick="closeWindow()"><span>&#xE8BB;</span></div>
-  `;
-  document.getElementById('window-controls').classList.add('windows');
+  // document.getElementById('window-controls').innerHTML = `
+  //   <div class="button" id="minimize-btn" title="Minimize" onclick="minimizeWindow()"><span>&#xE921;</span></div>
+  //   <div class="button" id="unmaximize-btn" title="Restore down" onclick="restoreWindow()" style="display: none"><span>&#xE923;</span></div>
+  //   <div class="button" id="maximize-btn" title="Maximize" onclick="maximizeWindow()"><span>&#xE922;</span></div>
+  //   <div class="button" id="close-btn" title="Close" onclick="closeWindow()"><span>&#xE8BB;</span></div>
+  // `;
+  // document.getElementById('window-controls').classList.add('windows');
 
   sslCertificate.get('google.com').then(function (certificate) {
     console.log(certificate)
   });
 
-  document.getElementById("add-bookmark-btn").addEventListener("click", (e) => {
-    createBookmark();
+  document.getElementById("search-suggest").addEventListener('wheel', function(event) {
+    if (event.deltaY < 0) {
+      var suggestions = document.getElementById('search-suggest-container').childNodes;
+      var i = 0;
+      while (i < suggestions.length && !suggestions[i].classList.contains('active')) {
+        i++;
+      }
+      if (i > 0) {
+        document.getElementById('search-input').value = suggestions[i].previousSibling.value;
+        suggestions[i].classList.remove('active');
+        suggestions[i].previousSibling.classList.add('active');
+      }
+    }
+    if (event.deltaY > 0) {
+      var suggestions = document.getElementById('search-suggest-container').childNodes;
+      var i = 0;
+      while (i < suggestions.length && !suggestions[i].classList.contains('active')) {
+        i++;
+      }
+      if (i < suggestions.length - 1) {
+        document.getElementById('search-input').value = suggestions[i].nextSibling.value;
+        suggestions[i].classList.remove('active');
+        suggestions[i].nextSibling.classList.add('active');
+      }
+    }
   });
 
   document.getElementById("search-input").addEventListener("keyup", function (event) {
@@ -985,14 +1034,6 @@ function init() {
 
   document.getElementById("find-input").addEventListener("keyup", function (event) {
     nextFindInPage();
-  });
-
-  document.getElementById("close-suggest-btn").addEventListener("click", (e) => {
-    removeSuggestions();
-  });
-
-  document.getElementById("hide-sidebar-btn").addEventListener("click", (e) => {
-    hideSidebar();
   });
 
   document.getElementById("sidebar-btn").addEventListener("click", (e) => {

@@ -104,15 +104,15 @@ function loadTheme() {
 }
 
 function openDeveloperPage() {
-  ipcRenderer.send('request-open-url', "https://moduleart.github.io");
+  ipcRenderer.send('request-open-url-in-new-tab', "https://moduleart.github.io");
 }
 
 function openAppPage() {
-  ipcRenderer.send('request-open-url', "https://moduleart.github.io/arrowbrowser");
+  ipcRenderer.send('request-open-url-in-new-tab', "https://moduleart.github.io/arrowbrowser");
 }
 
 function openReleasesPage() {
-  ipcRenderer.send('request-open-url', "https://github.com/ModuleArt/arrowbrowser/releases");
+  ipcRenderer.send('request-open-url-in-new-tab', "https://github.com/ModuleArt/arrowbrowser/releases");
 }
 
 function checkForUpdates() {

@@ -340,7 +340,7 @@ function resumeDownload(index) {
 
 function retryDownload(index, link) {
   removeDownload(index);
-  ipcRenderer.send('request-open-url', link);
+  ipcRenderer.send('request-open-url-in-new-tab', link);
 }
 
 function clearArchive() {

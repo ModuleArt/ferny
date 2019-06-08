@@ -102,7 +102,7 @@ const sideMenu = Menu.buildFromTemplate([
    { label: 'Developer tools', icon: app.getAppPath() + '\\imgs\\icons16\\tools.png', accelerator: 'F12', click: () => { mainWindow.webContents.send('action-page-devtools'); } }
  ] },
  { type: 'separator' },
- { label: 'Settings', icon: app.getAppPath() + '\\imgs\\icons16\\settings.png', accelerator: 'CmdOrCtrl+Shift+S', click: () => { mainWindow.webContents.send('action-open-settings'); } },
+ { label: 'Settings', icon: app.getAppPath() + '\\imgs\\icons16\\settings.png', accelerator: 'CmdOrCtrl+,', click: () => { mainWindow.webContents.send('action-open-settings'); } },
  { label: 'Help', icon: app.getAppPath() + '\\imgs\\icons16\\help.png', submenu: [
    { label: 'Hotkeys', icon: app.getAppPath() + '\\imgs\\icons16\\keyboard.png', accelerator: 'CmdOrCtrl+Shift+H', click: () => { showKeyBindsWindow(); } },
    { label: 'Check for updates', icon: app.getAppPath() + '\\imgs\\icons16\\reload.png', accelerator: 'CmdOrCtrl+U', click: () => { checkForUpdates(); } },
@@ -209,7 +209,7 @@ app.on('ready', function() {
   mainWindow.setMenu(sideMenu);
 
   // mainWindow.webContents.openDevTools();
-  mainWindow.loadFile(app.getAppPath() + '\\index.html');
+  mainWindow.loadFile(app.getAppPath() + '\\html\\browser.html');
 
   mainWindow.webContents.on('context-menu', (e, props) => {
     const { selectionText, isEditable } = props;
@@ -227,21 +227,24 @@ app.on('ready', function() {
     mainWindow.webContents.send('action-blur-window');
   });
   mainWindow.once('ready-to-show', () => {
-    // loadAllData();
-    // mainWindow.show();
-  });
-  mainWindow.webContents.once('did-finish-load', () => {
-    loadAllData();
     mainWindow.show();
+    loadAllData();
 
     var data = null;
     if (process.platform == 'win32' && process.argv.length >= 2) {
       var openFilePath = process.argv[1];
-      // data = fs.readFileSync(openFilePath, 'utf-8');
-      // tabGroup.getActiveTab().webview.src = openFilePath;
       mainWindow.webContents.send('action-open-url', openFilePath);
-      // console.log(process.argv);
     }
+  });
+  mainWindow.webContents.once('did-finish-load', () => {
+    // loadAllData();
+    // mainWindow.show();
+
+    // var data = null;
+    // if (process.platform == 'win32' && process.argv.length >= 2) {
+    //   var openFilePath = process.argv[1];
+    //   mainWindow.webContents.send('action-open-url', openFilePath);
+    // }
   });
   mainWindow.on('resize', () => {
     mainWindow.webContents.send('action-resize-tabs');
@@ -409,6 +412,10 @@ ipcMain.on('request-open-url', (event, arg) => {
   mainWindow.webContents.send('action-open-url', arg);
 });
 
+ipcMain.on('request-open-url-in-new-tab', (event, arg) => {
+  mainWindow.webContents.send('action-open-url-in-new-tab', arg);
+});
+
 ipcMain.on('request-open-settings', (event, arg) => {
   mainWindow.webContents.send('action-open-settings');
 });
@@ -518,13 +525,21 @@ ipcMain.on('request-minimize-window', (event, arg) => {
   mainWindow.minimize();
 });
 
-ipcMain.on('request-maximize-window', (event, arg) => {
-  mainWindow.maximize();
+ipcMain.on('request-toggle-maximize-window', (event, arg) => {
+  if(mainWindow.isMaximized()) {
+    mainWindow.unmaximize();
+  } else {
+    mainWindow.maximize();
+  }
 });
 
-ipcMain.on('request-unmaximize-window', (event, arg) => {
-  mainWindow.unmaximize();
-});
+// ipcMain.on('request-maximize-window', (event, arg) => {
+//   mainWindow.maximize();
+// });
+
+// ipcMain.on('request-unmaximize-window', (event, arg) => {
+//   mainWindow.unmaximize();
+// });
 
 ipcMain.on('request-change-theme', (event, arg) => {
   themeColor = arg;
@@ -609,13 +624,14 @@ function showWelcomeWindow() {
 function showKeyBindsWindow() {
   keyBindsWindow = new BrowserWindow({
     width: 480, height: 360,
+    minWidth: 480, minHeight: 180,
     frame: false,
     show: false,
     modal: true,
     parent: mainWindow,
     icon: app.getAppPath() + '\\imgs\\icon.ico',
     minimizable: false,
-    resizable: false,
+    // resizable: false,
     webPreferences: {
       nodeIntegration: true
     },
@@ -837,7 +853,7 @@ function loadStartPage() {
   try {
     startPage = fs.readFileSync(app.getPath('userData') + "\\json\\startpage.json");
     mainWindow.webContents.send('action-set-start-page', startPage);
-    mainWindow.webContents.send('action-open-url', startPage);
+    mainWindow.webContents.send('action-open-url-in-new-tab', startPage);
   } catch (e) {
     saveStartPage();
     mainWindow.webContents.send('action-notif', { type: "error", text: "Start page file error!" });

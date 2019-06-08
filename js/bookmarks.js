@@ -160,7 +160,7 @@ function editBookmark(editBtn) {
   }
 }
 function openBookmarkInNewTab(inNewTabBtn) {
-  window.open(inNewTabBtn.parentNode.parentNode.title, '_blank');
+  ipcRenderer.send('request-open-url-in-new-tab', inNewTabBtn.parentNode.parentNode.title);
 }
 function copyBookmark(copyBtn) {
   var input = document.createElement('input');
@@ -199,7 +199,7 @@ function createBookmark(name, url) {
   div.addEventListener('auxclick', (e) => {
     e.preventDefault();
      if(e.which == 2) {
-       window.open(div.title, '_blank');
+       ipcRenderer.send('request-open-url-in-new-tab', div.title);
      }
   }, false);
 

@@ -52,15 +52,19 @@
 */
 
 ::-webkit-scrollbar {
-  width: 12px;
+  width: 14px;
+  background-color: var(--color-over);
 }
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
 ::-webkit-scrollbar-thumb {
-  background: var(--color-over);
+  background-color: var(--color-over);
+}
+::-webkit-scrollbar-button {
+  width: 0;
+  height: 0;
+  display: none;
+}
+::-webkit-scrollbar-corner {
+  background-color: transparent;
 }
 
 ::-webkit-input-placeholder {
