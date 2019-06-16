@@ -9,95 +9,122 @@
   <body>
     <center>
       <label class="subtitle">Settings</label>
-      <hr>
-      <label class="link" onclick="scrollToId('background-color')">Background color</label>
-      <label class="link" onclick="scrollToId('borders-rounding')">Borders rounding</label>
-      <label class="link" onclick="scrollToId('new-tab')">New tab</label>
-      <label class="link" onclick="scrollToId('search-engine')">Search engine</label>
-      <label class="link" onclick="scrollToId('welcome-screen')">Welcome screen</label>
-      <hr>
-      <div class="block-title show" id="background-color">
+      <div class="block-title" id="shortcuts">
+        <img name="down" class="theme-icon">
+        <label>Shortcuts</label>
+      </div>
+      <div class="container">
+        <label class="link" onclick="scrollToId('background-color')">Background color</label>
+        <label class="link" onclick="scrollToId('borders-rounding')">Borders rounding</label>
+        <label class="link" onclick="scrollToId('new-tab')">New tab</label>
+        <label class="link" onclick="scrollToId('search-engine')">Search engine</label>
+        <label class="link" onclick="scrollToId('bookmarks')">Bookmarks</label>
+        <label class="link" onclick="scrollToId('welcome-screen')">Welcome screen</label>
+      </div>
+
+      <div class="block-title" id="background-color">
         <img name="color" class="theme-icon">
         <label>Background color</label>
       </div>
-      <div class="color" onclick="requestTheme('rgb(255, 255, 255)')"><div style="background-color: rgb(255, 255, 255)"></div>White</div>
-      <div class="color" onclick="requestTheme('rgb(210, 218, 226)')"><div style="background-color: rgb(210, 218, 226)"></div>Light</div>
-      <div class="color" onclick="requestTheme('rgb(72, 84, 96)')"><div style="background-color: rgb(72, 84, 96)"></div>Gray</div>
-      <div class="color" onclick="requestTheme('rgb(30, 39, 46)')"><div style="background-color: rgb(30, 39, 46)"></div>Dark</div>
-      <hr>
-      <div class="block-title show" id="borders-rounding">
+      <div class="container">
+        <div class="color" onclick="requestTheme('rgb(255, 255, 255)')"><div style="background-color: rgb(255, 255, 255)"></div>White</div>
+        <div class="color" onclick="requestTheme('rgb(210, 218, 226)')"><div style="background-color: rgb(210, 218, 226)"></div>Light</div>
+        <div class="color" onclick="requestTheme('rgb(72, 84, 96)')"><div style="background-color: rgb(72, 84, 96)"></div>Gray</div>
+        <div class="color" onclick="requestTheme('rgb(30, 39, 46)')"><div style="background-color: rgb(30, 39, 46)"></div>Dark</div>
+      </div>
+
+      <div class="block-title" id="borders-rounding">
         <img name="radius" class="theme-icon">
         <label>Borders rounding</label>
       </div>
-      <div class="nav-checkbox">
-        <label>None
-        <input type="radio" onclick="requestBorderRadius(0)" class="checkbox" name="border-radius" value="0">
+      <div class="container">
+        <div class="nav-checkbox">
+          <label>None
+          <input type="radio" onclick="requestBorderRadius(0)" class="checkbox" name="border-radius" value="0">
+        </div>
+        <div class="nav-checkbox">
+          <label>Small
+          <input type="radio" onclick="requestBorderRadius(4)" class="checkbox" checked name="border-radius" value="4">
+        </div>
+        <div class="nav-checkbox">
+          <label>Medium
+          <input type="radio" onclick="requestBorderRadius(8)" class="checkbox" name="border-radius" value="8">
+        </div>
+        <div class="nav-checkbox">
+          <label>Large
+          <input type="radio" onclick="requestBorderRadius(12)" class="checkbox" name="border-radius" value="12">
+        </div>
+        <div class="nav-checkbox">
+          <label>Circle
+          <input type="radio" onclick="requestBorderRadius(16)" class="checkbox" name="border-radius" value="16">
+        </div>
+        <img class="more-btn theme-icon" onclick="moreInfo(this)" title="More info" name="info">
+        <label class="more-label">The borders rounding of the interface elements.</label>
       </div>
-      <div class="nav-checkbox">
-        <label>Small
-        <input type="radio" onclick="requestBorderRadius(4)" class="checkbox" checked name="border-radius" value="4">
-      </div>
-      <div class="nav-checkbox">
-        <label>Medium
-        <input type="radio" onclick="requestBorderRadius(8)" class="checkbox" name="border-radius" value="8">
-      </div>
-      <div class="nav-checkbox">
-        <label>Large
-        <input type="radio" onclick="requestBorderRadius(12)" class="checkbox" name="border-radius" value="12">
-      </div>
-      <div class="nav-checkbox">
-        <label>Circle
-        <input type="radio" onclick="requestBorderRadius(16)" class="checkbox" name="border-radius" value="16">
-      </div>
-      <img class="more-btn theme-icon" onclick="moreInfo(this)" title="More info" name="info">
-      <label class="more-label">The borders rounding of the interface elements.</label>
-      <hr>
-      <div class="block-title show" id="new-tab">
+
+      <div class="block-title" id="new-tab">
         <img name="create" class="theme-icon">
         <label>New tab</label>
       </div>
-      <input type="text" id="start-page-input" placeholder="New tab page url">
-      <div class="nav-btn" onclick="saveStartPage()">
-        <img class="theme-icon" name="save">
-        <label>Save</label>
+      <div class="container">
+        <input type="text" id="start-page-input" placeholder="New tab page url">
+        <div class="nav-btn" onclick="saveStartPage()">
+          <img class="theme-icon" name="save">
+          <label>Save</label>
+        </div>
+        <img class="more-btn theme-icon" onclick="moreInfo(this)" title="More info" name="info">
+        <label class="more-label">The page that will open when you create a new tab or when you start the browser (You need to restart the browser).</label>
       </div>
-      <img class="more-btn theme-icon" onclick="moreInfo(this)" title="More info" name="info">
-      <label class="more-label">The page that will open when you create a new tab or when you start the browser.</label>
-      <hr>
-      <div class="block-title show" id="search-engine">
+
+      <div class="block-title" id="search-engine">
         <img name="search" class="theme-icon">
         <label>Search engine</label>
       </div>
-      <div class="nav-checkbox">
-        <label>Google
-        <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" checked name="search-engine" value="google">
+      <div class="container">
+        <div class="nav-checkbox">
+          <label>Google
+          <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" checked name="search-engine" value="google">
+        </div>
+        <div class="nav-checkbox">
+          <label>Bing
+          <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" name="search-engine" value="bing">
+        </div>
+        <div class="nav-checkbox">
+          <label>DuckDuckGo
+          <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" name="search-engine" value="duckduckgo">
+        </div>
+        <div class="nav-checkbox">
+          <label>Wikipedia
+          <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" name="search-engine" value="wikipedia">
+        </div>
+        <div class="nav-checkbox">
+          <label>Yahoo
+          <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" name="search-engine" value="yahoo">
+        </div>
+        <img class="more-btn theme-icon" onclick="moreInfo(this)" title="More info" name="info">
+        <label class="more-label">Search engine used in the address bar.</label>
       </div>
-      <div class="nav-checkbox">
-        <label>Bing
-        <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" name="search-engine" value="bing">
+
+      <div class="block-title" id="bookmarks">
+        <img name="bookmarks" class="theme-icon">
+        <label>Bookmarks</label>
       </div>
-      <div class="nav-checkbox">
-        <label>DuckDuckGo
-        <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" name="search-engine" value="duckduckgo">
+      <div class="container">
+        <div class="nav-btn" onclick="toggleBookmarksBar()">
+          <img class="nav-btn-icon theme-icon" name="bookmarks-bar">
+          <label class="nav-btn-label">Toggle bookmarks bar</label>
+        </div>
       </div>
-      <div class="nav-checkbox">
-        <label>Wikipedia
-        <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" name="search-engine" value="wikipedia">
-      </div>
-      <div class="nav-checkbox">
-        <label>Yahoo
-        <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" name="search-engine" value="yahoo">
-      </div>
-      <img class="more-btn theme-icon" onclick="moreInfo(this)" title="More info" name="info">
-      <label class="more-label">Search engine used in the address bar.</label>
-      <hr>
-      <div class="block-title show" id="welcome-screen">
+
+      <div class="block-title" id="welcome-screen">
         <img name="box" class="theme-icon">
         <label>Welcome screen</label>
       </div>
-      <div class="nav-btn" onclick="showWelcomeScreen()">
-        <img class="nav-btn-icon theme-icon" name="show">
-        <label class="nav-btn-label">Show welcome screen</label>
+      <div class="container">
+        <div class="nav-btn" onclick="showWelcomeScreen()">
+          <img class="nav-btn-icon theme-icon" name="show">
+          <label class="nav-btn-label">Show welcome screen</label>
+        </div>
       </div>
     </center>
     <script type="text/javascript" src="../js/settings.js"></script>

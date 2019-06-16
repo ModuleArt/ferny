@@ -13,29 +13,21 @@
         <div id="titlebar">
             <img id="titlebar-icon" class="theme-icon" name="box">
             <label id="titlebar-title">Welcome</label>
-            <div id="window-controls"></div>
+            <div id="window-controls">
+                <img name="cancel" id="close-btn" class="title-bar-btn theme-icon" title="Close" onclick="closeWindow()">
+            </div>
         </div>
 
         <center>
-            <div id="menu">
-                <div class="nav-btn disable" onclick="prevSlide()" id="prev-btn">
-                    <img class="theme-icon" name="back">
-                    <label>Prev</label>
-                </div>
-                <div id="dots">
-                    <div class="dot active" onclick="chooseSlide(this)"></div>
-                    <div class="dot" onclick="chooseSlide(this)"></div>
-                    <div class="dot" onclick="chooseSlide(this)"></div>
-                </div>
-                <div class="nav-btn" onclick="nextSlide()" id="next-btn">
-                    <img class="theme-icon" name="forward">
-                    <label>Next</label>
-                </div>
+            <div id="dots">
+                <div class="dot active" onclick="chooseSlide(this)"></div>
+                <div class="dot" onclick="chooseSlide(this)"></div>
+                <div class="dot" onclick="chooseSlide(this)"></div>
+                <div class="dot" onclick="chooseSlide(this)"></div>
             </div>
         
             <div class="tab active">
                 <label class="subtitle">Welcome to</label>
-                <hr>
                 <div class="container">
                     <img class="about-icon" src="../imgs/icon128.png" onclick="openAppPage()" title="App page">
                     <label class="subtitle">ArrowBrowser</label><br>
@@ -44,52 +36,90 @@
             </div>
             <div class="tab">
                 <label class="subtitle">Appearance</label>
-                <hr>
                 <div class="container">
                     <div class="block-title">
                         <img name="color" class="theme-icon">
                         <label>Background color</label>
                     </div>
-                    <div class="nav-btn" onclick="requestTheme('rgb(255, 255, 255)')">
-                        <img class="theme-icon" name="angel">
-                        <label>White</label>
+                    <div class="block-container">
+                        <div class="nav-btn" onclick="requestTheme('rgb(255, 255, 255)')">
+                            <img class="theme-icon" name="angel">
+                            <label>White</label>
+                        </div>
+                        <div class="nav-btn" onclick="requestTheme('rgb(30, 39, 46)')">
+                            <img class="theme-icon" name="demon">
+                            <label>Dark</label>
+                        </div>
+                        <label class="link" onclick="moreSettings()">More</label>
                     </div>
-                    <div class="nav-btn" onclick="requestTheme('rgb(30, 39, 46)')">
-                        <img class="theme-icon" name="demon">
-                        <label>Dark</label>
-                    </div>
-                    <label class="link" onclick="moreSettings()">More</label>
-                    <hr>
+                    
                     <div class="block-title">
                         <img name="radius" class="theme-icon">
                         <label>Borders rounding</label>
                     </div>
-                    <div class="nav-btn" onclick="requestBorderRadius(4)">
-                        <img class="theme-icon" name="square">
-                        <label>Small</label>
+                    <div class="block-container">
+                        <div class="nav-btn" onclick="requestBorderRadius(4)">
+                            <img class="theme-icon" name="square">
+                            <label>Small</label>
+                        </div>
+                        <div class="nav-btn" onclick="requestBorderRadius(16)">
+                            <img class="theme-icon" name="circle">
+                            <label>Circle</label>
+                        </div>
+                        <label class="link" onclick="moreSettings()">More</label>
                     </div>
-                    <div class="nav-btn" onclick="requestBorderRadius(16)">
-                        <img class="theme-icon" name="circle">
-                        <label>Circle</label>
+                </div>
+            </div>
+            <div class="tab">
+                <label class="subtitle">Startup</label>
+                <div class="container">
+                    <div class="block-title">
+                        <img name="search" class="theme-icon">
+                        <label>Search engine</label>
                     </div>
-                    <label class="link" onclick="moreSettings()">More</label>
+                    <div class="block-container">
+                        <div class="nav-btn" onclick="requestSearchEngine('google')">
+                            <img class="theme-icon" name="google">
+                            <label>Google</label>
+                        </div>
+                        <div class="nav-btn" onclick="requestSearchEngine('duckduckgo')">
+                            <img class="theme-icon" name="duckduckgo">
+                            <label>DuckDuckGo</label>
+                        </div>
+                        <label class="link" onclick="moreSettings()">More</label>
+                    </div>
+                    <div class="block-title">
+                        <img name="create" class="theme-icon">
+                        <label>New tab</label>
+                    </div>
+                    <div class="block-container">
+                        <input type="text" id="start-page-input" placeholder="New tab page url">
+                        <div class="nav-btn" onclick="saveStartPage()">
+                            <img class="theme-icon" name="save">
+                            <label>Save</label>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="tab">
                 <label class="subtitle">Finish</label>
-                <hr>
                 <div class="container">
                     <div class="block-title">
                         <img name="checked" class="theme-icon">
                         <label>All done</label>
                     </div>
-                    <div class="nav-checkbox" style="border: none">
-                        <label class="nav-btn-label">Show this dialog at startup
-                        <input type="checkbox" class="checkbox" checked id="welcome-checkbox">
-                    </div><br><br>
-                    <div id="start-btn" onclick="finishWelcome()"><label class="subtitle">Get started</label></div>
+                    <div class="block-container">
+                        <div class="nav-checkbox" style="border: none">
+                            <label class="nav-btn-label">Show this dialog at startup
+                            <input type="checkbox" class="checkbox" checked id="welcome-checkbox">
+                        </div>
+                        <div id="start-btn" onclick="finishWelcome()"><label class="subtitle">Get started</label></div>
+                    </div>
                 </div>
             </div>
+
+            <img class="theme-icon disable" name="back" onclick="prevSlide()" id="prev-btn" title="Previous">
+            <img class="theme-icon" name="forward" onclick="nextSlide()" id="next-btn" title="Next">
         </center>
         <script type="text/javascript" src="../js/welcome.js"></script>
     </body>

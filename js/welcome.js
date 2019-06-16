@@ -37,12 +37,12 @@ function changeTheme(color) {
     setIconsStyle('light');
 
     document.documentElement.style.setProperty('--color-top', 'white');
-    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.2)');
+    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.3)');
   } else {
     setIconsStyle('dark');
 
     document.documentElement.style.setProperty('--color-top', 'black');
-    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.1)');
+    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.15)');
   }
 }
 
@@ -211,7 +211,49 @@ function changeWelcome(bool) {
 }
 
 function openAppPage() {
-  ipcRenderer.send('request-open-url', "https://moduleart.github.io/arrowbrowser");
+  ipcRenderer.send('request-open-url-in-new-tab', "https://moduleart.github.io/arrowbrowser");
+}
+
+function loadStartPage() {
+  var fs = require("fs");
+  var ppath = require('persist-path')('ArrowBrowser');
+
+  try {
+    var startPage = fs.readFileSync(ppath + "\\json\\startpage.json");
+    document.getElementById('start-page-input').value = startPage;
+  } catch (e) {
+    alert(e);
+  }
+}
+
+function saveStartPage() {
+  var url = document.getElementById('start-page-input').value;
+
+  var fs = require('fs');
+  var ppath = require('persist-path')('ArrowBrowser');
+
+  fs.writeFileSync(ppath + "\\json\\startPage.json", url);
+
+  notif("Start page saved: " + url, "success");
+}
+
+function notif(text, type) {
+  let Data = {
+    text: text,
+    type: type
+  };
+  ipcRenderer.send('request-notif', Data)
+}
+
+function moreInfo(btn) {
+  btn.classList.toggle('active');
+  btn.nextElementSibling.classList.toggle('active');
+}
+
+function requestSearchEngine(engine) {
+  ipcRenderer.send('request-set-search-engine', engine);
+
+  notif("Search engine changed: " + engine, "success");
 }
 
 /*
@@ -247,13 +289,14 @@ ipcRenderer.on('action-focus-window', (event, arg) => {
 */
 
 function init() {
-  document.getElementById('window-controls').innerHTML = `
-    <div class="button" id="close-btn" title="Close" onclick="closeWindow()"><span>&#xE8BB;</span></div>
-  `;
-  document.getElementById('window-controls').classList.add('windows');
+  // document.getElementById('window-controls').innerHTML = `
+  //   <div class="button" id="close-btn" title="Close" onclick="closeWindow()"><span>&#xE8BB;</span></div>
+  // `;
+  // document.getElementById('window-controls').classList.add('windows');
 
   loadTheme();
   loadBorderRadius();
+  loadStartPage();
 
   ipcRenderer.send('request-set-about');
 }

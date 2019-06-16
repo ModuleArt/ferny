@@ -10,40 +10,48 @@
   <body>
     <center>
       <label class="subtitle">Bookmarks</label>
-      <hr>
       <div class="block-title">
         <img name="search" class="theme-icon">
         <label>Search</label>
       </div>
-      <input type="text" id="search" placeholder="Search bookmarks">
-      <hr>
+      <div class="container">
+        <input type="text" id="search" placeholder="Search bookmarks">
+      </div>
+
+      <div class="block-title">
+        <img name="actions" class="theme-icon">
+        <label>Actions</label>
+      </div>
+      <div class="container">
+        <div class="nav-btn" onclick="newBookmark()" title="Create bookmark">
+          <img class="theme-icon" name="create">
+          <label>New bookmark</label>
+        </div>
+      </div>
+      
       <div id="edit-bookmark" style="display: none;">
         <div class="block-title" id="edit-block-title">
           <img name="edit" class="theme-icon">
           <label>Edit bookmark</label>
         </div>
-        <input type="text" placeholder="Name" class="nav-input" id="bookmark-name"><br>
-        <input type="text" placeholder="URL" class="nav-input" id="bookmark-url"><br>
-        <div class="nav-btn" id="save-btn">
-          <img class="theme-icon" name="save">
-          <label>Save</label>
+        <div class="container">
+          <input type="text" placeholder="Name" class="nav-input" id="bookmark-name"><br>
+          <input type="text" placeholder="URL" class="nav-input" id="bookmark-url"><br>
+          <div class="nav-btn" id="save-btn">
+            <img class="theme-icon" name="save">
+            <label>Save</label>
+          </div>
+          <div class="nav-btn" onclick="closeBookmarkEditor()">
+            <img class="theme-icon" name="stop">
+            <label>Cancel</label>
+          </div>
         </div>
-        <div class="nav-btn" onclick="closeBookmarkEditor()">
-          <img class="theme-icon" name="stop">
-          <label>Cancel</label>
-        </div>
-        <hr>
       </div>
       <div class="block-title">
         <img name="bookmarks" class="theme-icon">
         <label>All bookmarks</label>
       </div>
       <div id="bookmarks"></div>
-      <hr>
-      <div class="nav-btn" onclick="newBookmark()" title="Create bookmark">
-        <img class="theme-icon" name="create">
-        <label>Add</label>
-      </div>
     </center>
     <script type="text/javascript" src="../js/bookmarks.js"></script>
   </body>

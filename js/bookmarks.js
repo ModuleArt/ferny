@@ -30,18 +30,18 @@ var drag = dragula([document.getElementById('bookmarks')], { direction: "horizon
 */
 
 function changeTheme(color) {
-  document.body.style.backgroundColor = color;
+  // document.body.style.backgroundColor = color;
 
   if(checkIfDark(color)) {
     setIconsStyle('light');
 
     document.documentElement.style.setProperty('--color-top', 'white');
-    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.2)');
+    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.3)');
   } else {
     setIconsStyle('dark');
 
     document.documentElement.style.setProperty('--color-top', 'black');
-    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.1)');
+    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.15)');
   }
 }
 function changeBorderRadius(size) {
@@ -176,7 +176,6 @@ function createBookmark(name, url) {
   div.title = url;
 
   div.onclick = function(e) {
-    // window.location.href = url;
     ipcRenderer.send('request-open-url', url);
   };
 
@@ -269,6 +268,8 @@ function saveBookmarks() {
   }
 
   fs.writeFileSync(ppath + "\\json\\bookmarks.json", JSON.stringify(bookmarksArray));
+
+  ipcRenderer.send('request-update-bookmarks-bar');
 }
 
 /*
@@ -283,6 +284,14 @@ function saveBookmarks() {
 
 ipcRenderer.on('action-update-bookmarks', (event, arg) => {
   loadBookmarks();
+});
+
+ipcRenderer.on('action-load-theme', (event, arg) => {
+  loadTheme();
+});
+
+ipcRenderer.on('action-load-border-radius', (event, arg) => {
+  loadBorderRadius();
 });
 
 /*
@@ -306,21 +315,27 @@ function init() {
 
   document.getElementById("search").addEventListener("keyup", function(event) {
     if(document.getElementById("search").value.length > 0) {
-      var search = document.getElementById("search").value;
+      // document.getElementById('search-loading').classList.add('process');
+
+      var search = document.getElementById("search").value.toLowerCase();
       var elements = document.getElementsByClassName('bookmark');
       for(var i = 0; i < elements.length; i++) {
-        var text = elements[i].getElementsByTagName('label')[0].innerHTML + " " + elements[i].title;
+        var text = elements[i].getElementsByTagName('label')[0].innerHTML.toLowerCase() + " " + elements[i].title.toLowerCase();
         if(text.indexOf(search) != -1) {
           elements[i].style.display = "inline-block";
         } else {
           elements[i].style.display = "none";
         }
       }
+
+      // document.getElementById('search-loading').classList.remove('process');
     } else {
       var elements = document.getElementsByClassName('bookmark');
       for(var i = 0; i < elements.length; i++) {
         elements[i].style.display = "inline-block";
       }
+
+      // document.getElementById('search-loading').classList.remove('process');
     }
   });
 }

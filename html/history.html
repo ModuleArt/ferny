@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>History</title>
+    <link rel="shortcut icon" type="image/png" href="../imgs/icons16/history.png"/>
+    <link rel="stylesheet" href="../css/history.css">
+  </head>
+  <body>
+    <center>
+        <label class="subtitle">History</label>
+        <div class="block-title">
+          <img name="search" class="theme-icon">
+          <label>Search</label>
+        </div>
+        <div class="container">
+          <input type="text" id="search" placeholder="Search history">
+        </div>
+        
+        <div class="block-title">
+          <img name="clear" class="theme-icon">
+          <label>Clear</label>
+        </div>
+        <div class="container">
+          <div class="nav-btn" onclick="clearHistory()">
+            <img class="theme-icon" name="delete">
+            <label>Delete all</label>
+          </div>  
+        </div>
+        
+        <div class="block-title">
+          <img name="history" class="theme-icon">
+          <label>All time</label>
+        </div>
+        <div id="history"></div>
+    </center>
+    <script type="text/javascript" src="../js/history.js"></script>
+  </body>
+</html>

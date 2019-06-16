@@ -9,31 +9,60 @@
   <body>
     <center>
       <label class="subtitle">About</label>
-      <hr>
-      <img class="about-icon" src="../imgs/icon128.png" onclick="openAppPage()" title="App page"><br>
-      <label class="subtitle">Arrow Browser</label><br>
-      <label id="about-app"></label><br><br>
-      <div class="nav-btn" onclick="checkForUpdates()" title="Check for new version">
-        <img class="nav-btn-icon theme-icon" name="check-updates">
-        <label class="nav-btn-label">Check for updates</label>
+      <div class="block-title">
+        <img name="info" class="theme-icon">
+        <label>Information</label>
       </div>
-      <div class="nav-btn" onclick="openReleasesPage()" title="GitHub page">
-        <img class="nav-btn-icon theme-icon" name="download">
-        <label class="nav-btn-label">Releases</label>
+      <div class="container">
+        <img class="about-icon" src="../imgs/icon128.png" onclick="openAppPage()" title="App page"><br>
+        <label class="subtitle">Arrow Browser</label>
+        <label id="about-app"></label>
       </div>
-      <hr>
+      
+      <div class="block-title">
+        <img name="actions" class="theme-icon">
+        <label>Actions</label>
+      </div>
+      <div class="container">
+        <div class="nav-btn" onclick="checkForUpdates()" title="Check for new version">
+          <img class="nav-btn-icon theme-icon" name="check-updates">
+          <label class="nav-btn-label">Check for updates</label>
+        </div>
+        <div class="nav-btn" onclick="openReleasesPage()" title="GitHub page">
+          <img class="nav-btn-icon theme-icon" name="download">
+          <label class="nav-btn-label">Releases</label>
+        </div>
+      </div>
+      
       <div class="block-title">
         <img name="code" class="theme-icon">
         <label>Created by</label>
       </div>
-      <div class="nav-btn" onclick="openDeveloperPage()" title="Developer page">
-        <img class="nav-btn-icon theme-icon" name="developer">
-        <label class="nav-btn-label">Module Art</label>
+      <div class="container">
+        <div class="nav-btn" onclick="openDeveloperPage()" title="Developer page">
+          <img class="nav-btn-icon theme-icon" name="developer">
+          <label class="nav-btn-label">Module Art</label>
+        </div>
       </div>
-      <hr>
-      <img name="atom" class="theme-icon"><label id="about-electron"></label><br>
-      <img name="chrome" class="theme-icon"><label id="about-chrome"></label><br>
-      <img name="node" class="theme-icon"><label id="about-node"></label>
+      
+      <div class="block-title">
+        <img name="library" class="theme-icon">
+        <label>Libraries</label>
+      </div>
+      <div class="container">
+        <div class="nav-btn" onclick="openElectronPage()" title="Electron stable releases">
+          <img class="theme-icon" name="atom">
+          <label id="about-electron"></label>
+        </div>
+        <div class="nav-btn" onclick="openChromePage()" title="Chrome releases">
+          <img class="theme-icon" name="chrome">
+          <label id="about-chrome"></label>
+        </div>
+        <div class="nav-btn" onclick="openNodePage()" title="Node previous releases">
+          <img class="theme-icon" name="node">
+          <label id="about-node">
+        </div>
+      </div>
     </center>
     <script type="text/javascript" src="../js/about.js"></script>
   </body>

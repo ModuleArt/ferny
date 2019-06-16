@@ -75,6 +75,38 @@
 }
 
 /*
+....###....##....##.####.##.....##....###....########.####..#######..##....##..######.
+...##.##...###...##..##..###...###...##.##......##.....##..##.....##.###...##.##....##
+..##...##..####..##..##..####.####..##...##.....##.....##..##.....##.####..##.##......
+.##.....##.##.##.##..##..##.###.##.##.....##....##.....##..##.....##.##.##.##..######.
+.#########.##..####..##..##.....##.#########....##.....##..##.....##.##..####.......##
+.##.....##.##...###..##..##.....##.##.....##....##.....##..##.....##.##...###.##....##
+.##.....##.##....##.####.##.....##.##.....##....##....####..#######..##....##..######.
+*/
+
+@keyframes anim-slide {
+  from {
+    opacity: 0;
+    transform: translateX(64px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes anim-show {
+  from {
+    opacity: 0;
+    transform: scale(0.75);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/*
 .########...#######..########..##....##
 .##.....##.##.....##.##.....##..##..##.
 .##.....##.##.....##.##.....##...####..
@@ -85,8 +117,11 @@
 */
 
 body {
-  margin: 4px;
-  padding: 0;
+  margin: 0;
+  padding: 2px;
+  animation-name: anim-slide;
+  animation-duration: 0.25s;
+  overflow-x: hidden;
 }
 
 label {
@@ -121,18 +156,36 @@ input {
   border-radius: var(--px-radius);
   background-color: transparent;
   text-align: center;
-  /* transition: 0.25s; */
-  width: 100%;
-  margin-bottom: 4px;
+  width: calc(100% - 4px);
+  margin: 2px;
 }
 
 input:hover, input:focus {
   background-color: var(--color-over);
 }
 
-#search {
-  margin-bottom: 0;
+/* #search-loading {
+  display: none;
+  margin-bottom: 4px;
+  vertical-align: middle;
+  border: 4px solid var(--color-top);
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: spin 1s linear infinite;
+  margin-left: 4px;
 }
+
+#search-loading.process {
+  display: inline-block;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+} */
 
 /*
 .########...#######...#######..##....##.##.....##....###....########..##....##..######.
@@ -146,7 +199,16 @@ input:hover, input:focus {
 
 #bookmarks {
   display: block;
-  margin: -2px;
+}
+
+#bookmarks:empty::before {
+  content: "\2205  No bookmarks... Try to bookmark something...";
+  color: var(--color-top);
+  background-color: var(--color-over);
+  display: block;
+  padding: 8px;
+  margin: 2px;
+  border-radius: var(--px-radius);
 }
 
 .bookmark {
@@ -171,18 +233,17 @@ input:hover, input:focus {
 .bookmark label {
   margin: 0 4px;
   width: calc(100% - 36px);
-  overflow:hidden;
+  overflow: hidden;
   position: absolute;
   white-space: nowrap;
   word-break: keep-all;
   text-overflow: ellipsis;
-  /* transition: 0.25s; */
 }
 
 .bookmark-icon {
   width: 16px;
   height: 16px;
-  filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.5));
+  /* filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.5)); */
   vertical-align: middle;
   margin: 2px;
 }
@@ -246,8 +307,15 @@ hr {
   margin: 4px 8px;
 }
 
+.container {
+  background-color: var(--color-over);
+  border-radius: var(--px-radius);
+  padding: 2px;
+  margin: 2px;
+}
+
 .block-title {
-  padding: 4px;
+  margin-top: 32px;
 }
 
 .block-title label {
@@ -273,7 +341,7 @@ hr {
   border-radius: var(--px-radius);
   padding: 4px;
   padding-right: 8px;
-  /* transition: 0.25s; */
+  margin: 2px;
   display: inline-block;
 }
 

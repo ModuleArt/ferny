@@ -10,6 +10,24 @@ const { ipcRenderer } = require('electron');
 .##........#######..##....##..######.....##....####..#######..##....##..######.
 */
 
+function toggleBookmarksBar() {
+  var fs = require("fs");
+  var ppath = require('persist-path')('ArrowBrowser');
+
+  try {
+    var bookmarksBar = fs.readFileSync(ppath + "\\json\\bookmarksbar.json");
+    if(bookmarksBar == 1) {
+      ipcRenderer.send('request-set-bookmarks-bar', 0);
+      notif("Bookmarks bar turned off", "info");
+    } else {
+      ipcRenderer.send('request-set-bookmarks-bar', 1);
+      notif("Bookmarks bar turned on", "success");
+    }
+  } catch (e) {
+
+  }
+}
+
 function scrollToId(id) {
   document.getElementById(id).scrollIntoView({
 	  	behavior: 'smooth'
@@ -18,15 +36,15 @@ function scrollToId(id) {
 
 function requestSearchEngine(engine) {
   ipcRenderer.send('request-set-search-engine', engine);
+
+  notif("Search engine changed: " + engine, "success");
 }
 
 function requestTheme(color) {
-  changeTheme(color);
   ipcRenderer.send('request-change-theme', color);
 }
 
 function requestBorderRadius(size) {
-  changeBorderRadius(size);
   ipcRenderer.send('request-change-border-radius', size);
 }
 
@@ -35,18 +53,16 @@ function changeBorderRadius(size) {
 }
 
 function changeTheme(color) {
-  document.body.style.backgroundColor = color;
-
   if(checkIfDark(color)) {
     setIconsStyle('light');
 
     document.documentElement.style.setProperty('--color-top', 'white');
-    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.2)');
+    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.3)');
   } else {
     setIconsStyle('dark');
 
     document.documentElement.style.setProperty('--color-top', 'black');
-    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.1)');
+    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.15)');
   }
 }
 
@@ -179,6 +195,24 @@ function moreInfo(btn) {
   btn.classList.toggle('active');
   btn.nextElementSibling.classList.toggle('active');
 }
+
+/*
+.####.########...######.....########..########.##....##.########..########.########..########.########.
+..##..##.....##.##....##....##.....##.##.......###...##.##.....##.##.......##.....##.##.......##.....##
+..##..##.....##.##..........##.....##.##.......####..##.##.....##.##.......##.....##.##.......##.....##
+..##..########..##..........########..######...##.##.##.##.....##.######...########..######...########.
+..##..##........##..........##...##...##.......##..####.##.....##.##.......##...##...##.......##...##..
+..##..##........##....##....##....##..##.......##...###.##.....##.##.......##....##..##.......##....##.
+.####.##.........######.....##.....##.########.##....##.########..########.##.....##.########.##.....##
+*/
+
+ipcRenderer.on('action-load-theme', (event, arg) => {
+  loadTheme();
+});
+
+ipcRenderer.on('action-load-border-radius', (event, arg) => {
+  loadBorderRadius();
+});
 
 /*
 .####.##....##.####.########

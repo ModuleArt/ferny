@@ -20,16 +20,6 @@ const { ipcRenderer } = require('electron');
 .##........#######..##....##..######.....##....####..#######..##....##..######.
 */
 
-function requestTheme(color) {
-  changeTheme(color);
-  ipcRenderer.send('request-change-theme', color);
-}
-
-function requestBorderRadius(size) {
-  changeBorderRadius(size);
-  ipcRenderer.send('request-change-border-radius', size);
-}
-
 function changeTheme(color) {
   document.body.style.backgroundColor = color;
 
@@ -37,12 +27,12 @@ function changeTheme(color) {
     setIconsStyle('light');
 
     document.documentElement.style.setProperty('--color-top', 'white');
-    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.2)');
+    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.3)');
   } else {
     setIconsStyle('dark');
 
     document.documentElement.style.setProperty('--color-top', 'black');
-    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.1)');
+    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.15)');
   }
 }
 
@@ -113,6 +103,48 @@ function closeWindow() {
   ipcRenderer.send('request-close-keybinds');
 }
 
+function updateSearch() {
+  var names = document.getElementsByClassName('key-name');
+  var codes = document.getElementsByClassName('key-code');
+
+  var containers = document.getElementsByClassName('block-container');
+  var blocks = document.getElementsByClassName('block-title');
+
+  if(document.getElementById("search").value.length > 0) {
+    var search = document.getElementById("search").value.toLowerCase();
+    for(var i = 0; i < names.length; i++) {
+      var text = names[i].innerHTML.toLowerCase();
+      if(text.indexOf(search) != -1) {
+        names[i].style.display = "";
+        codes[i].style.display = "";
+      } else {
+        names[i].style.display = "none";
+        codes[i].style.display = "none";
+      }
+    }
+
+    for(var i = 1; i < containers.length; i++) {
+      if(containers[i].clientHeight < 16) {
+        containers[i].style.display = "none";
+        blocks[i].style.display = "none";
+      } else {
+        containers[i].style.display = "";
+        blocks[i].style.display = "";
+      }
+    }
+  } else {
+    for(var i = 0; i < names.length; i++) {
+      names[i].style.display = "";
+      codes[i].style.display = "";
+    }
+
+    for(var i = 1; i < containers.length; i++) {
+      containers[i].style.display = "";
+      blocks[i].style.display = "";
+    }
+  }
+}
+
 /*
 .####.########...######.....########..########.##....##.########..########.########..########.########.
 ..##..##.....##.##....##....##.....##.##.......###...##.##.....##.##.......##.....##.##.......##.....##
@@ -142,10 +174,10 @@ ipcRenderer.on('action-focus-window', (event, arg) => {
 */
 
 function init() {
-  document.getElementById('window-controls').innerHTML = `
-    <div class="button" id="close-btn" title="Close" onclick="closeWindow()"><span>&#xE8BB;</span></div>
-  `;
-  document.getElementById('window-controls').classList.add('windows');
+  // document.getElementById('window-controls').innerHTML = `
+  //   <div class="button" id="close-btn" title="Close" onclick="closeWindow()"><span>&#xE8BB;</span></div>
+  // `;
+  // document.getElementById('window-controls').classList.add('windows');
 
   loadTheme();
   loadBorderRadius();

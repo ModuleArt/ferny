@@ -113,12 +113,13 @@
 
 #titlebar-icon {
     float: left;
+    padding: 4px;
 }
 
 #titlebar-title {
     position: absolute;
-    top: 6px;
-    left: 32px;
+    top: 10px;
+    left: 40px;
 }
 
 #drag-zone {
@@ -127,7 +128,7 @@
     left: 4px;
     right: 4px;
     top: 4px;
-    height: 28px;
+    height: 36px;
     z-index: -100;
 }
 
@@ -136,7 +137,7 @@
     top: 0;
     right: 0;
     left: 0;
-    height: 32px;
+    height: 40px;
     background-color: var(--color-over);
     padding: 4px;
 }
@@ -146,11 +147,23 @@
 }
 
 #window-controls {
-    -webkit-app-region: no-drag;
     float: right;
 }
 
-#titlebar.blur #window-controls .button {
+#close-btn {
+    background-color: var(--color-over);
+    margin: -4px;
+    margin-left: 0;
+    padding: 8px;
+    border-radius: 0;
+    -webkit-app-region: no-drag;
+}
+
+#close-btn:hover {
+    background-color: var(--color-red);
+}
+
+/* #titlebar.blur #window-controls .button {
     opacity: var(--opacity-blur);
 }
 
@@ -179,7 +192,35 @@
 }
 #window-controls.windows #close-btn:hover span {
     color: white;
-}
+} */
+
+/*
+.####.##....##.########..##.....##.########
+..##..###...##.##.....##.##.....##....##...
+..##..####..##.##.....##.##.....##....##...
+..##..##.##.##.########..##.....##....##...
+..##..##..####.##........##.....##....##...
+..##..##...###.##........##.....##....##...
+.####.##....##.##.........#######.....##...
+*/
+
+input[type=text] {
+    outline: none;
+    border: none;
+    color: var(--color-top);
+    font-size: var(--px-font);
+    height: 32px;
+    padding: 8px;
+    border-radius: var(--px-radius);
+    background-color: transparent;
+    text-align: center;
+    width: calc(100% - 4px);
+    margin: 2px;
+  }
+  
+  input[type=text]:hover, input[type=text]:focus {
+    background-color: var(--color-over);
+  }
 
 /*
 .########...#######..########..##....##
@@ -215,7 +256,7 @@ label.link:hover {
 
 .container {
     position: absolute;
-    top: 32px;
+    top: 40px;
     bottom: 0;
     left: 0;
     right: 0;
@@ -228,9 +269,15 @@ label.link:hover {
 }
 
 .key-code {
+    color: var(--color-top);
     display: inline-block;
     width: 160px;
     padding: 2px;
+}
+
+.key-name {
+    display: inline-block;
+    width: calc(100% - 164px);
 }
 
 .key {
@@ -238,6 +285,7 @@ label.link:hover {
     display: inline-block;
     padding: 2px 6px;
     border-radius: var(--px-radius);
+    margin: 2px;
 }
 
 /*
@@ -255,12 +303,20 @@ hr {
     margin: 4px 8px;
 }
 
-.block-title {
-    padding: 4px;
+.block-container {
+    background-color: var(--color-over);
+    border-radius: var(--px-radius);
+    padding: 2px;
+    margin: 2px;
 }
 
-.block-title label {
-    vertical-align: super;
+.block-title {
+    margin-top: 32px;
+    text-align: center;
+}
+
+.block-title img {
+    vertical-align: middle;
 }
 
 /*

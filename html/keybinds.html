@@ -13,46 +13,230 @@
         <div id="titlebar">
             <img id="titlebar-icon" class="theme-icon" name="keyboard">
             <label id="titlebar-title">Hotkeys</label>
-            <div id="window-controls"></div>
+            <div id="window-controls">
+                <img name="cancel" id="close-btn" class="title-bar-btn theme-icon" title="Close" onclick="closeWindow()">
+            </div>
         </div>
 
         <div class="container">
-            <div class="key-code"><div class="key">Ctrl</div> + <div class="key">T</div></div>Create new tab<br>
-            <div class="key-code"><div class="key">F5</div></div>Reload active page<br>
-            <div class="key-code"><div class="key">Ctrl</div> + <div class="key">Shift</div> + <div class="key">D</div></div>Duplicate active tab<br>
-            <div class="key-code"><div class="key">Ctrl</div> + <div class="key">W</div></div>Close active tab<br>
-            <hr>
-            <div class="key-code"><div class="key">Ctrl</div> + <div class="key">B</div></div>Open bookmarks<br>
-            <div class="key-code"><div class="key">Ctrl</div> + <div class="key">Shift</div> + <div class="key">B</div></div>Add active page to bookmarks<br>
-            <hr>
-            <div class="key-code"><div class="key">Ctrl</div> + <div class="key">D</div></div>Open downloads<br>
-            <hr>
-            <div class="key-code"><div class="key">Ctrl</div> + <div class="key">-</div></div>Zoom out active page<br>
-            <div class="key-code"><div class="key">Ctrl</div> + <div class="key">=</div></div>Zoom in active page<br>
-            <div class="key-code"><div class="key">Ctrl</div> + <div class="key">Backspace</div></div>Change active page zoom to original<br>
-            <div class="key-code"><div class="key">F11</div></div>Toggle fullscreen mode<br>
-            <hr>
-            <div class="key-code"><div class="key">Ctrl</div> + <div class="key">X</div></div>Cut<br>
-            <div class="key-code"><div class="key">Ctrl</div> + <div class="key">C</div></div>Copy<br>
-            <div class="key-code"><div class="key">Ctrl</div> + <div class="key">V</div></div>Paste<br>
-            <div class="key-code"><div class="key">Ctrl</div> + <div class="key">Z</div></div>Undo<br>
-            <div class="key-code"><div class="key">Ctrl</div> + <div class="key">Shift</div> + <div class="key">Z</div></div>Redo<br>
-            <div class="key-code"><div class="key">Ctrl</div> + <div class="key">A</div></div>Select all<br>
-            <div class="key-code"><div class="key">Backspace</div></div>Delete<br>
-            <hr>
-            <div class="key-code"><div class="key">Ctrl</div> + <div class="key">F</div></div>Find text in active page<br>
-            <div class="key-code"><div class="key">F12</div></div>Open developer tools for active page<br>
-            <hr>
-            <div class="key-code"><div class="key">Ctrl</div> + <div class="key">Comma</div></div>Open settings<br>
-            <hr>
-            <div class="key-code"><div class="key">Ctrl</div> + <div class="key">K</div></div>Show key binds window<br>
-            <div class="key-code"><div class="key">Ctrl</div> + <div class="key">U</div></div>Check for app updates<br>
-            <div class="key-code"><div class="key">Ctrl</div> + <div class="key">Shift</div> + <div class="key">A</div></div>Open about app page<br>
-            <hr>
-            <div class="key-code"><div class="key">Ctrl</div> + <div class="key">Shift</div> + <div class="key">F</div></div>Focus address bar<br>
-            <div class="key-code"><div class="key">Esc</div></div>Close active panel<br>
-            <hr>
-            <div class="key-code"><div class="key">Ctrl</div> + <div class="key">Shift</div> + <div class="key">E</div></div>Exit app
+            <div class="block-title">
+                <img name="search" class="theme-icon">
+                <label>Search</label>
+            </div>
+            <div class="block-container">
+                <input type="text" id="search" placeholder="Search hotkeys" onkeyup="updateSearch()">
+            </div>
+
+            <div class="block-title">
+                <img name="tab" class="theme-icon">
+                <label>Tab</label>
+            </div>
+            <div class="block-container">
+                <div class="key-code">
+                    <div class="key">Ctrl</div> + <div class="key">T</div>
+                </div>
+                <label class="key-name">Create new tab</label>
+
+                <div class="key-code">
+                    <div class="key">F5</div>
+                </div>
+                <label class="key-name">Reload active page</label>
+
+                <div class="key-code">
+                    <div class="key">Ctrl</div> + <div class="key">Shift</div> + <div class="key">D</div>
+                </div>
+                <label class="key-name">Duplicate active tab</label>
+
+                <div class="key-code">
+                    <div class="key">Ctrl</div> + <div class="key">W</div>
+                </div>
+                <label class="key-name">Close active tab</label>
+            </div>
+
+            <div class="block-title">
+                <img name="bookmarks" class="theme-icon">
+                <label>Bookmarks</label>
+            </div>
+            <div class="block-container">
+                <div class="key-code">
+                    <div class="key">Ctrl</div> + <div class="key">B</div>
+                </div>
+                <label class="key-name">Open bookmarks</label>
+
+                <div class="key-code">
+                    <div class="key">Ctrl</div> + <div class="key">Shift</div> + <div class="key">B</div>
+                </div>
+                <label class="key-name">Add active page to bookmarks</label>
+            </div>
+
+            <div class="block-title">
+                <img name="history" class="theme-icon">
+                <label>History</label>
+            </div>
+            <div class="block-container">
+                <div class="key-code">
+                    <div class="key">Ctrl</div> + <div class="key">H</div>
+                </div>
+                <label class="key-name">Open history</label>
+            </div>
+
+            <div class="block-title">
+                <img name="download" class="theme-icon">
+                <label>Downloads</label>
+            </div>
+            <div class="block-container">
+                <div class="key-code">
+                    <div class="key">Ctrl</div> + <div class="key">D</div>
+                </div>
+                <label class="key-name">Open downloads</label>
+            </div>
+
+            <div class="block-title">
+                <img name="zoom-in" class="theme-icon">
+                <label>Zoom</label>
+            </div>
+            <div class="block-container">
+                <div class="key-code">
+                    <div class="key">Ctrl</div> + <div class="key">-</div>
+                </div>
+                <label class="key-name">Zoom out active page</label>
+
+                <div class="key-code">
+                    <div class="key">Ctrl</div> + <div class="key">=</div>
+                </div>
+                <label class="key-name">Zoom in active page</label>
+
+                <div class="key-code">
+                    <div class="key">Ctrl</div> + <div class="key">Backspace</div>
+                </div>
+                <label class="key-name">Change active page zoom to original</label>
+
+                <div class="key-code">
+                    <div class="key">F11</div>
+                </div>
+                <label class="key-name">Toggle fullscreen mode</label>
+            </div>
+
+            <div class="block-title">
+                <img name="edit" class="theme-icon">
+                <label>Edit</label>
+            </div>
+            <div class="block-container">
+                <div class="key-code">
+                    <div class="key">Ctrl</div> + <div class="key">X</div>
+                </div>
+                <label class="key-name">Cut</label>
+
+                <div class="key-code">
+                    <div class="key">Ctrl</div> + <div class="key">C</div>
+                </div>
+                <label class="key-name">Copy</label>
+
+                <div class="key-code">
+                    <div class="key">Ctrl</div> + <div class="key">V</div>
+                </div>
+                <label class="key-name">Paste</label>
+
+                <div class="key-code">
+                    <div class="key">Ctrl</div> + <div class="key">Z</div>
+                </div>
+                <label class="key-name">Undo</label>
+
+                <div class="key-code">
+                    <div class="key">Ctrl</div> + <div class="key">Shift</div> + <div class="key">Z</div>
+                </div>
+                <label class="key-name">Redo</label>
+
+                <div class="key-code">
+                    <div class="key">Ctrl</div> + <div class="key">A</div>
+                </div>
+                <label class="key-name">Select all</label>
+
+                <div class="key-code">
+                    <div class="key">Backspace</div>
+                </div>
+                <label class="key-name">Delete</label>
+            </div>
+
+            <div class="block-title">
+                <img name="file" class="theme-icon">
+                <label>Page</label>
+            </div>
+            <div class="block-container">
+                <div class="key-code">
+                    <div class="key">Ctrl</div> + <div class="key">F</div>
+                </div>
+                <label class="key-name">Find text in active page</label>
+
+                <div class="key-code">
+                    <div class="key">Ctrl</div> + <div class="key">I</div>
+                </div>
+                <label class="key-name">Show certificate info for active page</label>
+
+                <div class="key-code">
+                    <div class="key">F12</div>
+                </div>
+                <label class="key-name">Open developer tools for active page</label>
+            </div>
+
+            <div class="block-title">
+                <img name="settings" class="theme-icon">
+                <label>Settings</label>
+            </div>
+            <div class="block-container">
+                <div class="key-code">
+                    <div class="key">Ctrl</div> + <div class="key">Comma</div>
+                </div>
+                <label class="key-name">Open settings</label>
+            </div>
+
+            <div class="block-title">
+                <img name="about" class="theme-icon">
+                <label>Help</label>
+            </div>
+            <div class="block-container">
+                <div class="key-code">
+                    <div class="key">Ctrl</div> + <div class="key">K</div>
+                </div>
+                <label class="key-name">Show key binds window</label>
+
+                <div class="key-code">
+                    <div class="key">Ctrl</div> + <div class="key">U</div>
+                </div>
+                <label class="key-name">Check for app updates</label>
+
+                <div class="key-code">
+                    <div class="key">Ctrl</div> + <div class="key">Shift</div> + <div class="key">A</div>
+                </div>
+                <label class="key-name">Open about app page</label>
+            </div>
+
+            <div class="block-title">
+                <img name="options" class="theme-icon">
+                <label>More</label>
+            </div>
+            <div class="block-container">
+                <div class="key-code">
+                    <div class="key">Ctrl</div> + <div class="key">Shift</div> + <div class="key">F</div>
+                </div>
+                <label class="key-name">Focus address bar</label>
+
+                <div class="key-code">
+                    <div class="key">Esc</div>
+                </div>
+                <label class="key-name">Close active panel</label>
+            </div>
+
+            <div class="block-title">
+                <img name="exit" class="theme-icon">
+                <label>Exit</label>
+            </div>
+            <div class="block-container">
+                <div class="key-code">
+                    <div class="key">Ctrl</div> + <div class="key">Shift</div> + <div class="key">E</div>
+                </div>
+                <label class="key-name">Exit app</label>
+            </div>
         </div>
         <script type="text/javascript" src="../js/keybinds.js"></script>
     </body>

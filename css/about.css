@@ -72,6 +72,38 @@
 }
 
 /*
+....###....##....##.####.##.....##....###....########.####..#######..##....##..######.
+...##.##...###...##..##..###...###...##.##......##.....##..##.....##.###...##.##....##
+..##...##..####..##..##..####.####..##...##.....##.....##..##.....##.####..##.##......
+.##.....##.##.##.##..##..##.###.##.##.....##....##.....##..##.....##.##.##.##..######.
+.#########.##..####..##..##.....##.#########....##.....##..##.....##.##..####.......##
+.##.....##.##...###..##..##.....##.##.....##....##.....##..##.....##.##...###.##....##
+.##.....##.##....##.####.##.....##.##.....##....##....####..#######..##....##..######.
+*/
+
+@keyframes anim-slide {
+  from {
+    opacity: 0;
+    transform: translateX(64px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes anim-show {
+  from {
+    opacity: 0;
+    transform: scale(0.75);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/*
 .########...#######..########..##....##
 .##.....##.##.....##.##.....##..##..##.
 .##.....##.##.....##.##.....##...####..
@@ -82,8 +114,11 @@
 */
 
 body {
-  margin: 4px;
-  padding: 0;
+  margin: 0;
+  padding: 2px;
+  animation-name: anim-slide;
+  animation-duration: 0.25s;
+  overflow-x: hidden;
 }
 
 label {
@@ -108,16 +143,20 @@ label.title {
 .########..########..#######...######..##....##
 */
 
+hr {
+  border: 1px solid var(--color-over);
+  margin: 4px 8px;
+}
+
 .container {
-  padding: 16px;
-  margin-bottom: 32px;
+  background-color: var(--color-over);
   border-radius: var(--px-radius);
-  border: 2px solid var(--color-over);
-  max-width: 720px;
+  padding: 2px;
+  margin: 2px;
 }
 
 .block-title {
-  padding: 4px;
+  margin-top: 32px;
 }
 
 .block-title label {
@@ -125,22 +164,18 @@ label.title {
 }
 
 .about-icon {
-  border-radius: 23px;
+  border-radius: 50%;
   padding: 4px;
+  margin: 2px;
 }
 
 .about-icon:hover {
   background-color: var(--color-over);
 }
 
-hr {
-  border: 1px solid var(--color-over);
-  margin: 4px 8px;
-}
-
-#about-electron, #about-node, #about-chrome {
-  vertical-align: super;
-  padding-left: 4px;
+#about-app {
+  margin: 2px;
+  display: block;
 }
 
 /*
@@ -162,8 +197,8 @@ hr {
   border-radius: var(--px-radius);
   padding: 4px;
   padding-right: 8px;
-  /* transition: 0.25s; */
   display: inline-block;
+  margin: 2px;
 }
 
 .nav-btn:hover {

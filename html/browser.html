@@ -9,7 +9,7 @@
 
     <div id="notif-panel"></div>
 
-    <div id="sidebar" style="display: none;">
+    <div id="sidebar" style="display: none;" class="hide">
       <div id="sidebar-div">
         <img name='forward' class='title-bar-btn theme-icon' title="Hide sidebar" onclick="hideSidebar()">
         <img id="pin-sidebar-btn" name='pin' class='title-bar-btn theme-icon' title="Pin sidebar" onclick="pinSidebar()">
@@ -18,6 +18,10 @@
         <div id="bookmarks-btn" class="nav-btn active" onclick="goToBookmarksTab()">
           <img class="theme-icon" name="bookmarks">
           <label>Bookmarks</label>
+        </div>
+        <div id="history-btn" class="nav-btn" onclick="goToHistoryTab()">
+          <img class="theme-icon" name="history">
+          <label>History</label>
         </div>
         <div id="downloads-btn" class="nav-btn" onclick="goToDownloadsTab()">
           <img class="theme-icon" name="download">
@@ -36,12 +40,8 @@
       <webview id="sidebar-webview" nodeintegration src="../html/bookmarks.html"></webview>
     </div>
 
-    <center id="find-panel" style="display: none;">
-      <div class="block-title">
-        <img name="search" class="theme-icon">
-        <label>Find in page</label>
-      </div>
-      <input type="text" id="find-input" placeholder="Text to find">
+    <center id="find-panel" style="display: none;" class="hide">
+      <input type="text" id="find-input" placeholder="Text to find in page" onkeyup="nextFindInPage()">
       <div class="nav-btn" onclick="previousFindInPage()">
         <img class="theme-icon" name="up">
         <label>Previous</label>
@@ -50,45 +50,42 @@
         <img class="theme-icon" name="down">
         <label>Next</label>
       </div>
-      <div class="nav-btn" onclick="closeFindPanel()">
-        <img class="theme-icon" name="cancel">
-        <label>Close</label>
-      </div>
+      <img name='cancel' class='title-bar-btn theme-icon' title="Close find panel" onclick="closeFindPanel()">
     </center>
 
     <div class="etabs-tabgroup" id="etabs-tabgroup">
       <div class="etabs-tabs" id="etabs-tabs"></div>
-      <div class="etabs-buttons">
-        <!-- <button><img name='down-squared' class='theme-icon' id="tabs-list-btn"/></button> -->
-      </div>
+      <div class="etabs-buttons"></div>
       <div id="window-controls">
-        <img name="tabs-down" id="tabs-list-btn" class="title-bar-btn theme-icon" title="Tabs list">
+        <img name="tabs-down" id="tabs-list-btn" class="title-bar-btn theme-icon" title="Tabs list" onclick="requestTabsList()">
         <div class="title-bar-vr"></div>
         <img name="line" id="minimize-btn" class="title-bar-btn theme-icon" title="Minimize" onclick="minimizeWindow()">
-        <!-- <img name="square" id="unmaximize-btn" class="title-bar-btn theme-icon" title="Restore down" onclick="restoreWindow()" style="display: none"> -->
-        <img name="window" id="maximize-btn" class="title-bar-btn theme-icon" title="Maximize" onclick="toggleMaximizeWindow()">
+        <img name="square" id="maximize-btn" class="title-bar-btn theme-icon" title="Maximize" onclick="toggleMaximizeWindow()">
         <img name="cancel" id="close-btn" class="title-bar-btn theme-icon" title="Close" onclick="closeWindow()">
       </div>
     </div>
 
+    <center id="bookmarks-bar" style="display: none;"></center>
+
     <div id="titlebar">
-      <img name="back" id="back-btn" class="title-bar-btn theme-icon" title="Go back">
-      <img name="forward" id="forward-btn" class="title-bar-btn theme-icon" title="Go forward">
-      <img name="refresh" id="refresh-btn" class="title-bar-btn theme-icon" title="Reload this page">
-      <img name="stop" id="stop-btn" class="title-bar-btn theme-icon" title="Stop loading this page" style="display: none">
+      <img name="back" id="back-btn" class="title-bar-btn theme-icon" title="Go back" onclick="goBack()">
+      <img name="forward" id="forward-btn" class="title-bar-btn theme-icon" title="Go forward" onclick="goForward()">
+      <img name="refresh" id="refresh-btn" class="title-bar-btn theme-icon" title="Reload this page" onclick="goReload()">
+      <img name="stop" id="stop-btn" class="title-bar-btn theme-icon" title="Stop loading this page" style="display: none" onclick="goStop()">
       <div class="title-bar-vr"></div>
-      <img name="info" id="info-btn" class="title-bar-btn theme-icon disable" title="Website info">
-      <input type="text" placeholder="Search Google or type a URL" id="search-input" oninput="getSuggestions()" onfocusout="removeSuggestions()">
+      <img name="info" id="info-btn" class="title-bar-btn theme-icon" title="Website info" onclick="popupInfoContextMenu()">
+      <input type="text" placeholder="Search or type a URL" id="search-input" oninput="getSuggestions()" onfocusout="removeSuggestions()" onkeyup="searchKeyUp(event)" onfocus="focusSearch()">
       <img name="bookmark" class="title-bar-btn theme-icon" title="Bookmark this page" onclick="createBookmark()">
       <div class="title-bar-vr"></div>
-      <img name="bookmarks-book" id="sidebar-btn" class="title-bar-btn theme-icon" title="Sidebar (Bookmarks, history, downloads, settings)">
-      <img name="menu" id="menu-btn" class="title-bar-btn theme-icon" title="Menu">
+      <img name="bookmarks-book" id="sidebar-btn" class="title-bar-btn theme-icon" title="Sidebar (Bookmarks, history, downloads, settings)" onclick="toggleSidebar()">
+      <img name="menu" id="menu-btn" class="title-bar-btn theme-icon" title="Menu" onclick="requestSideMenu()">
     </div>
 
     <div class="etabs-views" id="etabs-views"></div>
+
     <label id="target-url"></label>
 
-    <div id="search-suggest" style="display: none;">
+    <div id="search-suggest" style="display: none;" onmousewheel="searchSuggestWheel(event)" class="hide">
       <div id="search-suggest-container"></div>
       <hr>
       <img name="google" class="title-bar-btn theme-icon search-engine" title="Search with Google" onclick="searchWith(null, this.name)">

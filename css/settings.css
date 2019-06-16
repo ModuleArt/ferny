@@ -72,6 +72,38 @@
 }
 
 /*
+....###....##....##.####.##.....##....###....########.####..#######..##....##..######.
+...##.##...###...##..##..###...###...##.##......##.....##..##.....##.###...##.##....##
+..##...##..####..##..##..####.####..##...##.....##.....##..##.....##.####..##.##......
+.##.....##.##.##.##..##..##.###.##.##.....##....##.....##..##.....##.##.##.##..######.
+.#########.##..####..##..##.....##.#########....##.....##..##.....##.##..####.......##
+.##.....##.##...###..##..##.....##.##.....##....##.....##..##.....##.##...###.##....##
+.##.....##.##....##.####.##.....##.##.....##....##....####..#######..##....##..######.
+*/
+
+@keyframes anim-slide {
+  from {
+    opacity: 0;
+    transform: translateX(64px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes anim-show {
+  from {
+    opacity: 0;
+    transform: scale(0.75);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/*
 .########...#######..########..##....##
 .##.....##.##.....##.##.....##..##..##.
 .##.....##.##.....##.##.....##...####..
@@ -82,8 +114,11 @@
 */
 
 body {
-  margin: 4px;
-  padding: 0;
+  margin: 0;
+  padding: 2px;
+  animation-name: anim-slide;
+  animation-duration: 0.25s;
+  overflow-x: hidden;
 }
 
 label {
@@ -99,13 +134,15 @@ label.title {
 }
 
 label.link {
-  color: var(--color-blue);
+  color: var(--color-top);
   display: inline-block;
-  margin: 0 4px;
+  margin: 2px;
+  padding: 2px 8px;
+  border-radius: var(--px-radius);
 }
 
 label.link:hover {
-  text-decoration: underline;
+  background-color: var(--color-over);
 }
 
 /*
@@ -124,24 +161,18 @@ hr {
 }
 
 .container {
-  padding: 16px;
-  margin-bottom: 32px;
+  background-color: var(--color-over);
   border-radius: var(--px-radius);
-  border: 2px solid var(--color-over);
-  max-width: 720px;
+  padding: 2px;
+  margin: 2px;
 }
 
 .block-title {
-  padding: 4px;
+  margin-top: 32px;
 }
 
 .block-title label {
   vertical-align: super;
-}
-
-hr.dotted {
-  border: none;
-  border-bottom: 4px dotted var(--color-over);
 }
 
 /*
@@ -164,8 +195,8 @@ input[type=text] {
   border-radius: var(--px-radius);
   background-color: transparent;
   text-align: center;
-  width: 100%;
-  margin-top: 4px;
+  width: calc(100% - 4px);
+  margin: 2px;
 }
 
 input[type=text]:hover, input[type=text]:focus {
@@ -191,8 +222,8 @@ input[type=text]:hover, input[type=text]:focus {
   border-radius: var(--px-radius);
   padding: 4px;
   padding-right: 8px;
-  margin-top: 4px;
   display: inline-block;
+  margin: 2px;
 }
 
 .nav-btn:hover {
@@ -213,7 +244,8 @@ input[type=text]:hover, input[type=text]:focus {
   padding: 4px;
   border-radius: var(--px-radius);
   display: inline-block;
-  vertical-align: middle;
+  vertical-align: top;
+  margin: 2px;
 }
 
 .more-btn:hover, .more-btn.active {
@@ -221,7 +253,7 @@ input[type=text]:hover, input[type=text]:focus {
 }
 
 .more-label {
-  margin-top: 4px;
+  margin: 2px;
   display: none;
   padding: 4px;
   background-color: var(--color-over);
@@ -246,8 +278,8 @@ input[type=text]:hover, input[type=text]:focus {
   padding: 2px 8px;
   display: inline-block;
   border-radius: var(--px-radius);
-  margin-top: 4px;
   color: var(--color-top);
+  margin: 2px;
 }
 
 .color div {
@@ -274,10 +306,11 @@ input[type=text]:hover, input[type=text]:focus {
 
 .nav-checkbox {
   display: inline-block;
-  padding: 4px;
+  padding: 3px;
   padding-left: 8px;
   border-radius: var(--px-radius);
-  margin-top: 4px;
+  margin: 2px;
+  height: 32px;
 }
 
 .nav-checkbox:hover {

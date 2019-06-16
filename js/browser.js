@@ -14,7 +14,6 @@ const {
 const TabGroup = require("electron-tabs");
 const dragula = require("dragula");
 const autoSuggest = require('google-autocomplete');
-const sslCertificate = require('get-ssl-certificate');
 
 /*
 .########....###....########...######.
@@ -29,10 +28,9 @@ const sslCertificate = require('get-ssl-certificate');
 let tabGroup = new TabGroup({
   newTab: {
     title: 'New Tab',
-    src: "https://google.com", 
     active: true
   },
-  newTabButtonText: "<img name='create' class='theme-icon'/>",
+  newTabButtonText: "<img title='New tab' name='create' class='theme-icon'/>",
   closeButtonText: "&nbsp;"
 });
 dragula([tabGroup.tabContainer], {
@@ -46,6 +44,11 @@ tabGroup.on("tab-added", (tab, tabGroup) => {
     e.preventDefault();
     ipcRenderer.send('request-tab-menu', tab.id);
   }, false);
+
+  document.getElementById('search-input').value = "";
+  document.getElementById('back-btn').classList.add('disable');
+  document.getElementById('forward-btn').classList.add('disable');
+  applyFindPanel();
 
   tab.on("active", (tab) => {
     document.getElementById('search-input').value = webview.getURL();
@@ -96,7 +99,6 @@ tabGroup.on("tab-added", (tab, tabGroup) => {
         active: true
       });
     }
-    
   });
 
   webview.addEventListener('page-favicon-updated', (e) => {
@@ -139,6 +141,8 @@ tabGroup.on("tab-added", (tab, tabGroup) => {
     } else {
       document.getElementById('forward-btn').classList.add('disable');
     }
+    
+    ipcRenderer.send('request-add-history-item', e.url);
   });
 
   webview.addEventListener('did-navigate-in-page', (e) => {
@@ -216,6 +220,50 @@ tabGroup.on("tab-removed", (tab, tabGroup) => {
 .##........#######..##....##..######.....##....####..#######..##....##..######.
 */
 
+function popupInfoContextMenu() {
+  ipcRenderer.send('request-info-contextmenu');
+}
+
+function toggleSidebar() {
+  if (document.getElementById("sidebar").style.display == "none") {
+    showSidebar();
+  } else {
+    hideSidebar();
+  }
+}
+
+function goBack() {
+  tabGroup.getActiveTab().webview.goBack();
+}
+
+function goForward() {
+  tabGroup.getActiveTab().webview.goForward();
+}
+
+function goReload() {
+  tabGroup.getActiveTab().webview.reload();
+}
+
+function goStop() {
+  tabGroup.getActiveTab().webview.stop();
+}
+
+function requestTabsList() {
+  let arr = [];
+  let tabs = document.getElementsByClassName('etabs-tab');
+  for (var i = 0; i < tabs.length; i++) {
+    arr.push({
+      label: tabs[i].getElementsByClassName('etabs-tab-title')[0].innerHTML,
+      active: tabs[i].classList.contains('active')
+    });
+  }
+  ipcRenderer.send('request-tabs-list', arr);
+}
+
+function requestSideMenu() {
+  ipcRenderer.send('request-side-menu');
+}
+
 function pinSidebar() {
   document.getElementById('pin-sidebar-btn').style.display = "none";
   document.getElementById('unpin-sidebar-btn').style.display = "";
@@ -234,39 +282,73 @@ function installUpdate() {
 
 // system pages
 function goToBookmarksTab() {
+  var sidebarWebview = document.getElementById('sidebar-webview');
+  sidebarWebview.stop();
   showSidebar();
-  document.getElementById('sidebar-webview').src = '../html/bookmarks.html';
+
+  sidebarWebview.src = '../html/bookmarks.html';
+
   document.getElementById('bookmarks-btn').classList.add('active');
   document.getElementById('downloads-btn').classList.remove('active');
   document.getElementById('settings-btn').classList.remove('active');
   document.getElementById('about-btn').classList.remove('active');
+  document.getElementById('history-btn').classList.remove('active');
+}
+
+function goToHistoryTab() {
+  var sidebarWebview = document.getElementById('sidebar-webview');
+  sidebarWebview.stop();
+  showSidebar();
+
+  sidebarWebview.src = '../html/history.html';
+
+  document.getElementById('bookmarks-btn').classList.remove('active');
+  document.getElementById('downloads-btn').classList.remove('active');
+  document.getElementById('settings-btn').classList.remove('active');
+  document.getElementById('about-btn').classList.remove('active');
+  document.getElementById('history-btn').classList.add('active');
 }
 
 function goToAboutTab() {
+  var sidebarWebview = document.getElementById('sidebar-webview');
+  sidebarWebview.stop();
   showSidebar();
-  document.getElementById('sidebar-webview').src = '../html/about.html';
+
+  sidebarWebview.src = '../html/about.html';
+
   document.getElementById('bookmarks-btn').classList.remove('active');
   document.getElementById('downloads-btn').classList.remove('active');
   document.getElementById('settings-btn').classList.remove('active');
   document.getElementById('about-btn').classList.add('active');
+  document.getElementById('history-btn').classList.remove('active');
 }
 
 function goToSettingsTab() {
+  var sidebarWebview = document.getElementById('sidebar-webview');
+  sidebarWebview.stop();
   showSidebar();
-  document.getElementById('sidebar-webview').src = '../html/settings.html';
+
+  sidebarWebview.src = '../html/settings.html';
+
   document.getElementById('bookmarks-btn').classList.remove('active');
   document.getElementById('downloads-btn').classList.remove('active');
   document.getElementById('settings-btn').classList.add('active');
   document.getElementById('about-btn').classList.remove('active');
+  document.getElementById('history-btn').classList.remove('active');
 }
 
 function goToDownloadsTab() {
+  var sidebarWebview = document.getElementById('sidebar-webview');
+  sidebarWebview.stop();
   showSidebar();
-  document.getElementById('sidebar-webview').src = '../html/downloads.html';
+
+  sidebarWebview.src = '../html/downloads.html';
+
   document.getElementById('bookmarks-btn').classList.remove('active');
   document.getElementById('downloads-btn').classList.add('active');
   document.getElementById('settings-btn').classList.remove('active');
   document.getElementById('about-btn').classList.remove('active');
+  document.getElementById('history-btn').classList.remove('active');
 }
 
 // bookmarks
@@ -296,6 +378,8 @@ function createBookmark() {
   document.getElementById('sidebar-webview').send('action-update-bookmarks');
 
   notif("Bookmark added", "info");
+
+  updateBookmarksBar();
 }
 
 // search suggestions
@@ -311,18 +395,22 @@ function searchWith(text, engine) {
 
   removeSuggestions();
 
-  if(engine == "google") {
-    tabGroup.getActiveTab().webview.loadURL("https://google.com/search?q=" + text);
-  } else if(engine == "bing") {
-    tabGroup.getActiveTab().webview.loadURL("https://bing.com/search?q=" + text);
-  } else if(engine == "duckduckgo") {
-    tabGroup.getActiveTab().webview.loadURL("https://duckduckgo.com/?q=" + text);
-  } else if(engine == "yahoo") {
-    tabGroup.getActiveTab().webview.loadURL("https://search.yahoo.com/search?p=" + text);
-  } else if(engine == "yandex") {
-    location.href = "https://yandex.com/search/?text=" + text;
-  } else if(engine == "wikipedia") {
-    tabGroup.getActiveTab().webview.loadURL("https://en.wikipedia.org/wiki/Special:Search?search=" + text);
+  switch (engine) {
+    case 'google':
+      tabGroup.getActiveTab().webview.loadURL("https://google.com/search?q=" + text);
+      break;
+    case 'bing':
+      tabGroup.getActiveTab().webview.loadURL("https://bing.com/search?q=" + text);
+      break;
+    case 'duckduckgo':
+      tabGroup.getActiveTab().webview.loadURL("https://duckduckgo.com/?q=" + text);
+      break;
+    case 'yahoo':
+      tabGroup.getActiveTab().webview.loadURL("https://search.yahoo.com/search?p=" + text);
+      break;
+    case 'wikipedia':
+      tabGroup.getActiveTab().webview.loadURL("https://en.wikipedia.org/wiki/Special:Search?search=" + text);
+      break;
   }
 }
 
@@ -359,20 +447,24 @@ function getSuggestions() {
   suggest.classList.remove("hide");
 
   if (input.value.length > 0) {
-    autoSuggest.getQuerySuggestions(input.value, function (err, suggestions) {
-      container.innerHTML = "<input class='active' type='button' value='" + input.value + "' onclick='navigateSuggest(this.value)' />";
-      if (suggestions != null && suggestions.length > 0) {
-        if (container.childNodes.length < 5) {
-          var i;
-          for (i = 0; i < 5; i++) {
-            if (suggestions[i] != null) {
-              var button = "<input type='button' value='" + suggestions[i].suggestion + "' onclick='navigateSuggest(this.value)' />";
-              container.innerHTML += button;
+    // try {
+      autoSuggest.getQuerySuggestions(input.value, function (err, suggestions) {
+        container.innerHTML = "<input class='active' type='button' value='" + input.value + "' onclick='navigateSuggest(this.value)' />";
+        if (suggestions != null && suggestions.length > 0) {
+          if (container.childNodes.length < 5) {
+            var i;
+            for (i = 0; i < 5; i++) {
+              if (suggestions[i] != null) {
+                var button = "<input type='button' value='" + suggestions[i].suggestion + "' onclick='navigateSuggest(this.value)' />";
+                container.innerHTML += button;
+              }
             }
           }
         }
-      }
-    });
+      });
+    // } catch (error) {
+      
+    // }
   } else {
     removeSuggestions();
   }
@@ -384,6 +476,15 @@ function notif(text, type) {
   div.classList.add('notif');
   div.classList.add(type);
   div.innerHTML = "<div class='notif-body'><label class='notif-text'>" + text + "</label><img class='notif-close theme-icon' onclick='removeNotif(this)' title='Close notification' name='cancel'></div>";
+
+  var notifPanel = document.getElementById('notif-panel');
+
+  div.addEventListener('auxclick', (e) => {
+    e.preventDefault();
+      if(e.which == 2) {
+        notifPanel.removeChild(div);
+      }
+  }, false);
 
   var img = document.createElement('img');
   img.classList.add('notif-icon', 'theme-icon');
@@ -407,7 +508,6 @@ function notif(text, type) {
   }
   div.insertBefore(img, div.children[0]);
 
-  var notifPanel = document.getElementById('notif-panel');
   notifPanel.insertBefore(div, notifPanel.firstChild);
 
   applyTheme(document.documentElement.style.getPropertyValue('--color-back'));
@@ -508,17 +608,21 @@ function applyTheme(color) {
     setIconsStyle('light');
 
     document.documentElement.style.setProperty('--color-top', 'white');
-    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.2)');
+    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.3)');
   } else {
     setIconsStyle('dark');
 
     document.documentElement.style.setProperty('--color-top', 'black');
-    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.1)');
+    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.15)');
   }
+
+  document.getElementById('sidebar-webview').send('action-load-theme');
 }
 
 function applyBorderRadius(size) {
   document.documentElement.style.setProperty('--px-radius', size + 'px');
+
+  document.getElementById('sidebar-webview').send('action-load-border-radius');
 }
 
 // sidebar
@@ -535,11 +639,11 @@ function showSidebar() {
 }
 
 function hideSidebar() {
-  unpinSidebar();
-  document.getElementById("sidebar-btn").classList.remove('active');
   document.getElementById('sidebar').classList.add('hide');
   setTimeout(function() {
     document.getElementById('sidebar').style.display = "none";
+    unpinSidebar();
+    document.getElementById("sidebar-btn").classList.remove('active');
   }, 250);
 }
 
@@ -593,14 +697,22 @@ function showFindPanel() {
   hideSidebar();
 
   document.getElementById("find-panel").style.display = "";
+  document.getElementById('find-panel').classList.remove('hide');
   document.getElementById("find-input").select();
+
+  document.body.classList.add('find');
 
   nextFindInPage();
 }
 
 function closeFindPanel() {
-  document.getElementById("find-panel").style.display = "none";
-  tabGroup.getActiveTab().webview.stopFindInPage("keepSelection");
+  document.getElementById('find-panel').classList.add('hide');
+
+  setTimeout(function() {
+    document.getElementById('find-panel').style.display = "none";
+    document.body.classList.remove('find');
+    tabGroup.getActiveTab().webview.stopFindInPage("keepSelection");
+  }, 250);
 }
 
 function nextFindInPage() {
@@ -653,6 +765,131 @@ function closeWindow() {
   ipcRenderer.send('request-quit-app');
 }
 
+function searchKeyUp(event) {
+  event.preventDefault();
+  if (document.getElementById("search-input").value.length > 0) {
+    if (event.keyCode === 13) {
+      var suggestions = document.getElementById('search-suggest-container').childNodes;
+      var i = 0;
+      while (i < suggestions.length && !suggestions[i].classList.contains('active')) {
+        i++;
+      }
+      navigateSuggest(suggestions[i].value);
+    }
+    if (event.keyCode === 40) {
+      var suggestions = document.getElementById('search-suggest-container').childNodes;
+      var i = 0;
+      while (i < suggestions.length && !suggestions[i].classList.contains('active')) {
+        i++;
+      }
+      if (i < suggestions.length - 1) {
+        document.getElementById('search-input').value = suggestions[i].nextSibling.value;
+        suggestions[i].classList.remove('active');
+        suggestions[i].nextSibling.classList.add('active');
+      }
+    }
+    if (event.keyCode === 38) {
+      var suggestions = document.getElementById('search-suggest-container').childNodes;
+      var i = 0;
+      while (i < suggestions.length && !suggestions[i].classList.contains('active')) {
+        i++;
+      }
+      if (i > 0) {
+        document.getElementById('search-input').value = suggestions[i].previousSibling.value;
+        suggestions[i].classList.remove('active');
+        suggestions[i].previousSibling.classList.add('active');
+      }
+    }
+  }
+}
+
+function searchSuggestWheel(event) {
+  if (event.deltaY < 0) {
+    var suggestions = document.getElementById('search-suggest-container').childNodes;
+    var i = 0;
+    while (i < suggestions.length && !suggestions[i].classList.contains('active')) {
+      i++;
+    }
+    if (i > 0) {
+      document.getElementById('search-input').value = suggestions[i].previousSibling.value;
+      suggestions[i].classList.remove('active');
+      suggestions[i].previousSibling.classList.add('active');
+    }
+  }
+  if (event.deltaY > 0) {
+    var suggestions = document.getElementById('search-suggest-container').childNodes;
+    var i = 0;
+    while (i < suggestions.length && !suggestions[i].classList.contains('active')) {
+      i++;
+    }
+    if (i < suggestions.length - 1) {
+      document.getElementById('search-input').value = suggestions[i].nextSibling.value;
+      suggestions[i].classList.remove('active');
+      suggestions[i].nextSibling.classList.add('active');
+    }
+  }
+}
+
+function focusSearch() {
+  let s = document.getElementById('search-input');
+  s.focus();
+  s.select();
+}
+
+function updateBookmarksBar() {
+  var fs = require("fs");
+  var ppath = require('persist-path')('ArrowBrowser');
+
+  try {
+    document.getElementById('bookmarks-bar').innerHTML = "";
+    var jsonstr = fs.readFileSync(ppath + "\\json\\bookmarks.json");
+    var arr = JSON.parse(jsonstr);
+    var i;
+    for (i = 0; i < arr.length; i++) {
+      addToBookmarksBar(arr[i].index, arr[i].name, arr[i].url);
+    }
+  } catch (e) {
+
+  }
+}
+
+function addToBookmarksBar(index, name, url) {
+  var bbar = document.getElementById('bookmarks-bar');
+
+  var div = document.createElement('div');
+  div.classList.add('bookmark');
+  div.id = "bookmark-" + index;
+  div.title = url;
+
+  div.onclick = () => {
+    tabGroup.getActiveTab().webview.loadURL(url);
+  }
+
+  div.addEventListener('contextmenu', (e) => {
+    let Data = {
+      index: index,
+      url: url
+    };
+    ipcRenderer.send('request-bookmark-contextmenu', Data);
+  }, false);
+
+  div.addEventListener('auxclick', (e) => {
+    e.preventDefault();
+     if(e.which == 2) {
+      tabGroup.addTab({
+        title: 'New Tab',
+        src: url,
+        active: true
+      });
+     }
+  }, false);
+
+  div.innerHTML = `<img class="bookmark-icon" src="` + 'http://www.google.com/s2/favicons?domain=' + url + `">
+                  <label>` + name + `</label>`;
+
+  bbar.appendChild(div);
+}
+
 /*
 .####.########...######.....########..########.##....##.########..########.########..########.########.
 ..##..##.....##.##....##....##.....##.##.......###...##.##.....##.##.......##.....##.##.......##.....##
@@ -662,6 +899,27 @@ function closeWindow() {
 ..##..##........##....##....##....##..##.......##...###.##.....##.##.......##....##..##.......##....##.
 .####.##.........######.....##.....##.########.##....##.########..########.##.....##.########.##.....##
 */
+
+ipcRenderer.on('action-copy-text', (event, arg) => {
+  var input = document.createElement('input');
+  input.value = arg;
+  document.body.appendChild(input);
+  input.select();
+  document.execCommand('copy');
+  document.body.removeChild(input);
+});
+
+ipcRenderer.on('action-update-bookmarks-bar', (event, arg) => {
+  updateBookmarksBar();
+});
+
+ipcRenderer.on('action-open-history', (event, arg) => {
+  goToHistoryTab();
+});
+
+ipcRenderer.on('action-add-history-item', (event, arg) => {
+  document.getElementById('sidebar-webview').send('action-add-history-item', arg);
+});
 
 // tab menu
 ipcRenderer.on('action-tab-newtab', (event, arg) => {
@@ -687,7 +945,7 @@ ipcRenderer.on('action-esc', (event, arg) => {
   esc();
 });
 ipcRenderer.on('action-page-focussearch', (event, arg) => {
-  document.getElementById('search-input').focus();
+  focusSearch();
 });
 
 // bookmarks menu
@@ -778,6 +1036,12 @@ ipcRenderer.on('action-page-devtools', (event, arg) => {
 ipcRenderer.on('action-page-findinpage', (event, arg) => {
   showFindPanel();
 });
+ipcRenderer.on('action-page-certificate', (event, arg) => {
+  ipcRenderer.send('request-show-certificate-info', tabGroup.getActiveTab().webview.src);
+});
+// ipcRenderer.on('action-page-saveas', (event, arg) => {
+//   ipcRenderer.send('request-save-as-page', tabGroup.getActiveTab().webview.src);
+// });
 
 // app menu
 ipcRenderer.on('action-app-about', (event, arg) => {
@@ -873,6 +1137,22 @@ ipcRenderer.on('action-set-start-page', (event, arg) => {
   tabGroup.options.newTab.src = arg;
   // console.log(tabGroup);
 });
+ipcRenderer.on('action-set-bookmarks-bar', (event, arg) => {
+  if(arg == 1) {
+    document.getElementById('bookmarks-bar').style.display = "";
+    document.body.classList.add('bookmarks-bar');
+
+    updateBookmarksBar();
+  } else {
+    document.getElementById('bookmarks-bar').style.display = "none";
+    document.body.classList.remove('bookmarks-bar');
+  }
+});
+
+// history
+ipcRenderer.on('action-add-history-item', (event, arg) => {
+  document.getElementById('sidebar-webview').send('action-add-history-item', arg);
+});
 
 // downloads
 ipcRenderer.on('action-create-download', (event, arg) => {
@@ -913,138 +1193,12 @@ ipcRenderer.on('action-set-download-process', (event, arg) => {
 
 function init() {
   // document.getElementById('window-controls').innerHTML = `
-  //   <img name="minimize" id="minimize-btn" class="title-bar-btn theme-icon" title="Minimize" onclick="minimizeWindow()">
-  //   <img name="restore" id="unmaximize-btn" class="title-bar-btn theme-icon" title="Restore down" onclick="restoreWindow()" style="display: none">
-  //   <img name="maximize" id="maximize-btn" class="title-bar-btn theme-icon" title="Maximize" onclick="maximizeWindow()">
-  //   <img name="close" id="close-btn" class="title-bar-btn theme-icon" title="Close" onclick="closeWindow()">
-  // `;
-  // document.getElementById('window-controls').classList.add('arrow');
-  // document.getElementById('window-controls').innerHTML = `
   //   <div class="button" id="minimize-btn" title="Minimize" onclick="minimizeWindow()"><span>&#xE921;</span></div>
   //   <div class="button" id="unmaximize-btn" title="Restore down" onclick="restoreWindow()" style="display: none"><span>&#xE923;</span></div>
   //   <div class="button" id="maximize-btn" title="Maximize" onclick="maximizeWindow()"><span>&#xE922;</span></div>
   //   <div class="button" id="close-btn" title="Close" onclick="closeWindow()"><span>&#xE8BB;</span></div>
   // `;
   // document.getElementById('window-controls').classList.add('windows');
-
-  sslCertificate.get('google.com').then(function (certificate) {
-    console.log(certificate)
-  });
-
-  document.getElementById("search-suggest").addEventListener('wheel', function(event) {
-    if (event.deltaY < 0) {
-      var suggestions = document.getElementById('search-suggest-container').childNodes;
-      var i = 0;
-      while (i < suggestions.length && !suggestions[i].classList.contains('active')) {
-        i++;
-      }
-      if (i > 0) {
-        document.getElementById('search-input').value = suggestions[i].previousSibling.value;
-        suggestions[i].classList.remove('active');
-        suggestions[i].previousSibling.classList.add('active');
-      }
-    }
-    if (event.deltaY > 0) {
-      var suggestions = document.getElementById('search-suggest-container').childNodes;
-      var i = 0;
-      while (i < suggestions.length && !suggestions[i].classList.contains('active')) {
-        i++;
-      }
-      if (i < suggestions.length - 1) {
-        document.getElementById('search-input').value = suggestions[i].nextSibling.value;
-        suggestions[i].classList.remove('active');
-        suggestions[i].nextSibling.classList.add('active');
-      }
-    }
-  });
-
-  document.getElementById("search-input").addEventListener("keyup", function (event) {
-    event.preventDefault();
-    if (document.getElementById("search-input").value.length > 0) {
-      if (event.keyCode === 13) {
-        var suggestions = document.getElementById('search-suggest-container').childNodes;
-        var i = 0;
-        while (i < suggestions.length && !suggestions[i].classList.contains('active')) {
-          i++;
-        }
-        navigateSuggest(suggestions[i].value);
-      }
-      if (event.keyCode === 40) {
-        var suggestions = document.getElementById('search-suggest-container').childNodes;
-        var i = 0;
-        while (i < suggestions.length && !suggestions[i].classList.contains('active')) {
-          i++;
-        }
-        if (i < suggestions.length - 1) {
-          document.getElementById('search-input').value = suggestions[i].nextSibling.value;
-          suggestions[i].classList.remove('active');
-          suggestions[i].nextSibling.classList.add('active');
-        }
-      }
-      if (event.keyCode === 38) {
-        var suggestions = document.getElementById('search-suggest-container').childNodes;
-        var i = 0;
-        while (i < suggestions.length && !suggestions[i].classList.contains('active')) {
-          i++;
-        }
-        if (i > 0) {
-          document.getElementById('search-input').value = suggestions[i].previousSibling.value;
-          suggestions[i].classList.remove('active');
-          suggestions[i].previousSibling.classList.add('active');
-        }
-      }
-    }
-  });
-
-  document.getElementById("search-input").addEventListener("focus", function (event) {
-    this.select();
-  });
-
-  document.getElementById("menu-btn").addEventListener("click", (e) => {
-    ipcRenderer.send('request-side-menu');
-  });
-
-  document.getElementById("tabs-list-btn").addEventListener("click", (e) => {
-    let arr = [];
-    let tabs = document.getElementsByClassName('etabs-tab');
-    for (var i = 0; i < tabs.length; i++) {
-      arr.push({
-        label: tabs[i].getElementsByClassName('etabs-tab-title')[0].innerHTML,
-        active: tabs[i].classList.contains('active')
-      });
-    }
-    ipcRenderer.send('request-tabs-list', arr);
-  });
-
-  document.getElementById("back-btn").addEventListener("click", (e) => {
-    tabGroup.getActiveTab().webview.goBack();
-  });
-
-  document.getElementById("forward-btn").addEventListener("click", (e) => {
-    tabGroup.getActiveTab().webview.goForward();
-  });
-
-  document.getElementById("refresh-btn").addEventListener("click", (e) => {
-    tabGroup.getActiveTab().webview.reload();
-  });
-
-  document.getElementById("stop-btn").addEventListener("click", (e) => {
-    tabGroup.getActiveTab().webview.stop();
-  });
-
-  document.getElementById("find-input").addEventListener("keyup", function (event) {
-    nextFindInPage();
-  });
-
-  document.getElementById("sidebar-btn").addEventListener("click", (e) => {
-    if (document.getElementById("sidebar").style.display == "none") {
-      showSidebar();
-    } else {
-      hideSidebar();
-    }
-  });
-
-  document.getElementsByClassName('etabs-buttons')[0].title = "New tab";
 };
 
 document.onreadystatechange = () => {

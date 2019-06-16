@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="stylesheet" href="../css/pageinfo.css">
+        <title>Certificate info</title>
+    </head>
+    <body>
+        <div id="drag-zone"></div>
+
+        <div id="titlebar">
+            <img id="titlebar-icon" class="theme-icon" name="certificate">
+            <label id="titlebar-title">Certificate info</label>
+            <div id="window-controls">
+                <img name="cancel" id="close-btn" class="title-bar-btn theme-icon" title="Close" onclick="closeWindow()">
+            </div>
+        </div>
+
+        <div class="container">
+                <div class="block-title">
+                    <img name="user" class="theme-icon">
+                    <label>Subject</label>
+                </div>
+                <div class="block-container">
+                    <label>CN:</label><span id="subject-cn">Loading...</span><br>
+                    <label>O:</label><span id="subject-o">Loading...</span><br>
+                    <label>C:</label><span id="subject-c">Loading...</span><br>
+                    <label>L:</label><span id="subject-l">Loading...</span><br>
+                    <label>ST:</label><span id="subject-st">Loading...</span>
+                </div>
+                <div class="block-title">
+                    <img name="certificate" class="theme-icon">
+                    <label>Issuer</label>
+                </div>
+                <div class="block-container">
+                    <label>CN:</label><span id="issuer-cn">Loading...</span><br>
+                    <label>O:</label><span id="issuer-o">Loading...</span><br>
+                    <label>C:</label><span id="issuer-c">Loading...</span>
+                </div>
+                <div class="block-title">
+                    <img name="history" class="theme-icon">
+                    <label>Valid</label>
+                </div>
+                <div class="block-container">
+                    <label>From:</label><span id="valid-from">Loading...</span><br>
+                    <label>To:</label><span id="valid-to">Loading...</span>
+                </div>
+                <div class="block-title">
+                    <img name="details" class="theme-icon">
+                    <label>Details</label>
+                </div>
+                <div class="block-container">
+                    <label>Serial number:</label><span id="serial-number">Loading...</span><hr>
+                    <label>Fingerprint:</label><span id="fingerprint">Loading...</span><hr>
+                    <label>Fingerprint256:</label><span id="fingerprint256">Loading...</span><hr>
+                    <label>Subject alt name:</label><span id="alt-name">Loading...</span><hr>
+                    <label>Bits:</label><span id="bits">Loading...</span><br>
+                    <label>Exponent:</label><span id="exponent">Loading...</span><hr>
+                    <label>Pem encoded:</label><span id="pem-encoded">Loading...</span><hr>
+                    <label>Modulus:</label><span id="modulus">Loading...</span><br>
+                </div>
+            <label id=""></label>
+        </div>
+        <script type="text/javascript" src="../js/pageinfo.js"></script>
+    </body>
+</html>

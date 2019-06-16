@@ -13,18 +13,18 @@ const { shell } = require('electron');
 
 // appearance
 function changeTheme(color) {
-  document.body.style.backgroundColor = color;
+  // document.body.style.backgroundColor = color;
 
   if(checkIfDark(color)) {
     setIconsStyle('light');
 
     document.documentElement.style.setProperty('--color-top', 'white');
-    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.2)');
+    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.3)');
   } else {
     setIconsStyle('dark');
 
     document.documentElement.style.setProperty('--color-top', 'black');
-    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.1)');
+    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.15)');
   }
 }
 function setIconsStyle(str) {
@@ -102,12 +102,6 @@ function loadDownloads() {
     var arr = JSON.parse(jsonstr);
     var i;
     for (i = 0; i < arr.length; i++) {
-      let Data = {
-        index: arr[i].index,
-        url: arr[i].url,
-        name: arr[i].name,
-        path: arr[i].path
-      };
       createStoppedDownload(arr[i].index, arr[i].name, arr[i].url, arr[i].path, arr[i].time);
     }
   } catch (e) {
@@ -146,9 +140,9 @@ function createStoppedDownload(index, name, url, path, time) {
   div.name = "stopped";
   div.innerHTML = `
     <img class="download-icon" src="` + 'http://www.google.com/s2/favicons?domain=' + url + `"><label class="download-status">Finished</label><hr>
-    <label>File: </label><label class="download-file" title="` + name + `">` + name + `</label><br>
-    <label>Url: </label><label class="download-link" title="` + url + `">` + url + `</label><br>
-    <label>Date: </label><label class="download-date">` + epochToDate(time) + `</label> / <label>Time: </label><label class="download-time">` + epochToTime(time) + `</label><hr>`;
+    File: <label class="download-file" title="` + name + `">` + name + `</label><br>
+    Url: <label class="download-link" title="` + url + `">` + url + `</label><br>
+    Date: <label class="download-date">` + epochToDate(time) + `</label> / Time: <label class="download-time">` + epochToTime(time) + `</label><hr>`;
 
   var fs = require('fs');
   if (fs.existsSync(path.replace(/\\/g, "/"))) {
@@ -417,7 +411,19 @@ function epochToDate(time) {
 function epochToTime(time) {
   let date = new Date(0);
   date.setUTCSeconds(time);
-  var str = date.getHours() + ":" + date.getMinutes();
+
+  var minutes = date.getMinutes();
+  var hours = date.getHours()
+
+  if(minutes <= 9) {
+    minutes = "0" + minutes;
+  }
+
+  if(hours <= 9) {
+    hours = "0" + hours;
+  }
+
+  var str = hours + ":" + minutes;
   return str;
 }
 
@@ -460,6 +466,14 @@ ipcRenderer.on('action-set-download-process', (event, arg) => {
   setDownloadProcess(arg.index, arg.bytes, arg.total, arg.name);
 });
 
+ipcRenderer.on('action-load-theme', (event, arg) => {
+  loadTheme();
+});
+
+ipcRenderer.on('action-load-border-radius', (event, arg) => {
+  loadBorderRadius();
+});
+
 /*
 .####.##....##.####.########
 ..##..###...##..##.....##...
@@ -477,13 +491,16 @@ function init() {
 
   document.getElementById("search").addEventListener("keyup", function(event) {
     if(document.getElementById("search").value.length > 0) {
-      var search = document.getElementById("search").value;
+      var search = document.getElementById("search").value.toLowerCase();
       var elements = document.getElementsByClassName('download');
       for(var i = 0; i < elements.length; i++) {
-        var labels = elements[i].getElementsByClassName('download-label');
-        var text = labels[0].innerHTML + " " + labels[1].innerHTML + " " + labels[2].innerHTML;
+        var link = elements[i].getElementsByClassName('download-link')[0].innerHTML.toLowerCase();
+        var file = elements[i].getElementsByClassName('download-file')[0].innerHTML.toLowerCase();
+        var date = elements[i].getElementsByClassName('download-date')[0].innerHTML.toLowerCase();
+        var time = elements[i].getElementsByClassName('download-time')[0].innerHTML.toLowerCase();
+        var text = file + " " + link + " " + date + " " + time;
         if(text.indexOf(search) != -1) {
-          elements[i].style.display = "inline-block";
+          elements[i].style.display = "";
         } else {
           elements[i].style.display = "none";
         }
@@ -491,7 +508,7 @@ function init() {
     } else {
       var elements = document.getElementsByClassName('download');
       for(var i = 0; i < elements.length; i++) {
-        elements[i].style.display = "block";
+        elements[i].style.display = "";
       }
     }
   });

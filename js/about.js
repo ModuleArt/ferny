@@ -42,18 +42,18 @@ function loadAbout() {
 }
 
 function changeTheme(color) {
-  document.body.style.backgroundColor = color;
+  // document.body.style.backgroundColor = color;
 
   if(checkIfDark(color)) {
     setIconsStyle('light');
 
     document.documentElement.style.setProperty('--color-top', 'white');
-    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.2)');
+    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.3)');
   } else {
     setIconsStyle('dark');
 
     document.documentElement.style.setProperty('--color-top', 'black');
-    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.1)');
+    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.15)');
   }
 }
 
@@ -104,7 +104,7 @@ function loadTheme() {
 }
 
 function openDeveloperPage() {
-  ipcRenderer.send('request-open-url-in-new-tab', "https://moduleart.github.io");
+  ipcRenderer.send('request-open-url-in-new-tab', "https://electronjs.org/releases");
 }
 
 function openAppPage() {
@@ -113,6 +113,18 @@ function openAppPage() {
 
 function openReleasesPage() {
   ipcRenderer.send('request-open-url-in-new-tab', "https://github.com/ModuleArt/arrowbrowser/releases");
+}
+
+function openElectronPage() {
+  ipcRenderer.send('request-open-url-in-new-tab', "https://github.com/ModuleArt/arrowbrowser/releases");
+}
+
+function openChromePage() {
+  ipcRenderer.send('request-open-url-in-new-tab', "https://chromereleases.googleblog.com");
+}
+
+function openNodePage() {
+  ipcRenderer.send('request-open-url-in-new-tab', "https://nodejs.org/en/download/releases");
 }
 
 function checkForUpdates() {
@@ -131,6 +143,14 @@ function checkForUpdates() {
 
 ipcRenderer.on('action-set-about', (event, arg) => {
   document.getElementById('about-app').innerHTML = "v" + arg.app;
+});
+
+ipcRenderer.on('action-load-theme', (event, arg) => {
+  loadTheme();
+});
+
+ipcRenderer.on('action-load-border-radius', (event, arg) => {
+  loadBorderRadius();
 });
 
 /*
@@ -154,3 +174,13 @@ document.onreadystatechange =  () => {
     init();
   }
 };
+
+/*
+.########.##.....##.########....########.##....##.########.
+....##....##.....##.##..........##.......###...##.##.....##
+....##....##.....##.##..........##.......####..##.##.....##
+....##....#########.######......######...##.##.##.##.....##
+....##....##.....##.##..........##.......##..####.##.....##
+....##....##.....##.##..........##.......##...###.##.....##
+....##....##.....##.########....########.##....##.########.
+*/
