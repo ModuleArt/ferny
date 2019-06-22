@@ -14,6 +14,7 @@ const {
 const TabGroup = require("electron-tabs");
 const dragula = require("dragula");
 const autoSuggest = require('google-autocomplete');
+const isUrl = require('is-url');
 
 /*
 .########....###....########...######.
@@ -186,16 +187,16 @@ tabGroup.on("tab-added", (tab, tabGroup) => {
       document.getElementById('forward-btn').classList.add('disable');
     }
 
-    if (e.errorCode == -300) {
-      if (document.getElementById('search-input').value != null) {
-        navigateSuggest(document.getElementById('search-input').value);
-      }
+    // if (e.errorCode == -300) {
+    //   if (document.getElementById('search-input').value != null) {
+    //     navigateSuggest(document.getElementById('search-input').value);
+    //   }
     // } else if(e.errorCode == -27) {
 
-    } else if (!e.errorDescription == "") {
+    // } else if (!e.errorDescription == "") {
       notif("Connection failed! " + e.errorDescription + " (" + e.errorCode + ")", "error");
       // tabGroup.getActiveTab().webview.src = 'html/error.html';
-    }
+    // }
   });
 
   document.getElementsByClassName('etabs-tab-buttons')[tab.getPosition(false) - 1].title = "Close tab";
@@ -419,15 +420,22 @@ function searchWith(text, engine) {
     case 'yandex':
       tabGroup.getActiveTab().webview.loadURL("https://yandex.com/search/?text=" + text);
       break;
+    case 'mailru':
+      tabGroup.getActiveTab().webview.loadURL("https://go.mail.ru/search?q=" + text);
+      break;
   }
 }
 
 function navigateSuggest(text) {
-  var engines = document.getElementsByClassName('search-engine');
-  for(var i = 0; i < engines.length; i++) {
-    if(engines[i].classList.contains('active')) {
-      searchWith(text, engines[i].name);
-      break;
+  if(isUrl(text)) {
+    tabGroup.getActiveTab().webview.loadURL(text);
+  } else {
+    var engines = document.getElementsByClassName('search-engine');
+    for(var i = 0; i < engines.length; i++) {
+      if(engines[i].classList.contains('active')) {
+        searchWith(text, engines[i].name);
+        break;
+      }
     }
   }
 }
@@ -521,10 +529,9 @@ function notif(text, type) {
   applyTheme(document.documentElement.style.getPropertyValue('--color-back'));
 
   if (notifPanel.childNodes.length > 5) {
-    notifPanel.lastChild.classList.add('closed');
-    setTimeout(function () {
+    for(var i = notifPanel.childNodes.length; i > 5; i--) {
       notifPanel.removeChild(notifPanel.lastChild);
-    }, 250);
+    }
   }
 
   setTimeout(function () {
@@ -552,6 +559,12 @@ function quest(text, ops) {
   document.getElementById('notif-panel').appendChild(div);
 
   applyTheme(document.documentElement.style.getPropertyValue('--color-back'));
+
+  if (notifPanel.childNodes.length > 5) {
+    for(var i = notifPanel.childNodes.length; i > 5; i--) {
+      notifPanel.removeChild(notifPanel.lastChild);
+    }
+  }
 }
 
 function updateLoader(percent, id) {
@@ -584,6 +597,12 @@ function loader(text, id) {
   notifPanel.appendChild(div);
 
   applyTheme(document.documentElement.style.getPropertyValue('--color-back'));
+
+  if (notifPanel.childNodes.length > 5) {
+    for(var i = notifPanel.childNodes.length; i > 5; i--) {
+      notifPanel.removeChild(notifPanel.lastChild);
+    }
+  }
 }
 
 function removeNotif(div) {

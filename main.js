@@ -171,7 +171,7 @@ app.on('ready', function() {
 */
 
   // autoUpdater.autoDownload = false;
-  // autoUpdater.autoInstallOnAppQuit = false;
+  autoUpdater.autoInstallOnAppQuit = false;
   autoUpdater.logger = require("electron-log");
   autoUpdater.logger.transports.file.level = "info";
 
@@ -185,7 +185,7 @@ app.on('ready', function() {
     mainWindow.webContents.send('action-notif', { type: "success", text: "App is up to date!" });
   });
   autoUpdater.on('update-available', (event) => {
-    mainWindow.webContents.send('action-notif', { type: "info", text: "New version " + event.info.version +" is available! Download started" });
+    mainWindow.webContents.send('action-notif', { type: "info", text: "New version " + event.info.version +" is available! Download started..." });
     // mainWindow.webContents.send('action-quest', { text: "New version " + event.info.version, ops: [{ text:'Download', icon:'check', click:'downloadUpdate(); removeNotif(this.parentNode.parentNode);' }] });
   });
   autoUpdater.on('update-downloaded', () => {
@@ -219,7 +219,7 @@ app.on('ready', function() {
   });
   mainWindow.setMenu(sideMenu);
 
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
   mainWindow.loadFile(app.getAppPath() + '\\html\\browser.html');
 
   mainWindow.webContents.on('context-menu', (e, props) => {

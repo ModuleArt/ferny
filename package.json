@@ -3,7 +3,7 @@
   "productName": "ArrowBrowser",
   "companyName": "ModuleArt",
   "description": "Your web browser",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "license": "UNLICENSED",
   "author": {
     "name": "ModuleArt",
@@ -26,6 +26,7 @@
     "get-ssl-certificate": "^2.3.2",
     "get-title-at-url": "^1.1.6",
     "google-autocomplete": "0.0.1",
+    "is-url": "^1.2.4",
     "persist-path": "^1.0.2"
   },
   "devDependencies": {

@@ -31,6 +31,7 @@
         <div class="color" onclick="requestTheme('rgb(210, 218, 226)')"><div style="background-color: rgb(210, 218, 226)"></div>Light</div>
         <div class="color" onclick="requestTheme('rgb(72, 84, 96)')"><div style="background-color: rgb(72, 84, 96)"></div>Gray</div>
         <div class="color" onclick="requestTheme('rgb(30, 39, 46)')"><div style="background-color: rgb(30, 39, 46)"></div>Dark</div>
+        <div class="color" onclick="requestTheme('rgb(34, 34, 34)')"><div style="background-color: rgb(34, 34, 34)"></div>Black</div>
       </div>
 
       <div class="block-title" id="borders-rounding">
@@ -110,6 +111,11 @@
           <img src="../imgs/engines/yandex.png">
           <label>Yandex
           <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" name="search-engine" value="yandex">
+        </div>
+        <div class="nav-checkbox">
+          <img src="../imgs/engines/mailru.png">
+          <label>Mail.ru
+          <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" name="search-engine" value="mailru">
         </div>
         <img class="more-btn theme-icon" onclick="moreInfo(this)" title="More info" name="info">
         <label class="more-label">Search engine used in the address bar.</label>

@@ -541,23 +541,6 @@ body {
   height: 100%;
 }
 
-/* fullscreen */
-body.fullscreen #titlebar {
-  display: none;
-}
-body.fullscreen .etabs-views {
-  top: 0;
-}
-body.fullscreen .etabs-tabgroup {
-  top: -40px;
-}
-body.fullscreen #notif-panel {
-  top: 8px;
-}
-body.fullscreen #sidebar {
-  top: 0;
-}
-
 /* find panel */
 body.find .etabs-views {
   bottom: 42px;
@@ -575,6 +558,26 @@ body.bookmarks-bar .etabs-views {
 }
 body.bookmarks-bar #notif-panel {
   top: 118px;
+}
+
+/* fullscreen */
+body.fullscreen #titlebar {
+  display: none;
+}
+body.fullscreen .etabs-views {
+  top: 0;
+}
+body.fullscreen .etabs-tabgroup {
+  top: -40px;
+}
+body.fullscreen #notif-panel {
+  top: 8px;
+}
+body.fullscreen #sidebar {
+  top: 0;
+}
+body.fullscreen #bookmarks-bar {
+  display: none;
 }
 
 /*

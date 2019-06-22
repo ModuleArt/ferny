@@ -249,12 +249,12 @@ input:hover, input:focus {
 }
 
 .bookmark-options {
-  transition: 0.25s;
+  transition: width 0.25s, height 0.25s;
   position: absolute;
   right: 6px;
   top: 6px;
   width: 0;
-  height: 0;
+  height: 26px;
   border-radius: var(--px-radius);
   padding: 1px
 }
@@ -265,7 +265,6 @@ input:hover, input:focus {
 
 .bookmark:hover .bookmark-options {
   width: 26px;
-  height: 26px;
 }
 
 .bookmark-menu {
