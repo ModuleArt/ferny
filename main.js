@@ -171,28 +171,28 @@ app.on('ready', function() {
 */
 
   // autoUpdater.autoDownload = false;
-  autoUpdater.autoInstallOnAppQuit = false;
+  // autoUpdater.autoInstallOnAppQuit = false;
   autoUpdater.logger = require("electron-log");
   autoUpdater.logger.transports.file.level = "info";
 
   autoUpdater.on('checking-for-update', () => {
     mainWindow.webContents.send('action-notif', { type: "info", text: "Checking for updates..." });
   });
-  autoUpdater.on('error', () => {
-    mainWindow.webContents.send('action-notif', { type: "error", text: "Update error!" });
+  autoUpdater.on('error', (error) => {
+    mainWindow.webContents.send('action-notif', { type: "error", text: "Update error: " + error });
   });
   autoUpdater.on('update-not-available', () => {
     mainWindow.webContents.send('action-notif', { type: "success", text: "App is up to date!" });
   });
-  autoUpdater.on('update-available', (event) => {
-    mainWindow.webContents.send('action-notif', { type: "info", text: "New version " + event.info.version +" is available! Download started..." });
+  autoUpdater.on('update-available', (info) => {
+    mainWindow.webContents.send('action-notif', { type: "info", text: "New version " + info.version +" is available! Download started..." });
     // mainWindow.webContents.send('action-quest', { text: "New version " + event.info.version, ops: [{ text:'Download', icon:'check', click:'downloadUpdate(); removeNotif(this.parentNode.parentNode);' }] });
   });
   autoUpdater.on('update-downloaded', () => {
     mainWindow.webContents.send('action-quest', { text: "Update is downloaded!", ops: [{ text:'Install now', icon:'check', click:'installUpdate(); removeNotif(this.parentNode.parentNode);' }] });
   });
-  autoUpdater.on('download-progress', (event) => {
-    mainWindow.webContents.send('action-update-loader', { percent: event.percent, id: 'update-0' });
+  autoUpdater.on('download-progress', (progress, bytesPerSecond, percent, total, transferred) => {
+    mainWindow.webContents.send('action-update-loader', { percent: percent, id: 'update-0' });
   });
 
 /*
