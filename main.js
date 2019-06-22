@@ -170,6 +170,8 @@ app.on('ready', function() {
 .##.....##..#######.....##.....#######......#######..##........########..##.....##....##....########.##.....##
 */
 
+  // autoUpdater.autoDownload = false;
+  // autoUpdater.autoInstallOnAppQuit = false;
   autoUpdater.logger = require("electron-log");
   autoUpdater.logger.transports.file.level = "info";
 
@@ -182,11 +184,15 @@ app.on('ready', function() {
   autoUpdater.on('update-not-available', () => {
     mainWindow.webContents.send('action-notif', { type: "success", text: "App is up to date!" });
   });
-  autoUpdater.on('update-available', () => {
-    mainWindow.webContents.send('action-notif', { type: "success", text: "Update is available! Download started..." });
+  autoUpdater.on('update-available', (event) => {
+    mainWindow.webContents.send('action-notif', { type: "info", text: "New version " + event.info.version +" is available! Download started" });
+    // mainWindow.webContents.send('action-quest', { text: "New version " + event.info.version, ops: [{ text:'Download', icon:'check', click:'downloadUpdate(); removeNotif(this.parentNode.parentNode);' }] });
   });
   autoUpdater.on('update-downloaded', () => {
-    mainWindow.webContents.send('action-quest', { text: "Update is downloaded!", ops: [{ text:'Install', icon:'check', click:'installUpdate(); removeNotif(this);' }, { text:'Cancel', icon:'cancel', click:'removeNotif(this)' }] });
+    mainWindow.webContents.send('action-quest', { text: "Update is downloaded!", ops: [{ text:'Install now', icon:'check', click:'installUpdate(); removeNotif(this.parentNode.parentNode);' }] });
+  });
+  autoUpdater.on('download-progress', (event) => {
+    mainWindow.webContents.send('action-update-loader', { percent: event.percent, id: 'update-0' });
   });
 
 /*
@@ -213,7 +219,7 @@ app.on('ready', function() {
   });
   mainWindow.setMenu(sideMenu);
 
-  // mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
   mainWindow.loadFile(app.getAppPath() + '\\html\\browser.html');
 
   mainWindow.webContents.on('context-menu', (e, props) => {
@@ -526,6 +532,10 @@ ipcMain.on('request-check-for-updates', (event, arg) => {
   checkForUpdates();
 });
 
+ipcMain.on('request-download-update', (event, arg) => {
+  downloadUpdate();
+});
+
 ipcMain.on('request-tabs-list', (event, arg) => {
   let m = new Menu();
   for(let i = 0; i < arg.length; i++) {
@@ -679,6 +689,10 @@ function toggleFullscreen() {
 
 function checkForUpdates() {
   autoUpdater.checkForUpdates();
+}
+
+function downloadUpdate() {
+  autoUpdater.downloadUpdate();
 }
 
 function showWelcomeWindow() {

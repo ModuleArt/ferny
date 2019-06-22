@@ -105,6 +105,17 @@
   }
 }
 
+@keyframes anim-notif {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 /*
 .##......##.########.########..##....##.####.########
 .##..##..##.##.......##.....##.##...##...##.....##...
@@ -207,18 +218,36 @@
 
 #notif-panel {
   position: absolute;
-  left: 8px;
+  left: 0;
   top: 90px;
   width: 300px;
   z-index: 999;
 }
 
+.notif-bar {
+  height: 16px;
+  background-color: var(--color-over);
+  margin: 2px;
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.notif-bar div {
+  background-color: var(--color-over);
+  height: 100%;
+}
+
+.notif-bar label {
+  float: right;
+}
+
 .notif {
   transition: 0.25s;
   margin-bottom: 8px;
-  border-radius: var(--px-radius);
+  border-radius: 0 var(--px-radius) var(--px-radius) 0;
   border: 2px solid var(--color-over);
-  animation-name: anim-show;
+  border-left: none;
+  animation-name: anim-notif;
   animation-duration: 0.5s;
 }
 
@@ -226,7 +255,7 @@
   background-color: var(--color-green);
 }
 
-.notif.warning, .notif.quest {
+.notif.warning, .notif.quest, .notif.loader {
   background-color: var(--color-orange);
 }
 
@@ -239,7 +268,7 @@
 }
 
 .notif.closed {
-  transform: translateY(16px);
+  transform: translateX(-40px);
   opacity: 0;
 }
 
@@ -486,6 +515,10 @@
 
 #close-suggest-btn {
   float: right;
+}
+
+.search-engine {
+  padding: 8px;
 }
 
 /*

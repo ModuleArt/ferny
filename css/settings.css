@@ -317,6 +317,11 @@ input[type=text]:hover, input[type=text]:focus {
   background-color: var(--color-over);
 }
 
+.nav-checkbox img {
+  vertical-align: middle;
+  margin-top: -2px;
+}
+
 .checkbox {
    -webkit-appearance: none;
    appearance: none;

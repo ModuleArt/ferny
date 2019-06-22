@@ -280,6 +280,11 @@ function installUpdate() {
   ipcRenderer.send('request-install-update');
 }
 
+function downloadUpdate() {
+  ipcRenderer.send('request-download-update');
+  loader('Downloading update', 'update-0');
+}
+
 // system pages
 function goToBookmarksTab() {
   var sidebarWebview = document.getElementById('sidebar-webview');
@@ -409,7 +414,10 @@ function searchWith(text, engine) {
       tabGroup.getActiveTab().webview.loadURL("https://search.yahoo.com/search?p=" + text);
       break;
     case 'wikipedia':
-      tabGroup.getActiveTab().webview.loadURL("https://en.wikipedia.org/wiki/Special:Search?search=" + text);
+      tabGroup.getActiveTab().webview.loadURL("https://wikipedia.org/wiki/Special:Search?search=" + text);
+      break;
+    case 'yandex':
+      tabGroup.getActiveTab().webview.loadURL("https://yandex.com/search/?text=" + text);
       break;
   }
 }
@@ -475,7 +483,7 @@ function notif(text, type) {
   var div = document.createElement('div');
   div.classList.add('notif');
   div.classList.add(type);
-  div.innerHTML = "<div class='notif-body'><label class='notif-text'>" + text + "</label><img class='notif-close theme-icon' onclick='removeNotif(this)' title='Close notification' name='cancel'></div>";
+  div.innerHTML = "<div class='notif-body'><label class='notif-text'>" + text + "</label><img class='notif-close theme-icon' onclick='removeNotif(this.parentNode.parentNode)' title='Close notification' name='cancel'></div>";
 
   var notifPanel = document.getElementById('notif-panel');
 
@@ -520,10 +528,7 @@ function notif(text, type) {
   }
 
   setTimeout(function () {
-    div.classList.add('closed');
-    setTimeout(function () {
-      notifPanel.removeChild(div);
-    }, 250);
+    removeNotif(div);
   }, 5000);
 }
 
@@ -531,7 +536,7 @@ function quest(text, ops) {
   var div = document.createElement('div');
   div.classList.add('notif');
   div.classList.add('quest');
-  div.innerHTML = "<img name='question' class='notif-icon theme-icon'><div class='notif-body'><label class='notif-text'>" + text + "</label><br></div>";
+  div.innerHTML = "<img name='question' class='notif-icon theme-icon'><div class='notif-body'><label class='notif-text'>" + text + "</label><img class='notif-close theme-icon' onclick='removeNotif(this.parentNode.parentNode)' title='Close notification' name='cancel'><br></div>";
 
   for (var i = 0; i < ops.length; i++) {
     var btn = document.createElement('div');
@@ -547,21 +552,57 @@ function quest(text, ops) {
   document.getElementById('notif-panel').appendChild(div);
 
   applyTheme(document.documentElement.style.getPropertyValue('--color-back'));
+}
 
-  if (notifPanel.childNodes.length > 5) {
-    notifPanel.lastChild.classList.add('closed');
+function updateLoader(percent, id) {
+  var div = document.getElementById(id);
+  if(typeof(div) != "undefined") {
+    var bar = div.childNodes[1].getElementsByClassName('notif-bar')[0];
+    var line = bar.getElementsByTagName('div')[0];
+    var label = bar.getElementsByTagName('label')[0];
+
+    line.style.width = (percent / 100 * bar.clientWidth) + "px";
+
+    label.innerHTML = percent + "%";
+  }
+}
+
+function loader(text, id) {
+  var notifPanel = document.getElementById('notif-panel');
+
+  var div = document.createElement('div');
+  div.id = id;
+  div.classList.add('notif');
+  div.classList.add('loader');
+  div.innerHTML = "<img name='download' class='notif-icon theme-icon'><div class='notif-body'><label class='notif-text'>" + text + "</label><img class='notif-close theme-icon' onclick='removeNotif(this.parentNode.parentNode)' title='Close notification' name='cancel'></div>";
+
+  var bar = document.createElement('div');
+  bar.classList.add('notif-bar');
+  bar.innerHTML = "<div style='width: 0px;'></div><label>Loading...</label>";
+  div.childNodes[1].appendChild(bar);
+
+  notifPanel.appendChild(div);
+
+  applyTheme(document.documentElement.style.getPropertyValue('--color-back'));
+}
+
+function removeNotif(div) {
+  if(typeof(div) != "undefined") {
+    div.classList.add('closed');
     setTimeout(function () {
-      notifPanel.removeChild(notifPanel.lastChild);
+      document.getElementById('notif-panel').removeChild(div);
     }, 250);
   }
 }
 
-function removeNotif(btn) {
-  var div = btn.parentNode.parentNode;
-  div.classList.add('closed');
-  setTimeout(function () {
-    document.getElementById('notif-panel').removeChild(div);
-  }, 250);
+function removeNotifById(id) {
+  var div = document.getElementById(id);
+  if(typeof(div) != "undefined") {
+    div.classList.add('closed');
+    setTimeout(function () {
+      document.getElementById('notif-panel').removeChild(div);
+    }, 250);
+  }
 }
 
 // themes
@@ -570,7 +611,6 @@ function setIconsStyle(str) {
 
   for (var i = 0; i < icons.length; i++) {
     icons[i].src = "../themes/" + str + "/icons/" + icons[i].name + ".png";
-    // icons[i].style.opacity = "1";
   }
 }
 
@@ -1068,6 +1108,12 @@ ipcRenderer.on('action-notif', (event, arg) => {
 ipcRenderer.on('action-quest', (event, arg) => {
   quest(arg.text, arg.ops);
 });
+ipcRenderer.on('action-loader', (event, arg) => {
+  loader(arg.text, arg.id);
+});
+ipcRenderer.on('action-update-loader', (event, arg) => {
+  updateLoader(arg.percent, arg.id);
+});
 
 // window
 ipcRenderer.on('action-maximize-window', (event, arg) => {
@@ -1158,6 +1204,7 @@ ipcRenderer.on('action-add-history-item', (event, arg) => {
 ipcRenderer.on('action-create-download', (event, arg) => {
   document.getElementById('sidebar-webview').send('action-create-download', arg);
   notif('Download started: ' + arg.name, 'info');
+  loader('Downloading file: ' + arg.name, "download-" + arg.index);
 });
 ipcRenderer.on('action-create-stopped-download', (event, arg) => {
   document.getElementById('sidebar-webview').send('action-create-stopped-download', arg);
@@ -1168,17 +1215,21 @@ ipcRenderer.on('action-set-download-status-pause', (event, arg) => {
 ipcRenderer.on('action-set-download-status-done', (event, arg) => {
   document.getElementById('sidebar-webview').send('action-set-download-status-done', arg);
   notif('Download complete: ' + arg.name, 'success');
+  removeNotifById('download-' + arg.index);
 });
 ipcRenderer.on('action-set-download-status-failed', (event, arg) => {
   document.getElementById('sidebar-webview').send('action-set-download-status-failed', arg);
   notif('Download ' + arg.state + ": " + arg.name, 'error');
+  removeNotifById('download-' + arg.index);
 });
 ipcRenderer.on('action-set-download-status-interrupted', (event, arg) => {
   document.getElementById('sidebar-webview').send('action-set-download-status-interrupted', arg);
   notif('Download interrupted: ' + arg.name, 'warning');
+  removeNotifById('download-' + arg.index);
 });
 ipcRenderer.on('action-set-download-process', (event, arg) => {
   document.getElementById('sidebar-webview').send('action-set-download-process', arg);
+  updateLoader(Math.round(arg.bytes / arg.total * 100), "download-" + arg.index)
 });
 
 /*

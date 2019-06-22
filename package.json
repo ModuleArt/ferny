@@ -3,7 +3,7 @@
   "productName": "ArrowBrowser",
   "companyName": "ModuleArt",
   "description": "Your web browser",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "license": "UNLICENSED",
   "author": {
     "name": "ModuleArt",
@@ -47,9 +47,7 @@
       }
     ],
     "nsis": {
-      "oneClick": false,
-      "installerIcon": "imgs\\installer.ico",
-      "uninstallerIcon": "imgs\\uninstaller.ico"
+      "oneClick": false
     },
     "win": {
       "publish": {
