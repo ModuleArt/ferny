@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+
+<html lang="en" dir="ltr">
+
+<!--
+.##.....##.########....###....########.
+.##.....##.##.........##.##...##.....##
+.##.....##.##........##...##..##.....##
+.#########.######...##.....##.##.....##
+.##.....##.##.......#########.##.....##
+.##.....##.##.......##.....##.##.....##
+.##.....##.########.##.....##.########.
+-->
+
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta charset="utf-8">
+		<link rel="shortcut icon" type="image/png" href="imgs/apps/arrowbrowser/favicon.png"/>
+		<title>ArrowBrowser ••• by ModuleArt</title>
+		<link rel="stylesheet" href="css/master.css">
+		<script src="js/jquery.js"></script>
+		<script src="js/scroll.js"></script>
+		<script src="js/navbar.js"></script>
+		<script type="text/javascript">
+			$( document ).ready(function() {
+				$('#navbar').load('html/navbar.html');
+				$('#footer').load('html/footer.html');
+			});
+		</script>
+	</head>
+
+<!--
+.########...#######..########..##....##
+.##.....##.##.....##.##.....##..##..##.
+.##.....##.##.....##.##.....##...####..
+.########..##.....##.##.....##....##...
+.##.....##.##.....##.##.....##....##...
+.##.....##.##.....##.##.....##....##...
+.########...#######..########.....##...
+-->
+
+	<body>
+		<div id="navbar"></div>
+		<center class="container">
+			<label class="title head" id="description">Description</label>
+
+			<div class="main">
+				<div class="main-name">
+					<img class="icon" src="imgs/apps/arrowbrowser/icon.png">
+					<label class="title">ArrowBrowser</label><br>
+					<label class="subtitle">Beta v1.4.3</label>
+					<img class="platform-icon" src="imgs/icons/windows.png">
+					<!-- <img class="platform-icon disable" src="imgs/icons/ubuntu.png">
+					<img class="platform-icon disable" src="imgs/icons/android.png"> -->
+					<label class="link" onclick="scrollToId('screenshots')">Screenshots</label>
+					<label class="link" onclick="scrollToId('updates')">Updates</label>
+				</div>
+			</div>
+			<div class="main">
+				<div class="main-desc">
+					<label>ArrowBrowser is a privacy-focused <strike>cross-platform</strike> chromium-based web browser with a greatfull user experience, built on top of Electron. It aims to be fast, private, beautiful and functional.</label><br>
+
+					<label>Features:</label>
+					<label>• Sidebar - Full-featured panel that gives access to important elements of the browser. Accelerates your work.</label>
+					<label>• Color tabs - Allow you to quickly find the right tab among the heaps of others.</label>
+				</div>
+			</div>
+			<div class="main">
+				<div class="main-img">
+					<img src="imgs/apps/arrowbrowser/demo.png">
+				</div>
+				<div class="main-links">
+					<label class="subtitle">Download:</label><br><br>
+					<a class="btn" href="https://github.com/ModuleArt/arrowbrowser/releases/download/v1.4.3/ArrowBrowser-Setup-1.4.3.exe" title="Download installation file (Windows 10, 8.1, 7)">
+						<img src="imgs/icons/windows.png">
+						<label>Windows (x64)</label>
+					</a>
+					<hr>
+					<label class="subtitle">Other:</label><br><br>
+					<a class="btn" href="https://github.com/ModuleArt/arrowbrowser">
+						<img src="imgs/icons/code.png">
+						<label>Source code (GitHub)</label>
+					</a>
+					<a class="btn" href="https://github.com/ModuleArt/arrowbrowser/releases">
+						<img src="imgs/icons/download.png">
+						<label>Releases (GitHub)</label>
+					</a>
+					<a class="btn" href="https://trello.com/b/cb5lXUgS/arrowbrowser">
+						<img src="imgs/icons/planner.png">
+						<label>Planner (Trello)</label>
+					</a>
+				</div>
+			</div>
+
+			<label class="title head" id="screenshots">Screenshots</label>
+
+			<div class="main">
+				<div class="screenshot">
+					<label class="subtitle">Regular</label>
+					<img src="imgs/apps/arrowbrowser/1-regular.png">
+				</div>
+				<div class="screenshot">
+					<label class="subtitle">Dark mode</label>
+					<img src="imgs/apps/arrowbrowser/2-darkmode.png">
+				</div>
+				<div class="screenshot">
+					<label class="subtitle">Multitabs</label>
+					<img src="imgs/apps/arrowbrowser/3-multitabs.png">
+				</div>
+				<div class="screenshot">
+					<label class="subtitle">Search suggestions</label>
+					<img src="imgs/apps/arrowbrowser/4-suggestions.png">
+				</div>
+				<div class="screenshot">
+					<label class="subtitle">Find in page</label>
+					<img src="imgs/apps/arrowbrowser/5-findinpage.png">
+				</div>
+				<div class="screenshot">
+					<label class="subtitle">Bookmark manager</label>
+					<img src="imgs/apps/arrowbrowser/6-bookmarks.png">
+				</div>
+				<div class="screenshot">
+					<label class="subtitle">Automatic updates</label>
+					<img src="imgs/apps/arrowbrowser/7-auto-updates.png">
+				</div>
+				<div class="screenshot">
+					<label class="subtitle">Downloads</label>
+					<img src="imgs/apps/arrowbrowser/8-downloads.png">
+				</div>
+				<div class="screenshot">
+					<label class="subtitle">Bookmarks bar</label>
+					<img src="imgs/apps/arrowbrowser/9-bookmarks-bar.png">
+				</div>
+				<div class="screenshot">
+					<label class="subtitle">History</label>
+					<img src="imgs/apps/arrowbrowser/10-history.png">
+				</div>
+				<div class="screenshot">
+					<label class="subtitle">Developer tools</label>
+					<img src="imgs/apps/arrowbrowser/11-devtools.png">
+				</div>
+				<div class="screenshot">
+					<label class="subtitle">Settings</label>
+					<img src="imgs/apps/arrowbrowser/12-settings.png">
+				</div>
+			</div>
+			
+			<!-- <hr> -->
+			<label class="title head" id="updates">Updates</label> 
+
+			<div class="main">
+				<div class="updates">
+					<label>June 25 / 2019</label>
+					<label class="subtitle">Beta v1.4.3 "Tabs Update"</label>
+					<label>
+						Changes:<br>
+						• New type of window transparency if it is not active.<br>
+						• Removed sidebar tabs animation (Better performance).<br><br>
+						Added:<br>
+						• Added files and URLs Drag&Drop support on tabs.<br>
+						• Added color border for each tab.<br><br>
+						Fixes:<br>
+						• Fixed page zoom.<br>
+						• Fixed broken first app start.
+					</label>
+					<a href="https://github.com/ModuleArt/arrowbrowser/releases/tag/v1.4.3" title="GitHub release"><img src="imgs/icons/github.png"></a>
+				</div>
+			</div>
+			<div class="main">
+				<div class="updates">
+					<label>June 22 / 2019</label>
+					<label class="subtitle">Beta v1.4.2 "Black Update"</label>
+					<label>
+						Changes:<br>
+						• The notification panel can hold a maximum of 5 notifications.<br>
+						• Implemented "is-url" module (https://github.com/segmentio/is-url).<br>
+						• New bookmark options button animation.<br><br>
+						Added:<br>
+						• Added black background color.<br>
+						• Added Mail.ru search engine.<br>
+						• Added update error notification info.<br><br>
+						Fixes:<br>
+						• Fixed developer debug console.<br>
+						• Fixed bookmarks bar in fullscreen mode.
+					</label>
+					<a href="https://github.com/ModuleArt/arrowbrowser/releases/tag/v1.4.2" title="GitHub release"><img src="imgs/icons/github.png"></a>
+				</div>
+			</div>
+			<div class="main">
+				<div class="updates">
+					<label>June 22 / 2019</label>
+					<label class="subtitle">Beta v1.4.1 "Progress Update"</label>
+					<label>
+						Changes:<br>
+						• New app icon.<br>
+						• New html file icon.<br>
+						• Removed installer and uninstaller icons.<br>
+						• Colored search engine icons.<br>
+						• Notifications come out on the left.<br><br>
+						Added:<br>
+						• Added Yandex search engine.<br>
+						• Added search engine icons in settings.<br>
+						• Added download progress notification.<br>
+						• Added update progress bar.
+					</label>
+					<a href="https://github.com/ModuleArt/arrowbrowser/releases/tag/v1.4.1" title="GitHub release"><img src="imgs/icons/github.png"></a>
+				</div>
+			</div>
+			<div class="main">
+				<div class="updates">
+					<label>June 16 / 2019</label>
+					<label class="subtitle">Beta v1.4.0 "History Update"</label>
+					<label>
+						Changes:<br>
+						• Removed blur effect from disabled buttons.<br>
+						• Improved performance of some interface elements.<br>
+						• The default search engine is now DuckDuckGo.<br>
+						• Removed file upload error notifications.<br>
+						• New app icon.<br>
+						• New look of the welcome window.<br>
+						• Target url label moved to left-bottom corner.<br>
+						• Increased font size of the target url label (12px).<br>
+						• New look of the find-in-page panel.<br>
+						• Now the substrates are darker.<br>
+						• Removed shadows from favicons (Better performance).<br>
+						• New look of sidebar tabs.<br><br>
+						Added:<br>
+						• Added new window controls for welcome and hotkeys windows.<br>
+						• Added search to the hotkeys window.<br>
+						• Added history system.<br>
+						• Added sidebar tabs animation.<br>
+						• Added libraries links on about page.<br>
+						• Search engine and new tab blocks are added to welcome screen.<br>
+						• Added optional bookmarks bar.<br>
+						• Added notification middle click close action.<br>
+						• Added hotkeys categories.<br>
+						• Added web page certificate info window.<br><br>
+						Fixes:<br>
+						• Fixed dark mode on hotkeys window.<br>
+						• Fixed search for bookmarks and downloads.<br>
+						• Fixed dark mode at the sidebar downloads.<br>
+						• Fixed incorrect downloads dates.<br>
+						• Fixed address bar incorrect url.
+					</label>
+					<a href="https://github.com/ModuleArt/arrowbrowser/releases/tag/v1.4.0" title="GitHub release"><img src="imgs/icons/github.png"></a>
+				</div>
+			</div>
+			<div class="main">
+				<div class="updates">
+					<label>June 8 / 2019</label>
+					<label class="subtitle">Beta v1.3.4 "Gen6 Update"</label>
+					<label>
+						Changes:<br>
+						• Libraries update (Electron Beta6, Chrome 76).<br>
+						• System window controls are replaced with new ones.<br>
+						• New tabs list button.<br>
+						• New sidebar icon.<br>
+						• New scrollbar style.<br>
+						• The hotkey window can now be resized.<br>
+						• New shortcut for settings (Ctrl + Comma).<br>
+						• Increased app name font size on about page.<br>
+						• Now the bookmark opens in the current tab.<br><br>
+						Added:<br>
+						• Added tab close button animation.<br>
+						• Added mouse wheel events on the search panel.<br>
+						• Added pin/unpin sidebar button.<br><br>
+						Fixes:<br>
+						• Fixed Google Auth freeze.<br>
+						• Fixed invisible tabs after fullscreen mode.<br>
+						• Fixed bookmark middle click.
+					</label>
+					<a href="https://github.com/ModuleArt/arrowbrowser/releases/tag/v1.3.4" title="GitHub release"><img src="imgs/icons/github.png"></a>
+				</div>
+			</div>
+			<div class="main">
+				<div class="updates">
+					<label>June 5 / 2019</label>
+					<label class="subtitle">Beta v1.3.3 "Gen5 Update"</label>
+					<label>
+						Changes:<br>
+						• New icons: browser, installer, uninstaller, html file.<br>
+						• When you click on the link in the sidebar, the panel will close.<br>
+						• "Key binds" renamed to "Hotkeys".<br>
+						• New shortcut for hotkeys (Ctrl + Shift + H).<br>
+						• Firmware update (Electron 5, Chrome 73, Node 12).<br><br>
+						Added:<br>
+						• Added Fullscreen HTML API.<br>
+						• Added background for keys in the hotkeys window.<br><br>
+						Removed:<br>
+						• Removed support for all file types except .html and .htm.<br><br>
+						Fixes:<br>
+						• Repaired fullscreen mode.<br>
+						• Fixed update notification.
+					</label>
+					<a href="https://github.com/ModuleArt/arrowbrowser/releases/tag/v1.3.3" title="GitHub release"><img src="imgs/icons/github.png"></a>
+				</div>
+			</div>
+			<div class="main">
+				<div class="updates">
+					<label>June 4 / 2019</label>
+					<label class="subtitle">Beta v1.3.2 "Icons Update"</label>
+					<label>
+						Changes:<br>
+						• New app icon.<br>
+						• New installer icon.<br>
+						• New html file icon.<br><br>
+						Added:<br>
+						• Added uninstaller icon.<br>
+						• Added icons for htm, webp, xht, shtml, xhml files.<br>
+						• Added links in settings.<br>
+						• Added key binds window.
+					</label>
+					<a href="https://github.com/ModuleArt/arrowbrowser/releases/tag/v1.3.2" title="GitHub release"><img src="imgs/icons/github.png"></a>
+				</div>
+			</div>
+			<div class="main">
+				<div class="updates">
+					<label>June 3 / 2019</label>
+					<label class="subtitle">Beta v1.3.1 "Custom Update"</label>
+					<label>
+						Changes:<br>
+						• New search panel animation.<br>
+						• New welcome screen design.<br><br>
+						Added:<br>
+						• Added user custom search engine.<br>
+						• Added "new-window" options for websites.<br>
+						• Added icon for html files.<br>
+						• Added welcome screen section in settings.<br>
+						• Added icon, date, time for downloads.<br>
+						• Added user custom new tab page (Default: "https://google.com").<br>
+						• Added information buttons in the settings.<br>
+						• Added some notifications in downloads.<br>
+						• Added installer icon.<br>
+						• Added Yahoo search engine.<br><br>
+						Fixes:<br>
+						• Fixed show file / folder buttons in downloads.<br>
+						• Fixed "Search with" buttons.<br>
+						• Now you can not clear downloads when the file is loaded.
+					</label>
+					<a href="https://github.com/ModuleArt/arrowbrowser/releases/tag/v1.3.1" title="GitHub release"><img src="imgs/icons/github.png"></a>
+				</div>
+			</div>
+			<div class="main">
+				<div class="updates">
+					<label>June 2 / 2019</label>
+					<label class="subtitle">Beta v1.3.0 "Sidebar Update"</label>
+					<label>
+						• Improved web security (Disabled node integration, JQuery is working).<br>
+						• Added sidebar.<br>
+						• Bookmarks, downloads, settings, about moved to sidebar.<br>
+						• Fixed incorrect behavior of back/forward/refresh/stop buttons.<br>
+						• "Open with" for htm, html, shtml, webp, xht, xhtml files.<br>
+						• Some design improvements.<br>
+						• Removed fade animations (Better performance).
+					</label>
+					<a href="https://github.com/ModuleArt/arrowbrowser/releases/tag/v1.3.0" title="GitHub release"><img src="imgs/icons/github.png"></a>
+				</div>
+			</div>
+			<div class="main">
+				<div class="updates">
+					<label>May 21 / 2019</label>
+					<label class="subtitle">Beta v1.2.1 "Design Update"</label>
+					<label>
+						• ArrowFlat UI Design 2.1 (Removed shadows and borders).<br>
+						• Decreased installer file size.
+					</label>
+					<a href="https://github.com/ModuleArt/arrowbrowser/releases/tag/v1.2.1" title="GitHub release"><img src="imgs/icons/github.png"></a>
+				</div>
+			</div>
+			<div class="main">
+				<div class="updates">
+					<label>May 21 / 2019</label>
+					<label class="subtitle">Beta v1.2.0 "Impression Update"</label>
+					<label>
+						• New flat colors: blue, green, orange, red, light, gray, dark.<br>
+						• Smaller font: 14px.<br>
+						• Variable roundness of the corners of the interface elements.<br>
+						• Some new shortcuts.<br>
+						• The size and position of the window are maintained.<br>
+						• New download manager.<br>
+						• The application will not close during file download.<br>
+						• Find in page.<br>
+						• Removed loading screen.<br>
+						• Windows 10 controls.<br>
+						• Dynamic width of tabs.<br>
+						• Tabs list button.<br>
+						• Removed browser icon on the title bar<br>
+						• Context menu icons.<br>
+						• Removed error page.<br>
+						• Lighter substrates.<br>
+						• Welcome screen.<br>
+						• Multiple search engines on search panel (Google, Bing, DuckDuckGo, Wikipedia).
+					</label>
+					<a href="https://github.com/ModuleArt/arrowbrowser/releases/tag/v1.2.0" title="GitHub release"><img src="imgs/icons/github.png"></a>
+				</div>
+			</div>
+			<div class="main">
+				<div class="updates">
+					<label>April 13 / 2019</label>
+					<label class="subtitle">Beta v1.1.0 "Context Update"</label>
+					<label>
+						• New outlined icons style.<br>
+						• Tab context menu.<br>
+						• Light and dark themes.<br>
+						• New bookmark manager (Drag&Drop).<br>
+						• Loading screen.<br>
+						• Zoom factor.<br>
+						• Added context menu icons.<br>
+						• New design (Shadows replaced by borders).<br>
+						• Input roles.<br>
+						• Bookmarks, settings, about in new tab.<br>
+						• Sidebar replaced by context menu (Better performance).<br>
+						• Keyboard shortcuts.<br>
+						• Notification fade animation.<br>
+						• New app icon.<br>
+						• Fullscreen mode (F11).<br>
+						• Removed download manager. It will appear later in the new form.<br>
+						• Error page.<br>
+						• New font (Open Sans).<br>
+						• 50 new background colors.
+					</label>
+					<a href="https://github.com/ModuleArt/arrowbrowser/releases/tag/v1.1.0" title="GitHub release"><img src="imgs/icons/github.png"></a>
+					<a href="https://medium.com/module-art/arrowbrowser-v1-1-0-update-6c7a125b9ddd" title="Medium story"><img src="imgs/icons/medium.png"></a>
+				</div>
+			</div>
+			<div class="main">
+				<div class="updates">
+					<label>March 5 / 2019</label>
+					<label class="subtitle">Beta v1.0.0</label>
+					<label>Arrow Browser is available!</label>
+					<a href="https://github.com/ModuleArt/arrowbrowser/releases/tag/v1.0.0" title="GitHub release"><img src="imgs/icons/github.png"></a>
+				</div>
+			</div>
+
+<!--
+					███████  ██████   ██████  ████████ ███████ ██████
+					██      ██    ██ ██    ██    ██    ██      ██   ██
+					█████   ██    ██ ██    ██    ██    █████   ██████
+					██      ██    ██ ██    ██    ██    ██      ██   ██
+					██       ██████   ██████     ██    ███████ ██   ██
+-->
+
+		</center>
+		<footer id="footer"></footer>
+	</body>
+</html>
+
+<!--
+					████████ ██   ██ ███████     ███████ ███    ██ ██████
+					   ██    ██   ██ ██          ██      ████   ██ ██   ██
+					   ██    ███████ █████       █████   ██ ██  ██ ██   ██
+					   ██    ██   ██ ██          ██      ██  ██ ██ ██   ██
+					   ██    ██   ██ ███████     ███████ ██   ████ ██████
+-->

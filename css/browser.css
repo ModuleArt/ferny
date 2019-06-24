@@ -700,7 +700,7 @@ hr {
   z-index: 102;
 }
 
-.etabs-tabgroup.blur  {
+.etabs-tabgroup.blur .theme-icon {
   opacity: 0.5;
 }
 
@@ -718,6 +718,7 @@ hr {
   cursor: default;
   max-width: 256px;
   min-width: 40px;
+  border-top: 4px solid transparent;
 }
 
 .etabs-tab::after {
@@ -798,8 +799,8 @@ hr {
 .etabs-tab-icon {
   display: inline-block;
   height: 16px;
-  margin: 2px;
-  filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.5));
+  /* margin: 2px; */
+  /* filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.5)); */
 }
 
 .etabs-tab-icon img {
@@ -810,8 +811,8 @@ hr {
 .etabs-tab-title {
   overflow: hidden;
   position: absolute;
-  vertical-align: middle;
-  left: 36px;
+  top: 8px;
+  left: 32px;
   right: 32px;
   white-space: nowrap;
   word-break: keep-all;
@@ -823,13 +824,14 @@ hr {
 }
 
 .etabs-tab-buttons {
+  position: absolute;
+  right: 6px;
+  top: 6px;
   transition: 0.25s;
-  float: right;
   transform: scale(0);
 }
 
 .etabs-tab-buttons button {
-  margin: -2px;
   outline: none;
   display: inline-block;
   color: var(--color-top);

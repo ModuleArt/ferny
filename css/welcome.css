@@ -175,7 +175,7 @@
   padding: 4px;
 }
 
-#titlebar.blur {
+#titlebar.blur .theme-icon {
   opacity: 0.5;
 }
 

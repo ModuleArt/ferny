@@ -189,7 +189,7 @@ app.on('ready', function() {
     // mainWindow.webContents.send('action-quest', { text: "New version " + event.info.version, ops: [{ text:'Download', icon:'check', click:'downloadUpdate(); removeNotif(this.parentNode.parentNode);' }] });
   });
   autoUpdater.on('update-downloaded', () => {
-    mainWindow.webContents.send('action-quest', { text: "Update is downloaded!", ops: [{ text:'Install now', icon:'check', click:'installUpdate(); removeNotif(this.parentNode.parentNode);' }] });
+    mainWindow.webContents.send('action-quest', { text: "Update is downloaded!", ops: [{ text:'Install now', icon:'check', click:'installUpdate();' }] });
   });
   autoUpdater.on('download-progress', (progress, bytesPerSecond, percent, total, transferred) => {
     mainWindow.webContents.send('action-update-loader', { percent: percent, id: 'update-0' });
@@ -919,10 +919,11 @@ function loadSearchEngine() {
 
   try {
     searchEngine = fs.readFileSync(app.getPath('userData') + "\\json\\searchengine.json");
-    mainWindow.webContents.send('action-set-search-engine', searchEngine);
   } catch (e) {
     saveSearchEngine();
   }
+
+  mainWindow.webContents.send('action-set-search-engine', searchEngine);
 }
 
 function loadHistory() {
@@ -1012,10 +1013,11 @@ function loadTheme() {
 
   try {
     themeColor = fs.readFileSync(app.getPath('userData') + "\\json\\theme.json");
-    mainWindow.webContents.send('action-change-theme', themeColor);
   } catch (e) {
     saveTheme();
   }
+
+  mainWindow.webContents.send('action-change-theme', themeColor);
 }
 
 function loadBorderRadius() {
@@ -1023,10 +1025,11 @@ function loadBorderRadius() {
 
   try {
     borderRadius = fs.readFileSync(app.getPath('userData') + "\\json\\radius.json");
-    mainWindow.webContents.send('action-change-border-radius', borderRadius);
   } catch (e) {
     saveBorderRadius();
   }
+
+  mainWindow.webContents.send('action-change-border-radius', borderRadius);
 }
 
 function loadStartPage() {
@@ -1034,11 +1037,12 @@ function loadStartPage() {
 
   try {
     startPage = fs.readFileSync(app.getPath('userData') + "\\json\\startpage.json");
-    mainWindow.webContents.send('action-set-start-page', startPage);
-    mainWindow.webContents.send('action-open-url-in-new-tab', startPage);
   } catch (e) {
     saveStartPage();
   }
+
+  mainWindow.webContents.send('action-set-start-page', startPage);
+  mainWindow.webContents.send('action-open-url-in-new-tab', startPage);
 }
 
 /*

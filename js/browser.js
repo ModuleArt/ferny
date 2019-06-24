@@ -14,7 +14,8 @@ const {
 const TabGroup = require("electron-tabs");
 const dragula = require("dragula");
 const autoSuggest = require('google-autocomplete');
-const isUrl = require('is-url');
+const isUrl = require('validate.io-uri');
+const getAvColor = require('color.js')
 
 /*
 .########....###....########...######.
@@ -31,7 +32,7 @@ let tabGroup = new TabGroup({
     title: 'New Tab',
     active: true
   },
-  newTabButtonText: "<img title='New tab' name='create' class='theme-icon'/>",
+  newTabButtonText: `<img title='New tab' name='create' class='theme-icon' ondrop='newTabDrop(event)' ondragover='prevDef(event)'/>`,
   closeButtonText: "&nbsp;"
 });
 dragula([tabGroup.tabContainer], {
@@ -45,6 +46,25 @@ tabGroup.on("tab-added", (tab, tabGroup) => {
     e.preventDefault();
     ipcRenderer.send('request-tab-menu', tab.id);
   }, false);
+
+  tab.tab.addEventListener('dragenter', (e) => {
+    e.preventDefault();
+    tab.activate();
+  });
+
+  tab.tab.addEventListener('dragover', (e) => {
+    e.preventDefault();
+  });
+
+  tab.tab.addEventListener('drop', (e) => {
+    e.preventDefault();
+    var textData = e.dataTransfer.getData("Text");
+    if (textData) {
+      tab.webview.loadURL(textData);
+    } else if(e.dataTransfer.files.length > 0) {
+      tab.webview.loadURL(e.dataTransfer.files[0].path);
+    }
+  });
 
   document.getElementById('search-input').value = "";
   document.getElementById('back-btn').classList.add('disable');
@@ -104,6 +124,20 @@ tabGroup.on("tab-added", (tab, tabGroup) => {
 
   webview.addEventListener('page-favicon-updated', (e) => {
     tab.setIcon(e.favicons[0]);
+    // average(tab.tab.getElementsByTagName('img')[0], (err, color) => {
+    //   if (err) throw err;
+    //   var [red, green, blue, alpha] = color;
+    //   console.log(color);
+    // });
+    // var rgbColor = getAverageColour(tab.tab.getElementsByTagName('img')[0], "RGB")
+    // tab.tab.backgroundColor = rgbColor;
+
+    var img = tab.tab.getElementsByTagName('img')[0];
+    var color = new getAvColor(img);
+    color.mostUsed(result => {
+      // tab.tab.style.backgroundImage = "linear-gradient(" + result[0] + ", var(--color-back), var(--color-back))"; 
+      tab.tab.style.borderColor = result[0];
+    });
   });
 
   webview.addEventListener('page-title-updated', (e) => {
@@ -187,19 +221,11 @@ tabGroup.on("tab-added", (tab, tabGroup) => {
       document.getElementById('forward-btn').classList.add('disable');
     }
 
-    // if (e.errorCode == -300) {
-    //   if (document.getElementById('search-input').value != null) {
-    //     navigateSuggest(document.getElementById('search-input').value);
-    //   }
-    // } else if(e.errorCode == -27) {
-
-    // } else if (!e.errorDescription == "") {
-      notif("Connection failed! " + e.errorDescription + " (" + e.errorCode + ")", "error");
-      // tabGroup.getActiveTab().webview.src = 'html/error.html';
-    // }
+    notif("Connection failed: " + e.errorDescription + " (" + e.errorCode + ")", "error");
   });
 
   document.getElementsByClassName('etabs-tab-buttons')[tab.getPosition(false) - 1].title = "Close tab";
+
   resizeTabs();
 });
 
@@ -220,6 +246,46 @@ tabGroup.on("tab-removed", (tab, tabGroup) => {
 .##.......##.....##.##...###.##....##....##.....##..##.....##.##...###.##....##
 .##........#######..##....##..######.....##....####..#######..##....##..######.
 */
+
+// createBtn.addEventListener('dragover', (e) => {
+//   e.preventDefault();
+// });
+// createBtn.addEventListener('dragenter', (e) => {
+//   e.preventDefault();
+// });
+// createBtn.addEventListener('drop', (e) => {
+//   e.preventDefault();
+//   tabGroup.addTab({
+//     title: 'New Tab',
+//     src: e.dataTransfer.getData("Text"),
+//     active: true
+//   });
+// });
+
+function newTabDrop(e) {
+  e.preventDefault();
+  var textData = e.dataTransfer.getData("Text");
+  if (textData) {
+    tab.webview.loadURL(textData);
+    tabGroup.addTab({
+      title: 'New Tab',
+      src: textData,
+      active: true
+    });
+  } else if(e.dataTransfer.files.length > 0) {
+    for(var i = 0; i < e.dataTransfer.files.length; i++) {
+      tabGroup.addTab({
+        title: 'New Tab',
+        src: e.dataTransfer.files[i].path,
+        active: true
+      });
+    }
+  }
+}
+
+function prevDef(event) {
+  event.preventDefault();
+}
 
 function popupInfoContextMenu() {
   ipcRenderer.send('request-info-contextmenu');
@@ -279,6 +345,7 @@ function unpinSidebar() {
 
 function installUpdate() {
   ipcRenderer.send('request-install-update');
+  removeNotifById('update-0');
 }
 
 function downloadUpdate() {
@@ -1027,22 +1094,20 @@ ipcRenderer.on('action-open-settings', (event, arg) => {
 
 // zoom menu
 ipcRenderer.on('action-zoom-zoomout', (event, arg) => {
-  tabGroup.getActiveTab().webview.getZoomFactor(function (zoomFactor) {
-    if (zoomFactor > 0.3) {
-      tabGroup.getActiveTab().webview.setZoomFactor(zoomFactor - 0.1);
-      notif("Zoom factor changed to " + Math.round((zoomFactor - 0.1) * 100) + "%", "info");
-      tabGroup.getActiveTab().webview.focus();
-    }
-  });
+  var zoomFactor = tabGroup.getActiveTab().webview.getZoomFactor();
+  if (zoomFactor > 0.3) {
+    tabGroup.getActiveTab().webview.setZoomFactor(zoomFactor - 0.1);
+    notif("Zoom factor changed to " + Math.round((zoomFactor - 0.1) * 100) + "%", "info");
+    tabGroup.getActiveTab().webview.focus();
+  }
 });
 ipcRenderer.on('action-zoom-zoomin', (event, arg) => {
-  tabGroup.getActiveTab().webview.getZoomFactor(function (zoomFactor) {
-    if (zoomFactor < 2.5) {
-      tabGroup.getActiveTab().webview.setZoomFactor(zoomFactor + 0.1);
-      notif("Zoom factor changed to " + Math.round((zoomFactor + 0.1) * 100) + "%", "info");
-      tabGroup.getActiveTab().webview.focus();
-    }
-  });
+  var zoomFactor = tabGroup.getActiveTab().webview.getZoomFactor();
+  if (zoomFactor < 2.5) {
+    tabGroup.getActiveTab().webview.setZoomFactor(zoomFactor + 0.1);
+    notif("Zoom factor changed to " + Math.round((zoomFactor + 0.1) * 100) + "%", "info");
+    tabGroup.getActiveTab().webview.focus();
+  }
 });
 ipcRenderer.on('action-zoom-actualsize', (event, arg) => {
   tabGroup.getActiveTab().webview.getZoomFactor(function (zoomFactor) {

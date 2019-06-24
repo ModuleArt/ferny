@@ -3,7 +3,7 @@
   "productName": "ArrowBrowser",
   "companyName": "ModuleArt",
   "description": "Your web browser",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "license": "UNLICENSED",
   "author": {
     "name": "ModuleArt",
@@ -19,18 +19,21 @@
     "dist": "build"
   },
   "dependencies": {
+    "color.js": "^0.1.3",
     "dragula": "^3.7.2",
     "electron-log": "^2.2.17",
+    "electron-nightly": "^7.0.0-nightly.20190622",
     "electron-tabs": "^0.9.5",
     "electron-updater": "^4.0.6",
     "get-ssl-certificate": "^2.3.2",
     "get-title-at-url": "^1.1.6",
     "google-autocomplete": "0.0.1",
-    "is-url": "^1.2.4",
-    "persist-path": "^1.0.2"
+    "persist-path": "^1.0.2",
+    "validate.io-uri": "^1.0.0"
   },
   "devDependencies": {
-    "electron-builder": "^20.40.2"
+    "electron-builder": "^20.40.2",
+    "electron": "^6.0.0-beta.10"
   },
   "build": {
     "appId": "com.moduleart.arrowbrowser",
@@ -39,12 +42,14 @@
       {
         "ext": "htm",
         "icon": "imgs\\files\\html\\html.ico",
-        "name": "HTM file"
+        "name": "HTM document",
+        "role": "Viewer"
       },
       {
         "ext": "html",
         "icon": "imgs\\files\\html\\html.ico",
-        "name": "HTML file"
+        "name": "HTML document",
+        "role": "Viewer"
       }
     ],
     "nsis": {
@@ -61,6 +66,10 @@
       },
       "target": "nsis",
       "icon": "imgs/icon.ico"
+    },
+    "linux": {
+      "category": "Network",
+      "target": "AppImage"
     }
   }
 }

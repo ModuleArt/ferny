@@ -116,8 +116,8 @@
 body {
   margin: 0;
   padding: 2px;
-  animation-name: anim-slide;
-  animation-duration: 0.25s;
+  /* animation-name: anim-slide;
+  animation-duration: 0.25s; */
   overflow-x: hidden;
 }
 
