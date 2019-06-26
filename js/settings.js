@@ -18,10 +18,10 @@ function toggleBookmarksBar() {
     var bookmarksBar = fs.readFileSync(ppath + "\\json\\bookmarksbar.json");
     if(bookmarksBar == 1) {
       ipcRenderer.send('request-set-bookmarks-bar', 0);
-      notif("Bookmarks bar turned off", "info");
+      notif("Bookmarks bar turned off!", "info");
     } else {
       ipcRenderer.send('request-set-bookmarks-bar', 1);
-      notif("Bookmarks bar turned on", "success");
+      notif("Bookmarks bar turned on!", "success");
     }
   } catch (e) {
 

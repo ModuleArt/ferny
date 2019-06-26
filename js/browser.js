@@ -348,10 +348,10 @@ function installUpdate() {
   removeNotifById('update-0');
 }
 
-function downloadUpdate() {
-  ipcRenderer.send('request-download-update');
-  loader('Downloading update', 'update-0');
-}
+// function downloadUpdate() {
+//   ipcRenderer.send('request-download-update');
+//   loader('Downloading update', 'update-0');
+// }
 
 // system pages
 function goToBookmarksTab() {

@@ -149,10 +149,6 @@ var borderRadius = '4';
 var downloadsArray = [];
 var curDownloadNum = 0;
 
-var historyArray = [];
-var curHistoryNum = 0;
-
-var welcomeOn = 1;
 var bookmarksBarOn = 0;
 
 var startPage = "https://duckduckgo.com/";
@@ -185,7 +181,8 @@ app.on('ready', function() {
     mainWindow.webContents.send('action-notif', { type: "success", text: "App is up to date!" });
   });
   autoUpdater.on('update-available', (info) => {
-    mainWindow.webContents.send('action-notif', { type: "info", text: "New version " + info.version +" is available! Download started..." });
+    // mainWindow.webContents.send('action-notif', { type: "info", text: "New version " + info.version +" is available! Download started..." });
+    mainWindow.webContents.send('action-loader', { text: "Downloading update: v" + info.version, id: "update-0" });
     // mainWindow.webContents.send('action-quest', { text: "New version " + event.info.version, ops: [{ text:'Download', icon:'check', click:'downloadUpdate(); removeNotif(this.parentNode.parentNode);' }] });
   });
   autoUpdater.on('update-downloaded', () => {
@@ -448,30 +445,24 @@ ipcMain.on('request-show-certificate-info', (event, arg) => {
   showPageInfoWindow(arg);
 });
 
-ipcMain.on('request-clear-history', (event, arg) => {
-  historyArray = [];
-  saveHistory();
-});
-
-ipcMain.on('request-remove-history-item', (event, arg) => {
-  for(var i = 0; i < historyArray.length; i++) {
-    if(historyArray[i].index == arg) {
-      historyArray.splice(i, 1);
-      break;
-    }
-  }
-  saveHistory();
-});
-
 ipcMain.on('request-add-history-item', (event, arg) => {
   let Data = {
-    index: ++curHistoryNum,
     url: arg,
     time: Math.floor(Date.now() / 1000)
   };
-  historyArray.push(Data);
-  saveHistory();
-  mainWindow.webContents.send('action-add-history-item', Data);
+
+  var fs = require('fs');
+
+  try {
+    fs.appendFile(app.getPath('userData') + "\\json\\history.json", JSON.stringify(Data) + "\n", function (err) {
+      if (err) throw err;
+    });
+  } catch (error) {
+    fs.writeFileSync(app.getPath('userData') + "\\json\\history.json", "");
+    fs.appendFile(app.getPath('userData') + "\\json\\history.json", JSON.stringify(Data), function (err) {
+      if (err) throw err;
+    });
+  }
 });
 
 
@@ -494,7 +485,6 @@ ipcMain.on('request-set-search-engine', (event, arg) => {
 });
 
 ipcMain.on('request-show-welcome-screen', (event, arg) => {
-  welcomeOn = 1;
   showWelcomeWindow();
 });
 
@@ -532,9 +522,9 @@ ipcMain.on('request-check-for-updates', (event, arg) => {
   checkForUpdates();
 });
 
-ipcMain.on('request-download-update', (event, arg) => {
-  downloadUpdate();
-});
+// ipcMain.on('request-download-update', (event, arg) => {
+//   downloadUpdate();
+// });
 
 ipcMain.on('request-tabs-list', (event, arg) => {
   let m = new Menu();
@@ -691,9 +681,9 @@ function checkForUpdates() {
   autoUpdater.checkForUpdates();
 }
 
-function downloadUpdate() {
-  autoUpdater.downloadUpdate();
-}
+// function downloadUpdate() {
+//   autoUpdater.downloadUpdate();
+// }
 
 function showWelcomeWindow() {
   welcomeWindow = new BrowserWindow({
@@ -809,7 +799,6 @@ function showPageInfoWindow(certificate) {
 
 function saveAllData() {
   saveDownloads();
-  saveHistory();
   saveTheme();
   saveBorderRadius();
   saveStartPage();
@@ -821,13 +810,6 @@ function saveDownloads() {
   fs.writeFileSync(app.getPath('userData') + "\\json\\curdownloadnum.json", curDownloadNum);
   fs.writeFileSync(app.getPath('userData') + "\\json\\downloads.json", JSON.stringify(downloadsArray));
   console.log("saved DOWNLOADS: " + downloadsArray.length);
-}
-
-function saveHistory() {
-  var fs = require('fs');
-  fs.writeFileSync(app.getPath('userData') + "\\json\\curhistorynum.json", curHistoryNum);
-  fs.writeFileSync(app.getPath('userData') + "\\json\\history.json", JSON.stringify(historyArray));
-  console.log("saved HISTORY: " + historyArray.length);
 }
 
 function saveBorderRadius() {
@@ -896,7 +878,6 @@ function loadAllData() {
     loadBookmarksBar();
     loadSearchEngine();
     loadDownloads();
-    loadHistory();
   } else {
     fs.mkdirSync(app.getPath('userData') + "\\json");
     saveAllData();
@@ -924,29 +905,6 @@ function loadSearchEngine() {
   }
 
   mainWindow.webContents.send('action-set-search-engine', searchEngine);
-}
-
-function loadHistory() {
-  var fs = require("fs");
-
-  try {
-    curHistoryNum = fs.readFileSync(app.getPath('userData') + "\\json\\curhistorynum.json");
-
-    var jsonstr = fs.readFileSync(app.getPath('userData') + "\\json\\history.json");
-    var arr = JSON.parse(jsonstr);
-
-    for (var i = 0; i < arr.length; i++) {
-      let Item = {
-        index: arr[i].index,
-        url: arr[i].url,
-        time: arr[i].time
-      };
-      historyArray.push(Item);
-      // mainWindow.webContents.send('action-add-history-item', Item);
-    }
-  } catch(err) {
-    saveHistory();
-  }
 }
 
 function loadDownloads() {
@@ -978,7 +936,7 @@ function loadWelcome() {
   var fs = require("fs");
 
   try {
-    welcomeOn = fs.readFileSync(app.getPath('userData') + "\\json\\welcome.json");
+    var welcomeOn = fs.readFileSync(app.getPath('userData') + "\\json\\welcome.json");
     if(welcomeOn == 1) {
       showWelcomeWindow();
     }

@@ -1,5 +1,20 @@
 const { ipcRenderer } = require('electron');
 const getTitleAtUrl = require('get-title-at-url');
+const readline = require('readline');
+const ppath = require('persist-path')('ArrowBrowser');
+const fs = require("fs");
+
+let rl = readline.createInterface({
+  input: fs.createReadStream(ppath + "\\json\\history.json")
+});
+
+var historyLineNumber = 0;
+
+rl.on('line', function(line) {
+  var obj = JSON.parse(line);
+  createHistoryItem(historyLineNumber, obj.url, obj.time);
+  historyLineNumber++;
+});
 
 /*
 .########.##.....##.##....##..######..########.####..#######..##....##..######.
@@ -94,25 +109,17 @@ function changeBorderRadius(size) {
 
 // history
 function clearHistory() {
-  var container = document.getElementById('history');
-  container.innerHTML = "";
-  ipcRenderer.send('request-clear-history');
-  notif('History cleared', 'success')
-}
-
-function loadHistory() {
-  var fs = require("fs");
-  var ppath = require('persist-path')('ArrowBrowser');
-
   try {
-    var jsonstr = fs.readFileSync(ppath + "\\json\\history.json");
-    var arr = JSON.parse(jsonstr);
-    var i;
-    for (i = 0; i < arr.length; i++) {
-      createHistoryItem(arr[i].index, arr[i].url, arr[i].time);
+    fs.writeFileSync(ppath + "\\json\\history.json", "");
+    var container = document.getElementById('history');
+    if(container.innerHTML == "") {
+      notif('History is already empty!', 'info');
+    } else {
+      container.innerHTML = "";
+      notif('History cleared!', 'success');
     }
-  } catch (e) {
-
+  } catch (error) {
+    notif('Error: ' + error, 'error')
   }
 }
 
@@ -132,11 +139,13 @@ function createHistoryItem(index, url, time) {
                       <img class="nav-btn-icon theme-icon" name="tab">
                       <label>New tab</label>
                     </div>
-                    <div class="nav-btn" onclick="removeHistoryItem(` + index + `)">
-                      <img class="nav-btn-icon theme-icon" name="delete">
-                      <label>Remove</label>
-                    </div>
+                    
                   </center>`;
+
+                  // <div class="nav-btn" onclick="removeHistoryItem(` + index + `)">
+                  //     <img class="nav-btn-icon theme-icon" name="delete">
+                  //     <label>Remove</label>
+                  //   </div>
   div.addEventListener('auxclick', (e) => {
     e.preventDefault();
     if(e.which == 2) {
@@ -151,11 +160,19 @@ function createHistoryItem(index, url, time) {
   loadTheme();
 }
 
-function removeHistoryItem(index) {
-  var div = document.getElementById('history-' + index);
-  div.parentNode.removeChild(div);
-  ipcRenderer.send('request-remove-history-item', index);
-}
+// function removeHistoryItem(index) {
+//   var div = document.getElementById('history-' + index);
+//   div.parentNode.removeChild(div);
+
+//   replace({ files: ppath + "\\json\\history.json", from: , to:  }, (error, results) => {
+//     if (error) {
+//       return console.error('Error occurred:', error);
+//     } else {
+
+//     }
+//     console.log('Replacement results:', results);
+//   });
+// }
 
 function applyTitle(url, index) {
   getTitleAtUrl(url, function(title) {
@@ -253,7 +270,6 @@ ipcRenderer.on('action-load-border-radius', (event, arg) => {
 */
 
 function init() {
-  loadHistory();
   loadTheme();
   loadBorderRadius();
 
