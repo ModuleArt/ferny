@@ -318,14 +318,10 @@ label.link:hover {
   border: solid 2px transparent;
 }
 
-.tile.enabled:hover .icon {
-  border: 2px solid transparent;
-}
-
 .tile div {
   border-radius: var(--px-radius);
   border: solid 2px var(--color-over);
-  height: 104px;
+  height: 100px;
   padding: 16px;
   transition: 0.25s;
   text-align: left;
@@ -342,7 +338,7 @@ label.link:hover {
   /* float: left; */
   color: var(--color-top);
   display: block;
-  margin-top: -4px;
+  margin-top: -6px;
 }
 
 .tile.enabled label {
@@ -352,7 +348,6 @@ label.link:hover {
 .tile .icon {
   float: left;
   border-radius: var(--px-radius);
-  border: solid 2px var(--color-over);
   margin-right: 8px;
   transition: 0.25s;
 }
@@ -412,10 +407,11 @@ label.link:hover {
 #navbar-menu-btn {
   display: none !important;
   float: right;
+  border: 2px solid transparent;
 }
 
 #navbar-menu-btn:hover {
-  background-color: var(--color-over);
+  border-color: var(--color-over);
 }
 
 .navbar-btn, #navbar-menu-btn, .navbar-links-btn, .footer-btn {
