@@ -12,6 +12,8 @@ const { ipcMain, app, Menu, MenuItem, BrowserWindow, dialog } = require('electro
 const { autoUpdater } = require("electron-updater")
 const os = require('os');
 const path = require('path');
+const fs = require("fs");
+const ppath = require('persist-path')('Arrow Browser');
 
 app.on('window-all-closed', function() {
   if (process.platform != 'darwin') {
@@ -50,7 +52,10 @@ const sideMenu = Menu.buildFromTemplate([
    { label: 'New tab', icon: app.getAppPath() + '\\imgs\\icons16\\create.png', accelerator: 'CmdOrCtrl+T', click: () => { mainWindow.webContents.send('action-tab-newtab'); } },
    { label: 'New private tab', accelerator: 'CmdOrCtrl+Shift+T', click: () => {  }, enabled: false },
    { type: 'separator' },
+   { label: 'Back', accelerator: 'Alt+Left', icon: app.getAppPath() + '\\imgs\\icons16\\back.png', click: () => { mainWindow.webContents.send('action-tab-back'); } },
+   { label: 'Forward', accelerator: 'Alt+Right', icon: app.getAppPath() + '\\imgs\\icons16\\forward.png', click: () => { mainWindow.webContents.send('action-tab-forward'); } },
    { label: 'Reload', icon: app.getAppPath() + '\\imgs\\icons16\\reload.png', accelerator: 'F5', click: () => { mainWindow.webContents.send('action-tab-reload'); } },
+   { type: 'separator' },
    { label: 'Duplicate', icon: app.getAppPath() + '\\imgs\\icons16\\copy.png', accelerator: 'CmdOrCtrl+Shift+D', click: () => { mainWindow.webContents.send('action-tab-duplicatetab'); } },
    { label: 'Mute site', accelerator: 'CmdOrCtrl+Shift+M', click: () => {  }, enabled: false },
    { type: 'separator' },
@@ -99,17 +104,17 @@ const sideMenu = Menu.buildFromTemplate([
    { label: 'Create page shortcut', accelerator: 'CmdOrCtrl+Shift+S', click: () => {  }, enabled: false },
    { label: 'Open file', accelerator: 'CmdOrCtrl+O', click: () => {  }, enabled: false },
    { type: 'separator' },
+   { label: 'View page source', icon: app.getAppPath() + '\\imgs\\icons16\\code.png', accelerator: 'CmdOrCtrl+U', click: () => { mainWindow.webContents.send('action-page-viewsource'); } },
    { label: 'Developer tools', icon: app.getAppPath() + '\\imgs\\icons16\\tools.png', accelerator: 'F12', click: () => { mainWindow.webContents.send('action-page-devtools'); } }
  ] },
  { type: 'separator' },
  { label: 'Settings', icon: app.getAppPath() + '\\imgs\\icons16\\settings.png', accelerator: 'CmdOrCtrl+,', click: () => { mainWindow.webContents.send('action-open-settings'); } },
  { label: 'Help', icon: app.getAppPath() + '\\imgs\\icons16\\help.png', submenu: [
    { label: 'Hotkeys', icon: app.getAppPath() + '\\imgs\\icons16\\keyboard.png', accelerator: 'CmdOrCtrl+Shift+H', click: () => { showKeyBindsWindow(); } },
-   { label: 'Check for updates', icon: app.getAppPath() + '\\imgs\\icons16\\reload.png', accelerator: 'CmdOrCtrl+U', click: () => { checkForUpdates(); } },
+   { label: 'Check for updates', icon: app.getAppPath() + '\\imgs\\icons16\\reload.png', accelerator: 'CmdOrCtrl+Shift+U', click: () => { checkForUpdates(); } },
    { type: 'separator' },
    { label: 'About', icon: app.getAppPath() + '\\imgs\\icons16\\about.png', accelerator: 'CmdOrCtrl+Shift+A', click: () => { mainWindow.webContents.send('action-app-about'); } },
-   { label: 'Report an issue', accelerator: 'CmdOrCtrl+Shift+I', click: () => {  }, enabled: false },
-   { type: 'separator' },
+   { label: 'Report an issue', accelerator: 'CmdOrCtrl+Shift+I', click: () => {  }, enabled: false }
  ]},
  { label: 'More', icon: app.getAppPath() + '\\imgs\\icons16\\more.png', submenu: [
    { label: 'Focus address bar', icon: app.getAppPath() + '\\imgs\\icons16\\zoom.png', accelerator: 'CmdOrCtrl+Shift+F', click: () => { mainWindow.webContents.send('action-page-focussearch'); } },
@@ -143,8 +148,8 @@ var welcomeWindow = null;
 var keyBindsWindow = null;
 var pageInfoWindow = null;
 
-var themeColor = "rgb(255, 255, 255)";
-var borderRadius = '4';
+// var themeColor = "rgb(255, 255, 255)";
+// var borderRadius = '4';
 
 var downloadsArray = [];
 var curDownloadNum = 0;
@@ -204,7 +209,7 @@ app.on('ready', function() {
 
   mainWindow = new BrowserWindow({
     width: 1000, height: 640,
-    minWidth: 480, minHeight: 320,
+    minWidth: 480, minHeight: 240,
     frame: false,
     show: false,
     icon: app.getAppPath() + '\\imgs\\icon.ico',
@@ -234,7 +239,7 @@ app.on('ready', function() {
   mainWindow.on('blur', () => {
     mainWindow.webContents.send('action-blur-window');
   });
-  mainWindow.once('ready-to-show', () => {
+  // mainWindow.once('ready-to-show', () => {
     // loadAllData();
     // mainWindow.show();
 
@@ -243,19 +248,15 @@ app.on('ready', function() {
     //   var openFilePath = process.argv[1];
     //   mainWindow.webContents.send('action-open-url', openFilePath);
     // }
-  });
+  // });
   mainWindow.webContents.once('did-finish-load', () => {
     loadAllData();
     mainWindow.show();
 
-    var data = null;
     if (process.platform == 'win32' && process.argv.length >= 2) {
       var openFilePath = process.argv[1];
       mainWindow.webContents.send('action-open-url', openFilePath);
     }
-  });
-  mainWindow.on('resize', () => {
-    mainWindow.webContents.send('action-resize-tabs');
   });
   mainWindow.on('maximize', () => {
     mainWindow.webContents.send('action-maximize-window');
@@ -414,6 +415,27 @@ app.on('ready', function() {
 //   });
 // });
 
+ipcMain.on('request-webview-zoomin', (event, arg) => {
+  mainWindow.webContents.send('action-zoom-zoomin');
+});
+ipcMain.on('request-webview-zoomout', (event, arg) => {
+  mainWindow.webContents.send('action-zoom-zoomout');
+});
+ipcMain.on('request-webview-contextmenu', (event, arg) => {
+  console.log(arg);
+  let webviewMenu = Menu.buildFromTemplate([
+    { label: 'Type: ' + arg.type, enabled: false },
+    { type: 'separator' },
+    { label: 'Back', accelerator: 'Alt+Left', icon: app.getAppPath() + '\\imgs\\icons16\\back.png', click: () => { mainWindow.webContents.send('action-tab-back'); } },
+    { label: 'Forward', accelerator: 'Alt+Right', icon: app.getAppPath() + '\\imgs\\icons16\\forward.png', click: () => { mainWindow.webContents.send('action-tab-forward'); } },
+    { label: 'Reload', accelerator: 'F5', icon: app.getAppPath() + '\\imgs\\icons16\\reload.png', click: () => { mainWindow.webContents.send('action-tab-reload'); } },
+    { type: 'separator' },
+    { label: 'View page source', icon: app.getAppPath() + '\\imgs\\icons16\\code.png', accelerator: 'CmdOrCtrl+U', click: () => { mainWindow.webContents.send('action-page-viewsource'); } },
+    { label: 'Inspect element', icon: app.getAppPath() + '\\imgs\\icons16\\inspect.png', click: () => { mainWindow.webContents.send('action-page-inspect', arg); } }
+  ]);
+  webviewMenu.popup(mainWindow);
+});
+
 ipcMain.on('request-info-contextmenu', (event, arg) => {
   let infoMenu = Menu.buildFromTemplate([
     { label: 'Certificate info', accelerator: 'CmdOrCtrl+I', icon: app.getAppPath() + '\\imgs\\icons16\\certificate.png', click: () => { mainWindow.webContents.send('action-page-certificate'); } }
@@ -451,31 +473,26 @@ ipcMain.on('request-add-history-item', (event, arg) => {
     time: Math.floor(Date.now() / 1000)
   };
 
-  var fs = require('fs');
-
   try {
-    fs.appendFile(app.getPath('userData') + "\\json\\history.json", JSON.stringify(Data) + "\n", function (err) {
+    fs.appendFile(ppath + "\\json\\history.json", JSON.stringify(Data) + "\n", function (err) {
       if (err) throw err;
     });
   } catch (error) {
-    fs.writeFileSync(app.getPath('userData') + "\\json\\history.json", "");
-    fs.appendFile(app.getPath('userData') + "\\json\\history.json", JSON.stringify(Data), function (err) {
+    if(!fs.existsSync(ppath + "\\json")) {
+      fs.mkdirSync(ppath + "\\json");
+    } 
+    fs.writeFileSync(ppath + "\\json\\history.json", "");
+    fs.appendFile(ppath + "\\json\\history.json", JSON.stringify(Data), function (err) {
       if (err) throw err;
     });
   }
+
+  mainWindow.webContents.send('action-add-history-item', Data);
 });
 
 
 ipcMain.on('request-install-update', (event, arg) => {
   autoUpdater.quitAndInstall();
-});
-
-ipcMain.on('request-webview-context', (event, arg) => {
-  console.log(arg.url);
-  // let tabMenu = Menu.buildFromTemplate([
-  //   { label: 'Reload', icon: app.getAppPath() + '\\imgs\\icons16\\reload.png', accelerator: 'F5', click: () => { mainWindow.webContents.send('action-tabcontext-reload', arg); } }
-  // ]);
-  // tabMenu.popup(mainWindow);
 });
 
 ipcMain.on('request-set-search-engine', (event, arg) => {
@@ -502,6 +519,8 @@ ipcMain.on('request-open-url-in-new-tab', (event, arg) => {
 
 ipcMain.on('request-open-settings', (event, arg) => {
   mainWindow.webContents.send('action-open-settings');
+  welcomeWindow.setClosable(true);
+  welcomeWindow.close();
 });
 
 ipcMain.on('request-clear-downloads', (event, arg) => {
@@ -543,6 +562,7 @@ ipcMain.on('request-tabs-list', (event, arg) => {
 ipcMain.on('request-tab-menu', (event, arg) => {
   let tabMenu = Menu.buildFromTemplate([
     { label: 'Reload', icon: app.getAppPath() + '\\imgs\\icons16\\reload.png', accelerator: 'F5', click: () => { mainWindow.webContents.send('action-tabcontext-reload', arg); } },
+    { type: 'separator' },
     { label: 'Duplicate', icon: app.getAppPath() + '\\imgs\\icons16\\copy.png', accelerator: 'CmdOrCtrl+Shift+D', click: () => { mainWindow.webContents.send('action-tabcontext-duplicatetab', arg); } },
     { label: 'Mute site', accelerator: 'CmdOrCtrl+Shift+M', click: () => {  }, enabled: false },
     { type: 'separator' },
@@ -631,15 +651,27 @@ ipcMain.on('request-toggle-maximize-window', (event, arg) => {
 // });
 
 ipcMain.on('request-change-theme', (event, arg) => {
-  themeColor = arg;
-  saveTheme();
+  // themeColor = arg;
+  // saveTheme();
   mainWindow.webContents.send('action-change-theme', arg);
+
+  if(!fs.existsSync(ppath + "\\json")) {
+    fs.mkdirSync(ppath + "\\json");
+  } 
+
+  fs.writeFileSync(ppath + "\\json\\theme.json", arg);
 });
 
 ipcMain.on('request-change-border-radius', (event, arg) => {
-  borderRadius = arg;
-  saveBorderRadius();
+  // borderRadius = arg;
+  // saveBorderRadius();
   mainWindow.webContents.send('action-change-border-radius', arg);
+
+  if(!fs.existsSync(ppath + "\\json")) {
+    fs.mkdirSync(ppath + "\\json");
+  } 
+
+  fs.writeFileSync(ppath + "\\json\\radius.json", arg);
 });
 
 ipcMain.on('request-toggle-fullscreen', (event, arg) => {
@@ -647,6 +679,7 @@ ipcMain.on('request-toggle-fullscreen', (event, arg) => {
 });
 
 ipcMain.on('request-close-welcome', (event, arg) => {
+  welcomeWindow.setClosable(true);
   welcomeWindow.close();
 });
 
@@ -695,6 +728,7 @@ function showWelcomeWindow() {
     icon: app.getAppPath() + '\\imgs\\icon.ico',
     minimizable: false,
     resizable: false,
+    closable: false,
     webPreferences: {
       nodeIntegration: true
     },
@@ -799,46 +833,51 @@ function showPageInfoWindow(certificate) {
 
 function saveAllData() {
   saveDownloads();
-  saveTheme();
-  saveBorderRadius();
+  // saveTheme();
+  // saveBorderRadius();
   saveStartPage();
   saveBookmarksBar();
 }
 
 function saveDownloads() {
-  var fs = require('fs');
-  fs.writeFileSync(app.getPath('userData') + "\\json\\curdownloadnum.json", curDownloadNum);
-  fs.writeFileSync(app.getPath('userData') + "\\json\\downloads.json", JSON.stringify(downloadsArray));
+  if(!fs.existsSync(ppath + "\\json")) {
+    fs.mkdirSync(ppath + "\\json");
+  } 
+
+  fs.writeFileSync(ppath + "\\json\\curdownloadnum.json", curDownloadNum);
+  fs.writeFileSync(ppath + "\\json\\downloads.json", JSON.stringify(downloadsArray));
   console.log("saved DOWNLOADS: " + downloadsArray.length);
 }
 
-function saveBorderRadius() {
-  var fs = require('fs');
-  fs.writeFileSync(app.getPath('userData') + "\\json\\radius.json", borderRadius);
-  console.log("saved BORDERRADIUS: " + borderRadius);
-}
+// function saveBorderRadius() {
+//   fs.writeFileSync(ppath + "\\json\\radius.json", borderRadius);
+//   console.log("saved BORDERRADIUS: " + borderRadius);
+// }
 
-function saveTheme() {
-  var fs = require('fs');
-  fs.writeFileSync(app.getPath('userData') + "\\json\\theme.json", themeColor);
-  console.log("saved THEMECOLOR: " + themeColor);
-}
+// function saveTheme() {
+//   fs.writeFileSync(ppath + "\\json\\theme.json", themeColor);
+//   console.log("saved THEMECOLOR: " + themeColor);
+// }
 
 function saveStartPage() {
-  var fs = require('fs');
-  fs.writeFileSync(app.getPath('userData') + "\\json\\startpage.json", startPage);
+  if(!fs.existsSync(ppath + "\\json")) {
+    fs.mkdirSync(ppath + "\\json");
+  } 
+
+  fs.writeFileSync(ppath + "\\json\\startpage.json", startPage);
   console.log("saved STARTPAGE: " + startPage);
 }
 
 function saveSearchEngine() {
-  var fs = require('fs');
-  fs.writeFileSync(app.getPath('userData') + "\\json\\searchengine.json", searchEngine);
+  if(!fs.existsSync(ppath + "\\json")) {
+    fs.mkdirSync(ppath + "\\json");
+  } 
+
+  fs.writeFileSync(ppath + "\\json\\searchengine.json", searchEngine);
   console.log("saved SEARCHENGINE: " + searchEngine);
 }
 
 function saveBounds() {
-  var fs = require('fs');
-
   let Data = {
     x: mainWindow.getBounds().x,
     y: mainWindow.getBounds().y,
@@ -847,12 +886,19 @@ function saveBounds() {
     maximize: mainWindow.isMaximized()
   }
 
-  fs.writeFileSync(app.getPath('userData') + "\\json\\bounds.json", JSON.stringify(Data));
+  if(!fs.existsSync(ppath + "\\json")) {
+    fs.mkdirSync(ppath + "\\json");
+  } 
+
+  fs.writeFileSync(ppath + "\\json\\bounds.json", JSON.stringify(Data));
 }
 
 function saveBookmarksBar() {
-  var fs = require('fs');
-  fs.writeFileSync(app.getPath('userData') + "\\json\\bookmarksbar.json", bookmarksBarOn);
+  if(!fs.existsSync(ppath + "\\json")) {
+    fs.mkdirSync(ppath + "\\json");
+  } 
+  
+  fs.writeFileSync(ppath + "\\json\\bookmarksbar.json", bookmarksBarOn);
   console.log("saved BOOKMARKSBAR: " + bookmarksBarOn);
 }
 
@@ -867,28 +913,24 @@ function saveBookmarksBar() {
 */
 
 function loadAllData() {
-  var fs = require("fs");
-
-  if(fs.existsSync(app.getPath('userData') + "\\json")) {
+  if(fs.existsSync(ppath + "\\json")) {
     loadWelcome();
     loadBounds();
-    loadTheme();
-    loadBorderRadius();
+    // loadTheme();
+    // loadBorderRadius();
     loadStartPage();
     loadBookmarksBar();
     loadSearchEngine();
     loadDownloads();
   } else {
-    fs.mkdirSync(app.getPath('userData') + "\\json");
+    fs.mkdirSync(ppath + "\\json");
     saveAllData();
   }
 }
 
 function loadBookmarksBar() {
-  var fs = require("fs");
-
   try {
-    bookmarksBarOn = fs.readFileSync(app.getPath('userData') + "\\json\\bookmarksbar.json");
+    bookmarksBarOn = fs.readFileSync(ppath + "\\json\\bookmarksbar.json");
     mainWindow.webContents.send('action-set-bookmarks-bar', bookmarksBarOn);
   } catch (e) {
     saveBookmarksBar();
@@ -896,10 +938,8 @@ function loadBookmarksBar() {
 }
 
 function loadSearchEngine() {
-  var fs = require("fs");
-
   try {
-    searchEngine = fs.readFileSync(app.getPath('userData') + "\\json\\searchengine.json");
+    searchEngine = fs.readFileSync(ppath + "\\json\\searchengine.json");
   } catch (e) {
     saveSearchEngine();
   }
@@ -908,12 +948,10 @@ function loadSearchEngine() {
 }
 
 function loadDownloads() {
-  var fs = require("fs");
-
   try {
-    curDownloadNum = fs.readFileSync(app.getPath('userData') + "\\json\\curdownloadnum.json");
+    curDownloadNum = fs.readFileSync(ppath + "\\json\\curdownloadnum.json");
 
-    var jsonstr = fs.readFileSync(app.getPath('userData') + "\\json\\downloads.json");
+    var jsonstr = fs.readFileSync(ppath + "\\json\\downloads.json");
     var arr = JSON.parse(jsonstr);
 
     for (var i = 0; i < arr.length; i++) {
@@ -933,23 +971,20 @@ function loadDownloads() {
 }
 
 function loadWelcome() {
-  var fs = require("fs");
-
   try {
-    var welcomeOn = fs.readFileSync(app.getPath('userData') + "\\json\\welcome.json");
+    var welcomeOn = fs.readFileSync(ppath + "\\json\\welcome.json");
     if(welcomeOn == 1) {
       showWelcomeWindow();
     }
   } catch (e) {
+    fs.writeFileSync(ppath + "\\json\\welcome.json", 1);
     showWelcomeWindow();
   }
 }
 
 function loadBounds() {
-  var fs = require("fs");
-
   try {
-    let Data = JSON.parse(fs.readFileSync(app.getPath('userData') + "\\json\\bounds.json"));
+    let Data = JSON.parse(fs.readFileSync(ppath + "\\json\\bounds.json"));
 
     if(Data.maximize == true) {
       mainWindow.maximize();
@@ -966,35 +1001,29 @@ function loadBounds() {
   }
 }
 
-function loadTheme() {
-  var fs = require("fs");
+// function loadTheme() {
+//   try {
+//     themeColor = fs.readFileSync(ppath + "\\json\\theme.json");
+//   } catch (e) {
+//     saveTheme();
+//   }
 
-  try {
-    themeColor = fs.readFileSync(app.getPath('userData') + "\\json\\theme.json");
-  } catch (e) {
-    saveTheme();
-  }
+//   mainWindow.webContents.send('action-change-theme', themeColor);
+// }
 
-  mainWindow.webContents.send('action-change-theme', themeColor);
-}
+// function loadBorderRadius() {
+//   try {
+//     borderRadius = fs.readFileSync(ppath + "\\json\\radius.json");
+//   } catch (e) {
+//     saveBorderRadius();
+//   }
 
-function loadBorderRadius() {
-  var fs = require("fs");
-
-  try {
-    borderRadius = fs.readFileSync(app.getPath('userData') + "\\json\\radius.json");
-  } catch (e) {
-    saveBorderRadius();
-  }
-
-  mainWindow.webContents.send('action-change-border-radius', borderRadius);
-}
+//   mainWindow.webContents.send('action-change-border-radius', borderRadius);
+// }
 
 function loadStartPage() {
-  var fs = require("fs");
-
   try {
-    startPage = fs.readFileSync(app.getPath('userData') + "\\json\\startpage.json");
+    startPage = fs.readFileSync(ppath + "\\json\\startpage.json");
   } catch (e) {
     saveStartPage();
   }

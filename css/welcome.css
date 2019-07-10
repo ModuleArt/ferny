@@ -120,13 +120,16 @@
   border-radius: var(--px-radius);
   padding: 4px;
   padding-right: 8px;
-  /* transition: 0.25s; */
   display: inline-block;
   margin: 2px;
 }
 
 .nav-btn:hover {
   background-color: var(--color-over);
+}
+
+.nav-btn:active {
+  opacity: 0.5;
 }
 
 .nav-btn.disable {
@@ -146,13 +149,13 @@
 
 #titlebar-icon {
   float: left;
-  padding: 4px;
+  padding: 8px;
 }
 
 #titlebar-title {
   position: absolute;
-  top: 10px;
-  left: 40px;
+  top: 6px;
+  left: 30px;
 }
 
 #drag-zone {
@@ -161,7 +164,7 @@
   left: 4px;
   right: 4px;
   top: 4px;
-  height: 36px;
+  bottom: calc(100% - 32px);
   z-index: -100;
 }
 
@@ -170,62 +173,13 @@
   top: 0;
   right: 0;
   left: 0;
-  height: 40px;
+  height: 32px;
   background-color: var(--color-over);
-  padding: 4px;
 }
 
 #titlebar.blur .theme-icon {
   opacity: 0.5;
 }
-
-#window-controls {
-  float: right;
-}
-
-#close-btn {
-  background-color: var(--color-over);
-  margin: -4px;
-  margin-left: 0;
-  padding: 8px;
-  border-radius: 0;
-  -webkit-app-region: no-drag;
-}
-
-#close-btn:hover {
-  background-color: var(--color-red);
-}
-
-/* #titlebar.blur #window-controls .button {
-  opacity: var(--opacity-blur);
-} */
-
-/* #window-controls.windows {
-  display: grid;
-  grid-template-columns: repeat(1, 46px);
-  margin-top: -4px;
-  margin-right: -4px;
-}
-#window-controls.windows .button {
-  height: 32px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-}
-#window-controls.windows .button span {
-  font-family: SegMDL2;
-  font-size: 10px;
-  font-weight: normal;
-  color: var(--color-top);
-}
-#window-controls.windows .button:hover {
-  background: #E81123;
-  opacity: 1;
-}
-#window-controls.windows #close-btn:hover span {
-  color: white;
-} */
 
 /*
 .########...#######..########..##....##
@@ -260,6 +214,10 @@ label.link {
 
 label.link:hover {
   background-color: var(--color-over);
+}
+
+label.link:active {
+  opacity: 0.5;
 }
 
 /*
@@ -300,25 +258,25 @@ input[type=text]:hover, input[type=text]:focus {
 ....##....##.....##.########...######.
 */
 
-/* #menu {
+#skip-btn {
   position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 42px;
-  border-top: 2px solid var(--color-over);
+  right: 2px;
+  bottom: 2px;
 }
 
-#menu .nav-btn {
-  margin: 4px;
-} */
+#skip-btn.disable {
+  display: none;
+}
 
 #dots {
   position: absolute;
   bottom: 0;
-  width: 256px;
-  left: calc(50% - 128px);
-  /* background-color: var(--color-over); */
+  width: 100%;
+}
+
+#dots .link {
+  float: right;
+  margin: 2px;
 }
 
 .dot {
@@ -332,15 +290,22 @@ input[type=text]:hover, input[type=text]:focus {
 }
 
 .dot.active, .dot:hover {
-  background-color: transparent;
   border-color: var(--color-top);
+}
+
+.dot.active {
+  background-color: transparent;
+}
+
+.dot:active {
+  opacity: 0.5;
 }
 
 .tab {
   position: absolute;
   left: 0;
   right: 0;
-  top: 40px;
+  top: 32px;
   bottom: 24px;
   display: none;
   animation-name: anim-show;
@@ -356,7 +321,7 @@ input[type=text]:hover, input[type=text]:focus {
   background-color: var(--color-over);
   position: absolute;
   padding: 16px 4px;
-  top: 50%;
+  top: calc(50% - 16px);
   transition: padding 0.25s;
 }
 
@@ -374,8 +339,11 @@ input[type=text]:hover, input[type=text]:focus {
   padding: 16px;
 }
 
+#next-btn:active, #prev-btn:active {
+  opacity: 0.5
+}
+
 #next-btn.disable, #prev-btn.disable {
-  /* opacity: 0.5; */
   display: none;
 }
 
@@ -416,6 +384,16 @@ hr {
   vertical-align: super;
 }
 
+/*
+....###....########..########.....####..######...#######..##....##
+...##.##...##.....##.##.....##.....##..##....##.##.....##.###...##
+..##...##..##.....##.##.....##.....##..##.......##.....##.####..##
+.##.....##.########..########......##..##.......##.....##.##.##.##
+.#########.##........##............##..##.......##.....##.##..####
+.##.....##.##........##............##..##....##.##.....##.##...###
+.##.....##.##........##...........####..######...#######..##....##
+*/
+
 .about-icon {
   border-radius: 50%;
   padding: 8px;
@@ -424,6 +402,20 @@ hr {
 .about-icon:hover {
   background-color: var(--color-over);
 }
+
+.about-icon:active {
+  opacity: 0.5;
+}
+
+/*
+..######..########....###....########..########....########..########.##....##
+.##....##....##......##.##...##.....##....##.......##.....##....##....###...##
+.##..........##.....##...##..##.....##....##.......##.....##....##....####..##
+..######.....##....##.....##.########.....##.......########.....##....##.##.##
+.......##....##....#########.##...##......##.......##.....##....##....##..####
+.##....##....##....##.....##.##....##.....##.......##.....##....##....##...###
+..######.....##....##.....##.##.....##....##.......########.....##....##....##
+*/
 
 #start-btn {
   transition: 0.25s;
@@ -436,6 +428,10 @@ hr {
 
 #start-btn:hover {
   padding: 6px 40px;
+}
+
+#start-btn:active {
+  opacity: 0.5;
 }
 
 /*
@@ -458,6 +454,10 @@ hr {
 
 .nav-checkbox:hover {
   background-color: var(--color-over);
+}
+
+.nav-checkbox:active {
+  opacity: 0.5;
 }
 
 .checkbox {

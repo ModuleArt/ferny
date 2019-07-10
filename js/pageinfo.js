@@ -10,6 +10,8 @@
 
 const { ipcRenderer } = require('electron');
 const sslCertificate = require('get-ssl-certificate');
+const fs = require("fs");
+const ppath = require('persist-path')('Arrow Browser');
 
 /*
 .########.##.....##.##....##..######..########.####..#######..##....##..######.
@@ -76,9 +78,6 @@ function changeBorderRadius(size) {
 }
 
 function loadTheme() {
-  var fs = require("fs");
-  var ppath = require('persist-path')('ArrowBrowser');
-
   try {
     var themeColor = fs.readFileSync(ppath + "\\json\\theme.json");
     changeTheme(themeColor);
@@ -88,9 +87,6 @@ function loadTheme() {
 }
 
 function loadBorderRadius() {
-  var fs = require("fs");
-  var ppath = require('persist-path')('ArrowBrowser');
-
   try {
     var borderRadius = fs.readFileSync(ppath + "\\json\\radius.json");
     changeBorderRadius(borderRadius);
@@ -167,8 +163,14 @@ function init() {
   loadBorderRadius();
 }
 
-document.onreadystatechange =  () => {
-  if (document.readyState == "complete") {
-    init();
-  }
-};
+document.onload = init();
+
+/*
+.########.##.....##.########....########.##....##.########.
+....##....##.....##.##..........##.......###...##.##.....##
+....##....##.....##.##..........##.......####..##.##.....##
+....##....#########.######......######...##.##.##.##.....##
+....##....##.....##.##..........##.......##..####.##.....##
+....##....##.....##.##..........##.......##...###.##.....##
+....##....##.....##.########....########.##....##.########.
+*/

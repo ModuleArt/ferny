@@ -113,13 +113,13 @@
 
 #titlebar-icon {
     float: left;
-    padding: 4px;
+    padding: 8px;
 }
 
 #titlebar-title {
     position: absolute;
-    top: 10px;
-    left: 40px;
+    top: 6px;
+    left: 30px;
 }
 
 #drag-zone {
@@ -128,7 +128,7 @@
     left: 4px;
     right: 4px;
     top: 4px;
-    height: 36px;
+    bottom: calc(100% - 32px);
     z-index: -100;
 }
 
@@ -137,9 +137,8 @@
     top: 0;
     right: 0;
     left: 0;
-    height: 40px;
+    height: 32px;
     background-color: var(--color-over);
-    padding: 4px;
 }
 
 #titlebar.blur {
@@ -151,11 +150,7 @@
 }
 
 #close-btn {
-    background-color: var(--color-over);
-    margin: -4px;
-    margin-left: 0;
     padding: 8px;
-    border-radius: 0;
     -webkit-app-region: no-drag;
 }
 
@@ -163,36 +158,9 @@
     background-color: var(--color-red);
 }
 
-/* #titlebar.blur #window-controls .button {
-    opacity: var(--opacity-blur);
+#close-btn:active {
+    opacity: 0.5;
 }
-
-#window-controls.windows {
-    display: grid;
-    grid-template-columns: repeat(1, 46px);
-    margin-top: -4px;
-    margin-right: -4px;
-}
-#window-controls.windows .button {
-    height: 32px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-}
-#window-controls.windows .button span {
-    font-family: SegMDL2;
-    font-size: 10px;
-    font-weight: normal;
-    color: var(--color-top);
-}
-#window-controls.windows .button:hover {
-    background: #E81123;
-    opacity: 1;
-}
-#window-controls.windows #close-btn:hover span {
-    color: white;
-} */
 
 /*
 .####.##....##.########..##.....##.########
@@ -256,7 +224,7 @@ label.link:hover {
 
 .container {
     position: absolute;
-    top: 40px;
+    top: 32px;
     bottom: 0;
     left: 0;
     right: 0;
@@ -273,6 +241,7 @@ label.link:hover {
     display: inline-block;
     width: 160px;
     padding: 2px;
+    text-align: right;
 }
 
 .key-name {

@@ -1,4 +1,16 @@
+/*
+.##.....##....###....####.##....##
+.###...###...##.##....##..###...##
+.####.####..##...##...##..####..##
+.##.###.##.##.....##..##..##.##.##
+.##.....##.#########..##..##..####
+.##.....##.##.....##..##..##...###
+.##.....##.##.....##.####.##....##
+*/
+
 const { ipcRenderer } = require('electron');
+const ppath = require('persist-path')('Arrow Browser');
+const fs = require("fs");
 
 /*
 .########.##.....##.##....##..######..########.####..#######..##....##..######.
@@ -11,9 +23,6 @@ const { ipcRenderer } = require('electron');
 */
 
 function toggleBookmarksBar() {
-  var fs = require("fs");
-  var ppath = require('persist-path')('ArrowBrowser');
-
   try {
     var bookmarksBar = fs.readFileSync(ppath + "\\json\\bookmarksbar.json");
     if(bookmarksBar == 1) {
@@ -101,9 +110,6 @@ function checkIfDark(color) {
 }
 
 function loadTheme() {
-  var fs = require("fs");
-  var ppath = require('persist-path')('ArrowBrowser');
-
   try {
     var themeColor = fs.readFileSync(ppath + "\\json\\theme.json");
     changeTheme(themeColor);
@@ -113,9 +119,6 @@ function loadTheme() {
 }
 
 function loadStartPage() {
-  var fs = require("fs");
-  var ppath = require('persist-path')('ArrowBrowser');
-
   try {
     var startPage = fs.readFileSync(ppath + "\\json\\startpage.json");
     document.getElementById('start-page-input').value = startPage;
@@ -125,9 +128,6 @@ function loadStartPage() {
 }
 
 function loadSearchEngine() {
-  var fs = require("fs");
-  var ppath = require('persist-path')('ArrowBrowser');
-
   try {
     var searchEngine = fs.readFileSync(ppath + "\\json\\searchengine.json");
 
@@ -144,9 +144,6 @@ function loadSearchEngine() {
 }
 
 function loadBorderRadius() {
-  var fs = require("fs");
-  var ppath = require('persist-path')('ArrowBrowser');
-
   try {
     var borderRadius = fs.readFileSync(ppath + "\\json\\radius.json");
     changeBorderRadius(borderRadius);
@@ -164,9 +161,6 @@ function loadBorderRadius() {
 }
 
 function showWelcomeScreen() {
-  var fs = require('fs');
-  var ppath = require('persist-path')('ArrowBrowser');
-
   fs.writeFileSync(ppath + "\\json\\welcome.json", 1);
 
   ipcRenderer.send("request-show-welcome-screen");
@@ -174,9 +168,6 @@ function showWelcomeScreen() {
 
 function saveStartPage() {
   var url = document.getElementById('start-page-input').value;
-
-  var fs = require('fs');
-  var ppath = require('persist-path')('ArrowBrowser');
 
   fs.writeFileSync(ppath + "\\json\\startPage.json", url);
 

@@ -116,6 +116,17 @@
   }
 }
 
+@keyframes anim-tab {
+  from {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /*
 .##......##.########.########..##....##.####.########
 .##..##..##.##.......##.....##.##...##...##.....##...
@@ -219,7 +230,7 @@
 #notif-panel {
   position: absolute;
   left: 0;
-  top: 90px;
+  top: 82px;
   width: 300px;
   z-index: 999;
 }
@@ -342,7 +353,7 @@
   left: 4px;
   right: 4px;
   top: 4px;
-  bottom: calc(100% - 40px);
+  bottom: calc(100% - 32px);
   z-index: -100;
 }
 
@@ -355,7 +366,7 @@
 #titlebar {
   position: absolute;
   width: 100%;
-  top: 40px;
+  top: 32px;
   padding: 2px;
   height: 42px;
   border-bottom: 2px solid var(--color-over);
@@ -367,6 +378,12 @@
   -webkit-app-region: no-drag;
 }
 
+.etabs-tabgroup .title-bar-btn {
+  border-radius: 0;
+  margin: 0;
+  padding: 8px;
+}
+
 #pin-sidebar-btn, #unpin-sidebar-btn {
   float: right;
 }
@@ -375,6 +392,10 @@
   border-radius: var(--px-radius);
   padding: 4px;
   margin: 2px;
+}
+
+.title-bar-btn:active {
+  opacity: 0.5;
 }
 
 #search-input {
@@ -403,16 +424,20 @@
 
 #window-controls {
   float: right;
-  padding: 2px;
+  /* padding: 2px; */
 }
 
-#close-btn {
+#window-controls .title-bar-btn {
+  float: right;
+}
+
+/* #close-btn {
   background-color: var(--color-over);
   margin: -2px;
   margin-left: 0;
   padding: 8px;
   border-radius: 0;
-}
+} */
 
 #close-btn:hover {
   background-color: var(--color-red);
@@ -464,7 +489,7 @@
   /* width: calc(100% - 265px); */
   right: 123px;
   left: 162px;
-  top: 82px;
+  top: 74px;
   border-radius: 0 0 var(--px-radius) var(--px-radius);
   background-color: var(--color-back);
   padding: 2px;
@@ -549,16 +574,16 @@ body.find .etabs-views {
 
 /* bookmarks bar */
 body.bookmarks-bar #search-suggest {
-  top: 110px;
+  top: 102px;
 }
 body.bookmarks-bar #sidebar {
-  top: 110px;
+  top: 102px;
 }
 body.bookmarks-bar .etabs-views {
-  top: 110px;
+  top: 102px;
 }
 body.bookmarks-bar #notif-panel {
-  top: 118px;
+  top: 110px;
 }
 
 /* fullscreen */
@@ -679,6 +704,10 @@ hr {
   background-color: var(--color-over);
 }
 
+.nav-btn:active {
+  opacity: 0.5;
+}
+
 /*
 .########....###....########...######.
 ....##......##.##...##.....##.##....##
@@ -694,7 +723,7 @@ hr {
   left: 0;
   right: 0;
   top: 0;
-  height: 40px;
+  height: 32px;
   background-color: var(--color-over);
   cursor: default;
   font-size: var(--px-font);
@@ -706,23 +735,31 @@ hr {
 }
 
 .etabs-tabs {
-
+  width: calc(100% - 256px);
+  display: grid;
+  grid-template-columns: auto;
+  float: left;
+  overflow-y: hidden;
+  overflow-x: auto;
 }
 
 .etabs-tab {
+  grid-row: 1;
   -webkit-app-region: no-drag;
   display: none;
   position: relative;
   color: var(--color-top);
-  height: 40px;
-  padding: 10px;
+  height: 32px;
+  padding: 6px;
   cursor: default;
-  max-width: 256px;
-  min-width: 40px;
+  /* max-width: 256px; */
+  min-width: 28px;
   border-top: 4px solid transparent;
+  /* animation: anim-tab;
+  animation-duration: 0.25s; */
 }
 
-.etabs-tab::after {
+/* .etabs-tab::after {
   content: "";
   top: 0;
   width: 2px;
@@ -734,7 +771,7 @@ hr {
 
 .etabs-tab.active::after, .etabs-tab:hover::after {
   display: none;
-}
+} */
 
 .etabs-tab:hover {
   background-color: var(--color-over);
@@ -746,7 +783,6 @@ hr {
 
 .etabs-tab.visible {
   display: inline-block;
-  float: left;
 }
 
 .etabs-tab.active {
@@ -769,13 +805,14 @@ hr {
   background: none;
   border: none;
   font-size: var(--px-font);
-  width: 32px;
+  /* width: 32px; */
+  /* height: 32px; */
+  /* text-align: center; */
+  padding: 8px;
+  /* margin-left: 4px;
+  margin-top: 4px; */
+  /* border-radius: var(--px-radius); */
   height: 32px;
-  text-align: center;
-  padding: 4px 2px;
-  margin-left: 4px;
-  margin-top: 4px;
-  border-radius: var(--px-radius);
 }
 
 .etabs-buttons button:hover {
@@ -812,9 +849,9 @@ hr {
 .etabs-tab-title {
   overflow: hidden;
   position: absolute;
-  top: 8px;
-  left: 32px;
-  right: 32px;
+  top: 4px;
+  left: 28px;
+  right: 28px;
   white-space: nowrap;
   word-break: keep-all;
   text-overflow: ellipsis;
@@ -826,8 +863,8 @@ hr {
 
 .etabs-tab-buttons {
   position: absolute;
-  right: 6px;
-  top: 6px;
+  right: 4px;
+  top: 4px;
   transition: 0.25s;
   transform: scale(0);
 }
@@ -838,8 +875,8 @@ hr {
   color: var(--color-top);
   background: none;
   border: none;
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   border-radius: var(--px-radius);
   position: relative;
 }
@@ -850,8 +887,8 @@ hr {
     border-left: 2px solid var(--color-top);
     position: absolute;
     transform: rotate(45deg);
-    left: 11px;
-    top: 6px;
+    left: 9px;
+    top: 4px;
 }
 
 .etabs-tab-buttons button:before {
@@ -860,8 +897,8 @@ hr {
     border-left: 2px solid var(--color-top);
     position: absolute;
     transform: rotate(-45deg);
-    top: 6px;
-    left: 11px;
+    top: 4px;
+    left: 9px;
 }
 
 .etabs-tab-buttons button:hover {
@@ -870,7 +907,7 @@ hr {
 
 .etabs-views {
   position: absolute;
-  top: 82px;
+  top: 74px;
   bottom: 0;
   left: 0;
   right: 0;
@@ -899,7 +936,7 @@ hr {
 #sidebar {
   position: absolute;
   right: 0;
-  top: 82px;
+  top: 74px;
   width: 482px;
   bottom: 0;
   background-color: var(--color-back);
@@ -921,6 +958,7 @@ hr {
   padding: 2px;
   border-right: 2px solid var(--color-over);
   float: left;
+  overflow-y: auto;
 }
 
 #sidebar-div .nav-btn {
@@ -952,7 +990,7 @@ hr {
 
 #bookmarks-bar {
   position: absolute;
-  top: 78px;
+  top: 70px;
   left: 0;
   right: 0;
   height: 32px;
@@ -961,14 +999,10 @@ hr {
   z-index: 103;
 }
 
-/* #bookmarks-bar:empty::before {
+#bookmarks-bar:empty::before {
   content: "\2205  No bookmarks... Try to bookmark something...";
   color: var(--color-top);
-  background-color: var(--color-over);
-  padding: 4px 8px;
-  margin: 2px;
-  border-radius: var(--px-radius);
-} */
+}
 
 .bookmark {
   display: inline-block;

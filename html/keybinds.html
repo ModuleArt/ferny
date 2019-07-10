@@ -11,10 +11,10 @@
         <div id="drag-zone"></div>
 
         <div id="titlebar">
-            <img id="titlebar-icon" class="theme-icon" name="keyboard">
+            <img id="titlebar-icon" class="theme-icon" name="key16">
             <label id="titlebar-title">Hotkeys</label>
             <div id="window-controls">
-                <img name="cancel" id="close-btn" class="title-bar-btn theme-icon" title="Close" onclick="closeWindow()">
+                <img name="close16" id="close-btn" class="title-bar-btn theme-icon" title="Close" onclick="closeWindow()">
             </div>
         </div>
 
@@ -36,6 +36,16 @@
                     <div class="key">Ctrl</div> + <div class="key">T</div>
                 </div>
                 <label class="key-name">Create new tab</label>
+
+                <div class="key-code">
+                    <div class="key">Alt</div> + <div class="key">Left Arrow</div>
+                </div>
+                <label class="key-name">Go back for active page</label>
+
+                <div class="key-code">
+                    <div class="key">Alt</div> + <div class="key">Right Arrow</div>
+                </div>
+                <label class="key-name">Go forward for active page</label>
 
                 <div class="key-code">
                     <div class="key">F5</div>
@@ -174,6 +184,11 @@
                 <label class="key-name">Show certificate info for active page</label>
 
                 <div class="key-code">
+                    <div class="key">Ctrl</div> + <div class="key">U</div>
+                </div>
+                <label class="key-name">View active page source</label>
+
+                <div class="key-code">
                     <div class="key">F12</div>
                 </div>
                 <label class="key-name">Open developer tools for active page</label>
@@ -201,7 +216,7 @@
                 <label class="key-name">Show key binds window</label>
 
                 <div class="key-code">
-                    <div class="key">Ctrl</div> + <div class="key">U</div>
+                    <div class="key">Ctrl</div> + <div class="key">Shift</div> + <div class="key">U</div>
                 </div>
                 <label class="key-name">Check for app updates</label>
 

@@ -1,20 +1,61 @@
+/*
+.##.....##....###....####.##....##
+.###...###...##.##....##..###...##
+.####.####..##...##...##..####..##
+.##.###.##.##.....##..##..##.##.##
+.##.....##.#########..##..##..####
+.##.....##.##.....##..##..##...###
+.##.....##.##.....##.####.##....##
+*/
+
 const { ipcRenderer } = require('electron');
 const getTitleAtUrl = require('get-title-at-url');
-const readline = require('readline');
-const ppath = require('persist-path')('ArrowBrowser');
+const readl = require('readl-async');
+const ppath = require('persist-path')('Arrow Browser');
 const fs = require("fs");
 
-let rl = readline.createInterface({
-  input: fs.createReadStream(ppath + "\\json\\history.json")
-});
+
+// let rl = readline.createInterface({
+//   input: fs.createReadStream(ppath + "\\json\\history.json")
+// });
 
 var historyLineNumber = 0;
+var reader = new readl(ppath + "\\json\\history.json", { encoding: 'utf8' });
 
-rl.on('line', function(line) {
+reader.on('line', function(line, index, start, end) {
+  console.log(line);
   var obj = JSON.parse(line);
   createHistoryItem(historyLineNumber, obj.url, obj.time);
   historyLineNumber++;
 });
+
+// rl.on('line', function(line) {
+//   var obj = JSON.parse(line);
+//   createHistoryItem(historyLineNumber, obj.url, obj.time);
+//   historyLineNumber++;
+// });
+
+// function readLines({ input }) {
+//   const output = new stream.PassThrough({ objectMode: true });
+    
+//   const rl = readline.createInterface({ input });
+//   rl.on("line", line => { 
+//     output.write(line);
+//   });
+//   rl.on("close", () => {
+//     output.push(null);
+//   }); 
+//   return output;
+// }
+
+//   const input = fs.createReadStream(ppath + "\\json\\history.json");
+
+//   (async () => {
+    
+//   for await (const line of readLines({ input })) {
+//     console.log(line);
+//     }
+//   })();
 
 /*
 .########.##.....##.##....##..######..########.####..#######..##....##..######.
@@ -25,6 +66,10 @@ rl.on('line', function(line) {
 .##.......##.....##.##...###.##....##....##.....##..##.....##.##...###.##....##
 .##........#######..##....##..######.....##....####..#######..##....##..######.
 */
+
+function loadHistory() {
+  reader.read();
+}
 
 // appearance
 function changeTheme(color) {
@@ -75,9 +120,6 @@ function checkIfDark(color) {
     }
 }
 function loadTheme() {
-  var fs = require("fs");
-  var ppath = require('persist-path')('ArrowBrowser');
-
   try {
     var themeColor = fs.readFileSync(ppath + "\\json\\theme.json");
     changeTheme(themeColor);
@@ -86,9 +128,6 @@ function loadTheme() {
   }
 }
 function loadBorderRadius() {
-  var fs = require("fs");
-  var ppath = require('persist-path')('ArrowBrowser');
-
   try {
     var borderRadius = fs.readFileSync(ppath + "\\json\\radius.json");
     changeBorderRadius(borderRadius);
@@ -124,41 +163,42 @@ function clearHistory() {
 }
 
 function createHistoryItem(index, url, time) {
-  var div = document.createElement('div');
-  div.classList.add('history-item');
-  div.id = "history-" + index;
-  div.innerHTML = `<img class="history-icon" src="` + 'http://www.google.com/s2/favicons?domain=' + url + `"><label class="history-name">Loading...</label><hr>
-                  Url: <label class="history-url" title="` + url + `">` + url + `</label><br>
-                  Date: <label class="history-date">` + epochToDate(time) + `</label> / <label>Time: </label><label class="history-time">` + epochToTime(time) + `</label><hr>
-                  <center class="history-buttons">
-                    <div class="nav-btn" onclick="openUrl('` + url + `')" title="Open url">
-                      <img class="nav-btn-icon theme-icon" name="url">
-                      <label>Open</label>
-                    </div>
-                    <div class="nav-btn" onclick="openUrlInNewTab('` + url + `')" title="Open url in new tab">
-                      <img class="nav-btn-icon theme-icon" name="tab">
-                      <label>New tab</label>
-                    </div>
-                    
-                  </center>`;
+  return new Promise(function (resolve, reject) {
+    var div = document.createElement('div');
+    div.classList.add('history-item');
+    div.id = "history-" + index;
+    div.innerHTML = `<img class="history-icon" src="` + 'http://www.google.com/s2/favicons?domain=' + url + `"><label class="history-name">Loading...</label><hr>
+                    Url: <label class="history-url" title="` + url + `">` + url + `</label><br>
+                    Date: <label class="history-date">` + epochToDate(time) + `</label> / <label>Time: </label><label class="history-time">` + epochToTime(time) + `</label><hr>
+                    <center class="history-buttons">
+                      <div class="nav-btn" onclick="openUrl('` + url + `')" title="Open url">
+                        <img class="nav-btn-icon theme-icon" name="url">
+                        <label>Open</label>
+                      </div>
+                      <div class="nav-btn" onclick="openUrlInNewTab('` + url + `')" title="Open url in new tab">
+                        <img class="nav-btn-icon theme-icon" name="tab">
+                        <label>New tab</label>
+                      </div>
+                      
+                    </center>`;
+    div.addEventListener('auxclick', (e) => {
+      e.preventDefault();
+      if(e.which == 2) {
+        ipcRenderer.send('request-open-url-in-new-tab', url);
+      }
+    }, false);              
+    div.onload = resolve;
+    div.onerror = reject;
+    var container = document.getElementById('history');
+    container.insertBefore(div, container.firstChild);
 
-                  // <div class="nav-btn" onclick="removeHistoryItem(` + index + `)">
-                  //     <img class="nav-btn-icon theme-icon" name="delete">
-                  //     <label>Remove</label>
-                  //   </div>
-  div.addEventListener('auxclick', (e) => {
-    e.preventDefault();
-    if(e.which == 2) {
-      ipcRenderer.send('request-open-url-in-new-tab', url);
-    }
-  }, false);
-  var container = document.getElementById('history');
-  container.insertBefore(div, container.firstChild);
+    applyTitle(url, index);
 
-  applyTitle(url, index);
-
-  loadTheme();
+    loadTheme();
+  });
 }
+
+
 
 // function removeHistoryItem(index) {
 //   var div = document.getElementById('history-' + index);
@@ -249,6 +289,7 @@ function numberToMonth(number) {
 
 ipcRenderer.on('action-add-history-item', (event, arg) => {
   createHistoryItem(arg.index, arg.url, arg.time);
+  console.log('added');
 });
 
 ipcRenderer.on('action-load-theme', (event, arg) => {
@@ -272,6 +313,7 @@ ipcRenderer.on('action-load-border-radius', (event, arg) => {
 function init() {
   loadTheme();
   loadBorderRadius();
+  loadHistory();
 
   document.getElementById("search").addEventListener("keyup", function(event) {
     if(document.getElementById("search").value.length > 0) {
@@ -298,11 +340,7 @@ function init() {
   });
 }
 
-document.onreadystatechange =  () => {
-  if (document.readyState == "complete") {
-    init();
-  }
-};
+document.onload = init();
 
 /*
 .########.##.....##.########....########.##....##.########.

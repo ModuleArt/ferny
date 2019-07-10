@@ -1,5 +1,17 @@
+/*
+.##.....##....###....####.##....##
+.###...###...##.##....##..###...##
+.####.####..##...##...##..####..##
+.##.###.##.##.....##..##..##.##.##
+.##.....##.#########..##..##..####
+.##.....##.##.....##..##..##...###
+.##.....##.##.....##.####.##....##
+*/
+
 const { ipcRenderer } = require('electron');
 const { shell } = require('electron');
+const ppath = require('persist-path')('Arrow Browser');
+const fs = require("fs");
 
 /*
 .########.##.....##.##....##..######..########.####..#######..##....##..######.
@@ -60,9 +72,6 @@ function checkIfDark(color) {
     }
 }
 function loadTheme() {
-  var fs = require("fs");
-  var ppath = require('persist-path')('ArrowBrowser');
-
   try {
     var themeColor = fs.readFileSync(ppath + "\\json\\theme.json");
     changeTheme(themeColor);
@@ -71,9 +80,6 @@ function loadTheme() {
   }
 }
 function loadBorderRadius() {
-  var fs = require("fs");
-  var ppath = require('persist-path')('ArrowBrowser');
-
   try {
     var borderRadius = fs.readFileSync(ppath + "\\json\\radius.json");
     changeBorderRadius(borderRadius);
@@ -94,9 +100,6 @@ function changeBorderRadius(size) {
 
 // downloads
 function loadDownloads() {
-  var fs = require("fs");
-  var ppath = require('persist-path')('ArrowBrowser');
-
   try {
     var jsonstr = fs.readFileSync(ppath + "\\json\\downloads.json");
     var arr = JSON.parse(jsonstr);
@@ -144,7 +147,6 @@ function createStoppedDownload(index, name, url, path, time) {
     Url: <label class="download-link" title="` + url + `">` + url + `</label><br>
     Date: <label class="download-date">` + epochToDate(time) + `</label> / Time: <label class="download-time">` + epochToTime(time) + `</label><hr>`;
 
-  var fs = require('fs');
   if (fs.existsSync(path.replace(/\\/g, "/"))) {
     div.innerHTML += `
       <center class="download-buttons">
@@ -363,8 +365,6 @@ function clearArchive() {
 }
 
 function showItemInFolder(path) {
-  var fs = require("fs");
-
   if (fs.existsSync(path)) {
     shell.showItemInFolder(path);
   } else {
@@ -373,8 +373,6 @@ function showItemInFolder(path) {
 }
 
 function openItem(path) {
-  var fs = require("fs");
-
   if (fs.existsSync(path)) {
     shell.openItem(path);
   } else {

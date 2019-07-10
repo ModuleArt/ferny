@@ -263,6 +263,10 @@ input:hover, input:focus {
   background-color: var(--color-over);
 }
 
+.bookmark-options:active {
+  opacity: 0.5;
+}
+
 .bookmark:hover .bookmark-options {
   width: 26px;
 }
@@ -289,6 +293,10 @@ input:hover, input:focus {
 
 .bookmark-menu-btn:hover {
   background-color: var(--color-over);
+}
+
+.bookmark-menu-btn:active {
+  opacity: 0.5;
 }
 
 /*
@@ -346,6 +354,10 @@ hr {
 
 .nav-btn:hover {
   background-color: var(--color-over);
+}
+
+.nav-btn:active {
+  opacity: 0.5;
 }
 
 /*

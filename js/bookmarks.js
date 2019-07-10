@@ -1,16 +1,18 @@
 /*
-.########..########..#######..##.....##.####.########..########
-.##.....##.##.......##.....##.##.....##..##..##.....##.##......
-.##.....##.##.......##.....##.##.....##..##..##.....##.##......
-.########..######...##.....##.##.....##..##..########..######..
-.##...##...##.......##..##.##.##.....##..##..##...##...##......
-.##....##..##.......##....##..##.....##..##..##....##..##......
-.##.....##.########..#####.##..#######..####.##.....##.########
+.##.....##....###....####.##....##
+.###...###...##.##....##..###...##
+.####.####..##...##...##..####..##
+.##.###.##.##.....##..##..##.##.##
+.##.....##.#########..##..##..####
+.##.....##.##.....##..##..##...###
+.##.....##.##.....##.####.##....##
 */
 
 const { ipcRenderer } = require('electron');
 const dragula = require("dragula");
-var drag = dragula([document.getElementById('bookmarks')], { direction: "horizontal" });
+const ppath = require('persist-path')('Arrow Browser');
+const drag = dragula([document.getElementById('bookmarks')], { direction: "horizontal" });
+const fs = require("fs");
 
 /*
 .########.##.....##.##....##..######..########.####..#######..##....##..######.
@@ -80,9 +82,6 @@ function checkIfDark(color) {
     }
 }
 function loadTheme() {
-  var fs = require("fs");
-  var ppath = require('persist-path')('ArrowBrowser');
-
   try {
     var themeColor = fs.readFileSync(ppath + "\\json\\theme.json");
     changeTheme(themeColor);
@@ -91,9 +90,6 @@ function loadTheme() {
   }
 }
 function loadBorderRadius() {
-  var fs = require("fs");
-  var ppath = require('persist-path')('ArrowBrowser');
-
   try {
     var borderRadius = fs.readFileSync(ppath + "\\json\\radius.json");
     changeBorderRadius(borderRadius);
@@ -121,9 +117,6 @@ function closeBookmarkEditor() {
   document.getElementById('edit-bookmark').style.display = "none";
 }
 function loadBookmarks() {
-  var fs = require("fs");
-  var ppath = require('persist-path')('ArrowBrowser');
-
   try {
     document.getElementById('bookmarks').innerHTML = "";
     var jsonstr = fs.readFileSync(ppath + "\\json\\bookmarks.json");
@@ -251,9 +244,6 @@ function newBookmark() {
   saveBookmarks();
 }
 function saveBookmarks() {
-  var fs = require('fs');
-  var ppath = require('persist-path')('ArrowBrowser');
-
   var bookmarksArray = [];
 
   var bookmarks = document.getElementById('bookmarks').childNodes;

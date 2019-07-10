@@ -28,9 +28,12 @@
       </div>
       <div class="container">
         <div class="color" onclick="requestTheme('rgb(255, 255, 255)')"><div style="background-color: rgb(255, 255, 255)"></div>White</div>
-        <div class="color" onclick="requestTheme('rgb(210, 218, 226)')"><div style="background-color: rgb(210, 218, 226)"></div>Light</div>
-        <div class="color" onclick="requestTheme('rgb(72, 84, 96)')"><div style="background-color: rgb(72, 84, 96)"></div>Gray</div>
-        <div class="color" onclick="requestTheme('rgb(30, 39, 46)')"><div style="background-color: rgb(30, 39, 46)"></div>Dark</div>
+        <div class="color" onclick="requestTheme('rgb(238, 238, 238)')"><div style="background-color: rgb(238, 238, 238)"></div>Light</div>
+        <div class="color" onclick="requestTheme('rgb(222, 225, 230)')"><div style="background-color: rgb(225, 225, 225)"></div>Gray</div>
+        <div class="color" onclick="requestTheme('rgb(72, 84, 96)')"><div style="background-color: rgb(72, 84, 96)"></div>Modern</div>
+        <div class="color" onclick="requestTheme('rgb(43, 37, 65)')"><div style="background-color: rgb(43, 37, 65)"></div>Purple</div>
+        <div class="color" onclick="requestTheme('rgb(30, 39, 46)')"><div style="background-color: rgb(30, 39, 46)"></div>Night</div>
+        <div class="color" onclick="requestTheme('rgb(41, 42, 45)')"><div style="background-color: rgb(41, 42, 45)"></div>Dark</div>
         <div class="color" onclick="requestTheme('rgb(34, 34, 34)')"><div style="background-color: rgb(34, 34, 34)"></div>Black</div>
       </div>
 
@@ -116,6 +119,26 @@
           <img src="../imgs/engines/mailru.png">
           <label>Mail.ru
           <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" name="search-engine" value="mailru">
+        </div>
+        <div class="nav-checkbox">
+          <img src="../imgs/engines/baidu.png">
+          <label>Baidu
+          <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" name="search-engine" value="baidu">
+        </div>
+        <div class="nav-checkbox">
+          <img src="../imgs/engines/naver.png">
+          <label>Naver
+          <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" name="search-engine" value="naver">
+        </div>
+        <div class="nav-checkbox">
+          <img src="../imgs/engines/qwant.png">
+          <label>Qwant
+          <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" name="search-engine" value="qwant">
+        </div>
+        <div class="nav-checkbox">
+          <img src="../imgs/engines/youtube.png">
+          <label>YouTube
+          <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" name="search-engine" value="youtube">
         </div>
         <img class="more-btn theme-icon" onclick="moreInfo(this)" title="More info" name="info">
         <label class="more-label">Search engine used in the address bar.</label>

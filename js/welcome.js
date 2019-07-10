@@ -9,6 +9,8 @@
 */
 
 const { ipcRenderer } = require('electron');
+const ppath = require('persist-path')('Arrow Browser');
+const fs = require("fs");
 
 /*
 .########.##.....##.##....##..######..########.####..#######..##....##..######.
@@ -85,9 +87,6 @@ function changeBorderRadius(size) {
 }
 
 function loadTheme() {
-  var fs = require("fs");
-  var ppath = require('persist-path')('ArrowBrowser');
-
   try {
     var themeColor = fs.readFileSync(ppath + "\\json\\theme.json");
     changeTheme(themeColor);
@@ -97,9 +96,6 @@ function loadTheme() {
 }
 
 function loadBorderRadius() {
-  var fs = require("fs");
-  var ppath = require('persist-path')('ArrowBrowser');
-
   try {
     var borderRadius = fs.readFileSync(ppath + "\\json\\radius.json");
     changeBorderRadius(borderRadius);
@@ -109,51 +105,37 @@ function loadBorderRadius() {
 }
 
 // tabs
-function chooseSlide(dot) {
+function chooseSlide(i) {
   var dots = document.getElementsByClassName('dot');
   var tabs = document.getElementsByClassName('tab');
 
-  for(var i = 0; i < dots.length; i++) {
-    if(dots[i] == dot) {
-      dots[i].classList.add('active');
-      tabs[i].classList.add('active');
+  for(var j = 0; j < dots.length; j++) {
+    dots[j].classList.remove('active');
+    tabs[j].classList.remove('active');
+  }
 
-      if(i == 0) {
-        document.getElementById('prev-btn').classList.add('disable');
-      } else {
-        document.getElementById('prev-btn').classList.remove('disable');
-      }
-      if(i == dots.length - 1) {
-        document.getElementById('next-btn').classList.add('disable');
-      } else {
-        document.getElementById('next-btn').classList.remove('disable');
-      }
-    } else {
-      dots[i].classList.remove('active');
-      tabs[i].classList.remove('active');
-    }
+  dots[i].classList.add('active');
+  tabs[i].classList.add('active');
+
+  if(i == 0) {
+    document.getElementById('prev-btn').classList.add('disable');
+  } else {
+    document.getElementById('prev-btn').classList.remove('disable');
+  }
+  if(i == dots.length - 1) {
+    document.getElementById('next-btn').classList.add('disable');
+    document.getElementById('skip-btn').classList.add('disable');
+  } else {
+    document.getElementById('next-btn').classList.remove('disable');
+    document.getElementById('skip-btn').classList.remove('disable');
   }
 }
 
 function nextSlide() {
   var dots = document.getElementsByClassName('dot');
-  var tabs = document.getElementsByClassName('tab');
-
   for(var i = 0; i < dots.length - 1; i++) {
-    document.getElementById('prev-btn').classList.remove('disable');
-
     if(dots[i].classList.contains('active')) {
-      dots[i].classList.remove('active');
-      tabs[i].classList.remove('active');
-      dots[i + 1].classList.add('active');
-      tabs[i + 1].classList.add('active');
-
-      if(i == dots.length - 2) {
-        document.getElementById('next-btn').classList.add('disable');
-      } else {
-        document.getElementById('next-btn').classList.remove('disable');
-      }
-
+      chooseSlide(i + 1);
       break;
     }
   }
@@ -161,23 +143,9 @@ function nextSlide() {
 
 function prevSlide() {
   var dots = document.getElementsByClassName('dot');
-  var tabs = document.getElementsByClassName('tab');
-
   for(var i = 1; i < dots.length; i++) {
-    document.getElementById('next-btn').classList.remove('disable');
-
     if(dots[i].classList.contains('active')) {
-      dots[i].classList.remove('active');
-      tabs[i].classList.remove('active');
-      dots[i - 1].classList.add('active');
-      tabs[i - 1].classList.add('active');
-
-      if(i == 1) {
-        document.getElementById('prev-btn').classList.add('disable');
-      } else {
-        document.getElementById('prev-btn').classList.remove('disable');
-      }
-
+      chooseSlide(i - 1);
       break;
     }
   }
@@ -189,7 +157,6 @@ function closeWindow() {
 }
 
 function moreSettings() {
-  closeWindow();
   ipcRenderer.send('request-open-settings');
 }
 
@@ -200,9 +167,6 @@ function finishWelcome() {
 }
 
 function changeWelcome(bool) {
-  var fs = require('fs');
-  var ppath = require('persist-path')('ArrowBrowser');
-
   if(bool) {
     fs.writeFileSync(ppath + "\\json\\welcome.json", 1);
   } else {
@@ -215,22 +179,16 @@ function openAppPage() {
 }
 
 function loadStartPage() {
-  var fs = require("fs");
-  var ppath = require('persist-path')('ArrowBrowser');
-
   try {
     var startPage = fs.readFileSync(ppath + "\\json\\startpage.json");
     document.getElementById('start-page-input').value = startPage;
   } catch (e) {
-    alert(e);
+
   }
 }
 
 function saveStartPage() {
   var url = document.getElementById('start-page-input').value;
-
-  var fs = require('fs');
-  var ppath = require('persist-path')('ArrowBrowser');
 
   fs.writeFileSync(ppath + "\\json\\startPage.json", url);
 
@@ -289,11 +247,6 @@ ipcRenderer.on('action-focus-window', (event, arg) => {
 */
 
 function init() {
-  // document.getElementById('window-controls').innerHTML = `
-  //   <div class="button" id="close-btn" title="Close" onclick="closeWindow()"><span>&#xE8BB;</span></div>
-  // `;
-  // document.getElementById('window-controls').classList.add('windows');
-
   loadTheme();
   loadBorderRadius();
   loadStartPage();
@@ -301,8 +254,4 @@ function init() {
   ipcRenderer.send('request-set-about');
 }
 
-document.onreadystatechange =  () => {
-  if (document.readyState == "complete") {
-    init();
-  }
-};
+document.onload = init();

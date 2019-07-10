@@ -11,20 +11,21 @@
         <div id="drag-zone"></div>
 
         <div id="titlebar">
-            <img id="titlebar-icon" class="theme-icon" name="box">
+            <img id="titlebar-icon" class="theme-icon" name="box16">
             <label id="titlebar-title">Welcome</label>
-            <div id="window-controls">
-                <img name="cancel" id="close-btn" class="title-bar-btn theme-icon" title="Close" onclick="closeWindow()">
-            </div>
+            <!-- <div id="window-controls">
+                <img name="close16" id="close-btn" class="title-bar-btn theme-icon" title="Close" onclick="closeWindow()">
+            </div> -->
         </div>
 
         <center>
             <div id="dots">
-                <div class="dot active" onclick="chooseSlide(this)"></div>
-                <div class="dot" onclick="chooseSlide(this)"></div>
-                <div class="dot" onclick="chooseSlide(this)"></div>
-                <div class="dot" onclick="chooseSlide(this)"></div>
+                <div class="dot active" onclick="chooseSlide(0)"></div>
+                <div class="dot" onclick="chooseSlide(1)"></div>
+                <div class="dot" onclick="chooseSlide(2)"></div>
+                <div class="dot" onclick="chooseSlide(3)"></div>
             </div>
+            <label id="skip-btn" class="link" onclick="chooseSlide(3)">Skip</label>
         
             <div class="tab active">
                 <label class="subtitle">Welcome to</label>
@@ -48,9 +49,9 @@
                         </div>
                         <div class="nav-btn" onclick="requestTheme('rgb(30, 39, 46)')">
                             <img class="theme-icon" name="demon">
-                            <label>Dark</label>
+                            <label>Night</label>
                         </div>
-                        <label class="link" onclick="moreSettings()">More</label>
+                        <label class="link" onclick="moreSettings()" title="More settings">More</label>
                     </div>
                     
                     <div class="block-title">
@@ -66,7 +67,7 @@
                             <img class="theme-icon" name="circle">
                             <label>Circle</label>
                         </div>
-                        <label class="link" onclick="moreSettings()">More</label>
+                        <label class="link" onclick="moreSettings()" title="More settings">More</label>
                     </div>
                 </div>
             </div>
@@ -86,7 +87,7 @@
                             <img class="theme-icon" name="duckduckgo">
                             <label>DuckDuckGo</label>
                         </div>
-                        <label class="link" onclick="moreSettings()">More</label>
+                        <label class="link" onclick="moreSettings()" title="More settings">More</label>
                     </div>
                     <div class="block-title">
                         <img name="create" class="theme-icon">

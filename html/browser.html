@@ -54,14 +54,16 @@
     </center>
 
     <div class="etabs-tabgroup" id="etabs-tabgroup">
-      <div class="etabs-tabs" id="etabs-tabs"></div>
-      <div class="etabs-buttons"></div>
+      <div class="etabs-tabs" id="etabs-tabs" onmousewheel="etabsTabsWheel(event)"></div>
+      <div class="etabs-buttons">
+        <img name="down16" class="theme-icon title-bar-btn" id="tabs-list-btn"  title="Tabs list" onclick="requestTabsList()">
+      </div>
       <div id="window-controls">
-        <img name="tabs-down" id="tabs-list-btn" class="title-bar-btn theme-icon" title="Tabs list" onclick="requestTabsList()">
-        <div class="title-bar-vr"></div>
-        <img name="line" id="minimize-btn" class="title-bar-btn theme-icon" title="Minimize" onclick="minimizeWindow()">
-        <img name="square" id="maximize-btn" class="title-bar-btn theme-icon" title="Maximize" onclick="toggleMaximizeWindow()">
-        <img name="cancel" id="close-btn" class="title-bar-btn theme-icon" title="Close" onclick="closeWindow()">
+        <!-- <img name="tabs-down" id="tabs-list-btn" class="title-bar-btn theme-icon" title="Tabs list" onclick="requestTabsList()"> -->
+        <!-- <div class="title-bar-vr"></div> -->
+        <img name="close16" id="close-btn" class="title-bar-btn theme-icon" title="Close" onclick="closeWindow()">
+        <img name="square16" id="maximize-btn" class="title-bar-btn theme-icon" title="Maximize" onclick="toggleMaximizeWindow()">
+        <img name="minimize16" id="minimize-btn" class="title-bar-btn theme-icon" title="Minimize" onclick="minimizeWindow()">
       </div>
     </div>
 
@@ -95,6 +97,10 @@
       <img name="yahoo" class="title-bar-btn search-engine" title="Search with Yahoo" src="../imgs/engines/yahoo.png" onclick="searchWith(null, this.name)">
       <img name="yandex" class="title-bar-btn search-engine" title="Search with Yandex" src="../imgs/engines/yandex.png" onclick="searchWith(null, this.name)">
       <img name="mailru" class="title-bar-btn search-engine" title="Search with Mail.ru" src="../imgs/engines/mailru.png" onclick="searchWith(null, this.name)">
+      <img name="baidu" class="title-bar-btn search-engine" title="Search with Baidu" src="../imgs/engines/baidu.png" onclick="searchWith(null, this.name)">
+      <img name="naver" class="title-bar-btn search-engine" title="Search with Naver" src="../imgs/engines/naver.png" onclick="searchWith(null, this.name)">
+      <img name="qwant" class="title-bar-btn search-engine" title="Search with Qwant" src="../imgs/engines/qwant.png" onclick="searchWith(null, this.name)">
+      <img name="youtube" class="title-bar-btn search-engine" title="Search with YouTube" src="../imgs/engines/youtube.png" onclick="searchWith(null, this.name)">
       <img name="up" id="close-suggest-btn" class="title-bar-btn theme-icon" title="Close search panel" onclick="removeSuggestions()">
     </div>
 

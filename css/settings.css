@@ -145,6 +145,10 @@ label.link:hover {
   background-color: var(--color-over);
 }
 
+label.link:active {
+  opacity: 0.5;
+}
+
 /*
 .########..##........#######...######..##....##
 .##.....##.##.......##.....##.##....##.##...##.
@@ -230,6 +234,10 @@ input[type=text]:hover, input[type=text]:focus {
   background-color: var(--color-over);
 }
 
+.nav-btn:active {
+  opacity: 0.5;
+}
+
 /*
 .##.....##..#######..########..########....########..########.##....##
 .###...###.##.....##.##.....##.##..........##.....##....##....###...##
@@ -250,6 +258,10 @@ input[type=text]:hover, input[type=text]:focus {
 
 .more-btn:hover, .more-btn.active {
   background-color: var(--color-over);
+}
+
+.more-btn:active {
+  opacity: 0.5;
 }
 
 .more-label {
@@ -280,6 +292,7 @@ input[type=text]:hover, input[type=text]:focus {
   border-radius: var(--px-radius);
   color: var(--color-top);
   margin: 2px;
+  width: calc(25% - 7px);
 }
 
 .color div {
@@ -292,6 +305,10 @@ input[type=text]:hover, input[type=text]:focus {
 
 .color:hover {
   background-color: var(--color-over);
+}
+
+.color:active {
+  opacity: 0.5;
 }
 
 /*
@@ -311,10 +328,15 @@ input[type=text]:hover, input[type=text]:focus {
   border-radius: var(--px-radius);
   margin: 2px;
   height: 32px;
+  /* width: calc(50% - 6px); */
 }
 
 .nav-checkbox:hover {
   background-color: var(--color-over);
+}
+
+.nav-checkbox:active {
+  opacity: 0.5;
 }
 
 .nav-checkbox img {
@@ -330,7 +352,6 @@ input[type=text]:hover, input[type=text]:focus {
    width: 20px;
    height: 20px;
    padding-left: 4px;
-   /* transition: 0.25s; */
    margin-bottom: 3px;
 }
 

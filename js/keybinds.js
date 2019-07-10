@@ -9,6 +9,8 @@
 */
 
 const { ipcRenderer } = require('electron');
+const ppath = require('persist-path')('Arrow Browser');
+const fs = require("fs");
 
 /*
 .########.##.....##.##....##..######..########.####..#######..##....##..######.
@@ -75,9 +77,6 @@ function changeBorderRadius(size) {
 }
 
 function loadTheme() {
-  var fs = require("fs");
-  var ppath = require('persist-path')('ArrowBrowser');
-
   try {
     var themeColor = fs.readFileSync(ppath + "\\json\\theme.json");
     changeTheme(themeColor);
@@ -87,9 +86,6 @@ function loadTheme() {
 }
 
 function loadBorderRadius() {
-  var fs = require("fs");
-  var ppath = require('persist-path')('ArrowBrowser');
-
   try {
     var borderRadius = fs.readFileSync(ppath + "\\json\\radius.json");
     changeBorderRadius(borderRadius);
@@ -174,17 +170,8 @@ ipcRenderer.on('action-focus-window', (event, arg) => {
 */
 
 function init() {
-  // document.getElementById('window-controls').innerHTML = `
-  //   <div class="button" id="close-btn" title="Close" onclick="closeWindow()"><span>&#xE8BB;</span></div>
-  // `;
-  // document.getElementById('window-controls').classList.add('windows');
-
   loadTheme();
   loadBorderRadius();
 }
 
-document.onreadystatechange =  () => {
-  if (document.readyState == "complete") {
-    init();
-  }
-};
+document.onload = init();

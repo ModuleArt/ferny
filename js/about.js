@@ -1,4 +1,16 @@
+/*
+.##.....##....###....####.##....##
+.###...###...##.##....##..###...##
+.####.####..##...##...##..####..##
+.##.###.##.##.....##..##..##.##.##
+.##.....##.#########..##..##..####
+.##.....##.##.....##..##..##...###
+.##.....##.##.....##.####.##....##
+*/
+
 const { ipcRenderer } = require('electron');
+const ppath = require('persist-path')('Arrow Browser');
+const fs = require("fs");
 
 /*
 .########.##.....##.##....##..######..########.####..#######..##....##..######.
@@ -15,9 +27,6 @@ function changeBorderRadius(size) {
 }
 
 function loadBorderRadius() {
-  var fs = require("fs");
-  var ppath = require('persist-path')('ArrowBrowser');
-
   try {
     var borderRadius = fs.readFileSync(ppath + "\\json\\radius.json");
     changeBorderRadius(borderRadius);
@@ -92,9 +101,6 @@ function checkIfDark(color) {
 }
 
 function loadTheme() {
-  var fs = require("fs");
-  var ppath = require('persist-path')('ArrowBrowser');
-
   try {
     var themeColor = fs.readFileSync(ppath + "\\json\\theme.json");
     changeTheme(themeColor);
@@ -113,6 +119,14 @@ function openAppPage() {
 
 function openReleasesPage() {
   ipcRenderer.send('request-open-url-in-new-tab', "https://github.com/ModuleArt/arrowbrowser/releases");
+}
+
+function openPlannerPage() {
+  ipcRenderer.send('request-open-url-in-new-tab', "https://trello.com/b/cb5lXUgS/arrowbrowser");
+}
+
+function openSourcePage() {
+  ipcRenderer.send('request-open-url-in-new-tab', "https://github.com/ModuleArt/arrowbrowser");
 }
 
 function openElectronPage() {
@@ -169,11 +183,7 @@ function init() {
   loadBorderRadius();
 }
 
-document.onreadystatechange =  () => {
-  if (document.readyState == "complete") {
-    init();
-  }
-};
+document.onload = init();
 
 /*
 .########.##.....##.########....########.##....##.########.
