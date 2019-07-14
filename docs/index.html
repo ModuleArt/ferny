@@ -127,7 +127,7 @@
             </div>
             <label class="main-title">Release notes</label>
             <div class="updates">
-                <div class="update">
+                <div class="update show" class="show">
                     <a href="https://github.com/ModuleArt/ferny/releases/tag/v1.5.1" title="GitHub release"><img src="imgs/icons/github.png"></a>
                     <label class="date">July 14 / 2019</label>
                     <button class="title" onclick="toggleUpdate(this)">Beta v1.5.1</button>
@@ -143,7 +143,7 @@
                     </label>
                     
                 </div>
-                <div class="update">
+                <div class="update show">
                     <a href="https://github.com/ModuleArt/ferny/releases/tag/v1.5.0" title="GitHub release"><img src="imgs/icons/github.png"></a>
                     <label class="date">July 10 / 2019</label>
                     <button class="title" onclick="toggleUpdate(this)">Beta v1.5.0 "Responsive Update"</button>
@@ -173,7 +173,7 @@
                         • Fixed history loading.
                     </label>
                 </div>
-                <div class="update">
+                <div class="update show">
                     <a href="https://github.com/ModuleArt/ferny/releases/tag/v1.4.4" title="GitHub release"><img src="imgs/icons/github.png"></a>
                     <label class="date">June 26 / 2019</label>
                     <button class="title" onclick="toggleUpdate(this)">Beta v1.4.4</button>
@@ -185,7 +185,7 @@
                         • Fixed update progress bar.
                     </label>
                 </div>
-                <div class="update">
+                <div class="update show">
                     <a href="https://github.com/ModuleArt/ferny/releases/tag/v1.4.3" title="GitHub release"><img src="imgs/icons/github.png"></a>
                     <label class="date">June 25 / 2019</label>
                     <button class="title" onclick="toggleUpdate(this)">Beta v1.4.3 "Tabs Update"</button>
@@ -442,6 +442,7 @@
                     <button class="title" onclick="toggleUpdate(this)">Beta v1.0.0</button>
                     <label class="text">Arrow Browser is available!</label>
                 </div>
+                <button class="more" id="more-updates" onclick="moreUpdates()">More updates</button>
             </div>
         </center>
         <footer id="footer"></footer>

@@ -20,5 +20,15 @@ function buttonToggle(button) {
 }
 
 function toggleUpdate(div) {
-  div.parentNode.classList.toggle('show');
+  div.parentNode.classList.toggle('expand');
+}
+
+function moreUpdates() {
+  document.getElementById('more-updates').style.display = "none";
+  var updates = document.getElementsByClassName('update');
+  for(var i = 0; i < updates.length; i++) {
+    if(!updates[i].classList.contains('show')) {
+      updates[i].classList.add('show');
+    }
+  }
 }

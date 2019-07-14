@@ -242,12 +242,16 @@ body {
 .main .update {
     border-top: 2px solid rgba(255, 255, 255, 0.5);
     text-align: left;
-    display: inline-block;
+    display: none;
     width: calc(50% - 18px);
     vertical-align: top;
     margin: 8px;
     margin-top: 48px;
     padding-top: 4px;
+}
+
+.main .update.show {
+    display: inline-block;
 }
 
 .main .update label {
@@ -281,7 +285,7 @@ body {
     display: none;
 }
 
-.main .update.show .text {
+.main .update.expand .text {
     display: inline-block;
 }
 
@@ -300,6 +304,22 @@ body {
 
 .main .update a:hover img, .main .update a:focus img {
     background-color: rgba(255, 255, 255, 0.1);
+}
+
+.main .updates .more {
+    background: none;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    outline: none;
+    font-size: 16px;
+    border-radius: 4px;
+    transition: 0.25s;
+    margin-top: 16px;
+    padding: 12px 24px;
+}
+
+.main .updates .more:hover, .main .updates .more:active, .main .updates .more:focus {
+    border-color: white;
+    transform: translateY(-4px);
 }
 
 /*
