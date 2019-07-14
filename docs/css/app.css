@@ -112,10 +112,10 @@ body {
     border: 2px solid rgba(255, 255, 255, 0.5);
     border-radius: 4px;
     transition: 0.25s;
-    font-size: 16px;
     height: 24px;
     text-decoration: none;
     display: block;
+    font-size: 16px;
 }
 
 .main .links a.blue {
@@ -190,29 +190,6 @@ body {
     opacity: 1;
     transform: scale(2);
 }
-
-/* .main .screenshots button {
-    background-color: white;
-    opacity: 0.5;
-    border: none;
-    border-radius: 50%;
-    padding: 5px;
-    margin: 4px;
-    transition: 0.25s;
-}
-
-.main .screenshots .dots {
-    margin-top: 16px;
-}
-
-.main .screenshots button:hover {
-    opacity: 1;
-}
-
-.main .screenshots button.active {
-    opacity: 1;
-    padding: 8px;
-}  */
 
 /*
 .########.########....###....########.##.....##.########..########..######.
@@ -323,6 +300,12 @@ body {
 
     .main .features img {
         float: left;
+    }
+}
+
+@media only screen and (max-width: 420px) {
+    .main .links a img {
+        display: none;
     }
 }
 

@@ -4,7 +4,6 @@ $(document).ready(function() {
         arrows: false,
         autoplay: true,
         pauseOnHover: false,
-        pauseOnFocus: false,
-        adaptiveHeight: true
+        pauseOnFocus: false
     });
 });

@@ -105,6 +105,17 @@ footer .bottom .right {
     }
 }
 
+@media only screen and (max-width: 420px) {
+    footer .bottom {
+        text-align: center;
+    }
+
+    footer .bottom .left, footer .bottom .right {
+        float: none;
+        display: block;
+    }
+}
+
 /*
 .########.##.....##.########....########.##....##.########.
 ....##....##.....##.##..........##.......###...##.##.....##
