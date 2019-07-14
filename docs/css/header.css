@@ -213,6 +213,11 @@ header .links a:hover {
     background: none;
     border: none;
     display: none;
+    transition: 0.25s;
+}
+
+.hamburger:hover {
+    opacity: 0.5;
 }
 
 /*

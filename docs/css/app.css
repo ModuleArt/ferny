@@ -307,6 +307,29 @@ body {
     .main .links a img {
         display: none;
     }
+
+    .main {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .main .screenshots .slick-list {
+        border-radius: 0;
+    }
+
+    .main .description {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .main .features {
+        text-align: left;
+    }
+
+    .main .features img {
+        margin-right: 32px;
+        margin-bottom: 16px;
+    }
 }
 
 /*
