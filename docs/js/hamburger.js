@@ -10,3 +10,11 @@ function toggleMenu() {
     menuIcon.src = "imgs/icons/close.png";
   }
 }
+
+function buttonOff(button) {
+  button.classList.remove('show');
+}
+
+function buttonToggle(button) {
+  button.classList.toggle('show');
+}

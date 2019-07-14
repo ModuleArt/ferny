@@ -50,9 +50,10 @@ footer .column a {
     display: block;
     padding-bottom: 8px;
     text-decoration: none;
+    outline: none;
 }
 
-footer .column a:hover {
+footer .column a:hover, footer .column a:focus {
     opacity: 1;
 }
 

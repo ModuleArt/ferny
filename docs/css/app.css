@@ -116,6 +116,7 @@ body {
     text-decoration: none;
     display: block;
     font-size: 16px;
+    outline: none;
 }
 
 .main .links a.blue {
@@ -124,7 +125,7 @@ body {
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
 }
 
-.main .links a:hover {
+.main .links a:hover, .main .links a:focus {
     transform: translateY(-4px);
     border-color: white;
 }
@@ -265,14 +266,17 @@ body {
 
 .main .update a {
     transition: 0.25s;
+    outline: none;
 }
 
 .main .update a img {
     padding: 4px;
+    margin-bottom: -4px;
+    border-radius: 50%;
 }
 
-.main .update a:hover {
-    opacity: 0.5;
+.main .update a:hover img, .main .update a:focus img {
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 /*

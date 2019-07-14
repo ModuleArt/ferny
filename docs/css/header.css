@@ -62,6 +62,7 @@ header .container {
 header .logo {
     padding: 18px;
     text-decoration: none;
+    outline: none;
 }
 
 header .logo img {
@@ -78,11 +79,11 @@ header .logo span {
     transition: 0.25s;
 }
 
-header .logo:hover img {
+header .logo:hover img, header .logo:focus img {
     transform: rotate(120deg);
 }
 
-header .logo:hover span {
+header .logo:hover span, header .logo:focus span {
     opacity: 0.5;
 }
 
@@ -102,22 +103,25 @@ header .buttons {
 
 header .button img {
     vertical-align: middle;
+    margin-right: -8px;
 }
 
 header .button {
+    border-radius: 4px;
     display: inline-block;
-    padding: 24px;
+    padding: 14px 22px;
+    margin: 10px 2px;
     transition: 0.25s;
     text-decoration: none;
-    opacity: 0.5;
     position: relative;
+    outline: none;
 }
 
-header .button:hover {
-    opacity: 1;
+header .button:hover, header .button:focus {
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
-header .button:hover .menu {
+header .button.show .menu {
     display: block;
 }
 
@@ -136,12 +140,13 @@ header .menu {
     animation-duration: 0.25s;
     display: none;
     width: 128px;
-    left: -20px;
-    top: 64px;
+    left: 0;
+    top: 50px;
     position: absolute;
     background-color: white;
     border-radius: 4px;
     padding: 8px 0;
+    z-index: 100;
 }
 
 header .menu a {
@@ -162,7 +167,7 @@ header .menu::after {
     content: " ";
     position: absolute;
     bottom: 100%;  
-    left: 50%;
+    left: 32px;
     margin-left: -8px;
     border-width: 8px;
     border-style: solid;
@@ -184,15 +189,19 @@ header .links {
 }
 
 header .links a {
-    transition: 0.25s;
+    outline: none;
+    margin: 10px 2px;
+    display: inline-block;
 }
 
 header .links a img {
-    padding: 22px 8px;
+    padding: 12px;
+    border-radius: 50%;
+    transition: 0.25s;
 }
 
-header .links a:hover {
-    opacity: 0.5;
+header .links a:hover img, header .links a:focus img {
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 /*
@@ -209,15 +218,22 @@ header .links a:hover {
     position: absolute;
     right: 0;
     top: 0;
-    padding: 22px;
+    padding: 16px;
+    margin: 6px;
     background: none;
     border: none;
     display: none;
+    border-radius: 50%;
     transition: 0.25s;
+    outline: none;
 }
 
-.hamburger:hover {
-    opacity: 0.5;
+.hamburger img {
+    margin-bottom: -4px;
+}
+
+.hamburger:hover, .hamburger:focus {
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 /*
@@ -256,6 +272,7 @@ header .links a:hover {
     
     header.show .button {
         display: block;
+        margin: 0 8px;
     }
     
     header.show .vr {
@@ -263,8 +280,9 @@ header .links a:hover {
     }
 
     header .menu {
-        left: 64px;
-        width: calc(100% - 128px);
+        left: 0;
+        width: auto;
+        right: 0;
     }
 }
 
