@@ -18,3 +18,7 @@ function buttonOff(button) {
 function buttonToggle(button) {
   button.classList.toggle('show');
 }
+
+function toggleUpdate(div) {
+  div.parentNode.classList.toggle('show');
+}

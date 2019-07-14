@@ -258,15 +258,37 @@ body {
 .main .update .date {
     opacity: 0.5;
     float: right;
+    padding: 8px;
 }
 
 .main .update .title {
     font-size: 20px;
+    display: block;
+    outline: none;
+    transition: 0.25s;
+    background: none;
+    border: none;
+    border-radius: 4px;
+    margin-top: 4px;
+}
+
+.main .update .title:hover, .main .update .title:focus, .main.update .title:active {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.main .update .text {
+    display: none;
+}
+
+.main .update.show .text {
+    display: inline-block;
 }
 
 .main .update a {
     transition: 0.25s;
     outline: none;
+    float: right;
+    margin-top: 2px;
 }
 
 .main .update a img {
