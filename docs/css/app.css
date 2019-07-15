@@ -265,8 +265,7 @@ body {
     padding: 8px;
 }
 
-.main .update .title {
-    font-size: 18px;
+.main .update button {
     display: block;
     outline: none;
     transition: 0.25s;
@@ -275,9 +274,20 @@ body {
     border-radius: 4px;
     margin-top: 4px;
     text-align: left;
+    padding: 4px;
+    padding-right: 8px;
 }
 
-.main .update .title:hover, .main .update .title:focus, .main.update .title:active {
+.main .update button span {
+    font-size: 16px;
+    vertical-align: middle;
+}
+
+.main .update button img {
+    vertical-align: middle;
+}
+
+.main .update button:hover, .main .update button:focus, .main.update button:active {
     background-color: rgba(255, 255, 255, 0.1);
 }
 
@@ -376,10 +386,6 @@ body {
     .main .features img {
         margin-right: 32px;
         margin-bottom: 16px;
-    }
-
-    .main .update .title {
-        font-size: 14px;
     }
 }
 

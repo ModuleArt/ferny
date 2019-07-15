@@ -12,11 +12,19 @@
     from {
         opacity: 0;
         transform: scale(0.75);
-    }
-    to {
+    } to {
         opacity: 1;
         transform: scale(1);
     }
+}
+
+@keyframes anim-logo {
+    from {
+        transform: translateY(-64px);
+    } to {
+        transform: translateY(0px);
+    }
+
 }
 
 /*
@@ -70,6 +78,8 @@ header .logo img {
     height: 32px;
     vertical-align: middle;
     transition: 0.5s;
+    animation: anim-logo;
+    animation-duration: 0.5s;
 }
 
 header .logo span {
@@ -258,6 +268,14 @@ header .links a:hover img, header .links a:focus img {
 }
 
 @media only screen and (max-width: 420px) {
+    header .logo img {
+        float: left;
+    }
+
+    header .logo {
+        margin-right: 40px;
+    }
+
     header .buttons {
         display: none;
     }
@@ -283,6 +301,10 @@ header .links a:hover img, header .links a:focus img {
         left: 0;
         width: auto;
         right: 0;
+    }
+
+    header .menu::after {
+        left: 50%;
     }
 }
 

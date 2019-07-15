@@ -99,7 +99,7 @@ footer .bottom .right {
         text-align: center;
     }
 
-    footer .column label.link {
+    footer .column a {
         display: inline-block;
         padding-left: 4px;
         padding-right: 4px;
