@@ -109,6 +109,8 @@ header .logo:hover span, header .logo:focus span {
 
 header .buttons {
     flex: 1;
+    animation: anim-show;
+    animation-duration: 0.25s;
 }
 
 header .button img {
