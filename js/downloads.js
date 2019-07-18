@@ -10,8 +10,9 @@
 
 const { ipcRenderer } = require('electron');
 const { shell } = require('electron');
-const ppath = require('persist-path')('Arrow Browser');
+const ppath = require('persist-path')('Ferny');
 const fs = require("fs");
+const getAvColor = require('color.js');
 
 /*
 .########.##.....##.##....##..######..########.####..#######..##....##..######.
@@ -36,7 +37,7 @@ function changeTheme(color) {
     setIconsStyle('dark');
 
     document.documentElement.style.setProperty('--color-top', 'black');
-    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.15)');
+    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.1)');
   }
 }
 function setIconsStyle(str) {
@@ -124,6 +125,11 @@ function createDownload(index, name, url, time) {
     <label>Url: </label><label class="download-link" title="` + url + `">` + url + `</label><br>
     <label>Date: </label><label class="download-date">` + epochToDate(time) + `</label> / <label>Time: </label><label class="download-time">` + epochToTime(time) + `</label><hr>
     <center class="download-buttons"></center>`;
+
+  var color = new getAvColor(div.getElementsByTagName('img')[0]);
+  color.mostUsed(result => {
+    div.style.borderLeft = "4px solid " + result[0];
+  });
 
   var container = document.getElementById('sidebar-downloads');
   var dwndls = container.getElementsByClassName('download');
@@ -512,11 +518,7 @@ function init() {
   });
 }
 
-document.onreadystatechange =  () => {
-  if (document.readyState == "complete") {
-    init();
-  }
-};
+document.onreadystatechange = init;
 
 /*
 .########.##.....##.########....########.##....##.########.

@@ -27,7 +27,25 @@
                 <input type="text" id="search" placeholder="Search hotkeys" onkeyup="updateSearch()">
             </div>
 
-            <div class="block-title">
+            <div class="block-title" id="shortcuts">
+                <img name="down" class="theme-icon">
+                <label>Shortcuts</label>
+            </div>
+            <center class="block-container">
+                <label class="link" onclick="scrollToId('tab')">Tab</label>
+                <label class="link" onclick="scrollToId('bookmarks')">Bookmarks</label>
+                <label class="link" onclick="scrollToId('history')">History</label>
+                <label class="link" onclick="scrollToId('downloads')">Downloads</label>
+                <label class="link" onclick="scrollToId('zoom')">Zoom</label>
+                <label class="link" onclick="scrollToId('edit')">Edit</label>
+                <label class="link" onclick="scrollToId('page')">Page</label>
+                <label class="link" onclick="scrollToId('settings')">Settings</label>
+                <label class="link" onclick="scrollToId('help')">Help</label>
+                <label class="link" onclick="scrollToId('more')">More</label>
+                <label class="link" onclick="scrollToId('exit')">Exit</label>
+            </center>
+
+            <div class="block-title" id="tab">
                 <img name="tab" class="theme-icon">
                 <label>Tab</label>
             </div>
@@ -63,7 +81,7 @@
                 <label class="key-name">Close active tab</label>
             </div>
 
-            <div class="block-title">
+            <div class="block-title" id="bookmarks">
                 <img name="bookmarks" class="theme-icon">
                 <label>Bookmarks</label>
             </div>
@@ -71,7 +89,7 @@
                 <div class="key-code">
                     <div class="key">Ctrl</div> + <div class="key">B</div>
                 </div>
-                <label class="key-name">Open bookmarks</label>
+                <label class="key-name">Open sidebar bookmarks tab</label>
 
                 <div class="key-code">
                     <div class="key">Ctrl</div> + <div class="key">Shift</div> + <div class="key">B</div>
@@ -79,7 +97,7 @@
                 <label class="key-name">Add active page to bookmarks</label>
             </div>
 
-            <div class="block-title">
+            <div class="block-title" id="history">
                 <img name="history" class="theme-icon">
                 <label>History</label>
             </div>
@@ -87,10 +105,10 @@
                 <div class="key-code">
                     <div class="key">Ctrl</div> + <div class="key">H</div>
                 </div>
-                <label class="key-name">Open history</label>
+                <label class="key-name">Open sidebar history tab</label>
             </div>
 
-            <div class="block-title">
+            <div class="block-title" id="downloads">
                 <img name="download" class="theme-icon">
                 <label>Downloads</label>
             </div>
@@ -98,10 +116,10 @@
                 <div class="key-code">
                     <div class="key">Ctrl</div> + <div class="key">D</div>
                 </div>
-                <label class="key-name">Open downloads</label>
+                <label class="key-name">Open sidebar downloads tab</label>
             </div>
 
-            <div class="block-title">
+            <div class="block-title" id="zoom">
                 <img name="zoom-in" class="theme-icon">
                 <label>Zoom</label>
             </div>
@@ -127,7 +145,7 @@
                 <label class="key-name">Toggle fullscreen mode</label>
             </div>
 
-            <div class="block-title">
+            <div class="block-title" id="edit">
                 <img name="edit" class="theme-icon">
                 <label>Edit</label>
             </div>
@@ -168,7 +186,7 @@
                 <label class="key-name">Delete</label>
             </div>
 
-            <div class="block-title">
+            <div class="block-title" id="page">
                 <img name="file" class="theme-icon">
                 <label>Page</label>
             </div>
@@ -194,7 +212,7 @@
                 <label class="key-name">Open developer tools for active page</label>
             </div>
 
-            <div class="block-title">
+            <div class="block-title" id="settings">
                 <img name="settings" class="theme-icon">
                 <label>Settings</label>
             </div>
@@ -202,10 +220,10 @@
                 <div class="key-code">
                     <div class="key">Ctrl</div> + <div class="key">Comma</div>
                 </div>
-                <label class="key-name">Open settings</label>
+                <label class="key-name">Open sidebar settings tab</label>
             </div>
 
-            <div class="block-title">
+            <div class="block-title" id="help">
                 <img name="about" class="theme-icon">
                 <label>Help</label>
             </div>
@@ -223,16 +241,26 @@
                 <div class="key-code">
                     <div class="key">Ctrl</div> + <div class="key">Shift</div> + <div class="key">A</div>
                 </div>
-                <label class="key-name">Open about app page</label>
+                <label class="key-name">Open sidebar about tab</label>
+
+                <div class="key-code">
+                    <div class="key">Ctrl</div> + <div class="key">Shift</div> + <div class="key">I</div>
+                </div>
+                <label class="key-name">Open GitHub issues page</label>
             </div>
 
-            <div class="block-title">
+            <div class="block-title" id="more">
                 <img name="options" class="theme-icon">
                 <label>More</label>
             </div>
             <div class="block-container">
                 <div class="key-code">
-                    <div class="key">Ctrl</div> + <div class="key">Shift</div> + <div class="key">F</div>
+                    <div class="key">Ctrl</div> + <div class="key">Shift</div> + <div class="key">W</div>
+                </div>
+                <label class="key-name">Show welcome window</label>
+
+                <div class="key-code">
+                    <div class="key">F6</div>
                 </div>
                 <label class="key-name">Focus address bar</label>
 
@@ -242,7 +270,7 @@
                 <label class="key-name">Close active panel</label>
             </div>
 
-            <div class="block-title">
+            <div class="block-title" id="exit">
                 <img name="exit" class="theme-icon">
                 <label>Exit</label>
             </div>

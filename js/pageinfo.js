@@ -11,7 +11,7 @@
 const { ipcRenderer } = require('electron');
 const sslCertificate = require('get-ssl-certificate');
 const fs = require("fs");
-const ppath = require('persist-path')('Arrow Browser');
+const ppath = require('persist-path')('Ferny');
 
 /*
 .########.##.....##.##....##..######..########.####..#######..##....##..######.
@@ -35,7 +35,7 @@ function changeTheme(color) {
     setIconsStyle('dark');
 
     document.documentElement.style.setProperty('--color-top', 'black');
-    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.15)');
+    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.1)');
   }
 }
 
@@ -163,7 +163,7 @@ function init() {
   loadBorderRadius();
 }
 
-document.onload = init();
+document.onreadystatechange = init;
 
 /*
 .########.##.....##.########....########.##....##.########.

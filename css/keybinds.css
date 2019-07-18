@@ -214,14 +214,6 @@ body {
     overflow: hidden;
 }
 
-label.link {
-    color: var(--color-blue);
-}
-
-label.link:hover {
-    text-decoration: underline;
-}
-
 .container {
     position: absolute;
     top: 32px;
@@ -256,6 +248,32 @@ label.link:hover {
     border-radius: var(--px-radius);
     margin: 2px;
 }
+
+/*
+.##.......####.##....##.##....##
+.##........##..###...##.##...##.
+.##........##..####..##.##..##..
+.##........##..##.##.##.#####...
+.##........##..##..####.##..##..
+.##........##..##...###.##...##.
+.########.####.##....##.##....##
+*/
+
+label.link {
+    color: var(--color-top);
+    display: inline-block;
+    margin: 2px;
+    padding: 2px 8px;
+    border-radius: var(--px-radius);
+  }
+  
+  label.link:hover {
+    background-color: var(--color-over);
+  }
+  
+  label.link:active {
+    opacity: 0.5;
+  }
 
 /*
 .########..##........#######...######..##....##

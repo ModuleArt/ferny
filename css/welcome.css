@@ -71,6 +71,28 @@
   }
 }
 
+@keyframes anim-prev {
+  from {
+    opacity: 0;
+    transform: translateX(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+}
+
+@keyframes anim-next {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+}
+
 /*
 .##......##.########.########..##....##.####.########
 .##..##..##.##.......##.....##.##...##...##.....##...
@@ -133,8 +155,7 @@
 }
 
 .nav-btn.disable {
-  opacity: var(--opacity-blur);
-  background-color: transparent;
+  display: none;
 }
 
 /*
@@ -202,6 +223,7 @@ label.subtitle {
 body {
   margin: 0;
   padding: 0;
+  overflow: hidden;
 }
 
 label.link {
@@ -258,14 +280,20 @@ input[type=text]:hover, input[type=text]:focus {
 ....##....##.....##.########...######.
 */
 
-#skip-btn {
+#developer-btn, #skip-btn {
   position: absolute;
-  right: 2px;
+  z-index: 100;
   bottom: 2px;
+  animation: anim-show;
+  animation-duration: 0.25s;
 }
 
-#skip-btn.disable {
-  display: none;
+#developer-btn {
+  left: 2px;
+}
+
+#skip-btn {
+  right: 2px;
 }
 
 #dots {
@@ -328,11 +356,15 @@ input[type=text]:hover, input[type=text]:focus {
 #prev-btn {
   left: 0;
   border-radius: 0 var(--px-radius) var(--px-radius) 0;
+  animation: anim-prev;
+  animation-duration: 0.25s;
 }
 
 #next-btn {
   right: 0;
   border-radius: var(--px-radius) 0 0 var(--px-radius);
+  animation: anim-next;
+  animation-duration: 0.25s;
 }
 
 #next-btn:hover, #prev-btn:hover {

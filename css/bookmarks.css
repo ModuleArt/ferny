@@ -213,16 +213,16 @@ input:hover, input:focus {
 
 .bookmark {
   display: inline-block;
-  border-radius: var(--px-radius);
+  border-radius: 0 var(--px-radius) var(--px-radius) 0;
   padding: 8px;
   padding-right: 4px;
   margin: 2px;
   text-decoration: none;
   width: calc(50% - 4px);
   vertical-align: top;
-  /* transition: 0.25s; */
   text-align: left;
   position: relative;
+  border-left: 4px solid transparent;
   background-color: var(--color-over);
 }
 
@@ -232,7 +232,7 @@ input:hover, input:focus {
 
 .bookmark label {
   margin: 0 4px;
-  width: calc(100% - 36px);
+  width: calc(100% - 44px);
   overflow: hidden;
   position: absolute;
   white-space: nowrap;
@@ -243,7 +243,6 @@ input:hover, input:focus {
 .bookmark-icon {
   width: 16px;
   height: 16px;
-  /* filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.5)); */
   vertical-align: middle;
   margin: 2px;
 }
@@ -277,7 +276,6 @@ input:hover, input:focus {
   margin-top: 8px;
   margin-left: -4px;
   margin-bottom: -8px;
-  /* transition: 0.25s; */
   padding-top: 4px;
 }
 
@@ -286,7 +284,6 @@ input:hover, input:focus {
 }
 
 .bookmark-menu-btn {
-  /* transition: 0.25s; */
   border-radius: var(--px-radius);
   padding: 4px;
 }

@@ -10,9 +10,10 @@
 
 const { ipcRenderer } = require('electron');
 const dragula = require("dragula");
-const ppath = require('persist-path')('Arrow Browser');
+const ppath = require('persist-path')('Ferny');
 const drag = dragula([document.getElementById('bookmarks')], { direction: "horizontal" });
 const fs = require("fs");
+const getAvColor = require('color.js');
 
 /*
 .########.##.....##.##....##..######..########.####..#######..##....##..######.
@@ -43,7 +44,7 @@ function changeTheme(color) {
     setIconsStyle('dark');
 
     document.documentElement.style.setProperty('--color-top', 'black');
-    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.15)');
+    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.1)');
   }
 }
 function changeBorderRadius(size) {
@@ -210,6 +211,11 @@ function createBookmark(name, url) {
     div.getElementsByClassName('bookmark-menu')[0].classList.remove('active');
   });
 
+  var color = new getAvColor(div.getElementsByTagName('img')[0]);
+  color.mostUsed(result => {
+    div.style.borderLeft = "4px solid " + result[0];
+  });
+
   var options = document.createElement('img');
   options.classList.add('bookmark-options', 'theme-icon');
   options.name = "options";
@@ -238,11 +244,25 @@ function createBookmark(name, url) {
 
   return div.getElementsByClassName('bookmark-menu-btn')[2];
 }
+
 function newBookmark() {
   editBookmark(createBookmark("Google", "https://google.com"));
   loadTheme();
   saveBookmarks();
 }
+
+function newFolder() {
+  /*
+  .##....##.########.##......##....########..#######..##.......########..########.########.
+  .###...##.##.......##..##..##....##.......##.....##.##.......##.....##.##.......##.....##
+  .####..##.##.......##..##..##....##.......##.....##.##.......##.....##.##.......##.....##
+  .##.##.##.######...##..##..##....######...##.....##.##.......##.....##.######...########.
+  .##..####.##.......##..##..##....##.......##.....##.##.......##.....##.##.......##...##..
+  .##...###.##.......##..##..##....##.......##.....##.##.......##.....##.##.......##....##.
+  .##....##.########..###..###.....##........#######..########.########..########.##.....##
+  */
+}
+
 function saveBookmarks() {
   var bookmarksArray = [];
 
@@ -330,11 +350,7 @@ function init() {
   });
 }
 
-document.onreadystatechange =  () => {
-  if (document.readyState == "complete") {
-    init();
-  }
-};
+document.onreadystatechange = init;
 
 /*
 .########.##.....##.########....########.##....##.########.

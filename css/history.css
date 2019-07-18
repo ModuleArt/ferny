@@ -116,8 +116,6 @@
 body {
   margin: 0;
   padding: 2px;
-  /* animation-name: anim-slide;
-  animation-duration: 0.25s; */
   overflow-x: hidden;
 }
 
@@ -245,11 +243,12 @@ input:hover, input:focus {
 .history-item {
   margin: 4px 2px;
   background-color: var(--color-over);
-  border-radius: var(--px-radius);
+  border-radius: 0 var(--px-radius) var(--px-radius) 0;
   text-align: left;
   padding: 6px;
   position: relative;
   color: var(--color-top);
+  border-left: 4px solid transparent;
 }
 
 .history-url, .history-name {

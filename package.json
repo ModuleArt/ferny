@@ -1,18 +1,18 @@
 {
-  "name": "arrowbrowser",
-  "productName": "Arrow Browser",
-  "companyName": "ModuleArt",
+  "name": "ferny",
+  "productName": "Ferny",
+  "companyName": "Module Art",
   "description": "Your web browser",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "license": "UNLICENSED",
   "author": {
     "name": "ModuleArt",
     "email": "module.art.team@gmail.com"
   },
   "main": "main.js",
-  "homepage": "https://moduleart.github.io/arrowbrowser",
+  "homepage": "https://moduleart.github.io/ferny",
   "repository": {
-    "url": "https://github.com/ModuleArt/arrowbrowser"
+    "url": "https://github.com/ModuleArt/ferny"
   },
   "scripts": {
     "start": "electron .",
@@ -29,8 +29,8 @@
     "get-title-at-url": "^1.1.6",
     "google-autocomplete": "0.0.1",
     "persist-path": "^1.0.2",
+    "prepend-file": "^1.3.1",
     "readl-async": "0.0.4",
-    "readline": "^1.3.0",
     "readline2": "^1.0.1",
     "validate.io-uri": "^1.0.0"
   },
@@ -39,18 +39,16 @@
     "electron": "^6.0.0-beta.10"
   },
   "build": {
-    "appId": "com.moduleart.arrowbrowser",
-    "copyright": "Copyright © 2019 ModuleArt",
+    "appId": "com.moduleart.ferny",
+    "copyright": "Copyright © 2019 Module Art",
     "fileAssociations": [
       {
         "ext": "htm",
-        "icon": "imgs\\files\\html\\html.ico",
         "name": "HTM document",
         "role": "Viewer"
       },
       {
         "ext": "html",
-        "icon": "imgs\\files\\html\\html.ico",
         "name": "HTML document",
         "role": "Viewer"
       }
@@ -61,7 +59,7 @@
     "win": {
       "publish": {
         "provider": "github",
-        "repo": "arrowbrowser",
+        "repo": "ferny",
         "owner": "ModuleArt",
         "host": "github.com",
         "protocol": "https",

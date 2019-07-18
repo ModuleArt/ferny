@@ -11,51 +11,18 @@
 const { ipcRenderer } = require('electron');
 const getTitleAtUrl = require('get-title-at-url');
 const readl = require('readl-async');
-const ppath = require('persist-path')('Arrow Browser');
+const ppath = require('persist-path')('Ferny');
 const fs = require("fs");
-
-
-// let rl = readline.createInterface({
-//   input: fs.createReadStream(ppath + "\\json\\history.json")
-// });
+const getAvColor = require('color.js');
 
 var historyLineNumber = 0;
 var reader = new readl(ppath + "\\json\\history.json", { encoding: 'utf8' });
 
 reader.on('line', function(line, index, start, end) {
-  console.log(line);
   var obj = JSON.parse(line);
-  createHistoryItem(historyLineNumber, obj.url, obj.time);
+  createHistoryItem(historyLineNumber, obj.url, obj.time, false);
   historyLineNumber++;
 });
-
-// rl.on('line', function(line) {
-//   var obj = JSON.parse(line);
-//   createHistoryItem(historyLineNumber, obj.url, obj.time);
-//   historyLineNumber++;
-// });
-
-// function readLines({ input }) {
-//   const output = new stream.PassThrough({ objectMode: true });
-    
-//   const rl = readline.createInterface({ input });
-//   rl.on("line", line => { 
-//     output.write(line);
-//   });
-//   rl.on("close", () => {
-//     output.push(null);
-//   }); 
-//   return output;
-// }
-
-//   const input = fs.createReadStream(ppath + "\\json\\history.json");
-
-//   (async () => {
-    
-//   for await (const line of readLines({ input })) {
-//     console.log(line);
-//     }
-//   })();
 
 /*
 .########.##.....##.##....##..######..########.####..#######..##....##..######.
@@ -84,7 +51,7 @@ function changeTheme(color) {
     setIconsStyle('dark');
 
     document.documentElement.style.setProperty('--color-top', 'black');
-    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.15)');
+    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.1)');
   }
 }
 function setIconsStyle(str) {
@@ -162,11 +129,12 @@ function clearHistory() {
   }
 }
 
-function createHistoryItem(index, url, time) {
+function createHistoryItem(index, url, time, begin) {
   return new Promise(function (resolve, reject) {
     var div = document.createElement('div');
     div.classList.add('history-item');
     div.id = "history-" + index;
+    
     div.innerHTML = `<img class="history-icon" src="` + 'http://www.google.com/s2/favicons?domain=' + url + `"><label class="history-name">Loading...</label><hr>
                     Url: <label class="history-url" title="` + url + `">` + url + `</label><br>
                     Date: <label class="history-date">` + epochToDate(time) + `</label> / <label>Time: </label><label class="history-time">` + epochToTime(time) + `</label><hr>
@@ -186,11 +154,23 @@ function createHistoryItem(index, url, time) {
       if(e.which == 2) {
         ipcRenderer.send('request-open-url-in-new-tab', url);
       }
-    }, false);              
+    }, false);   
+
     div.onload = resolve;
     div.onerror = reject;
+
+    var color = new getAvColor(div.getElementsByTagName('img')[0]);
+    color.mostUsed(result => {
+      div.style.borderLeft = "4px solid " + result[0];
+    });
+
     var container = document.getElementById('history');
-    container.insertBefore(div, container.firstChild);
+
+    if(begin) {
+      container.insertBefore(div, container.firstChild);
+    } else {
+      container.appendChild(div);
+    }
 
     applyTitle(url, index);
 
@@ -288,8 +268,7 @@ function numberToMonth(number) {
 */
 
 ipcRenderer.on('action-add-history-item', (event, arg) => {
-  createHistoryItem(arg.index, arg.url, arg.time);
-  console.log('added');
+  createHistoryItem(arg.index, arg.url, arg.time, true);
 });
 
 ipcRenderer.on('action-load-theme', (event, arg) => {
@@ -340,7 +319,7 @@ function init() {
   });
 }
 
-document.onload = init();
+document.onreadystatechange = init;
 
 /*
 .########.##.....##.########....########.##....##.########.

@@ -9,7 +9,7 @@
 */
 
 const { ipcRenderer } = require('electron');
-const ppath = require('persist-path')('Arrow Browser');
+const ppath = require('persist-path')('Ferny');
 const fs = require("fs");
 
 /*
@@ -34,7 +34,7 @@ function changeTheme(color) {
     setIconsStyle('dark');
 
     document.documentElement.style.setProperty('--color-top', 'black');
-    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.15)');
+    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.1)');
   }
 }
 
@@ -141,6 +141,12 @@ function updateSearch() {
   }
 }
 
+function scrollToId(id) {
+  document.getElementById(id).scrollIntoView({
+	  	behavior: 'smooth'
+	});
+}
+
 /*
 .####.########...######.....########..########.##....##.########..########.########..########.########.
 ..##..##.....##.##....##....##.....##.##.......###...##.##.....##.##.......##.....##.##.......##.....##
@@ -174,4 +180,4 @@ function init() {
   loadBorderRadius();
 }
 
-document.onload = init();
+document.onreadystatechange = init;

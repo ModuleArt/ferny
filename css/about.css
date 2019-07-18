@@ -58,14 +58,6 @@
 ::-webkit-scrollbar-thumb {
   background-color: var(--color-over);
 }
-::-webkit-scrollbar-button {
-  width: 0;
-  height: 0;
-  display: none;
-}
-::-webkit-scrollbar-corner {
-  background-color: transparent;
-}
 
 ::-webkit-input-placeholder {
   color: var(--color-top);

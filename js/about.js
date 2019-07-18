@@ -9,7 +9,7 @@
 */
 
 const { ipcRenderer } = require('electron');
-const ppath = require('persist-path')('Arrow Browser');
+const ppath = require('persist-path')('Ferny');
 const fs = require("fs");
 
 /*
@@ -62,7 +62,7 @@ function changeTheme(color) {
     setIconsStyle('dark');
 
     document.documentElement.style.setProperty('--color-top', 'black');
-    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.15)');
+    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.1)');
   }
 }
 
@@ -109,28 +109,36 @@ function loadTheme() {
   }
 }
 
+function openIssuesPage() {
+  ipcRenderer.send('request-open-url-in-new-tab', "https://github.com/ModuleArt/ferny/issues");
+}
+
+function openDonatePage() {
+  ipcRenderer.send('request-open-url-in-new-tab', "https://www.patreon.com/moduleart");
+}
+
 function openDeveloperPage() {
-  ipcRenderer.send('request-open-url-in-new-tab', "https://electronjs.org/releases");
+  ipcRenderer.send('request-open-url-in-new-tab', "https://moduleart.github.io/");
 }
 
 function openAppPage() {
-  ipcRenderer.send('request-open-url-in-new-tab', "https://moduleart.github.io/arrowbrowser");
+  ipcRenderer.send('request-open-url-in-new-tab', "https://moduleart.github.io/ferny");
 }
 
 function openReleasesPage() {
-  ipcRenderer.send('request-open-url-in-new-tab', "https://github.com/ModuleArt/arrowbrowser/releases");
+  ipcRenderer.send('request-open-url-in-new-tab', "https://github.com/ModuleArt/ferny/releases");
 }
 
 function openPlannerPage() {
-  ipcRenderer.send('request-open-url-in-new-tab', "https://trello.com/b/cb5lXUgS/arrowbrowser");
+  ipcRenderer.send('request-open-url-in-new-tab', "https://trello.com/b/cb5lXUgS/ferny");
 }
 
 function openSourcePage() {
-  ipcRenderer.send('request-open-url-in-new-tab', "https://github.com/ModuleArt/arrowbrowser");
+  ipcRenderer.send('request-open-url-in-new-tab', "https://github.com/ModuleArt/ferny");
 }
 
 function openElectronPage() {
-  ipcRenderer.send('request-open-url-in-new-tab', "https://github.com/ModuleArt/arrowbrowser/releases");
+  ipcRenderer.send('request-open-url-in-new-tab', "https://electronjs.org/releases");
 }
 
 function openChromePage() {
@@ -183,7 +191,7 @@ function init() {
   loadBorderRadius();
 }
 
-document.onload = init();
+document.onreadystatechange = init;
 
 /*
 .########.##.....##.########....########.##....##.########.

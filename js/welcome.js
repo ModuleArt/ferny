@@ -9,7 +9,7 @@
 */
 
 const { ipcRenderer } = require('electron');
-const ppath = require('persist-path')('Arrow Browser');
+const ppath = require('persist-path')('Ferny');
 const fs = require("fs");
 
 /*
@@ -44,7 +44,7 @@ function changeTheme(color) {
     setIconsStyle('dark');
 
     document.documentElement.style.setProperty('--color-top', 'black');
-    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.15)');
+    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.1)');
   }
 }
 
@@ -119,8 +119,10 @@ function chooseSlide(i) {
 
   if(i == 0) {
     document.getElementById('prev-btn').classList.add('disable');
+    document.getElementById('developer-btn').classList.remove('disable');
   } else {
     document.getElementById('prev-btn').classList.remove('disable');
+    document.getElementById('developer-btn').classList.add('disable');
   }
   if(i == dots.length - 1) {
     document.getElementById('next-btn').classList.add('disable');
@@ -175,7 +177,11 @@ function changeWelcome(bool) {
 }
 
 function openAppPage() {
-  ipcRenderer.send('request-open-url-in-new-tab', "https://moduleart.github.io/arrowbrowser");
+  ipcRenderer.send('request-open-url-in-new-tab', "https://moduleart.github.io/ferny");
+}
+
+function openDeveloperPage() {
+  ipcRenderer.send('request-open-url-in-new-tab', "https://moduleart.github.io/");
 }
 
 function loadStartPage() {
@@ -212,6 +218,16 @@ function requestSearchEngine(engine) {
   ipcRenderer.send('request-set-search-engine', engine);
 
   notif("Search engine changed: " + engine, "success");
+}
+
+function keyDown(e) {
+  e = e || window.event;
+
+  if (e.keyCode == '37') {
+    prevSlide();
+  } else if (e.keyCode == '39') {
+    nextSlide();
+  }
 }
 
 /*
@@ -252,6 +268,8 @@ function init() {
   loadStartPage();
 
   ipcRenderer.send('request-set-about');
+
+  document.onkeydown = keyDown;
 }
 
-document.onload = init();
+document.onreadystatechange = init;

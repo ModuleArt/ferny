@@ -3,6 +3,9 @@ const { ipcRenderer } = require('electron');
 document.addEventListener('contextmenu', webviewContextMenu);
 document.addEventListener('wheel', webviewMouseWheel);
 
+// var sheet = window.document.styleSheets[0];
+// sheet.insertRule('strong { color: red; }', sheet.cssRules.length);
+
 function webviewMouseWheel(e) {
     if (e.ctrlKey) {
         if (e.deltaY > 0) {

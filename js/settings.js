@@ -9,7 +9,7 @@
 */
 
 const { ipcRenderer } = require('electron');
-const ppath = require('persist-path')('Arrow Browser');
+const ppath = require('persist-path')('Ferny');
 const fs = require("fs");
 
 /*
@@ -71,7 +71,7 @@ function changeTheme(color) {
     setIconsStyle('dark');
 
     document.documentElement.style.setProperty('--color-top', 'black');
-    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.15)');
+    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.1)');
   }
 }
 
@@ -123,7 +123,7 @@ function loadStartPage() {
     var startPage = fs.readFileSync(ppath + "\\json\\startpage.json");
     document.getElementById('start-page-input').value = startPage;
   } catch (e) {
-    alert(e);
+
   }
 }
 
@@ -222,11 +222,7 @@ function init() {
   loadSearchEngine();
 }
 
-document.onreadystatechange =  () => {
-  if (document.readyState == "complete") {
-    init();
-  }
-};
+document.onreadystatechange = init;
 
 /*
 .########.##.....##.########....########.##....##.########.

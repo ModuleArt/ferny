@@ -13,9 +13,9 @@ const TabGroup = require("electron-tabs");
 const dragula = require("dragula");
 const autoSuggest = require('google-autocomplete');
 const isUrl = require('validate.io-uri');
-const getAvColor = require('color.js')
+const getAvColor = require('color.js');
 const fs = require("fs");
-const ppath = require('persist-path')('Arrow Browser');
+const ppath = require('persist-path')('Ferny');
 
 /*
 .########....###....########...######.
@@ -146,7 +146,7 @@ tabGroup.on("tab-added", (tab, tabGroup) => {
     var color = new getAvColor(img);
     color.mostUsed(result => {
       // tab.tab.style.backgroundImage = "linear-gradient(" + result[0] + ", var(--color-back), var(--color-back))"; 
-      tab.tab.style.borderColor = result[0];
+      tab.tab.style.borderTop = "4px solid " + result[0];
     });
   });
 
@@ -281,6 +281,33 @@ function loadBorderRadius() {
   }
 
   applyBorderRadius(borderRadius);
+}
+
+function loadBookmarksBar() {
+  var bookmarksBarOn = "0";
+
+  try {
+    bookmarksBarOn = fs.readFileSync(ppath + "\\json\\bookmarksbar.json");
+  } catch (e) {
+    if(!fs.existsSync(ppath + "\\json")) {
+      fs.mkdirSync(ppath + "\\json");
+    } 
+    fs.writeFileSync(ppath + "\\json\\bookmarksbar.json", bookmarksBarOn);
+  }
+
+  applyBookmarksBar(bookmarksBarOn);
+}
+
+function applyBookmarksBar(arg) {
+  if(arg == 1) {
+    document.getElementById('bookmarks-bar').style.display = "";
+    document.body.classList.add('bookmarks-bar');
+
+    updateBookmarksBar();
+  } else {
+    document.getElementById('bookmarks-bar').style.display = "none";
+    document.body.classList.remove('bookmarks-bar');
+  }
 }
 
 function newTabDrop(e) {
@@ -775,7 +802,7 @@ function applyTheme(color) {
     setIconsStyle('dark');
 
     document.documentElement.style.setProperty('--color-top', 'black');
-    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.15)');
+    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.1)');
   }
 
   document.getElementById('sidebar-webview').send('action-load-theme');
@@ -797,7 +824,7 @@ function showSidebar() {
   document.getElementById('sidebar').style.display = "";
   document.getElementById('sidebar').classList.remove('hide');
 
-  document.getElementById('sidebar-webview').openDevTools();
+  // document.getElementById('sidebar-webview').openDevTools();
 }
 
 function hideSidebar() {
@@ -877,21 +904,17 @@ function applyFindPanel() {
 }
 
 // window controls
-function toggleMaximizeWindow() {
-  ipcRenderer.send('request-toggle-maximize-window');
+function maximizeWindow() {
+  ipcRenderer.send('request-maximize-window');
 }
-
-// function maximizeWindow() {
-//   ipcRenderer.send('request-maximize-window');
-// }
 
 function minimizeWindow() {
   ipcRenderer.send('request-minimize-window');
 }
 
-// function restoreWindow() {
-//   ipcRenderer.send('request-unmaximize-window');
-// }
+function restoreWindow() {
+  ipcRenderer.send('request-unmaximize-window');
+}
 
 function closeWindow() {
   ipcRenderer.send('request-quit-app');
@@ -979,16 +1002,19 @@ function focusSearch() {
 }
 
 function updateBookmarksBar() {
-  try {
-    document.getElementById('bookmarks-bar').innerHTML = "";
-    var jsonstr = fs.readFileSync(ppath + "\\json\\bookmarks.json");
-    var arr = JSON.parse(jsonstr);
-    var i;
-    for (i = 0; i < arr.length; i++) {
-      addToBookmarksBar(arr[i].index, arr[i].name, arr[i].url);
+  var bbar = document.getElementById('bookmarks-bar');
+  if(bbar.style.display != "none") {
+    try {
+      bbar.innerHTML = "";
+      var jsonstr = fs.readFileSync(ppath + "\\json\\bookmarks.json");
+      var arr = JSON.parse(jsonstr);
+      var i;
+      for (i = 0; i < arr.length; i++) {
+        addToBookmarksBar(arr[i].index, arr[i].name, arr[i].url);
+      }
+    } catch (e) {
+  
     }
-  } catch (e) {
-
   }
 }
 
@@ -1042,8 +1068,18 @@ function addToBookmarksBar(index, name, url) {
 .####.##.........######.....##.....##.########.##....##.########..########.##.....##.########.##.....##
 */
 
-ipcRenderer.on('action-add-history-item', (event, arg) => {
-  document.getElementById('sidebar-webview').send('action-add-history-item', arg);
+ipcRenderer.on('action-maximize-window', (event, arg) => {
+  document.getElementById('max-btn').style.display = "none";
+  document.getElementById('restore-btn').style.display = "";
+});
+
+ipcRenderer.on('action-unmaximize-window', (event, arg) => {
+  document.getElementById('max-btn').style.display = "";
+  document.getElementById('restore-btn').style.display = "none";
+});
+
+ipcRenderer.on('action-set-bookmarks-bar', (event, arg) => {
+  applyBookmarksBar(arg);
 });
 
 ipcRenderer.on('action-copy-text', (event, arg) => {
@@ -1061,10 +1097,6 @@ ipcRenderer.on('action-update-bookmarks-bar', (event, arg) => {
 
 ipcRenderer.on('action-open-history', (event, arg) => {
   goToHistoryTab();
-});
-
-ipcRenderer.on('action-add-history-item', (event, arg) => {
-  document.getElementById('sidebar-webview').send('action-add-history-item', arg);
 });
 
 // tab menu
@@ -1308,17 +1340,6 @@ ipcRenderer.on('action-set-start-page', (event, arg) => {
   tabGroup.options.newTab.src = arg;
   // console.log(tabGroup);
 });
-ipcRenderer.on('action-set-bookmarks-bar', (event, arg) => {
-  if(arg == 1) {
-    document.getElementById('bookmarks-bar').style.display = "";
-    document.body.classList.add('bookmarks-bar');
-
-    updateBookmarksBar();
-  } else {
-    document.getElementById('bookmarks-bar').style.display = "none";
-    document.body.classList.remove('bookmarks-bar');
-  }
-});
 
 // history
 ipcRenderer.on('action-add-history-item', (event, arg) => {
@@ -1370,10 +1391,10 @@ ipcRenderer.on('action-set-download-process', (event, arg) => {
 function init() {
   loadTheme();
   loadBorderRadius();
+  loadBookmarksBar();
 };
 
-document.onload = init();
-
+document.onreadystatechange = init;
 /*
 .########.##.....##.########....########.##....##.########.
 ....##....##.....##.##..........##.......###...##.##.....##

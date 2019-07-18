@@ -8,12 +8,12 @@
 .##.....##.##.....##.####.##....##
 */
 
-const { ipcMain, app, Menu, MenuItem, BrowserWindow, dialog } = require('electron');
+const { ipcMain, app, Menu, MenuItem, BrowserWindow, dialog, systemPreferences } = require('electron');
 const { autoUpdater } = require("electron-updater")
 const os = require('os');
-const path = require('path');
+const prependFile = require('prepend-file');
 const fs = require("fs");
-const ppath = require('persist-path')('Arrow Browser');
+const ppath = require('persist-path')('Ferny');
 
 app.on('window-all-closed', function() {
   if (process.platform != 'darwin') {
@@ -114,13 +114,15 @@ const sideMenu = Menu.buildFromTemplate([
    { label: 'Check for updates', icon: app.getAppPath() + '\\imgs\\icons16\\reload.png', accelerator: 'CmdOrCtrl+Shift+U', click: () => { checkForUpdates(); } },
    { type: 'separator' },
    { label: 'About', icon: app.getAppPath() + '\\imgs\\icons16\\about.png', accelerator: 'CmdOrCtrl+Shift+A', click: () => { mainWindow.webContents.send('action-app-about'); } },
-   { label: 'Report an issue', accelerator: 'CmdOrCtrl+Shift+I', click: () => {  }, enabled: false }
+   { label: 'Report an issue', icon: app.getAppPath() + '\\imgs\\icons16\\bug.png', accelerator: 'CmdOrCtrl+Shift+I', click: () => { mainWindow.webContents.send('action-open-url-in-new-tab', 'https://github.com/ModuleArt/ferny/issues'); } }
  ]},
  { label: 'More', icon: app.getAppPath() + '\\imgs\\icons16\\more.png', submenu: [
-   { label: 'Focus address bar', icon: app.getAppPath() + '\\imgs\\icons16\\zoom.png', accelerator: 'CmdOrCtrl+Shift+F', click: () => { mainWindow.webContents.send('action-page-focussearch'); } },
-   { label: 'Close active panel', icon: app.getAppPath() + '\\imgs\\icons16\\close.png', accelerator: 'Esc', click: () => { mainWindow.webContents.send('action-esc'); } },
-   // { type: 'separator' },
-   // { label: 'Task manager', accelerator: 'Shift+Esc', click: () => {  }, enabled: false },
+  { label: 'Show welcome window', icon: app.getAppPath() + '\\imgs\\icons16\\startup.png', accelerator: 'CmdOrCtrl+Shift+W', click: () => { showWelcomeWindow(); } },
+  { type: 'separator' }, 
+  { label: 'Developer mode (Danger)', icon: app.getAppPath() + '\\imgs\\icons16\\developer.png', accelerator: 'CmdOrCtrl+Shift+F12', click: () => { mainWindow.webContents.openDevTools(); } },
+  { type: 'separator' },
+  { label: 'Focus address bar', icon: app.getAppPath() + '\\imgs\\icons16\\zoom.png', accelerator: 'F6', click: () => { mainWindow.webContents.send('action-page-focussearch'); } },
+  { label: 'Close active panel', icon: app.getAppPath() + '\\imgs\\icons16\\close.png', accelerator: 'Esc', click: () => { mainWindow.webContents.send('action-esc'); } }
  ] },
  { type: 'separator' },
  { label: 'Exit', icon: app.getAppPath() + '\\imgs\\icons16\\exit.png', accelerator: 'CmdOrCtrl+Shift+E', click: () => { app.quit(); } }
@@ -148,13 +150,8 @@ var welcomeWindow = null;
 var keyBindsWindow = null;
 var pageInfoWindow = null;
 
-// var themeColor = "rgb(255, 255, 255)";
-// var borderRadius = '4';
-
 var downloadsArray = [];
 var curDownloadNum = 0;
-
-var bookmarksBarOn = 0;
 
 var startPage = "https://duckduckgo.com/";
 var searchEngine = "duckduckgo";
@@ -194,6 +191,8 @@ app.on('ready', function() {
     mainWindow.webContents.send('action-quest', { text: "Update is downloaded!", ops: [{ text:'Install now', icon:'check', click:'installUpdate();' }] });
   });
   autoUpdater.on('download-progress', (progress, bytesPerSecond, percent, total, transferred) => {
+    console.log(progress);
+    console.log(percent);
     mainWindow.webContents.send('action-update-loader', { percent: percent, id: 'update-0' });
   });
 
@@ -208,7 +207,7 @@ app.on('ready', function() {
 */
 
   mainWindow = new BrowserWindow({
-    width: 1000, height: 640,
+    width: 1280, height: 720,
     minWidth: 480, minHeight: 240,
     frame: false,
     show: false,
@@ -238,6 +237,12 @@ app.on('ready', function() {
   });
   mainWindow.on('blur', () => {
     mainWindow.webContents.send('action-blur-window');
+  });
+  mainWindow.on('maximize', () => {
+    mainWindow.webContents.send('action-maximize-window');
+  });
+  mainWindow.on('unmaximize', () => {
+    mainWindow.webContents.send('action-unmaximize-window');
   });
   // mainWindow.once('ready-to-show', () => {
     // loadAllData();
@@ -448,6 +453,9 @@ ipcMain.on('request-bookmark-contextmenu', (event, arg) => {
     { label: 'Open in new tab', icon: app.getAppPath() + '\\imgs\\icons16\\tab.png', click: () => { mainWindow.webContents.send('action-open-url-in-new-tab', arg.url); } },
     { label: 'Copy URL', icon: app.getAppPath() + '\\imgs\\icons16\\copy.png', click: () => { mainWindow.webContents.send('action-copy-text', arg.url); } },
     { type: "separator" },
+    { label: 'Edit', icon: app.getAppPath() + '\\imgs\\icons16\\edit.png', click: () => { mainWindow.webContents.send('action-edit-bookmark', arg.url); }, enabled: false },
+    { label: 'Delete', icon: app.getAppPath() + '\\imgs\\icons16\\delete.png', click: () => { mainWindow.webContents.send('action-delete-bookmark', arg.url); }, enabled: false },
+    { type: "separator" },
     { label: 'Bookmark manager', accelerator: 'CmdOrCtrl+B', icon: app.getAppPath() + '\\imgs\\icons16\\bookmarks.png', click: () => { mainWindow.webContents.send('action-open-bookmarks',); } }
   ]);
   bookmarkMenu.popup(mainWindow);
@@ -458,9 +466,11 @@ ipcMain.on('request-update-bookmarks-bar', (event, arg) => {
 });
 
 ipcMain.on('request-set-bookmarks-bar', (event, arg) => {
-  bookmarksBarOn = arg;
   mainWindow.webContents.send('action-set-bookmarks-bar', arg);
-  saveBookmarksBar();
+  if(!fs.existsSync(ppath + "\\json")) {
+    fs.mkdirSync(ppath + "\\json");
+  } 
+  fs.writeFileSync(ppath + "\\json\\bookmarksbar.json", arg);
 });
 
 ipcMain.on('request-show-certificate-info', (event, arg) => {
@@ -474,7 +484,7 @@ ipcMain.on('request-add-history-item', (event, arg) => {
   };
 
   try {
-    fs.appendFile(ppath + "\\json\\history.json", JSON.stringify(Data) + "\n", function (err) {
+    prependFile(ppath + "\\json\\history.json", JSON.stringify(Data) + "\n", function (err) {
       if (err) throw err;
     });
   } catch (error) {
@@ -482,7 +492,7 @@ ipcMain.on('request-add-history-item', (event, arg) => {
       fs.mkdirSync(ppath + "\\json");
     } 
     fs.writeFileSync(ppath + "\\json\\history.json", "");
-    fs.appendFile(ppath + "\\json\\history.json", JSON.stringify(Data), function (err) {
+    fs.appendFileSync(ppath + "\\json\\history.json", JSON.stringify(Data), function (err) {
       if (err) throw err;
     });
   }
@@ -634,25 +644,15 @@ ipcMain.on('request-minimize-window', (event, arg) => {
   mainWindow.minimize();
 });
 
-ipcMain.on('request-toggle-maximize-window', (event, arg) => {
-  if(mainWindow.isMaximized()) {
-    mainWindow.unmaximize();
-  } else {
-    mainWindow.maximize();
-  }
+ipcMain.on('request-maximize-window', (event, arg) => {
+  mainWindow.maximize();
 });
 
-// ipcMain.on('request-maximize-window', (event, arg) => {
-//   mainWindow.maximize();
-// });
-
-// ipcMain.on('request-unmaximize-window', (event, arg) => {
-//   mainWindow.unmaximize();
-// });
+ipcMain.on('request-unmaximize-window', (event, arg) => {
+  mainWindow.unmaximize();
+});
 
 ipcMain.on('request-change-theme', (event, arg) => {
-  // themeColor = arg;
-  // saveTheme();
   mainWindow.webContents.send('action-change-theme', arg);
 
   if(!fs.existsSync(ppath + "\\json")) {
@@ -663,8 +663,6 @@ ipcMain.on('request-change-theme', (event, arg) => {
 });
 
 ipcMain.on('request-change-border-radius', (event, arg) => {
-  // borderRadius = arg;
-  // saveBorderRadius();
   mainWindow.webContents.send('action-change-border-radius', arg);
 
   if(!fs.existsSync(ppath + "\\json")) {
@@ -833,10 +831,7 @@ function showPageInfoWindow(certificate) {
 
 function saveAllData() {
   saveDownloads();
-  // saveTheme();
-  // saveBorderRadius();
   saveStartPage();
-  saveBookmarksBar();
 }
 
 function saveDownloads() {
@@ -893,15 +888,6 @@ function saveBounds() {
   fs.writeFileSync(ppath + "\\json\\bounds.json", JSON.stringify(Data));
 }
 
-function saveBookmarksBar() {
-  if(!fs.existsSync(ppath + "\\json")) {
-    fs.mkdirSync(ppath + "\\json");
-  } 
-  
-  fs.writeFileSync(ppath + "\\json\\bookmarksbar.json", bookmarksBarOn);
-  console.log("saved BOOKMARKSBAR: " + bookmarksBarOn);
-}
-
 /*
 .########.....###....########....###.......##........#######.....###....########.
 .##.....##...##.##......##......##.##......##.......##.....##...##.##...##.....##
@@ -916,24 +902,12 @@ function loadAllData() {
   if(fs.existsSync(ppath + "\\json")) {
     loadWelcome();
     loadBounds();
-    // loadTheme();
-    // loadBorderRadius();
     loadStartPage();
-    loadBookmarksBar();
     loadSearchEngine();
     loadDownloads();
   } else {
     fs.mkdirSync(ppath + "\\json");
     saveAllData();
-  }
-}
-
-function loadBookmarksBar() {
-  try {
-    bookmarksBarOn = fs.readFileSync(ppath + "\\json\\bookmarksbar.json");
-    mainWindow.webContents.send('action-set-bookmarks-bar', bookmarksBarOn);
-  } catch (e) {
-    saveBookmarksBar();
   }
 }
 

@@ -25,13 +25,22 @@
                 <div class="dot" onclick="chooseSlide(2)"></div>
                 <div class="dot" onclick="chooseSlide(3)"></div>
             </div>
-            <label id="skip-btn" class="link" onclick="chooseSlide(3)">Skip</label>
+            <div id="developer-btn" class="nav-btn" onclick="openDeveloperPage()" title="Developer page">
+                <img src="../imgs/module24.png">
+                <label>Module Art</label>
+            </div>
+            <div id="skip-btn" class="nav-btn" onclick="chooseSlide(3)" title="Skip welcome screen">
+                <img name="skip" class="theme-icon">
+                <label>Skip</label>
+            </div>
+            <!-- <label id="skip-btn" class="link" onclick="chooseSlide(3)">Skip</label> -->
         
             <div class="tab active">
                 <label class="subtitle">Welcome to</label>
                 <div class="container">
-                    <img class="about-icon" src="../imgs/icon128.png" onclick="openAppPage()" title="App page">
-                    <label class="subtitle">ArrowBrowser</label><br>
+                    <img class="about-icon" src="../imgs/icon128.png" onclick="openAppPage()" title="App page"><br>
+                    <label class="subtitle">Ferny</label><br>
+                    <label>Web Browser</label><br>
                     <label id="version"></label>
                 </div>
             </div>
@@ -80,11 +89,11 @@
                     </div>
                     <div class="block-container">
                         <div class="nav-btn" onclick="requestSearchEngine('google')">
-                            <img class="theme-icon" name="google">
+                            <img src='../imgs/engines/google.png'>
                             <label>Google</label>
                         </div>
                         <div class="nav-btn" onclick="requestSearchEngine('duckduckgo')">
-                            <img class="theme-icon" name="duckduckgo">
+                            <img src='../imgs/engines/duckduckgo.png'>
                             <label>DuckDuckGo</label>
                         </div>
                         <label class="link" onclick="moreSettings()" title="More settings">More</label>
