@@ -5,6 +5,7 @@
 <h3 align="center">Web Browser</h3>
 
 <p align="center">
-  ArrowBrowser is a privacy-focused cross-platform chromium-based web browser with a greatfull user experience, built on top of Electron. 
+  Ferny is a privacy-focused, <strike>cross-platform</strike>, chromium-based web browser<br>
+  with a greatfull user experience, built on top of Electron, JS and styled-components.<br>
   It aims to be fast, private, beautiful and functional.
 </p>
