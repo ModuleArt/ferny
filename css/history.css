@@ -81,17 +81,6 @@
 .##.....##.##....##.####.##.....##.##.....##....##....####..#######..##....##..######.
 */
 
-@keyframes anim-slide {
-  from {
-    opacity: 0;
-    transform: translateX(64px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
 @keyframes anim-show {
   from {
     opacity: 0;
@@ -123,12 +112,36 @@ label {
   color: var(--color-top);
 }
 
+/*
+.########.####.########.##.......########
+....##.....##.....##....##.......##......
+....##.....##.....##....##.......##......
+....##.....##.....##....##.......######..
+....##.....##.....##....##.......##......
+....##.....##.....##....##.......##......
+....##....####....##....########.########
+*/
+
 label.subtitle {
   font-size: 24px;
+  display: inline-block;
+  margin: 8px 16px;
 }
 
-label.title {
-  font-size: 48px;
+.title-btn {
+  padding: 4px;
+  border-radius: var(--px-radius);
+  float: right;
+  margin: 8px;
+  margin-left: 4px;
+}
+
+.title-btn:hover, .title-btn.active {
+  background-color: var(--color-over);
+}
+
+.title-btn:active {
+  opacity: 0.5;
 }
 
 /*
@@ -151,10 +164,14 @@ hr {
   border-radius: var(--px-radius);
   padding: 2px;
   margin: 2px;
+  text-align: center;
+  animation: anim-show;
+  animation-duration: 0.25s;
 }
 
 .block-title {
   margin-top: 32px;
+  text-align: center;
 }
 
 .block-title label {
@@ -238,13 +255,13 @@ input:hover, input:focus {
   padding: 8px;
   margin: 2px;
   border-radius: var(--px-radius);
+  text-align: center;
 }
 
 .history-item {
   margin: 4px 2px;
   background-color: var(--color-over);
   border-radius: 0 var(--px-radius) var(--px-radius) 0;
-  text-align: left;
   padding: 6px;
   position: relative;
   color: var(--color-top);
@@ -268,7 +285,6 @@ input:hover, input:focus {
 .history-icon {
   width: 16px;
   height: 16px;
-  /* filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.5)); */
   vertical-align: middle;
   margin: 2px;
 }

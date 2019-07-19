@@ -401,6 +401,7 @@
   width: 100%;
   height: 100%;
   color: var(--color-top);
+  transition: background-color 0.25s;
 }
 
 #window-controls .button:hover {

@@ -119,10 +119,10 @@ function clearHistory() {
     fs.writeFileSync(ppath + "\\json\\history.json", "");
     var container = document.getElementById('history');
     if(container.innerHTML == "") {
-      notif('History is already empty!', 'info');
+      notif('History is already empty', 'info');
     } else {
       container.innerHTML = "";
-      notif('History cleared!', 'success');
+      notif('History cleared', 'success');
     }
   } catch (error) {
     notif('Error: ' + error, 'error')
@@ -258,6 +258,57 @@ function numberToMonth(number) {
 }
 
 /*
+..######..########....###....########...######..##.....##
+.##....##.##.........##.##...##.....##.##....##.##.....##
+.##.......##........##...##..##.....##.##.......##.....##
+..######..######...##.....##.########..##.......#########
+.......##.##.......#########.##...##...##.......##.....##
+.##....##.##.......##.....##.##....##..##....##.##.....##
+..######..########.##.....##.##.....##..######..##.....##
+*/
+
+function closeSearchPanel() {
+  cancelSearch();
+  document.getElementById('search-panel').style.display = "none";
+  document.getElementById('search-btn').classList.remove('active');
+}
+
+function showSearchPanel() {
+  document.getElementById('search-panel').style.display = "";
+  document.getElementById('search-btn').classList.add('active');
+  document.getElementById('search').select();
+}
+
+function searchKeyUp() {
+  if(document.getElementById("search").value.length > 0) {
+    var search = document.getElementById("search").value.toLowerCase();
+    var elements = document.getElementsByClassName('history-item');
+    for(var i = 0; i < elements.length; i++) {
+      var name = elements[i].getElementsByClassName('history-name')[0].innerHTML.toLowerCase();
+      var url = elements[i].getElementsByClassName('history-url')[0].innerHTML.toLowerCase();
+      var date = elements[i].getElementsByClassName('history-date')[0].innerHTML.toLowerCase();
+      var time = elements[i].getElementsByClassName('history-time')[0].innerHTML.toLowerCase();
+      var text = name + " " + url + " " + date + " " + time;
+      if(text.indexOf(search) != -1) {
+        elements[i].style.display = "";
+      } else {
+        elements[i].style.display = "none";
+      }
+    }
+  } else {
+    var elements = document.getElementsByClassName('history-item');
+    for(var i = 0; i < elements.length; i++) {
+      elements[i].style.display = "";
+    }
+  }
+}
+
+function cancelSearch() {
+  document.getElementById('search').value = "";
+  searchKeyUp();
+}
+
+/*
 .####.########...######.....########..########.##....##.########..########.########..########.########.
 ..##..##.....##.##....##....##.....##.##.......###...##.##.....##.##.......##.....##.##.......##.....##
 ..##..##.....##.##..........##.....##.##.......####..##.##.....##.##.......##.....##.##.......##.....##
@@ -293,33 +344,13 @@ function init() {
   loadTheme();
   loadBorderRadius();
   loadHistory();
-
-  document.getElementById("search").addEventListener("keyup", function(event) {
-    if(document.getElementById("search").value.length > 0) {
-      var search = document.getElementById("search").value.toLowerCase();
-      var elements = document.getElementsByClassName('history-item');
-      for(var i = 0; i < elements.length; i++) {
-        var name = elements[i].getElementsByClassName('history-name')[0].innerHTML.toLowerCase();
-        var url = elements[i].getElementsByClassName('history-url')[0].innerHTML.toLowerCase();
-        var date = elements[i].getElementsByClassName('history-date')[0].innerHTML.toLowerCase();
-        var time = elements[i].getElementsByClassName('history-time')[0].innerHTML.toLowerCase();
-        var text = name + " " + url + " " + date + " " + time;
-        if(text.indexOf(search) != -1) {
-          elements[i].style.display = "";
-        } else {
-          elements[i].style.display = "none";
-        }
-      }
-    } else {
-      var elements = document.getElementsByClassName('history-item');
-      for(var i = 0; i < elements.length; i++) {
-        elements[i].style.display = "";
-      }
-    }
-  });
 }
 
-document.onreadystatechange = init;
+document.onreadystatechange = () => {
+  if (document.readyState == "complete") {
+      init();
+  }
+}
 
 /*
 .########.##.....##.########....########.##....##.########.

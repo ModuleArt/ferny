@@ -163,7 +163,11 @@ function init() {
   loadBorderRadius();
 }
 
-document.onreadystatechange = init;
+document.onreadystatechange = () => {
+  if (document.readyState == "complete") {
+      init();
+  }
+}
 
 /*
 .########.##.....##.########....########.##....##.########.

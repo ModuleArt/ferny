@@ -7,80 +7,80 @@
     <link rel="stylesheet" href="../css/about.css">
   </head>
   <body>
-    <center>
-      <label class="subtitle">About</label>
-      <div class="block-title">
-        <img name="info" class="theme-icon">
-        <label>Information</label>
-      </div>
-      <div class="container">
-        <img class="about-icon" src="../imgs/icon128.png" onclick="openAppPage()" title="App page"><br>
-        <label class="subtitle">Ferny</label><br>
-        <label>Web Browser</label><br>
-        <label id="about-app"></label>
-      </div>
+    <label class="subtitle">About</label>
       
-      <div class="block-title">
-        <img name="actions" class="theme-icon">
-        <label>Actions</label>
+    <div class="block-title">
+      <img name="info" class="theme-icon">
+      <label>Information</label>
+    </div>
+    <div class="container">
+      <img class="about-icon" src="../imgs/icon128.png" onclick="openAppPage()" title="App page"><br>
+      <label class="subtitle">Ferny</label><br>
+      <label>Web Browser</label><br>
+      <label id="about-app"></label>
+    </div>
+    
+    <div class="block-title">
+      <img name="actions" class="theme-icon">
+      <label>Actions</label>
+    </div>
+    <div class="container">
+      <div class="nav-btn" onclick="checkForUpdates()" title="Check for new version">
+        <img class="nav-btn-icon theme-icon" name="check-updates">
+        <label class="nav-btn-label">Check for updates</label>
       </div>
-      <div class="container">
-        <div class="nav-btn" onclick="checkForUpdates()" title="Check for new version">
-          <img class="nav-btn-icon theme-icon" name="check-updates">
-          <label class="nav-btn-label">Check for updates</label>
-        </div>
-        <div class="nav-btn" onclick="openReleasesPage()" title="GitHub page">
-          <img class="nav-btn-icon theme-icon" name="download">
-          <label class="nav-btn-label">Releases</label>
-        </div>
-        <div class="nav-btn" onclick="openSourcePage()" title="GitHub page">
-          <img class="nav-btn-icon theme-icon" name="code">
-          <label class="nav-btn-label">Source code</label>
-        </div>
-        <div class="nav-btn" onclick="openPlannerPage()" title="Trello page">
-          <img class="nav-btn-icon theme-icon" name="planner">
-          <label class="nav-btn-label">Planner</label>
-        </div>
-        <div class="nav-btn" onclick="openIssuesPage()" title="GitHub page">
-          <img class="nav-btn-icon theme-icon" name="bug">
-          <label class="nav-btn-label">Report an issue</label>
-        </div>
+      <div class="nav-btn" onclick="openReleasesPage()" title="GitHub page">
+        <img class="nav-btn-icon theme-icon" name="download">
+        <label class="nav-btn-label">Releases</label>
       </div>
-      
-      <div class="block-title">
-        <img name="code" class="theme-icon">
-        <label>Created by</label>
+      <div class="nav-btn" onclick="openSourcePage()" title="GitHub page">
+        <img class="nav-btn-icon theme-icon" name="code">
+        <label class="nav-btn-label">Source code</label>
       </div>
-      <div class="container">
-        <div class="nav-btn" onclick="openDeveloperPage()" title="Developer page">
-          <img src="../imgs/module24.png">
-          <label class="nav-btn-label">Module Art</label>
-        </div>
-        <div class="nav-btn" onclick="openDonatePage()" title="Patreon page">
-            <img class="nav-btn-icon theme-icon" name="donate">
-            <label class="nav-btn-label">Donate</label>
-          </div>
+      <div class="nav-btn" onclick="openPlannerPage()" title="Trello page">
+        <img class="nav-btn-icon theme-icon" name="planner">
+        <label class="nav-btn-label">Planner</label>
       </div>
-      
-      <div class="block-title">
-        <img name="library" class="theme-icon">
-        <label>Libraries</label>
+      <div class="nav-btn" onclick="openIssuesPage()" title="GitHub page">
+        <img class="nav-btn-icon theme-icon" name="bug">
+        <label class="nav-btn-label">Report an issue</label>
       </div>
-      <div class="container">
-        <div class="nav-btn" onclick="openElectronPage()" title="Electron stable releases">
-          <img class="theme-icon" name="atom">
-          <label id="about-electron"></label>
-        </div>
-        <div class="nav-btn" onclick="openChromePage()" title="Chrome releases">
-          <img class="theme-icon" name="chrome">
-          <label id="about-chrome"></label>
-        </div>
-        <div class="nav-btn" onclick="openNodePage()" title="Node previous releases">
-          <img class="theme-icon" name="node">
-          <label id="about-node">
-        </div>
+    </div>
+    
+    <div class="block-title">
+      <img name="code" class="theme-icon">
+      <label>Created by</label>
+    </div>
+    <div class="container">
+      <div class="nav-btn" onclick="openDeveloperPage()" title="Developer page">
+        <img src="../imgs/module24.png">
+        <label class="nav-btn-label">Module Art</label>
       </div>
-    </center>
+      <div class="nav-btn" onclick="openDonatePage()" title="Patreon page">
+          <img class="nav-btn-icon theme-icon" name="donate">
+          <label class="nav-btn-label">Donate</label>
+        </div>
+    </div>
+    
+    <div class="block-title">
+      <img name="library" class="theme-icon">
+      <label>Libraries</label>
+    </div>
+    <div class="container">
+      <div class="nav-btn" onclick="openElectronPage()" title="Electron stable releases">
+        <img class="theme-icon" name="atom">
+        <label id="about-electron"></label>
+      </div>
+      <div class="nav-btn" onclick="openChromePage()" title="Chrome releases">
+        <img class="theme-icon" name="chrome">
+        <label id="about-chrome"></label>
+      </div>
+      <div class="nav-btn" onclick="openNodePage()" title="Node previous releases">
+        <img class="theme-icon" name="node">
+        <label id="about-node">
+      </div>
+    </div>
+    
     <script type="text/javascript" src="../js/about.js"></script>
   </body>
 </html>

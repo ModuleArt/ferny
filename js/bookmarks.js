@@ -11,9 +11,31 @@
 const { ipcRenderer } = require('electron');
 const dragula = require("dragula");
 const ppath = require('persist-path')('Ferny');
-const drag = dragula([document.getElementById('bookmarks')], { direction: "horizontal" });
 const fs = require("fs");
 const getAvColor = require('color.js');
+
+const folderDrag = dragula([document.getElementById('folders')], {
+  moves: function(el, container, handle) {
+    return handle.classList.contains('name');
+  },
+  direction: "vertical"
+});
+folderDrag.on('drop', function(el, target, source, sibling) {
+  saveFolders();
+});
+
+const bookmarkDrag = dragula([document.getElementById('all-bookmarks')], {
+  moves: function(el, container, handle) {
+    return !handle.classList.contains('bookmark-options') && !handle.classList.contains('bookmark-menu') && !handle.classList.contains('bookmark-menu-btn');
+  },
+  direction: "mixed"
+});
+bookmarkDrag.on('drag', function(el, target, source, sibling) {
+  el.getElementsByClassName('bookmark-menu')[0].classList.remove('active');
+});
+bookmarkDrag.on('drop', function(el, target, source, sibling) {
+  saveBookmarks();
+});
 
 /*
 .########.##.....##.##....##..######..########.####..#######..##....##..######.
@@ -106,56 +128,91 @@ function loadBorderRadius() {
   }
 }
 
-/*
+function closeAllEditors() {
+  cancelSearch();
 
-#           #               #
-### ### ### # # ###  ## ### # #  ##
-# # # # # # ##  ### # # #   ##   #
-### ### ### # # # # ### #   # # ##
+  document.getElementById('bookmark-editor').style.display = "none";
+  document.getElementById('folder-editor').style.display = "none";
+  document.getElementById('bookmark-creator').style.display = "none";
+  document.getElementById('folder-creator').style.display = "none";
+  document.getElementById('search-panel').style.display = "none";
+
+  document.getElementById('search-btn').classList.remove('active');
+  document.getElementById('new-bookmark-btn').classList.remove('active');
+  document.getElementById('new-folder-btn').classList.remove('active');
+}
+
+function notif(text, type) {
+  let Data = {
+    text: text,
+    type: type
+  };
+  ipcRenderer.send('request-notif', Data)
+}
+
+function scrollToTop() {
+  document.body.scrollIntoView({
+	  	behavior: 'smooth'
+	});
+}
+
+/*
+..######..########....###....########...######..##.....##
+.##....##.##.........##.##...##.....##.##....##.##.....##
+.##.......##........##...##..##.....##.##.......##.....##
+..######..######...##.....##.########..##.......#########
+.......##.##.......#########.##...##...##.......##.....##
+.##....##.##.......##.....##.##....##..##....##.##.....##
+..######..########.##.....##.##.....##..######..##.....##
 */
 
-function closeBookmarkEditor() {
-  document.getElementById('edit-bookmark').style.display = "none";
+function showSearchPanel() {
+  closeAllEditors();
+
+  document.getElementById('search-panel').style.display = "";
+  document.getElementById('search-btn').classList.add('active');
+  document.getElementById('search').select();
 }
-function loadBookmarks() {
-  try {
-    document.getElementById('bookmarks').innerHTML = "";
-    var jsonstr = fs.readFileSync(ppath + "\\json\\bookmarks.json");
-    var arr = JSON.parse(jsonstr);
-    var i;
-    for (i = 0; i < arr.length; i++) {
-      let Data = {
-        index: arr[i].index,
-        url: arr[i].url,
-        name: arr[i].name
-      };
-      createBookmark(arr[i].name, arr[i].url);
+
+function searchKeyUp() {
+  if(document.getElementById("search").value.length > 0) {
+    var search = document.getElementById("search").value.toLowerCase();
+    var elements = document.getElementsByClassName('bookmark');
+    for(var i = 0; i < elements.length; i++) {
+      var text = elements[i].getElementsByTagName('label')[0].innerHTML.toLowerCase() + " " + elements[i].title.toLowerCase();
+      if(text.indexOf(search) != -1) {
+        elements[i].style.display = "inline-block";
+      } else {
+        elements[i].style.display = "none";
+      }
     }
-  } catch (e) {
-
+  } else {
+    var elements = document.getElementsByClassName('bookmark');
+    for(var i = 0; i < elements.length; i++) {
+      elements[i].style.display = "inline-block";
+    }
   }
 }
-function removeBookmark(deleteBtn) {
-  document.getElementById('bookmarks').removeChild(deleteBtn.parentNode.parentNode);
-  saveBookmarks();
-}
-function editBookmark(editBtn) {
-  document.getElementById('edit-bookmark').style.display = "";
 
-  document.getElementById('bookmark-name').value = editBtn.parentNode.parentNode.getElementsByTagName('label')[0].innerHTML;
-  document.getElementById('bookmark-url').value = editBtn.parentNode.parentNode.title;
-
-  document.getElementById('save-btn').onclick = function() {
-    editBtn.parentNode.parentNode.getElementsByTagName('label')[0].innerHTML = document.getElementById('bookmark-name').value;
-    editBtn.parentNode.parentNode.title = document.getElementById('bookmark-url').value;
-    editBtn.parentNode.parentNode.getElementsByTagName('img')[0].src = 'http://www.google.com/s2/favicons?domain=' + document.getElementById('bookmark-url').value;;
-    closeBookmarkEditor();
-    saveBookmarks();
-  }
+function cancelSearch() {
+  document.getElementById('search').value = "";
+  searchKeyUp();
 }
+
+/*
+.########...#######...#######..##....##.##.....##....###....########..##....##..######.
+.##.....##.##.....##.##.....##.##...##..###...###...##.##...##.....##.##...##..##....##
+.##.....##.##.....##.##.....##.##..##...####.####..##...##..##.....##.##..##...##......
+.########..##.....##.##.....##.#####....##.###.##.##.....##.########..#####.....######.
+.##.....##.##.....##.##.....##.##..##...##.....##.#########.##...##...##..##.........##
+.##.....##.##.....##.##.....##.##...##..##.....##.##.....##.##....##..##...##..##....##
+.########...#######...#######..##....##.##.....##.##.....##.##.....##.##....##..######.
+*/
+
 function openBookmarkInNewTab(inNewTabBtn) {
   ipcRenderer.send('request-open-url-in-new-tab', inNewTabBtn.parentNode.parentNode.title);
 }
+
 function copyBookmark(copyBtn) {
   var input = document.createElement('input');
   input.value = copyBtn.parentNode.parentNode.title;
@@ -164,7 +221,80 @@ function copyBookmark(copyBtn) {
   document.execCommand('copy');
   document.body.removeChild(input);
 }
-function createBookmark(name, url) {
+
+function editBookmark(bookmark) {
+  showBookmarkEditor();
+
+  document.getElementById('edit-bookmark-name').value = bookmark.getElementsByTagName('label')[0].innerHTML;
+  document.getElementById('edit-bookmark-url').value = bookmark.title;
+  document.getElementById('edit-bookmark-folder').value = bookmark.parentNode.parentNode.getElementsByTagName('label')[0].innerHTML;
+
+  document.getElementById('remove-bookmark-btn').onclick = function() {
+    removeBookmark(bookmark);
+    closeAllEditors();
+  }
+
+  document.getElementById('save-bookmark-btn').onclick = function() {
+    var bool = false;
+    var folders = document.getElementById('folders').getElementsByClassName('folder');
+    for(var i = 0; i < folders.length; i++) {
+      if(folders[i].getElementsByTagName('label')[0].innerHTML == document.getElementById('edit-bookmark-folder').value) {
+        bool = true;
+        break;
+      }
+    }
+    
+    if(bool) {
+      removeBookmark(bookmark);
+      createBookmark(document.getElementById('edit-bookmark-name').value, document.getElementById('edit-bookmark-url').value, document.getElementById('edit-bookmark-folder').value);
+      closeAllEditors();
+      saveBookmarks();
+    } else {
+      notif("There is no such folder", "error");
+    }
+  }
+}
+
+function showBookmarkEditor() {
+  closeAllEditors();
+
+  document.getElementById('bookmark-editor').style.display = "";
+  document.getElementById('edit-bookmark-name').select();
+  scrollToTop();
+}
+
+function showBookmarkCreator() {
+  closeAllEditors();
+
+  document.getElementById('bookmark-creator').style.display = "";
+  document.getElementById('new-bookmark-btn').classList.add('active');
+  document.getElementById('bookmark-name').select();
+}
+
+function newBookmark() {
+  var name = document.getElementById('bookmark-name').value;
+  var url = document.getElementById('bookmark-url').value;
+  var folder = document.getElementById('bookmark-folder').value;
+
+  var bool = false;
+  var folders = document.getElementById('folders').getElementsByClassName('folder');
+  for(var i = 0; i < folders.length; i++) {
+    if(folders[i].getElementsByTagName('label')[0].innerHTML == folder) {
+      bool = true;
+      break;
+    }
+  }
+  
+  if(bool) {
+    createBookmark(name, url, folder);
+    saveBookmarks();
+    closeAllEditors();
+  } else {
+    notif("There is no such folder", "error");
+  }
+}
+
+function appendBookmark(name, url, folderEl) {
   let div = document.createElement('a');
   div.classList.add('bookmark');
   div.title = url;
@@ -175,8 +305,6 @@ function createBookmark(name, url) {
 
   div.addEventListener('contextmenu', (e) => {
     e.preventDefault();
-
-    closeBookmarkEditor();
 
     if(div.getElementsByClassName('bookmark-menu')[0].classList.contains('active')) {
       div.getElementsByClassName('bookmark-menu')[0].classList.remove('active');
@@ -191,9 +319,9 @@ function createBookmark(name, url) {
 
   div.addEventListener('auxclick', (e) => {
     e.preventDefault();
-     if(e.which == 2) {
-       ipcRenderer.send('request-open-url-in-new-tab', div.title);
-     }
+      if(e.which == 2) {
+        ipcRenderer.send('request-open-url-in-new-tab', div.title);
+      }
   }, false);
 
   div.innerHTML = `
@@ -202,8 +330,7 @@ function createBookmark(name, url) {
     <center class="bookmark-menu">
       <img class="bookmark-menu-btn theme-icon" name="tab" title="Open in new tab" onclick="openBookmarkInNewTab(this)">
       <img class="bookmark-menu-btn theme-icon" name="copy" title="Copy URL" onclick="copyBookmark(this)">
-      <img class="bookmark-menu-btn theme-icon" name="edit" title="Edit" onclick="editBookmark(this)">
-      <img class="bookmark-menu-btn theme-icon" name="delete" title="Delete" onclick="removeBookmark(this)">
+      <img class="bookmark-menu-btn theme-icon" name="edit" title="Edit" onclick="editBookmark(this.parentNode.parentNode)">
     </center>`;
 
   div.getElementsByClassName('bookmark-menu')[0].addEventListener("click", (e) => {
@@ -222,8 +349,6 @@ function createBookmark(name, url) {
   options.onclick = function(e) {
     e.stopPropagation();
 
-    closeBookmarkEditor();
-
     if(div.getElementsByClassName('bookmark-menu')[0].classList.contains('active')) {
       div.getElementsByClassName('bookmark-menu')[0].classList.remove('active');
     } else {
@@ -238,41 +363,56 @@ function createBookmark(name, url) {
 
   div.appendChild(options);
 
-  document.getElementById('bookmarks').appendChild(div);
+  folderEl.getElementsByTagName('div')[0].appendChild(div);
 
   loadTheme();
-
-  return div.getElementsByClassName('bookmark-menu-btn')[2];
 }
 
-function newBookmark() {
-  editBookmark(createBookmark("Google", "https://google.com"));
-  loadTheme();
+function createBookmark(name, url, folder) {
+  if(folder == null || folder == "" || folder == "undefined") {
+    folder = "All bookmarks";
+  }
+  var folders = document.getElementById('folders').getElementsByClassName('folder');
+  for(var i = 0; i < folders.length; i++) {
+    var n = folders[i].getElementsByTagName('label')[0].innerHTML;
+    if(n == folder) {
+      appendBookmark(name, url, folders[i]);
+      break;
+    }
+  }
+}
+
+function removeBookmark(bookmark) {
+  bookmark.parentNode.removeChild(bookmark);
   saveBookmarks();
 }
 
-function newFolder() {
-  /*
-  .##....##.########.##......##....########..#######..##.......########..########.########.
-  .###...##.##.......##..##..##....##.......##.....##.##.......##.....##.##.......##.....##
-  .####..##.##.......##..##..##....##.......##.....##.##.......##.....##.##.......##.....##
-  .##.##.##.######...##..##..##....######...##.....##.##.......##.....##.######...########.
-  .##..####.##.......##..##..##....##.......##.....##.##.......##.....##.##.......##...##..
-  .##...###.##.......##..##..##....##.......##.....##.##.......##.....##.##.......##....##.
-  .##....##.########..###..###.....##........#######..########.########..########.##.....##
-  */
+function loadBookmarks() {
+  try {
+    var folders = document.getElementById('folders').getElementsByClassName('folder');
+    for(var i = 0; i < folders.length; i++) {
+      folders[i].getElementsByTagName('div')[0].innerHTML = "";
+    }
+    var jsonstr = fs.readFileSync(ppath + "\\json\\bookmarks.json");
+    var arr = JSON.parse(jsonstr);
+    for (var i = 0; i < arr.length; i++) {
+      createBookmark(arr[i].name, arr[i].url, arr[i].folder);
+    }
+  } catch (e) {
+
+  }
 }
 
 function saveBookmarks() {
   var bookmarksArray = [];
 
-  var bookmarks = document.getElementById('bookmarks').childNodes;
+  var bookmarks = document.getElementsByClassName('bookmark');
 
   for(var i = 0; i < bookmarks.length; i++) {
-    console.log(bookmarks[i].getElementsByTagName('label')[0].innerHTML);
     let Data = {
       url: bookmarks[i].title,
-      name: bookmarks[i].getElementsByTagName('label')[0].innerHTML
+      name: bookmarks[i].getElementsByTagName('label')[0].innerHTML,
+      folder: bookmarks[i].parentNode.parentNode.getElementsByTagName('label')[0].innerHTML
     };
     bookmarksArray.push(Data);
   }
@@ -280,6 +420,139 @@ function saveBookmarks() {
   fs.writeFileSync(ppath + "\\json\\bookmarks.json", JSON.stringify(bookmarksArray));
 
   ipcRenderer.send('request-update-bookmarks-bar');
+}
+
+/*
+.########..#######..##.......########..########.########...######.
+.##.......##.....##.##.......##.....##.##.......##.....##.##....##
+.##.......##.....##.##.......##.....##.##.......##.....##.##......
+.######...##.....##.##.......##.....##.######...########...######.
+.##.......##.....##.##.......##.....##.##.......##...##.........##
+.##.......##.....##.##.......##.....##.##.......##....##..##....##
+.##........#######..########.########..########.##.....##..######.
+*/
+
+function removeFolder(folder) {
+  folder.parentNode.removeChild(folder);
+  saveFolders();
+}
+
+function editFolder(folder) {
+  showFolderEditor();
+
+  document.getElementById('edit-folder-name').value = folder.getElementsByClassName('name')[0].innerHTML;
+
+  document.getElementById('remove-folder-btn').onclick = function() {
+    removeFolder(folder);
+    closeAllEditors();
+  }
+
+  document.getElementById('save-folder-btn').onclick = function() {
+    var bool = false;
+    var folders = document.getElementById('folders').getElementsByClassName('folder');
+    for(var i = 0; i < folders.length; i++) {
+      if(folders[i].getElementsByTagName('label')[0].innerHTML == document.getElementById('edit-folder-name').value) {
+        bool = true;
+        break;
+      }
+    }
+    
+    if(bool) {
+      notif("This folder name is already taken", "error");
+    } else {
+      folder.getElementsByClassName('name')[0].innerHTML = document.getElementById('edit-folder-name').value;
+
+
+      // removeFolder(folder);
+      // createFolder(document.getElementById('edit-folder-name').value);
+
+
+      closeAllEditors();
+      saveFolders();
+      saveBookmarks();
+    }
+  }
+}
+
+function showFolderEditor() {
+  closeAllEditors();
+
+  document.getElementById('folder-editor').style.display = "";
+  document.getElementById('edit-folder-name').select();
+  scrollToTop();
+}
+
+function showFolderCreator() {
+  closeAllEditors();
+
+  document.getElementById('folder-creator').style.display = "";
+  document.getElementById('new-folder-btn').classList.add('active');
+  document.getElementById('folder-name').select();
+}
+
+function newFolder() {
+  var name = document.getElementById('folder-name').value;
+
+  if(name == null || name == "") {
+    notif("First enter the folder name", "warning");
+  } else {
+    var bool = false;
+    var folders = document.getElementById('folders').getElementsByClassName('folder');
+    for(var i = 0; i < folders.length; i++) {
+      if(folders[i].getElementsByTagName('label')[0].innerHTML == name) {
+        bool = true;
+        break;
+      }
+    }
+    
+    if(bool) {
+      notif("This folder name is already taken", "error")
+    } else {
+      createFolder(name);
+      saveFolders();
+      closeAllEditors();
+    }
+  }
+}
+
+function createFolder(name) {
+  var folders = document.getElementById('folders');
+  
+  var div = document.createElement('div');
+  div.classList.add('folder');
+  div.innerHTML = `<label class="name">` + name + `</label><img name="edit" class="theme-icon edit-btn" title="Edit folder" onclick="editFolder(this.parentNode)"><div class="bookmarks"></div>`;
+
+  folders.appendChild(div);
+
+  bookmarkDrag.containers.push(div.getElementsByTagName('div')[0]);
+
+  loadTheme();
+}
+
+function loadFolders() {
+  try {
+    var jsonstr = fs.readFileSync(ppath + "\\json\\folders.json");
+    var arr = JSON.parse(jsonstr);
+    for (var i = 0; i < arr.length; i++) {
+      createFolder(arr[i].name);
+    }
+  } catch (e) {
+
+  }
+}
+
+function saveFolders() {
+  var folderArray = [];
+  var folders = document.getElementById('folders').getElementsByClassName('folder');
+  for(var i = 0; i < folders.length; i++) {
+    if(folders[i].getElementsByTagName('label')[0].innerHTML != "All bookmarks") {
+      let Data = {
+        name: folders[i].getElementsByTagName('label')[0].innerHTML
+      };
+      folderArray.push(Data);
+    }
+  }
+  fs.writeFileSync(ppath + "\\json\\folders.json", JSON.stringify(folderArray));
 }
 
 /*
@@ -315,42 +588,17 @@ ipcRenderer.on('action-load-border-radius', (event, arg) => {
 */
 
 function init() {
+  loadFolders();
   loadBookmarks();
   loadTheme();
   loadBorderRadius();
-
-  drag.on('drop', function(el, target, source, sibling) {
-    saveBookmarks();
-  });
-
-  document.getElementById("search").addEventListener("keyup", function(event) {
-    if(document.getElementById("search").value.length > 0) {
-      // document.getElementById('search-loading').classList.add('process');
-
-      var search = document.getElementById("search").value.toLowerCase();
-      var elements = document.getElementsByClassName('bookmark');
-      for(var i = 0; i < elements.length; i++) {
-        var text = elements[i].getElementsByTagName('label')[0].innerHTML.toLowerCase() + " " + elements[i].title.toLowerCase();
-        if(text.indexOf(search) != -1) {
-          elements[i].style.display = "inline-block";
-        } else {
-          elements[i].style.display = "none";
-        }
-      }
-
-      // document.getElementById('search-loading').classList.remove('process');
-    } else {
-      var elements = document.getElementsByClassName('bookmark');
-      for(var i = 0; i < elements.length; i++) {
-        elements[i].style.display = "inline-block";
-      }
-
-      // document.getElementById('search-loading').classList.remove('process');
-    }
-  });
 }
 
-document.onreadystatechange = init;
+document.onreadystatechange = () => {
+  if (document.readyState == "complete") {
+      init();
+  }
+}
 
 /*
 .########.##.....##.########....########.##....##.########.

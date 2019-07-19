@@ -439,6 +439,57 @@ function numberToMonth(number) {
 }
 
 /*
+..######..########....###....########...######..##.....##
+.##....##.##.........##.##...##.....##.##....##.##.....##
+.##.......##........##...##..##.....##.##.......##.....##
+..######..######...##.....##.########..##.......#########
+.......##.##.......#########.##...##...##.......##.....##
+.##....##.##.......##.....##.##....##..##....##.##.....##
+..######..########.##.....##.##.....##..######..##.....##
+*/
+
+function closeSearchPanel() {
+  cancelSearch();
+  document.getElementById('search-panel').style.display = "none";
+  document.getElementById('search-btn').classList.remove('active');
+}
+
+function showSearchPanel() {
+  document.getElementById('search-panel').style.display = "";
+  document.getElementById('search-btn').classList.add('active');
+  document.getElementById('search').select();
+}
+
+function searchKeyUp() {
+  if(document.getElementById("search").value.length > 0) {
+    var search = document.getElementById("search").value.toLowerCase();
+    var elements = document.getElementsByClassName('download');
+    for(var i = 0; i < elements.length; i++) {
+      var link = elements[i].getElementsByClassName('download-link')[0].innerHTML.toLowerCase();
+      var file = elements[i].getElementsByClassName('download-file')[0].innerHTML.toLowerCase();
+      var date = elements[i].getElementsByClassName('download-date')[0].innerHTML.toLowerCase();
+      var time = elements[i].getElementsByClassName('download-time')[0].innerHTML.toLowerCase();
+      var text = file + " " + link + " " + date + " " + time;
+      if(text.indexOf(search) != -1) {
+        elements[i].style.display = "";
+      } else {
+        elements[i].style.display = "none";
+      }
+    }
+  } else {
+    var elements = document.getElementsByClassName('download');
+    for(var i = 0; i < elements.length; i++) {
+      elements[i].style.display = "";
+    }
+  }
+}
+
+function cancelSearch() {
+  document.getElementById('search').value = "";
+  searchKeyUp();
+}
+
+/*
 .####.########...######.....########..########.##....##.########..########.########..########.########.
 ..##..##.....##.##....##....##.....##.##.......###...##.##.....##.##.......##.....##.##.......##.....##
 ..##..##.....##.##..........##.....##.##.......####..##.##.....##.##.......##.....##.##.......##.....##
@@ -492,33 +543,13 @@ function init() {
   loadDownloads();
   loadTheme();
   loadBorderRadius();
-
-  document.getElementById("search").addEventListener("keyup", function(event) {
-    if(document.getElementById("search").value.length > 0) {
-      var search = document.getElementById("search").value.toLowerCase();
-      var elements = document.getElementsByClassName('download');
-      for(var i = 0; i < elements.length; i++) {
-        var link = elements[i].getElementsByClassName('download-link')[0].innerHTML.toLowerCase();
-        var file = elements[i].getElementsByClassName('download-file')[0].innerHTML.toLowerCase();
-        var date = elements[i].getElementsByClassName('download-date')[0].innerHTML.toLowerCase();
-        var time = elements[i].getElementsByClassName('download-time')[0].innerHTML.toLowerCase();
-        var text = file + " " + link + " " + date + " " + time;
-        if(text.indexOf(search) != -1) {
-          elements[i].style.display = "";
-        } else {
-          elements[i].style.display = "none";
-        }
-      }
-    } else {
-      var elements = document.getElementsByClassName('download');
-      for(var i = 0; i < elements.length; i++) {
-        elements[i].style.display = "";
-      }
-    }
-  });
 }
 
-document.onreadystatechange = init;
+document.onreadystatechange = () => {
+  if (document.readyState == "complete") {
+      init();
+  }
+}
 
 /*
 .########.##.....##.########....########.##....##.########.

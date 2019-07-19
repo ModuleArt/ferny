@@ -50,7 +50,7 @@ if (!gotTheLock) {
 const sideMenu = Menu.buildFromTemplate([
  { label: 'Tab', icon: app.getAppPath() + '\\imgs\\icons16\\tab.png', submenu: [
    { label: 'New tab', icon: app.getAppPath() + '\\imgs\\icons16\\create.png', accelerator: 'CmdOrCtrl+T', click: () => { mainWindow.webContents.send('action-tab-newtab'); } },
-   { label: 'New private tab', accelerator: 'CmdOrCtrl+Shift+T', click: () => {  }, enabled: false },
+  //  { label: 'New private tab', accelerator: 'CmdOrCtrl+Shift+T', click: () => {  }, enabled: false },
    { type: 'separator' },
    { label: 'Back', accelerator: 'Alt+Left', icon: app.getAppPath() + '\\imgs\\icons16\\back.png', click: () => { mainWindow.webContents.send('action-tab-back'); } },
    { label: 'Forward', accelerator: 'Alt+Right', icon: app.getAppPath() + '\\imgs\\icons16\\forward.png', click: () => { mainWindow.webContents.send('action-tab-forward'); } },
@@ -99,9 +99,9 @@ const sideMenu = Menu.buildFromTemplate([
    { type: 'separator' },
    { label: 'Certificate info', icon: app.getAppPath() + '\\imgs\\icons16\\certificate.png', accelerator: 'CmdOrCtrl+I', click: () => { mainWindow.webContents.send('action-page-certificate'); } },
    { type: 'separator' },
-   { label: 'Print page', accelerator: 'CmdOrCtrl+P', click: () => {  }, enabled: false },
+  //  { label: 'Print page', accelerator: 'CmdOrCtrl+P', click: () => {  }, enabled: false },
   //  { label: 'Save page as', icon: app.getAppPath() + '\\imgs\\icons16\\save.png', accelerator: 'CmdOrCtrl+S', click: () => { mainWindow.webContents.send('action-page-saveas'); } },
-   { label: 'Create page shortcut', accelerator: 'CmdOrCtrl+Shift+S', click: () => {  }, enabled: false },
+  //  { label: 'Create page shortcut', accelerator: 'CmdOrCtrl+Shift+S', click: () => {  }, enabled: false },
    { label: 'Open file', accelerator: 'CmdOrCtrl+O', click: () => {  }, enabled: false },
    { type: 'separator' },
    { label: 'View page source', icon: app.getAppPath() + '\\imgs\\icons16\\code.png', accelerator: 'CmdOrCtrl+U', click: () => { mainWindow.webContents.send('action-page-viewsource'); } },
@@ -176,20 +176,23 @@ app.on('ready', function() {
   autoUpdater.on('checking-for-update', () => {
     mainWindow.webContents.send('action-notif', { type: "info", text: "Checking for updates..." });
   });
+
   autoUpdater.on('error', (error) => {
     mainWindow.webContents.send('action-notif', { type: "error", text: "Update error: " + error });
   });
+
   autoUpdater.on('update-not-available', () => {
     mainWindow.webContents.send('action-notif', { type: "success", text: "App is up to date!" });
   });
+
   autoUpdater.on('update-available', (info) => {
-    // mainWindow.webContents.send('action-notif', { type: "info", text: "New version " + info.version +" is available! Download started..." });
     mainWindow.webContents.send('action-loader', { text: "Downloading update: v" + info.version, id: "update-0" });
-    // mainWindow.webContents.send('action-quest', { text: "New version " + event.info.version, ops: [{ text:'Download', icon:'check', click:'downloadUpdate(); removeNotif(this.parentNode.parentNode);' }] });
   });
+
   autoUpdater.on('update-downloaded', () => {
     mainWindow.webContents.send('action-quest', { text: "Update is downloaded!", ops: [{ text:'Install now', icon:'check', click:'installUpdate();' }] });
   });
+
   autoUpdater.on('download-progress', (progress, bytesPerSecond, percent, total, transferred) => {
     console.log(progress);
     console.log(percent);
@@ -235,25 +238,19 @@ app.on('ready', function() {
   mainWindow.on('focus', () => {
     mainWindow.webContents.send('action-focus-window');
   });
+
   mainWindow.on('blur', () => {
     mainWindow.webContents.send('action-blur-window');
   });
+
   mainWindow.on('maximize', () => {
     mainWindow.webContents.send('action-maximize-window');
   });
+
   mainWindow.on('unmaximize', () => {
     mainWindow.webContents.send('action-unmaximize-window');
   });
-  // mainWindow.once('ready-to-show', () => {
-    // loadAllData();
-    // mainWindow.show();
 
-    // var data = null;
-    // if (process.platform == 'win32' && process.argv.length >= 2) {
-    //   var openFilePath = process.argv[1];
-    //   mainWindow.webContents.send('action-open-url', openFilePath);
-    // }
-  // });
   mainWindow.webContents.once('did-finish-load', () => {
     loadAllData();
     mainWindow.show();
@@ -263,12 +260,15 @@ app.on('ready', function() {
       mainWindow.webContents.send('action-open-url', openFilePath);
     }
   });
+
   mainWindow.on('maximize', () => {
     mainWindow.webContents.send('action-maximize-window');
   });
+
   mainWindow.on('unmaximize', () => {
     mainWindow.webContents.send('action-unmaximize-window');
   });
+
   mainWindow.on('close', function(event) {
     event.preventDefault();
 
@@ -551,10 +551,6 @@ ipcMain.on('request-check-for-updates', (event, arg) => {
   checkForUpdates();
 });
 
-// ipcMain.on('request-download-update', (event, arg) => {
-//   downloadUpdate();
-// });
-
 ipcMain.on('request-tabs-list', (event, arg) => {
   let m = new Menu();
   for(let i = 0; i < arg.length; i++) {
@@ -712,10 +708,6 @@ function checkForUpdates() {
   autoUpdater.checkForUpdates();
 }
 
-// function downloadUpdate() {
-//   autoUpdater.downloadUpdate();
-// }
-
 function showWelcomeWindow() {
   welcomeWindow = new BrowserWindow({
     width: 480, height: 360,
@@ -760,7 +752,6 @@ function showKeyBindsWindow() {
     parent: mainWindow,
     icon: app.getAppPath() + '\\imgs\\icon.ico',
     minimizable: false,
-    // resizable: false,
     webPreferences: {
       nodeIntegration: true
     },
@@ -794,7 +785,6 @@ function showPageInfoWindow(certificate) {
     parent: mainWindow,
     icon: app.getAppPath() + '\\imgs\\icon.ico',
     minimizable: false,
-    // resizable: false,
     webPreferences: {
       nodeIntegration: true
     },
@@ -843,16 +833,6 @@ function saveDownloads() {
   fs.writeFileSync(ppath + "\\json\\downloads.json", JSON.stringify(downloadsArray));
   console.log("saved DOWNLOADS: " + downloadsArray.length);
 }
-
-// function saveBorderRadius() {
-//   fs.writeFileSync(ppath + "\\json\\radius.json", borderRadius);
-//   console.log("saved BORDERRADIUS: " + borderRadius);
-// }
-
-// function saveTheme() {
-//   fs.writeFileSync(ppath + "\\json\\theme.json", themeColor);
-//   console.log("saved THEMECOLOR: " + themeColor);
-// }
 
 function saveStartPage() {
   if(!fs.existsSync(ppath + "\\json")) {
@@ -937,7 +917,6 @@ function loadDownloads() {
         time: arr[i].time
       };
       downloadsArray.push(Item);
-      // mainWindow.webContents.send('action-create-stopped-download', Item);
     }
   } catch(err) {
     saveDownloads();
@@ -974,26 +953,6 @@ function loadBounds() {
     saveBounds();
   }
 }
-
-// function loadTheme() {
-//   try {
-//     themeColor = fs.readFileSync(ppath + "\\json\\theme.json");
-//   } catch (e) {
-//     saveTheme();
-//   }
-
-//   mainWindow.webContents.send('action-change-theme', themeColor);
-// }
-
-// function loadBorderRadius() {
-//   try {
-//     borderRadius = fs.readFileSync(ppath + "\\json\\radius.json");
-//   } catch (e) {
-//     saveBorderRadius();
-//   }
-
-//   mainWindow.webContents.send('action-change-border-radius', borderRadius);
-// }
 
 function loadStartPage() {
   try {

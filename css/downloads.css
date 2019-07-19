@@ -81,17 +81,6 @@
 .##.....##.##....##.####.##.....##.##.....##....##....####..#######..##....##..######.
 */
 
-@keyframes anim-slide {
-  from {
-    opacity: 0;
-    transform: translateX(64px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
 @keyframes anim-show {
   from {
     opacity: 0;
@@ -125,12 +114,36 @@ label {
   color: var(--color-top);
 }
 
+/*
+.########.####.########.##.......########
+....##.....##.....##....##.......##......
+....##.....##.....##....##.......##......
+....##.....##.....##....##.......######..
+....##.....##.....##....##.......##......
+....##.....##.....##....##.......##......
+....##....####....##....########.########
+*/
+
 label.subtitle {
   font-size: 24px;
+  display: inline-block;
+  margin: 8px 16px;
 }
 
-label.title {
-  font-size: 48px;
+.title-btn {
+  padding: 4px;
+  border-radius: var(--px-radius);
+  float: right;
+  margin: 8px;
+  margin-left: 4px;
+}
+
+.title-btn:hover, .title-btn.active {
+  background-color: var(--color-over);
+}
+
+.title-btn:active {
+  opacity: 0.5;
 }
 
 /*
@@ -153,10 +166,12 @@ hr {
   border-radius: var(--px-radius);
   padding: 2px;
   margin: 2px;
+  text-align: center;
 }
 
 .block-title {
   margin-top: 32px;
+  text-align: center;
 }
 
 .block-title label {
@@ -240,6 +255,7 @@ input:hover, input:focus {
   padding: 8px;
   margin: 2px;
   border-radius: var(--px-radius);
+  text-align: center;
 }
 
 .download {

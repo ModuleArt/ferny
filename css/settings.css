@@ -81,17 +81,6 @@
 .##.....##.##....##.####.##.....##.##.....##....##....####..#######..##....##..######.
 */
 
-@keyframes anim-slide {
-  from {
-    opacity: 0;
-    transform: translateX(64px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
 @keyframes anim-show {
   from {
     opacity: 0;
@@ -125,12 +114,20 @@ label {
   color: var(--color-top);
 }
 
+/*
+.########.####.########.##.......########
+....##.....##.....##....##.......##......
+....##.....##.....##....##.......##......
+....##.....##.....##....##.......######..
+....##.....##.....##....##.......##......
+....##.....##.....##....##.......##......
+....##....####....##....########.########
+*/
+
 label.subtitle {
   font-size: 24px;
-}
-
-label.title {
-  font-size: 48px;
+  display: inline-block;
+  margin: 8px 16px;
 }
 
 /*
@@ -179,10 +176,12 @@ hr {
   border-radius: var(--px-radius);
   padding: 2px;
   margin: 2px;
+  text-align: center;
 }
 
 .block-title {
   margin-top: 32px;
+  text-align: center;
 }
 
 .block-title label {
