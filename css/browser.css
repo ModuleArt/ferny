@@ -212,7 +212,7 @@
   background-color: var(--color-orange);
 }
 
-.notif.info {
+.notif.info, .notif.zoom {
   background-color: var(--color-blue);
 }
 
@@ -235,7 +235,7 @@
   padding-left: 14px;
 }
 
-.notif.quest .notif-body {
+.notif.quest .notif-body, .notif.zoom .notif-body {
   padding-right: 14px;
 }
 
@@ -275,6 +275,66 @@
 }
 
 /*
+.########..####..######..########.##.....##.########..########....####.##....##
+.##.....##..##..##....##....##....##.....##.##.....##.##...........##..###...##
+.##.....##..##..##..........##....##.....##.##.....##.##...........##..####..##
+.########...##..##..........##....##.....##.########..######.......##..##.##.##
+.##.........##..##..........##....##.....##.##...##...##...........##..##..####
+.##.........##..##....##....##....##.....##.##....##..##...........##..##...###
+.##........####..######.....##.....#######..##.....##.########....####.##....##
+*/
+
+#picture-in-panel {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  width: 35%;
+  min-width: 440px;
+  height: 45%;
+  /* min-height: 240px; */
+  background-color: var(--color-back);
+  border: 2px solid var(--color-over);
+  animation: anim-show;
+  animation-duration: 0.25s;
+  transition: transform 0.25s, opacity 0.25s;
+}
+
+#picture-in-panel div {
+  padding: 2px;
+  border-bottom: 2px solid var(--color-over);
+  display: none;
+  text-align: right;
+}
+
+#picture-in-webview {
+  height: 100%;
+  width: 100%;
+  background-color: white;
+}
+
+#picture-in-panel:hover {
+  height: calc(45% + 42px);
+  border-radius: calc(var(--px-radius) + 4px) calc(var(--px-radius) + 4px) 0 0;
+}
+
+#picture-in-panel:hover #picture-in-webview {
+  height: calc(100% - 42px);
+}
+
+#picture-in-panel:hover div {
+  display: block;
+}
+
+#picture-in-panel.hide {
+  opacity: 0;
+  transform: scale(0.75);
+}
+
+/* #cancel-picture-in-btn {
+  float: right;
+} */
+
+/*
 .########.####.########.##.......########....########.....###....########.
 ....##.....##.....##....##.......##..........##.....##...##.##...##.....##
 ....##.....##.....##....##.......##..........##.....##..##...##..##.....##
@@ -303,9 +363,9 @@
 #titlebar {
   padding: 2px;
   height: 42px;
-  z-index: 102;
   background-color: var(--color-back);
   border-bottom: 2px solid var(--color-over);
+  display: flex;
 }
 
 .etabs-tabgroup .title-bar-btn {
@@ -326,8 +386,16 @@
   -webkit-app-region: no-drag;
 }
 
+#search-div {
+  flex: 1;
+  position: relative;
+  z-index: 100;
+  margin: 2px;
+}
+
 #search-input {
-  width: calc(100% - 293px);
+  width: 100%;
+  margin: 0;
 }
 
 .title-bar-btn:hover, #search-input:hover, #search-input:focus {
@@ -351,7 +419,7 @@
   width: 2px;
   height: 16px;
   background-color: var(--color-over);
-  margin: 8px 0;
+  margin: 10px 2px;
 }
 
 /*
@@ -363,18 +431,6 @@
 .##..##..##..##..##...###....##....##.##.....##.##...###....##....##....##..##.....##.##.......##....##
 ..###..###..####.##....##.....######...#######..##....##....##....##.....##..#######..########..######.
 */
-
-/* #window-controls {
-  float: right;
-} */
-
-/* #window-controls .title-bar-btn {
-  float: right;
-}
-
-#close-btn:hover {
-  background-color: var(--color-red);
-} */
 
 #window-controls {
   -webkit-app-region: no-drag;
@@ -440,17 +496,15 @@
 */
 
 #search-suggest {
-  z-index: 101;
   animation-name: anim-suggest;
   animation-duration: 0.25s;
   position: absolute;
-  right: 123px;
-  left: 162px;
-  top: 0;
-  border-radius: 0 0 var(--px-radius) var(--px-radius);
+  left: -6px;
+  right: -6px;
+  top: calc(100% + 4px);
+  border-radius: 0 0 calc(var(--px-radius) + 4px) calc(var(--px-radius) + 4px);
   background-color: var(--color-back);
   border: solid 2px var(--color-over);
-  border-top: none;
   transition: 0.25s;
 }
 
@@ -482,12 +536,6 @@
   display: block;
   border: solid 2px transparent;
   margin: 4px;
-}
-
-#search-suggest-container:empty::before {
-  content: "\2205  No suggestions... Check your connection...";
-  color: var(--color-top);
-  margin: 2px;
 }
 
 #search-suggest-container input.active, #search-suggest-container input:hover {
@@ -528,6 +576,10 @@ body {
 
 body.fullscreen .etabs-tabgroup, body.fullscreen #titlebar, body.fullscreen #bookmarks-bar {
   display: none;
+}
+
+body.bookmarks-bar #search-suggest {
+  border-radius: calc(var(--px-radius) + 4px);
 }
 
 main {
@@ -835,7 +887,6 @@ hr {
   width: 482px;
   bottom: 0;
   background-color: var(--color-back);
-  z-index: 5;
   animation-name: anim-sidebar;
   animation-duration: 0.25s;
   border-left: 2px solid var(--color-over);
@@ -889,12 +940,12 @@ hr {
   padding-top: 0;
   height: 30px;
   background-color: var(--color-back);
-  z-index: 103;
   border-bottom: 2px solid var(--color-over);
   display: flex;
   flex-direction: row;
   overflow-y: hidden;
-  overflow-x: auto;
+  /* overflow-x: auto; */
+  overflow-x: hidden; 
 }
 
 #bookmarks-bar:empty::before {
@@ -902,8 +953,8 @@ hr {
   color: var(--color-top);
 }
 
-.bookmark {
-  /* display: inline-block; */
+.bookmark, .folder {
+  display: inline-block;
   margin: 2px;
   margin-top: 0;
   height: 24px;
@@ -912,19 +963,20 @@ hr {
   border-radius: var(--px-radius);
   vertical-align: top;
   min-width: 24px;
-  /* flex: 1; */
+  flex: 1;
 }
 
-.bookmark:hover {
+.bookmark:hover, .folder:hover {
   background-color: var(--color-over);
 }
 
-.bookmark label {
+.bookmark label, .folder label {
   vertical-align: top;
   font-size: 12px;
 }
 
-.bookmark-icon {
+.bookmark img, .folder img {
+  margin-right: 4px;
   width: 16px;
   height: 16px;
 }
@@ -946,7 +998,6 @@ hr {
   animation-name: anim-find;
   animation-duration: 0.25s;
   background-color: var(--color-back);
-  z-index: 100;
   transition: 0.25s;
   text-align: left;
 }

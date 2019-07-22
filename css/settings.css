@@ -173,7 +173,7 @@ hr {
 
 .container {
   background-color: var(--color-over);
-  border-radius: var(--px-radius);
+  border-radius: calc(var(--px-radius) + 4px);
   padding: 2px;
   margin: 2px;
   text-align: center;
@@ -237,6 +237,7 @@ input[type=text]:hover, input[type=text]:focus {
   padding-right: 8px;
   display: inline-block;
   margin: 2px;
+  vertical-align: middle;
 }
 
 .nav-btn:hover {
@@ -261,7 +262,7 @@ input[type=text]:hover, input[type=text]:focus {
   padding: 4px;
   border-radius: var(--px-radius);
   display: inline-block;
-  vertical-align: top;
+  vertical-align: middle;
   margin: 2px;
 }
 
@@ -286,6 +287,41 @@ input[type=text]:hover, input[type=text]:focus {
 }
 
 /*
+.########.##.....##.########.##.....##.########....########..########..########.##.....##.####.########.##......##
+....##....##.....##.##.......###...###.##..........##.....##.##.....##.##.......##.....##..##..##.......##..##..##
+....##....##.....##.##.......####.####.##..........##.....##.##.....##.##.......##.....##..##..##.......##..##..##
+....##....#########.######...##.###.##.######......########..########..######...##.....##..##..######...##..##..##
+....##....##.....##.##.......##.....##.##..........##........##...##...##........##...##...##..##.......##..##..##
+....##....##.....##.##.......##.....##.##..........##........##....##..##.........##.##....##..##.......##..##..##
+....##....##.....##.########.##.....##.########....##........##.....##.########....###....####.########..###..###.
+*/
+
+.theme-preview {
+  margin: 2px;
+  padding: 4px;
+  border-radius: var(--px-radius);
+}
+
+.theme-preview:hover {
+  background-color: var(--color-over);
+}
+
+.theme-preview:active {
+  opacity: 0.5;
+}
+
+.theme-preview img {
+  margin-top: 2px;
+  margin-bottom: -2px;
+  border-radius: var(--px-radius);
+  border: 2px solid var(--color-over);
+}
+
+.theme-preview label {
+  display: block;
+}
+
+/*
 ..######...#######..##........#######..########.
 .##....##.##.....##.##.......##.....##.##.....##
 .##.......##.....##.##.......##.....##.##.....##
@@ -305,11 +341,11 @@ input[type=text]:hover, input[type=text]:focus {
 }
 
 .color div {
-  width: 32px;
+  width: calc(100% - 4px);
   height: 32px;
-  border: 2px solid var(--color-top);
+  border: 2px solid var(--color-over);
   border-radius: var(--px-radius);
-  margin: 4px;
+  margin: 2px;
 }
 
 .color:hover {
@@ -318,6 +354,72 @@ input[type=text]:hover, input[type=text]:focus {
 
 .color:active {
   opacity: 0.5;
+}
+
+/*
+.##....##....###....##.....##.....######..##.....##.########..######..##....##.########...#######..##.....##
+.###...##...##.##...##.....##....##....##.##.....##.##.......##....##.##...##..##.....##.##.....##..##...##.
+.####..##..##...##..##.....##....##.......##.....##.##.......##.......##..##...##.....##.##.....##...##.##..
+.##.##.##.##.....##.##.....##....##.......#########.######...##.......#####....########..##.....##....###...
+.##..####.#########..##...##.....##.......##.....##.##.......##.......##..##...##.....##.##.....##...##.##..
+.##...###.##.....##...##.##......##....##.##.....##.##.......##....##.##...##..##.....##.##.....##..##...##.
+.##....##.##.....##....###........######..##.....##.########..######..##....##.########...#######..##.....##
+*/
+
+.nav-checkbox {
+  display: block;
+  margin: 2px;
+}
+
+.nav-checkbox img, .nav-checkbox label, .nav-checkbox {
+  vertical-align: middle;
+}
+
+/*
+.########.....###....########..####..#######.
+.##.....##...##.##...##.....##..##..##.....##
+.##.....##..##...##..##.....##..##..##.....##
+.########..##.....##.##.....##..##..##.....##
+.##...##...#########.##.....##..##..##.....##
+.##....##..##.....##.##.....##..##..##.....##
+.##.....##.##.....##.########..####..#######.
+*/
+
+input[type=radio] {
+  margin-left: 4px;
+  -webkit-appearance: none;
+  appearance: none;
+  outline: none;
+  border-radius: var(--px-radius);
+  width: 24px;
+  height: 24px;
+  position: relative;
+  vertical-align: middle;
+  border: 2px solid var(--color-top);
+}
+
+input[type=radio]:hover {
+  background-color: var(--color-over);
+}
+
+input[type=radio]:active {
+  opacity: 0.5;
+}
+
+input[type=radio]::after {
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  width: 12px;
+  height: 12px;
+  content: "";
+  background-color: var(--color-over);
+  border-radius: calc(var(--px-radius) - 4px);
+  transition: 0.25s;
+}
+
+input[type=radio]:checked::after {
+  background-color: var(--color-top);
 }
 
 /*
@@ -330,54 +432,42 @@ input[type=text]:hover, input[type=text]:focus {
 ..######..##.....##.########..######..##....##.########...#######..##.....##
 */
 
-.nav-checkbox {
-  display: inline-block;
-  padding: 3px;
-  padding-left: 8px;
+input[type=checkbox] {
+  margin-left: 4px;
+  -webkit-appearance: none;
+  appearance: none;
+  outline: none;
   border-radius: var(--px-radius);
-  margin: 2px;
-  height: 32px;
-  /* width: calc(50% - 6px); */
+  width: 48px;
+  height: 24px;
+  position: relative;
+  vertical-align: middle;
+  border: 2px solid var(--color-top);
 }
 
-.nav-checkbox:hover {
+input[type=checkbox]:hover {
   background-color: var(--color-over);
 }
 
-.nav-checkbox:active {
+input[type=checkbox]:active {
   opacity: 0.5;
 }
 
-.nav-checkbox img {
-  vertical-align: middle;
-  margin-top: -2px;
-}
-
-.checkbox {
-   -webkit-appearance: none;
-   appearance: none;
-   outline: none;
-   border-radius: var(--px-radius);
-   width: 20px;
-   height: 20px;
-   padding-left: 4px;
-   margin-bottom: 3px;
-}
-
-.checkbox:checked {
+input[type=checkbox]::after {
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  width: 12px;
+  height: 12px;
+  content: "";
   background-color: var(--color-over);
+  border-radius: calc(var(--px-radius) - 4px);
+  transition: 0.25s;
 }
 
-.checkbox::after {
-  width: 24px;
-  height: 24px;
-  content: "✘";
-  font-weight: bold;
-  color: var(--color-top);
-}
-
-.checkbox:checked::after {
-  content: "✔";
+input[type=checkbox]:checked::after {
+  background-color: var(--color-top);
+  left: calc(100% - 16px);
 }
 
 /*

@@ -40,9 +40,29 @@
       <img name="stop" id="stop-btn" class="title-bar-btn theme-icon" title="Stop loading this page" style="display: none" onclick="goStop()">
       <div class="title-bar-vr"></div>
       <img name="info" id="info-btn" class="title-bar-btn theme-icon" title="Website info" onclick="popupInfoContextMenu()">
-      <input type="text" placeholder="Search or type a URL" id="search-input" oninput="getSuggestions()" onfocusout="removeSuggestions()" onkeyup="searchKeyUp(event)" onfocus="focusSearch()">
+      <div id="search-div">
+        <input type="text" placeholder="Search or type a URL" id="search-input" oninput="getSuggestions()" onfocusout="removeSuggestions()" onkeyup="searchKeyUp(event)" onfocus="focusSearch()">
+        <div id="search-suggest" style="display: none;" class="hide">
+          <div id="search-suggest-container" onmousewheel="searchSuggestWheel(event)"></div>
+          <hr>
+          <div id="search-engines">
+            <img name="google" class="title-bar-btn search-engine" title="Search with Google" src="../imgs/engines/google.png" onclick="searchWith(null, this.name)">
+            <img name="bing" class="title-bar-btn search-engine" title="Search with Bing" src="../imgs/engines/bing.png" onclick="searchWith(null, this.name)">
+            <img name="duckduckgo" class="title-bar-btn search-engine" title="Search with DuckDuckGo" src="../imgs/engines/duckduckgo.png" onclick="searchWith(null, this.name)">
+            <img name="wikipedia" class="title-bar-btn search-engine" title="Search with Wikipedia" src="../imgs/engines/wikipedia.png" onclick="searchWith(null, this.name)">
+            <img name="yahoo" class="title-bar-btn search-engine" title="Search with Yahoo" src="../imgs/engines/yahoo.png" onclick="searchWith(null, this.name)">
+            <img name="yandex" class="title-bar-btn search-engine" title="Search with Yandex" src="../imgs/engines/yandex.png" onclick="searchWith(null, this.name)">
+            <img name="mailru" class="title-bar-btn search-engine" title="Search with Mail.ru" src="../imgs/engines/mailru.png" onclick="searchWith(null, this.name)">
+            <img name="baidu" class="title-bar-btn search-engine" title="Search with Baidu" src="../imgs/engines/baidu.png" onclick="searchWith(null, this.name)">
+            <img name="naver" class="title-bar-btn search-engine" title="Search with Naver" src="../imgs/engines/naver.png" onclick="searchWith(null, this.name)">
+            <img name="qwant" class="title-bar-btn search-engine" title="Search with Qwant" src="../imgs/engines/qwant.png" onclick="searchWith(null, this.name)">
+            <img name="youtube" class="title-bar-btn search-engine" title="Search with YouTube" src="../imgs/engines/youtube.png" onclick="searchWith(null, this.name)">
+          </div>
+        </div>
+      </div>
       <img name="bookmark" class="title-bar-btn theme-icon" title="Bookmark this page" onclick="createBookmark()">
       <div class="title-bar-vr"></div>
+      <img name="home" id="home-btn" class="title-bar-btn theme-icon" title="Go home" onclick="goHome()" style="display: none;" oncontextmenu="popupHomeButtonContextMenu()">
       <img name="bookmarks-book" id="sidebar-btn" class="title-bar-btn theme-icon" title="Sidebar (Bookmarks, history, downloads, settings)" onclick="toggleSidebar()">
       <img name="menu" id="menu-btn" class="title-bar-btn theme-icon" title="Menu" onclick="requestSideMenu()">
     </div>
@@ -51,6 +71,15 @@
 
     <main>
       <div class="etabs-views" id="etabs-views"></div>
+      <div id="picture-in-panel" style="display: none;">
+        <div>
+          <!-- <img name="back" class="title-bar-btn theme-icon" title="Go back" onclick="goBackPictureIn()">
+          <img name="forward" class="title-bar-btn theme-icon" title="Go forward" onclick="goForwardPictureIn()">
+          <img name="refresh" class="title-bar-btn theme-icon" title="Reload page" onclick="refreshPictureIn()"> -->
+          <img name="cancel" class="title-bar-btn theme-icon" title="Close" onclick="cancelPictureIn()" id="cancel-picture-in-btn">
+        </div>
+        <webview id="picture-in-webview" src="https://duckduckgo.com"></webview>
+      </div>
       <label id="target-url"></label>
       <div id="sidebar" style="display: none;" class="hide">
         <div id="sidebar-div">
@@ -81,23 +110,6 @@
           </div>
         </div>
         <webview id="sidebar-webview" nodeintegration src="../html/bookmarks.html"></webview>
-      </div>
-      <div id="search-suggest" style="display: none;" class="hide">
-        <div id="search-suggest-container" onmousewheel="searchSuggestWheel(event)"></div>
-        <hr>
-        <div id="search-engines">
-          <img name="google" class="title-bar-btn search-engine" title="Search with Google" src="../imgs/engines/google.png" onclick="searchWith(null, this.name)">
-          <img name="bing" class="title-bar-btn search-engine" title="Search with Bing" src="../imgs/engines/bing.png" onclick="searchWith(null, this.name)">
-          <img name="duckduckgo" class="title-bar-btn search-engine" title="Search with DuckDuckGo" src="../imgs/engines/duckduckgo.png" onclick="searchWith(null, this.name)">
-          <img name="wikipedia" class="title-bar-btn search-engine" title="Search with Wikipedia" src="../imgs/engines/wikipedia.png" onclick="searchWith(null, this.name)">
-          <img name="yahoo" class="title-bar-btn search-engine" title="Search with Yahoo" src="../imgs/engines/yahoo.png" onclick="searchWith(null, this.name)">
-          <img name="yandex" class="title-bar-btn search-engine" title="Search with Yandex" src="../imgs/engines/yandex.png" onclick="searchWith(null, this.name)">
-          <img name="mailru" class="title-bar-btn search-engine" title="Search with Mail.ru" src="../imgs/engines/mailru.png" onclick="searchWith(null, this.name)">
-          <img name="baidu" class="title-bar-btn search-engine" title="Search with Baidu" src="../imgs/engines/baidu.png" onclick="searchWith(null, this.name)">
-          <img name="naver" class="title-bar-btn search-engine" title="Search with Naver" src="../imgs/engines/naver.png" onclick="searchWith(null, this.name)">
-          <img name="qwant" class="title-bar-btn search-engine" title="Search with Qwant" src="../imgs/engines/qwant.png" onclick="searchWith(null, this.name)">
-          <img name="youtube" class="title-bar-btn search-engine" title="Search with YouTube" src="../imgs/engines/youtube.png" onclick="searchWith(null, this.name)">
-        </div>
       </div>
       <div id="notif-panel"></div>
     </main>

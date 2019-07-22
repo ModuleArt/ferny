@@ -198,8 +198,59 @@
   background-color: var(--color-over);
 }
 
-#titlebar.blur .theme-icon {
+#titlebar.blur #window-controls {
   opacity: 0.5;
+}
+
+/*
+.##......##.####.##....##.....######...#######..##....##.########.########...#######..##........######.
+.##..##..##..##..###...##....##....##.##.....##.###...##....##....##.....##.##.....##.##.......##....##
+.##..##..##..##..####..##....##.......##.....##.####..##....##....##.....##.##.....##.##.......##......
+.##..##..##..##..##.##.##....##.......##.....##.##.##.##....##....########..##.....##.##........######.
+.##..##..##..##..##..####....##.......##.....##.##..####....##....##...##...##.....##.##.............##
+.##..##..##..##..##...###....##....##.##.....##.##...###....##....##....##..##.....##.##.......##....##
+..###..###..####.##....##.....######...#######..##....##....##....##.....##..#######..########..######.
+*/
+
+#window-controls {
+  -webkit-app-region: no-drag;
+  display: grid;
+  grid-template-columns: repeat(3, 46px);
+  float: right;
+  height: 100%;
+}
+
+#titlebar.blur #window-controls {
+  opacity: 0.5;
+}
+
+#window-controls span {
+  font-family: SegMDL2;
+  font-size: 10px;
+}
+
+#window-controls .button {
+  grid-row: 1 / span 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  color: var(--color-top);
+  transition: background-color 0.25s;
+}
+
+#window-controls .button:active {
+  opacity: 0.5;
+}
+
+#window-controls #close-btn {
+  grid-column: 3;
+}
+
+#window-controls #close-btn:hover {
+  background-color: #E81022;
+  color: white;
 }
 
 /*
@@ -300,6 +351,7 @@ input[type=text]:hover, input[type=text]:focus {
   position: absolute;
   bottom: 0;
   width: 100%;
+  z-index: 100;
 }
 
 #dots .link {
@@ -308,25 +360,26 @@ input[type=text]:hover, input[type=text]:focus {
 }
 
 .dot {
-  width: 16px;
-  height: 16px;
+  width: 12px;
+  height: 12px;
   border-radius: var(--px-radius);
   display: inline-block;
-  border: 2px solid transparent;
   background-color: var(--color-over);
-  margin: 2px;
+  margin: 4px 2px;
+  transition: width 0.25s, background-color 0.25s;
+  vertical-align: top;
 }
 
 .dot.active, .dot:hover {
-  border-color: var(--color-top);
-}
-
-.dot.active {
-  background-color: transparent;
+  background-color: var(--color-top);
 }
 
 .dot:active {
   opacity: 0.5;
+}
+
+.dot.active {
+  width: 24px;
 }
 
 .tab {
@@ -334,7 +387,7 @@ input[type=text]:hover, input[type=text]:focus {
   left: 0;
   right: 0;
   top: 32px;
-  bottom: 24px;
+  bottom: 0;
   display: none;
   animation-name: anim-show;
   animation-duration: 0.25s;
@@ -396,20 +449,22 @@ hr {
 
 .container {
   position: absolute;
-  top: calc(50%);
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 300px;
+  top: 48px;
+  left: 80px;
+  right: 80px;
+  bottom: 24px;
 }
 
 .block-container {
   background-color: var(--color-over);
-  border-radius: var(--px-radius);
+  border-radius: calc(var(--px-radius) + 4px);
+  margin-2px;
   padding: 2px;
 }
 
 .block-title {
   margin-top: 32px;
+  padding: 4px;
 }
 
 .block-title label {
@@ -450,12 +505,12 @@ hr {
 */
 
 #start-btn {
-  transition: 0.25s;
+  transition: padding 0.25s;
   border-radius: var(--px-radius);
   background-color: var(--color-over);
   display: inline-block;
   padding: 6px 16px;
-  margin: 2px;
+  margin: 8px;
 }
 
 #start-btn:hover {
@@ -464,6 +519,107 @@ hr {
 
 #start-btn:active {
   opacity: 0.5;
+}
+
+/*
+.########.##.....##.########.##.....##.########....########..########..########.##.....##.####.########.##......##
+....##....##.....##.##.......###...###.##..........##.....##.##.....##.##.......##.....##..##..##.......##..##..##
+....##....##.....##.##.......####.####.##..........##.....##.##.....##.##.......##.....##..##..##.......##..##..##
+....##....#########.######...##.###.##.######......########..########..######...##.....##..##..######...##..##..##
+....##....##.....##.##.......##.....##.##..........##........##...##...##........##...##...##..##.......##..##..##
+....##....##.....##.##.......##.....##.##..........##........##....##..##.........##.##....##..##.......##..##..##
+....##....##.....##.########.##.....##.########....##........##.....##.########....###....####.########..###..###.
+*/
+
+.theme-preview {
+  margin: 2px;
+  padding: 4px;
+  border-radius: var(--px-radius);
+}
+
+.theme-preview:hover {
+  background-color: var(--color-over);
+}
+
+.theme-preview:active {
+  opacity: 0.5;
+}
+
+.theme-preview img {
+  margin-top: 2px;
+  margin-bottom: -2px;
+  border-radius: var(--px-radius);
+  border: 2px solid var(--color-over);
+}
+
+.theme-preview label {
+  display: block;
+}
+
+/*
+.##....##....###....##.....##.....######..##.....##.########..######..##....##.########...#######..##.....##
+.###...##...##.##...##.....##....##....##.##.....##.##.......##....##.##...##..##.....##.##.....##..##...##.
+.####..##..##...##..##.....##....##.......##.....##.##.......##.......##..##...##.....##.##.....##...##.##..
+.##.##.##.##.....##.##.....##....##.......#########.######...##.......#####....########..##.....##....###...
+.##..####.#########..##...##.....##.......##.....##.##.......##.......##..##...##.....##.##.....##...##.##..
+.##...###.##.....##...##.##......##....##.##.....##.##.......##....##.##...##..##.....##.##.....##..##...##.
+.##....##.##.....##....###........######..##.....##.########..######..##....##.########...#######..##.....##
+*/
+
+.nav-checkbox {
+  display: block;
+  margin: 2px;
+}
+
+.nav-checkbox img, .nav-checkbox label, .nav-checkbox {
+  vertical-align: middle;
+}
+
+/*
+.########.....###....########..####..#######.
+.##.....##...##.##...##.....##..##..##.....##
+.##.....##..##...##..##.....##..##..##.....##
+.########..##.....##.##.....##..##..##.....##
+.##...##...#########.##.....##..##..##.....##
+.##....##..##.....##.##.....##..##..##.....##
+.##.....##.##.....##.########..####..#######.
+*/
+
+input[type=radio] {
+  margin-left: 4px;
+  -webkit-appearance: none;
+  appearance: none;
+  outline: none;
+  border-radius: var(--px-radius);
+  width: 24px;
+  height: 24px;
+  position: relative;
+  vertical-align: middle;
+  border: 2px solid var(--color-top);
+}
+
+input[type=radio]:hover {
+  background-color: var(--color-over);
+}
+
+input[type=radio]:active {
+  opacity: 0.5;
+}
+
+input[type=radio]::after {
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  width: 12px;
+  height: 12px;
+  content: "";
+  background-color: var(--color-over);
+  border-radius: calc(var(--px-radius) - 4px);
+  transition: 0.25s;
+}
+
+input[type=radio]:checked::after {
+  background-color: var(--color-top);
 }
 
 /*
@@ -476,47 +632,42 @@ hr {
 ..######..##.....##.########..######..##....##.########...#######..##.....##
 */
 
-.nav-checkbox {
-  display: inline-block;
-  padding: 4px;
-  padding-left: 8px;
+input[type=checkbox] {
+  margin-left: 4px;
+  -webkit-appearance: none;
+  appearance: none;
+  outline: none;
   border-radius: var(--px-radius);
-  margin: 2px;
+  width: 48px;
+  height: 24px;
+  position: relative;
+  vertical-align: middle;
+  border: 2px solid var(--color-top);
 }
 
-.nav-checkbox:hover {
+input[type=checkbox]:hover {
   background-color: var(--color-over);
 }
 
-.nav-checkbox:active {
+input[type=checkbox]:active {
   opacity: 0.5;
 }
 
-.checkbox {
-   -webkit-appearance: none;
-   appearance: none;
-   outline: none;
-   border-radius: var(--px-radius);
-   width: 20px;
-   height: 20px;
-   padding-left: 4px;
-   margin-bottom: 3px;
-}
-
-.checkbox:checked {
+input[type=checkbox]::after {
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  width: 12px;
+  height: 12px;
+  content: "";
   background-color: var(--color-over);
+  border-radius: calc(var(--px-radius) - 4px);
+  transition: 0.25s;
 }
 
-.checkbox::after {
-  width: 24px;
-  height: 24px;
-  content: "✘";
-  font-weight: bold;
-  color: var(--color-top);
-}
-
-.checkbox:checked::after {
-  content: "✔";
+input[type=checkbox]:checked::after {
+  background-color: var(--color-top);
+  left: calc(100% - 16px);
 }
 
 /*

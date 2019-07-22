@@ -22,18 +22,11 @@ const fs = require("fs");
 .##........#######..##....##..######.....##....####..#######..##....##..######.
 */
 
-function toggleBookmarksBar() {
-  try {
-    var bookmarksBar = fs.readFileSync(ppath + "\\json\\bookmarksbar.json");
-    if(bookmarksBar == 1) {
-      ipcRenderer.send('request-set-bookmarks-bar', 0);
-      notif("Bookmarks bar turned off", "info");
-    } else {
-      ipcRenderer.send('request-set-bookmarks-bar', 1);
-      notif("Bookmarks bar turned on", "success");
-    }
-  } catch (e) {
-
+function changeBookmarksBar(bool) {
+  if(bool) {
+    ipcRenderer.send('request-set-bookmarks-bar', 1);
+  } else {
+    ipcRenderer.send('request-set-bookmarks-bar', 0);
   }
 }
 
@@ -45,8 +38,6 @@ function scrollToId(id) {
 
 function requestSearchEngine(engine) {
   ipcRenderer.send('request-set-search-engine', engine);
-
-  notif("Search engine changed: " + engine, "success");
 }
 
 function requestTheme(color) {
@@ -118,12 +109,57 @@ function loadTheme() {
   }
 }
 
+function changeWelcome(bool) {
+  if(bool) {
+    fs.writeFileSync(ppath + "\\json\\welcome.json", 1);
+  } else {
+    fs.writeFileSync(ppath + "\\json\\welcome.json", 0);
+  }
+}
+
 function loadStartPage() {
   try {
     var startPage = fs.readFileSync(ppath + "\\json\\startpage.json");
     document.getElementById('start-page-input').value = startPage;
   } catch (e) {
 
+  }
+}
+
+function loadHomePage() {
+  try {
+    var jsonstr = fs.readFileSync(ppath + "\\json\\home.json");
+    Data = JSON.parse(jsonstr);
+    document.getElementById('home-page-input').value = Data.url;
+    if(Data.on == 1) {
+      document.getElementById('home-page-checkbox').checked = true;
+    }
+  } catch (e) {
+
+  }
+}
+
+function saveHomePage() {
+  var url = document.getElementById('home-page-input').value;
+  var on = document.getElementById('home-page-checkbox').checked;
+
+  if(url.length <= 0) {
+    notif("First enter the home page URL", "warning");
+  } else {
+    if(on) {
+      on = 1;
+    } else {
+      on = 0;
+    }
+  
+    if(!fs.existsSync(ppath + "\\json")) {
+      fs.mkdirSync(ppath + "\\json");
+    } 
+    fs.writeFileSync(ppath + "\\json\\home.json", JSON.stringify({ url: url, on: on }));
+
+    notif("Home page saved", "success");
+
+    ipcRenderer.send('request-update-home-page');
   }
 }
 
@@ -161,8 +197,6 @@ function loadBorderRadius() {
 }
 
 function showWelcomeScreen() {
-  fs.writeFileSync(ppath + "\\json\\welcome.json", 1);
-
   ipcRenderer.send("request-show-welcome-screen");
 }
 
@@ -185,6 +219,32 @@ function notif(text, type) {
 function moreInfo(btn) {
   btn.classList.toggle('active');
   btn.nextElementSibling.classList.toggle('active');
+}
+
+function loadWelcome() {
+  try {
+    var welcomeOn = fs.readFileSync(ppath + "\\json\\welcome.json");
+    if(welcomeOn == 1) {
+      document.getElementById('welcome-checkbox').checked = true;
+    } else {
+      document.getElementById('welcome-checkbox').checked = false;
+    }
+  } catch (e) {
+
+  }
+}
+
+function loadBookmarksBar() {
+  try {
+    var bBarOn = fs.readFileSync(ppath + "\\json\\bookmarksbar.json");
+    if(bBarOn == 1) {
+      document.getElementById('bookmarks-bar-checkbox').checked = true;
+    } else {
+      document.getElementById('bookmarks-bar-checkbox').checked = false;
+    }
+  } catch (e) {
+
+  }
 }
 
 /*
@@ -218,8 +278,11 @@ ipcRenderer.on('action-load-border-radius', (event, arg) => {
 function init() {
   loadTheme();
   loadBorderRadius();
+  loadBookmarksBar();
   loadStartPage();
+  loadHomePage();
   loadSearchEngine();
+  loadWelcome();
 }
 
 document.onreadystatechange = () => {

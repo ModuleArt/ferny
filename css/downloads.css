@@ -163,7 +163,7 @@ hr {
 
 .container {
   background-color: var(--color-over);
-  border-radius: var(--px-radius);
+  border-radius: calc(var(--px-radius) + 4px);
   padding: 2px;
   margin: 2px;
   text-align: center;
@@ -254,14 +254,14 @@ input:hover, input:focus {
   display: block;
   padding: 8px;
   margin: 2px;
-  border-radius: var(--px-radius);
+  border-radius: calc(var(--px-radius) + 4px);
   text-align: center;
 }
 
 .download {
   margin: 4px 2px;
   background-color: var(--color-over);
-  border-radius: 0 var(--px-radius) var(--px-radius) 0;
+  border-radius: 0 calc(var(--px-radius) + 4px) calc(var(--px-radius) + 4px) 0;
   text-align: left;
   padding: 6px;
   position: relative;

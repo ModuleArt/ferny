@@ -104,7 +104,6 @@ function loadBorderRadius() {
   }
 }
 
-// tabs
 function chooseSlide(i) {
   var dots = document.getElementsByClassName('dot');
   var tabs = document.getElementsByClassName('tab');
@@ -153,19 +152,12 @@ function prevSlide() {
   }
 }
 
-// window
 function closeWindow() {
   ipcRenderer.send('request-close-welcome');
 }
 
-function moreSettings() {
-  ipcRenderer.send('request-open-settings');
-}
-
-// welcome
-function finishWelcome() {
-  changeWelcome(document.getElementById('welcome-checkbox').checked);
-  closeWindow();
+function moreSettings(shortcutId) {
+  ipcRenderer.send('request-open-settings', shortcutId);
 }
 
 function changeWelcome(bool) {
@@ -230,6 +222,19 @@ function keyDown(e) {
   }
 }
 
+function loadWelcome() {
+  try {
+    var welcomeOn = fs.readFileSync(ppath + "\\json\\welcome.json");
+    if(welcomeOn == 1) {
+      document.getElementById('welcome-checkbox').checked = true;
+    } else {
+      document.getElementById('welcome-checkbox').checked = false;
+    }
+  } catch (e) {
+
+  }
+}
+
 /*
 .####.########...######.....########..########.##....##.########..########.########..########.########.
 ..##..##.....##.##....##....##.....##.##.......###...##.##.....##.##.......##.....##.##.......##.....##
@@ -244,10 +249,10 @@ ipcRenderer.on('action-set-about', (event, arg) => {
   document.getElementById('version').innerHTML = "v" + arg.app;
 });
 
-// window
 ipcRenderer.on('action-blur-window', (event, arg) => {
   document.getElementById('titlebar').classList.add('blur');
 });
+
 ipcRenderer.on('action-focus-window', (event, arg) => {
   document.getElementById('titlebar').classList.remove('blur');
 });
@@ -266,6 +271,7 @@ function init() {
   loadTheme();
   loadBorderRadius();
   loadStartPage();
+  loadWelcome();
 
   ipcRenderer.send('request-set-about');
 

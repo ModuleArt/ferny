@@ -16,6 +16,11 @@
             <!-- <div id="window-controls">
                 <img name="close16" id="close-btn" class="title-bar-btn theme-icon" title="Close" onclick="closeWindow()">
             </div> -->
+            <div id="window-controls">
+                <div class="button" id="close-btn" title="Close" onclick="closeWindow()">
+                    <span>&#xE8BB;</span>
+                </div>
+            </div>
         </div>
 
         <center>
@@ -24,16 +29,16 @@
                 <div class="dot" onclick="chooseSlide(1)"></div>
                 <div class="dot" onclick="chooseSlide(2)"></div>
                 <div class="dot" onclick="chooseSlide(3)"></div>
+                <div class="dot" onclick="chooseSlide(4)"></div>
             </div>
             <div id="developer-btn" class="nav-btn" onclick="openDeveloperPage()" title="Developer page">
                 <img src="../imgs/module24.png">
                 <label>Module Art</label>
             </div>
-            <div id="skip-btn" class="nav-btn" onclick="chooseSlide(3)" title="Skip welcome screen">
+            <div id="skip-btn" class="nav-btn" onclick="chooseSlide(4)" title="Skip welcome screen">
                 <img name="skip" class="theme-icon">
                 <label>Skip</label>
             </div>
-            <!-- <label id="skip-btn" class="link" onclick="chooseSlide(3)">Skip</label> -->
         
             <div class="tab active">
                 <label class="subtitle">Welcome to</label>
@@ -45,43 +50,23 @@
                 </div>
             </div>
             <div class="tab">
-                <label class="subtitle">Appearance</label>
+                <label class="subtitle">Theme</label>
                 <div class="container">
-                    <div class="block-title">
-                        <img name="color" class="theme-icon">
-                        <label>Background color</label>
-                    </div>
                     <div class="block-container">
-                        <div class="nav-btn" onclick="requestTheme('rgb(255, 255, 255)')">
-                            <img class="theme-icon" name="angel">
+                        <div class="theme-preview" onclick="requestTheme('rgb(255, 255, 255)')">
                             <label>White</label>
+                            <img src="../imgs/themes/white.png">
                         </div>
-                        <div class="nav-btn" onclick="requestTheme('rgb(30, 39, 46)')">
-                            <img class="theme-icon" name="demon">
+                        <div class="theme-preview" onclick="requestTheme('rgb(30, 39, 46)')">
                             <label>Night</label>
+                            <img src="../imgs/themes/night.png">
                         </div>
-                        <label class="link" onclick="moreSettings()" title="More settings">More</label>
-                    </div>
-                    
-                    <div class="block-title">
-                        <img name="radius" class="theme-icon">
-                        <label>Borders rounding</label>
-                    </div>
-                    <div class="block-container">
-                        <div class="nav-btn" onclick="requestBorderRadius(4)">
-                            <img class="theme-icon" name="square">
-                            <label>Small</label>
-                        </div>
-                        <div class="nav-btn" onclick="requestBorderRadius(16)">
-                            <img class="theme-icon" name="circle">
-                            <label>Circle</label>
-                        </div>
-                        <label class="link" onclick="moreSettings()" title="More settings">More</label>
+                        <label class="link" onclick="moreSettings('background-color')" title="More settings">More</label>
                     </div>
                 </div>
             </div>
             <div class="tab">
-                <label class="subtitle">Startup</label>
+                <label class="subtitle">Custom</label>
                 <div class="container">
                     <div class="block-title">
                         <img name="search" class="theme-icon">
@@ -96,8 +81,20 @@
                             <img src='../imgs/engines/duckduckgo.png'>
                             <label>DuckDuckGo</label>
                         </div>
-                        <label class="link" onclick="moreSettings()" title="More settings">More</label>
+                        <label class="link" onclick="moreSettings('search-engine')" title="More settings">More</label>
                     </div>
+                    <div class="block-title">
+                        <img name="bookmarks" class="theme-icon">
+                        <label>Bookmarks</label>
+                    </div>
+                    <div class="block-container">
+        
+                    </div>
+                </div>
+            </div>
+            <div class="tab">
+                <label class="subtitle">Custom</label>
+                <div class="container">
                     <div class="block-title">
                         <img name="create" class="theme-icon">
                         <label>New tab</label>
@@ -109,6 +106,13 @@
                             <label>Save</label>
                         </div>
                     </div>
+                    <div class="block-title">
+                        <img name="home" class="theme-icon">
+                        <label>Home page</label>
+                    </div>
+                    <div class="block-container">
+                        
+                    </div>
                 </div>
             </div>
             <div class="tab">
@@ -119,11 +123,11 @@
                         <label>All done</label>
                     </div>
                     <div class="block-container">
-                        <div class="nav-checkbox" style="border: none">
-                            <label class="nav-btn-label">Show this dialog at startup
-                            <input type="checkbox" class="checkbox" checked id="welcome-checkbox">
+                        <div class="nav-checkbox">
+                            <label>Show this dialog at startup
+                            <input type="checkbox" class="checkbox" checked id="welcome-checkbox" onclick="changeWelcome(this.checked)">
                         </div>
-                        <div id="start-btn" onclick="finishWelcome()"><label class="subtitle">Get started</label></div>
+                        <div id="start-btn" onclick="closeWindow()"><label class="subtitle">Get started</label></div>
                     </div>
                 </div>
             </div>

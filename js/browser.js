@@ -328,6 +328,10 @@ function popupInfoContextMenu() {
   ipcRenderer.send('request-info-contextmenu');
 }
 
+function popupHomeButtonContextMenu() {
+  ipcRenderer.send('request-home-button-contextmenu');
+}
+
 function toggleSidebar() {
   if (document.getElementById("sidebar").style.display == "none") {
     showSidebar();
@@ -427,12 +431,16 @@ function goToAboutTab() {
   document.getElementById('history-btn').classList.remove('active');
 }
 
-function goToSettingsTab() {
+function goToSettingsTab(shortcutId) {
   var sidebarWebview = document.getElementById('sidebar-webview');
   sidebarWebview.stop();
   showSidebar();
 
-  sidebarWebview.src = '../html/settings.html';
+  if(shortcutId != null) {
+    sidebarWebview.src = '../html/settings.html#' + shortcutId;
+  } else {
+    sidebarWebview.src = '../html/settings.html';
+  }
 
   document.getElementById('bookmarks-btn').classList.remove('active');
   document.getElementById('downloads-btn').classList.remove('active');
@@ -568,25 +576,21 @@ function getSuggestions() {
   suggest.style.display = "";
   suggest.classList.remove("hide");
 
+  container.innerHTML = "<input class='active' type='button' value='" + input.value + "' onclick='navigateSuggest(this.value)' />";
+
   if (input.value.length > 0) {
-    // try {
-      autoSuggest.getQuerySuggestions(input.value, function (err, suggestions) {
-        container.innerHTML = "<input class='active' type='button' value='" + input.value + "' onclick='navigateSuggest(this.value)' />";
-        if (suggestions != null && suggestions.length > 0) {
-          if (container.childNodes.length < 5) {
-            var i;
-            for (i = 0; i < 5; i++) {
-              if (suggestions[i] != null) {
-                var button = "<input type='button' value='" + suggestions[i].suggestion + "' onclick='navigateSuggest(this.value)' />";
-                container.innerHTML += button;
-              }
+    autoSuggest.getQuerySuggestions(input.value, function (err, suggestions) {
+      if (suggestions != null && suggestions.length > 0) {
+        if (container.childNodes.length < 5) {
+          for (var i = 0; i < 5; i++) {
+            if (suggestions[i] != null) {
+              var button = "<input type='button' value='" + suggestions[i].suggestion + "' onclick='navigateSuggest(this.value)' />";
+              container.innerHTML += button;
             }
           }
         }
-      });
-    // } catch (error) {
-      
-    // }
+      }
+    });
   } else {
     removeSuggestions();
   }
@@ -803,7 +807,7 @@ function showSidebar() {
   document.getElementById('sidebar').style.display = "";
   document.getElementById('sidebar').classList.remove('hide');
 
-  document.getElementById('sidebar-webview').openDevTools();
+  // document.getElementById('sidebar-webview').openDevTools();
 }
 
 function hideSidebar() {
@@ -945,6 +949,72 @@ function etabsTabsWheel(event) {
   }
 }
 
+function zoomNotif(zoom) {
+  var div = document.createElement('div');
+  div.id="zoom-1";
+  div.classList.add('notif');
+  div.classList.add('zoom');
+  div.innerHTML = `<img name='search' class='notif-icon theme-icon'>
+                    <div class='notif-body'>
+                        <label class='notif-text'>Zoom factor changed to ` + zoom + `%</label>
+                        <img class='notif-close theme-icon' onclick='removeNotif(this.parentNode.parentNode)' title='Close notification' name='cancel'>
+                        <br>
+                        <div class="nav-btn" onclick="zoomOut()">
+                            <img class="nav-btn-icon theme-icon" name="zoom-out">
+                            <label class="nav-btn-label">Zoom out</label>
+                        </div>
+                        <div class="nav-btn" onclick="zoomIn()">
+                            <img class="nav-btn-icon theme-icon" name="zoom-in">
+                            <label class="nav-btn-label">Zoom in</label>
+                        </div>
+                    </div>`;
+
+  var notifPanel = document.getElementById('notif-panel');
+
+  notifPanel.insertBefore(div, notifPanel.firstChild);
+
+  applyTheme(document.documentElement.style.getPropertyValue('--color-back'));
+
+  if (notifPanel.childNodes.length > 5) {
+    for(var i = notifPanel.childNodes.length; i > 5; i--) {
+      notifPanel.removeChild(notifPanel.lastChild);
+    }
+  }
+
+  setTimeout(function () {
+    removeNotif(div);
+  }, 5000);
+}
+
+function updateZoomNotif(zoom) {
+  var div = document.getElementById('zoom-1');
+  if(div != null) {
+    div.getElementsByClassName('notif-text')[0].innerHTML = "Zoom factor changed to " + zoom + "%";
+  } else {
+    zoomNotif(zoom);
+  }
+}
+
+function zoomIn() {
+  var zoomFactor = tabGroup.getActiveTab().webview.getZoomFactor();
+  console.log(zoomFactor);
+  if (zoomFactor < 2.5) {
+    tabGroup.getActiveTab().webview.setZoomFactor(zoomFactor + 0.1);
+    updateZoomNotif(Math.round((zoomFactor + 0.1) * 100));
+    tabGroup.getActiveTab().webview.focus();
+  }
+}
+
+function zoomOut() {
+  var zoomFactor = tabGroup.getActiveTab().webview.getZoomFactor();
+  console.log(zoomFactor);
+  if (zoomFactor > 0.3) {
+    tabGroup.getActiveTab().webview.setZoomFactor(zoomFactor - 0.1);
+    updateZoomNotif(Math.round((zoomFactor - 0.1) * 100));
+    tabGroup.getActiveTab().webview.focus();
+  }
+}
+
 function searchSuggestWheel(event) {
   if (event.deltaY < 0) {
     var suggestions = document.getElementById('search-suggest-container').childNodes;
@@ -983,11 +1053,18 @@ function updateBookmarksBar() {
   if(bbar.style.display != "none") {
     try {
       bbar.innerHTML = "";
-      var jsonstr = fs.readFileSync(ppath + "\\json\\bookmarks.json");
+      var jsonstr = fs.readFileSync(ppath + "\\json\\folders.json");
       var arr = JSON.parse(jsonstr);
-      var i;
-      for (i = 0; i < arr.length; i++) {
-        addToBookmarksBar(arr[i].index, arr[i].name, arr[i].url);
+      for (var i = 0; i < arr.length; i++) {
+        addFolderToBookmarksBar(arr[i].name);
+      }
+
+      jsonstr = fs.readFileSync(ppath + "\\json\\bookmarks.json");
+      arr = JSON.parse(jsonstr);
+      for (var i = 0; i < arr.length; i++) {
+        if(arr[i].folder == "All bookmarks") {
+          addBookmarkToBookmarksBar(arr[i].url, arr[i].name);
+        }
       }
     } catch (e) {
   
@@ -995,12 +1072,29 @@ function updateBookmarksBar() {
   }
 }
 
-function addToBookmarksBar(index, name, url) {
+function addFolderToBookmarksBar(name) {
+  var bbar = document.getElementById('bookmarks-bar');
+
+  var div = document.createElement('div');
+  div.classList.add('folder');
+  div.innerHTML = "<img src='../imgs/icons16/folder.png'><label>" + name + "</label>";
+
+  div.onclick = () => {
+    ipcRenderer.send('request-folder-bookmarks', name);
+  }
+
+  div.addEventListener('contextmenu', (e) => {
+    ipcRenderer.send('request-folder-contextmenu');
+  }, false);
+
+  bbar.appendChild(div);
+}
+
+function addBookmarkToBookmarksBar(url, name) {
   var bbar = document.getElementById('bookmarks-bar');
 
   var div = document.createElement('div');
   div.classList.add('bookmark');
-  div.id = "bookmark-" + index;
   div.title = url;
 
   div.onclick = () => {
@@ -1008,11 +1102,7 @@ function addToBookmarksBar(index, name, url) {
   }
 
   div.addEventListener('contextmenu', (e) => {
-    let Data = {
-      index: index,
-      url: url
-    };
-    ipcRenderer.send('request-bookmark-contextmenu', Data);
+    ipcRenderer.send('request-bookmark-contextmenu', url);
   }, false);
 
   div.addEventListener('auxclick', (e) => {
@@ -1029,10 +1119,55 @@ function addToBookmarksBar(index, name, url) {
      }
   }, false);
 
-  div.innerHTML = `<img class="bookmark-icon" src="` + 'http://www.google.com/s2/favicons?domain=' + url + `">
+  div.innerHTML = `<img src="` + 'http://www.google.com/s2/favicons?domain=' + url + `">
                   <label>` + name + `</label>`;
 
   bbar.appendChild(div);
+}
+
+function loadHome() {
+  let Data = {
+    url: "https://duckduckgo.com",
+    on: 0
+  };
+
+  try {
+    var jsonstr = fs.readFileSync(ppath + "\\json\\home.json");
+    Data = JSON.parse(jsonstr);
+  } catch (e) {
+    if(!fs.existsSync(ppath + "\\json")) {
+      fs.mkdirSync(ppath + "\\json");
+    } 
+    fs.writeFileSync(ppath + "\\json\\home.json", JSON.stringify(Data));
+  }
+
+  var btn = document.getElementById('home-btn');
+  if(Data.on == 1) {
+    btn.style.display = "";
+    btn.onclick = () => {
+      goHome(Data.url);
+    }
+  } else {
+    btn.style.display = "none";
+  }
+}
+
+function goHome(url) {
+  tabGroup.getActiveTab().webview.loadURL(url);
+}
+
+function cancelPictureIn() {
+  document.getElementById('picture-in-panel').classList.add('hide');
+
+  setTimeout(function() {
+    document.getElementById('picture-in-panel').style.display = "none";
+  }, 250);
+}
+
+function pictureIn(url) {
+  document.getElementById('picture-in-panel').classList.remove('hide');
+  document.getElementById('picture-in-panel').style.display = "";
+  document.getElementById('picture-in-webview').loadURL(url);
 }
 
 /*
@@ -1044,6 +1179,11 @@ function addToBookmarksBar(index, name, url) {
 ..##..##........##....##....##....##..##.......##...###.##.....##.##.......##....##..##.......##....##.
 .####.##.........######.....##.....##.########.##....##.########..########.##.....##.########.##.....##
 */
+
+ipcRenderer.on('action-sidebar-devtools', (event, arg) => {
+  showSidebar();
+  document.getElementById('sidebar-webview').openDevTools();
+});
 
 ipcRenderer.on('action-maximize-window', (event, arg) => {
   document.getElementById('drag-zone').classList.add('maximize');
@@ -1070,6 +1210,19 @@ ipcRenderer.on('action-copy-text', (event, arg) => {
   document.body.removeChild(input);
 });
 
+ipcRenderer.on('action-update-home-page', (event, arg) => {
+  loadHome();
+});
+
+ipcRenderer.on('action-tab-gohome', (event, arg) => {
+  document.getElementById('home-btn').click();
+});
+
+ipcRenderer.on('action-tab-picturein', (event, arg) => {
+  var url = tabGroup.getActiveTab().webview.getURL();
+  pictureIn(url);
+});
+
 ipcRenderer.on('action-update-bookmarks-bar', (event, arg) => {
   updateBookmarksBar();
 });
@@ -1093,7 +1246,7 @@ ipcRenderer.on('action-tab-forward', (event, arg) => {
 ipcRenderer.on('action-tab-duplicatetab', (event, arg) => {
   var url = tabGroup.getActiveTab().webview.src;
   tabGroup.addTab();
-  tabGroup.getActiveTab().webview.src = url;
+  tabGroup.getActiveTab().webview.loadURL(url);
 });
 ipcRenderer.on('action-tab-closetab', (event, arg) => {
   tabGroup.getActiveTab().close(false);
@@ -1121,35 +1274,24 @@ ipcRenderer.on('action-open-downloads', (event, arg) => {
 });
 
 ipcRenderer.on('action-open-settings', (event, arg) => {
-  goToSettingsTab();
+  goToSettingsTab(arg);
 });
 
 ipcRenderer.on('action-zoom-zoomout', (event, arg) => {
-  var zoomFactor = tabGroup.getActiveTab().webview.getZoomFactor();
-  if (zoomFactor > 0.3) {
-    tabGroup.getActiveTab().webview.setZoomFactor(zoomFactor - 0.1);
-    notif("Zoom factor changed to " + Math.round((zoomFactor - 0.1) * 100) + "%", "info");
-    tabGroup.getActiveTab().webview.focus();
-  }
+  zoomOut();
 });
 
 ipcRenderer.on('action-zoom-zoomin', (event, arg) => {
-  var zoomFactor = tabGroup.getActiveTab().webview.getZoomFactor();
-  if (zoomFactor < 2.5) {
-    tabGroup.getActiveTab().webview.setZoomFactor(zoomFactor + 0.1);
-    notif("Zoom factor changed to " + Math.round((zoomFactor + 0.1) * 100) + "%", "info");
-    tabGroup.getActiveTab().webview.focus();
-  }
+  zoomIn(); 
 });
 
 ipcRenderer.on('action-zoom-actualsize', (event, arg) => {
-  tabGroup.getActiveTab().webview.getZoomFactor(function (zoomFactor) {
-    if (zoomFactor != 1) {
-      tabGroup.getActiveTab().webview.setZoomFactor(1);
+  var zoomFactor = tabGroup.getActiveTab().webview.getZoomFactor();
+  if (zoomFactor != 1) {
+    tabGroup.getActiveTab().webview.setZoomFactor(1);
       notif("Zoom factor changed to the actual size (100%)", "info");
       tabGroup.getActiveTab().webview.focus();
-    }
-  });
+  }
 });
 
 ipcRenderer.on('action-edit-cut', (event, arg) => {
@@ -1235,7 +1377,7 @@ ipcRenderer.on('action-tabcontext-reload', (event, arg) => {
 ipcRenderer.on('action-tabcontext-duplicatetab', (event, arg) => {
   var url = tabGroup.getTab(arg).webview.src;
   tabGroup.addTab();
-  tabGroup.getActiveTab().webview.src = url;
+  tabGroup.getActiveTab().webview.loadURL(url);
 });
 
 ipcRenderer.on('action-tabcontext-closetab', (event, arg) => {
@@ -1260,6 +1402,10 @@ ipcRenderer.on('action-update-loader', (event, arg) => {
 
 ipcRenderer.on('action-change-theme', (event, arg) => {
   applyTheme(arg);
+});
+
+ipcRenderer.on('action-toggle-sidebar', (event, arg) => {
+  toggleSidebar();
 });
 
 ipcRenderer.on('action-change-border-radius', (event, arg) => {
@@ -1377,6 +1523,7 @@ ipcRenderer.on('action-set-download-process', (event, arg) => {
 function init() {
   loadTheme();
   loadBorderRadius();
+  loadHome();
   loadBookmarksBar();
 }
 

@@ -14,25 +14,34 @@
       <label>Shortcuts</label>
     </div>
     <div class="container">
-      <label class="link" onclick="scrollToId('background-color')">Background color</label>
+      <label class="link" onclick="scrollToId('background-color')">Themes</label>
       <label class="link" onclick="scrollToId('borders-rounding')">Borders rounding</label>
       <label class="link" onclick="scrollToId('new-tab')">New tab</label>
+      <label class="link" onclick="scrollToId('home-page')">Home page</label>
       <label class="link" onclick="scrollToId('search-engine')">Search engine</label>
       <label class="link" onclick="scrollToId('bookmarks')">Bookmarks</label>
-      <label class="link" onclick="scrollToId('welcome-screen')">Welcome screen</label>
+      <label class="link" onclick="scrollToId('welcome-screen')">Welcome</label>
     </div>
 
     <div class="block-title" id="background-color">
       <img name="color" class="theme-icon">
-      <label>Background color</label>
+      <label>Themes</label>
     </div>
     <div class="container">
-      <div class="color" onclick="requestTheme('rgb(255, 255, 255)')"><div style="background-color: rgb(255, 255, 255)"></div>White</div>
+      <div class="theme-preview" onclick="requestTheme('rgb(255, 255, 255)')">
+          <label>White</label>
+          <img src="../imgs/themes/white.png">
+      </div>
+      <div class="theme-preview" onclick="requestTheme('rgb(30, 39, 46)')">
+          <label>Night</label>
+          <img src="../imgs/themes/night.png">
+      </div>
+      <div class="theme-preview" onclick="requestTheme('rgb(72, 84, 96)')">
+          <label>Modern</label>
+          <img src="../imgs/themes/modern.png">
+      </div>
       <div class="color" onclick="requestTheme('rgb(238, 238, 238)')"><div style="background-color: rgb(238, 238, 238)"></div>Light</div>
       <div class="color" onclick="requestTheme('rgb(222, 225, 230)')"><div style="background-color: rgb(225, 225, 225)"></div>Gray</div>
-      <div class="color" onclick="requestTheme('rgb(72, 84, 96)')"><div style="background-color: rgb(72, 84, 96)"></div>Modern</div>
-      <div class="color" onclick="requestTheme('rgb(43, 37, 65)')"><div style="background-color: rgb(43, 37, 65)"></div>Purple</div>
-      <div class="color" onclick="requestTheme('rgb(30, 39, 46)')"><div style="background-color: rgb(30, 39, 46)"></div>Night</div>
       <div class="color" onclick="requestTheme('rgb(41, 42, 45)')"><div style="background-color: rgb(41, 42, 45)"></div>Dark</div>
       <div class="color" onclick="requestTheme('rgb(34, 34, 34)')"><div style="background-color: rgb(34, 34, 34)"></div>Black</div>
     </div>
@@ -71,13 +80,31 @@
       <label>New tab</label>
     </div>
     <div class="container">
-      <input type="text" id="start-page-input" placeholder="New tab page url">
+      <input type="text" id="start-page-input" placeholder="New tab page URL">
       <div class="nav-btn" onclick="saveStartPage()">
         <img class="theme-icon" name="save">
         <label>Save</label>
       </div>
       <img class="more-btn theme-icon" onclick="moreInfo(this)" title="More info" name="info">
       <label class="more-label">The page that will open when you create a new tab or when you start the browser (You need to restart the browser).</label>
+    </div>
+
+    <div class="block-title" id="home-page">
+      <img name="home" class="theme-icon">
+      <label>Home page</label>
+    </div>
+    <div class="container">
+      <input type="text" id="home-page-input" placeholder="Home page URL">
+      <div class="nav-checkbox">
+        <label>Show button
+        <input type="checkbox" id="home-page-checkbox" class="checkbox">
+      </div>
+      <div class="nav-btn" onclick="saveHomePage()">
+        <img class="theme-icon" name="save">
+        <label>Save</label>
+      </div>
+      <img class="more-btn theme-icon" onclick="moreInfo(this)" title="More info" name="info">
+      <label class="more-label">The page that will open when you click home button.</label>
     </div>
 
     <div class="block-title" id="search-engine">
@@ -149,17 +176,21 @@
       <label>Bookmarks</label>
     </div>
     <div class="container">
-      <div class="nav-btn" onclick="toggleBookmarksBar()">
-        <img class="nav-btn-icon theme-icon" name="bookmarks-bar">
-        <label class="nav-btn-label">Toggle bookmarks bar</label>
+      <div class="nav-checkbox">
+        <label>Show bookmarks bar
+        <input type="checkbox" id="bookmarks-bar-checkbox" onclick="changeBookmarksBar(this.checked)">
       </div>
     </div>
 
     <div class="block-title" id="welcome-screen">
       <img name="box" class="theme-icon">
-      <label>Welcome screen</label>
+      <label>Welcome</label>
     </div>
     <div class="container">
+      <div class="nav-checkbox">
+        <label>Show welcome dialog at startup
+        <input type="checkbox" id="welcome-checkbox" onclick="changeWelcome(this.checked)">
+      </div>
       <div class="nav-btn" onclick="showWelcomeScreen()">
         <img class="nav-btn-icon theme-icon" name="show">
         <label class="nav-btn-label">Show welcome screen</label>

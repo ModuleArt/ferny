@@ -58,16 +58,9 @@
   width: 14px;
   background-color: var(--color-over);
 }
+
 ::-webkit-scrollbar-thumb {
   background-color: var(--color-over);
-}
-::-webkit-scrollbar-button {
-  width: 0;
-  height: 0;
-  display: none;
-}
-::-webkit-scrollbar-corner {
-  background-color: transparent;
 }
 
 ::-webkit-input-placeholder {
@@ -304,7 +297,7 @@ input:hover, input:focus {
   display: inline-block;
   width: calc(100% - 4px);
   background-color: var(--color-over);
-  border-radius: var(--px-radius) var(--px-radius) 0 0;
+  border-radius: calc(var(--px-radius) + 4px) calc(var(--px-radius) + 4px) 0 0;
   text-align: center;
   height: 32px;
   vertical-align: middle;
@@ -321,7 +314,7 @@ input:hover, input:focus {
 .folder .edit-btn {
   display: inline-block;
   padding: 4px 0;
-  border-radius: var(--px-radius) var(--px-radius) 0 0;
+  border-radius: calc(var(--px-radius) + 4px) calc(var(--px-radius) + 4px) 0 0;
   vertical-align: middle;
   height: 32px;
   width: 0;
@@ -349,7 +342,7 @@ input:hover, input:focus {
   display: block;
   padding: 8px;
   margin: 2px;
-  border-radius: 0 0 var(--px-radius) var(--px-radius);
+  border-radius: 0 0 calc(var(--px-radius) + 4px) calc(var(--px-radius) + 4px);
   text-align: center;
 }
 
@@ -370,7 +363,7 @@ hr {
 
 .container {
   background-color: var(--color-over);
-  border-radius: var(--px-radius);
+  border-radius: calc(var(--px-radius) + 4px);
   padding: 2px;
   margin: 2px;
   text-align: center;

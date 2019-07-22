@@ -14,7 +14,9 @@
             <img id="titlebar-icon" class="theme-icon" name="key16">
             <label id="titlebar-title">Hotkeys</label>
             <div id="window-controls">
-                <img name="close16" id="close-btn" class="title-bar-btn theme-icon" title="Close" onclick="closeWindow()">
+                <div class="button" id="close-btn" title="Close" onclick="closeWindow()">
+                    <span>&#xE8BB;</span>
+                </div>
             </div>
         </div>
 
@@ -76,6 +78,11 @@
                 <label class="key-name">Duplicate active tab</label>
 
                 <div class="key-code">
+                    <div class="key">Ctrl</div> + <div class="key">Shift</div> + <div class="key">H</div>
+                </div>
+                <label class="key-name">Navigate active tab to home page</label>
+
+                <div class="key-code">
                     <div class="key">Ctrl</div> + <div class="key">W</div>
                 </div>
                 <label class="key-name">Close active tab</label>
@@ -135,7 +142,7 @@
                 <label class="key-name">Zoom in active page</label>
 
                 <div class="key-code">
-                    <div class="key">Ctrl</div> + <div class="key">Backspace</div>
+                    <div class="key">Ctrl</div> + <div class="key">0</div>
                 </div>
                 <label class="key-name">Change active page zoom to original</label>
 
@@ -229,19 +236,24 @@
             </div>
             <div class="block-container">
                 <div class="key-code">
-                    <div class="key">Ctrl</div> + <div class="key">K</div>
-                </div>
-                <label class="key-name">Show key binds window</label>
-
-                <div class="key-code">
                     <div class="key">Ctrl</div> + <div class="key">Shift</div> + <div class="key">U</div>
                 </div>
                 <label class="key-name">Check for app updates</label>
 
                 <div class="key-code">
-                    <div class="key">Ctrl</div> + <div class="key">Shift</div> + <div class="key">A</div>
+                    <div class="key">F2</div>
                 </div>
                 <label class="key-name">Open sidebar about tab</label>
+
+                <div class="key-code">
+                    <div class="key">F1</div>
+                </div>
+                <label class="key-name">Show hotkeys window</label>
+
+                <div class="key-code">
+                    <div class="key">F7</div>
+                </div>
+                <label class="key-name">Show welcome window</label>
 
                 <div class="key-code">
                     <div class="key">Ctrl</div> + <div class="key">Shift</div> + <div class="key">I</div>
@@ -255,9 +267,9 @@
             </div>
             <div class="block-container">
                 <div class="key-code">
-                    <div class="key">Ctrl</div> + <div class="key">Shift</div> + <div class="key">W</div>
+                    <div class="key">F3</div>
                 </div>
-                <label class="key-name">Show welcome window</label>
+                <label class="key-name">Toggle sidebar appearance</label>
 
                 <div class="key-code">
                     <div class="key">F6</div>
@@ -268,6 +280,16 @@
                     <div class="key">Esc</div>
                 </div>
                 <label class="key-name">Close active panel</label>
+
+                <div class="key-code">
+                    <div class="key">Ctrl</div> + <div class="key">Shift</div> + <div class="key">F11</div>
+                </div>
+                <label class="key-name">Show developer tools for sidebar webview [Danger]</label>
+
+                <div class="key-code">
+                    <div class="key">Ctrl</div> + <div class="key">Shift</div> + <div class="key">F12</div>
+                </div>
+                <label class="key-name">Show developer tools for main window [Danger]</label>
             </div>
 
             <div class="block-title" id="exit">

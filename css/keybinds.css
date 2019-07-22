@@ -85,21 +85,21 @@
     width: 14px;
     background-color: var(--color-over);
   }
-  ::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
     background-color: var(--color-over);
-  }
-  ::-webkit-scrollbar-button {
+}
+::-webkit-scrollbar-button {
     width: 0;
     height: 0;
     display: none;
-  }
-  ::-webkit-scrollbar-corner {
+}
+::-webkit-scrollbar-corner {
     background-color: transparent;
-  }
-  
-  ::-webkit-input-placeholder {
+}
+
+::-webkit-input-placeholder {
     color: var(--color-top);
-  }
+}
 
 /*
 .########.####.########.##.......########.########.....###....########.
@@ -141,26 +141,60 @@
     background-color: var(--color-over);
 }
 
-#titlebar.blur {
+#titlebar.blur #window-controls {
     opacity: 0.5;
 }
+
+/*
+.##......##.####.##....##.....######...#######..##....##.########.########...#######..##........######.
+.##..##..##..##..###...##....##....##.##.....##.###...##....##....##.....##.##.....##.##.......##....##
+.##..##..##..##..####..##....##.......##.....##.####..##....##....##.....##.##.....##.##.......##......
+.##..##..##..##..##.##.##....##.......##.....##.##.##.##....##....########..##.....##.##........######.
+.##..##..##..##..##..####....##.......##.....##.##..####....##....##...##...##.....##.##.............##
+.##..##..##..##..##...###....##....##.##.....##.##...###....##....##....##..##.....##.##.......##....##
+..###..###..####.##....##.....######...#######..##....##....##....##.....##..#######..########..######.
+*/
 
 #window-controls {
-    float: right;
-}
-
-#close-btn {
-    padding: 8px;
     -webkit-app-region: no-drag;
-}
-
-#close-btn:hover {
-    background-color: var(--color-red);
-}
-
-#close-btn:active {
+    display: grid;
+    grid-template-columns: repeat(3, 46px);
+    float: right;
+    height: 100%;
+  }
+  
+  #titlebar.blur #window-controls {
     opacity: 0.5;
-}
+  }
+  
+  #window-controls span {
+    font-family: SegMDL2;
+    font-size: 10px;
+  }
+  
+  #window-controls .button {
+    grid-row: 1 / span 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    color: var(--color-top);
+    transition: background-color 0.25s;
+  }
+  
+  #window-controls .button:active {
+    opacity: 0.5;
+  }
+  
+  #window-controls #close-btn {
+    grid-column: 3;
+  }
+  
+  #window-controls #close-btn:hover {
+    background-color: #E81022;
+    color: white;
+  }
 
 /*
 .####.##....##.########..##.....##.########
@@ -228,17 +262,30 @@ body {
     vertical-align: middle;
 }
 
+/*
+.##....##.########.##....##..######.
+.##...##..##........##..##..##....##
+.##..##...##.........####...##......
+.#####....######......##.....######.
+.##..##...##..........##..........##
+.##...##..##..........##....##....##
+.##....##.########....##.....######.
+*/
+
 .key-code {
     color: var(--color-top);
     display: inline-block;
-    width: 160px;
+    width: 168px;
     padding: 2px;
     text-align: right;
+    vertical-align: middle;
 }
 
 .key-name {
     display: inline-block;
-    width: calc(100% - 164px);
+    width: calc(100% - 176px);
+    vertical-align: middle;
+    margin: 2px;
 }
 
 .key {
@@ -300,6 +347,7 @@ hr {
 .block-title {
     margin-top: 32px;
     text-align: center;
+    padding: 4px;
 }
 
 .block-title img {
