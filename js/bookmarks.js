@@ -179,7 +179,7 @@ function searchKeyUp() {
     var search = document.getElementById("search").value.toLowerCase();
     var elements = document.getElementsByClassName('bookmark');
     for(var i = 0; i < elements.length; i++) {
-      var text = elements[i].getElementsByTagName('label')[0].innerHTML.toLowerCase() + " " + elements[i].title.toLowerCase();
+      var text = elements[i].getElementsByTagName('label')[0].innerHTML.toLowerCase() + " " + elements[i].name.toLowerCase();
       if(text.indexOf(search) != -1) {
         elements[i].style.display = "inline-block";
       } else {
@@ -210,12 +210,12 @@ function cancelSearch() {
 */
 
 function openBookmarkInNewTab(inNewTabBtn) {
-  ipcRenderer.send('request-open-url-in-new-tab', inNewTabBtn.parentNode.parentNode.title);
+  ipcRenderer.send('request-open-url-in-new-tab', inNewTabBtn.parentNode.parentNode.name);
 }
 
 function copyBookmark(copyBtn) {
   var input = document.createElement('input');
-  input.value = copyBtn.parentNode.parentNode.title;
+  input.value = copyBtn.parentNode.parentNode.name;
   document.body.appendChild(input);
   input.select();
   document.execCommand('copy');
@@ -226,7 +226,7 @@ function editBookmark(bookmark) {
   showBookmarkEditor();
 
   document.getElementById('edit-bookmark-name').value = bookmark.getElementsByTagName('label')[0].innerHTML;
-  document.getElementById('edit-bookmark-url').value = bookmark.title;
+  document.getElementById('edit-bookmark-url').value = bookmark.name;
   document.getElementById('edit-bookmark-folder').value = bookmark.parentNode.parentNode.getElementsByTagName('label')[0].innerHTML;
 
   document.getElementById('remove-bookmark-btn').onclick = function() {
@@ -297,7 +297,8 @@ function newBookmark() {
 function appendBookmark(name, url, folderEl) {
   let div = document.createElement('a');
   div.classList.add('bookmark');
-  div.title = url;
+  div.title = name + "\n" + url;
+  div.name = url;
 
   div.onclick = function(e) {
     ipcRenderer.send('request-open-url', url);
@@ -320,7 +321,7 @@ function appendBookmark(name, url, folderEl) {
   div.addEventListener('auxclick', (e) => {
     e.preventDefault();
       if(e.which == 2) {
-        ipcRenderer.send('request-open-url-in-new-tab', div.title);
+        ipcRenderer.send('request-open-url-in-new-tab', name);
       }
   }, false);
 
@@ -406,11 +407,11 @@ function loadBookmarks() {
 function saveBookmarks() {
   var bookmarksArray = [];
 
-  var bookmarks = document.getElementsByClassName('bookmark');
+  var bookmarks = document.getElementById('folders').getElementsByClassName('bookmark');
 
   for(var i = 0; i < bookmarks.length; i++) {
     let Data = {
-      url: bookmarks[i].title,
+      url: bookmarks[i].name,
       name: bookmarks[i].getElementsByTagName('label')[0].innerHTML,
       folder: bookmarks[i].parentNode.parentNode.getElementsByTagName('label')[0].innerHTML
     };
@@ -553,6 +554,8 @@ function saveFolders() {
     }
   }
   fs.writeFileSync(ppath + "\\json\\folders.json", JSON.stringify(folderArray));
+
+  ipcRenderer.send('request-update-bookmarks-bar');
 }
 
 /*

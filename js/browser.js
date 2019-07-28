@@ -17,6 +17,17 @@ const getAvColor = require('color.js');
 const fs = require("fs");
 const ppath = require('persist-path')('Ferny');
 
+// const bookmarkDrag = dragula([document.getElementById('bookmarks-bar')], {
+//   moves: function(el, container, handle) {
+//     return !el.classList.contains('folder');
+//   },
+//   direction: "horizontal"
+// });
+
+// bookmarkDrag.on('drop', function(el, target, source, sibling) {
+//   saveBookmarksBar();
+// });
+
 /*
 .########....###....########...######.
 ....##......##.##...##.....##.##....##
@@ -252,7 +263,7 @@ function loadTheme() {
 }
 
 function loadBorderRadius() {
-  var borderRadius = '4';
+  var borderRadius = '8';
 
   try {
     borderRadius = fs.readFileSync(ppath + "\\json\\radius.json");
@@ -266,29 +277,92 @@ function loadBorderRadius() {
   applyBorderRadius(borderRadius);
 }
 
-function loadBookmarksBar() {
-  var bookmarksBarOn = "0";
+function saveSidebar() {
+  var pin = document.body.classList.contains('pinned-sidebar');
+  if(pin) {
+    pin = 1;
+  } else {
+    pin = 0;
+  }
+  var collapse = document.body.classList.contains('collapse-sidebar');
+  if(collapse) {
+    collapse = 1;
+  } else {
+    collapse = 0;
+  }
+
+  let Data = {
+    pin: pin,
+    collapse: collapse
+  };
+
+  fs.writeFileSync(ppath + "\\json\\sidebar.json", JSON.stringify(Data));
+}
+
+function loadSidebar() {
+  let Data = {
+    pin: 0,
+    collapse: 0
+  };
 
   try {
-    bookmarksBarOn = fs.readFileSync(ppath + "\\json\\bookmarksbar.json");
+    var jsonstr = fs.readFileSync(ppath + "\\json\\sidebar.json");
+    Data = JSON.parse(jsonstr);
   } catch (e) {
     if(!fs.existsSync(ppath + "\\json")) {
       fs.mkdirSync(ppath + "\\json");
     } 
-    fs.writeFileSync(ppath + "\\json\\bookmarksbar.json", bookmarksBarOn);
+    fs.writeFileSync(ppath + "\\json\\sidebar.json", JSON.stringify(Data));
   }
 
-  applyBookmarksBar(bookmarksBarOn);
+  if(Data.pin == 1) {
+    showSidebar();
+    pinSidebar();
+  }
+  if(Data.collapse == 1) {
+    document.body.classList.add('collapse-sidebar');
+  }
+}
+
+function loadBookmarksBar() {
+  let Data = {
+    on: 0,
+    layout: "all"
+  };
+
+  try {
+    var jsonstr = fs.readFileSync(ppath + "\\json\\bookmarksbar.json");
+    Data = JSON.parse(jsonstr);
+  } catch (e) {
+    if(!fs.existsSync(ppath + "\\json")) {
+      fs.mkdirSync(ppath + "\\json");
+    } 
+    fs.writeFileSync(ppath + "\\json\\bookmarksbar.json", JSON.stringify(Data));
+  }
+
+  applyBookmarksBar(Data);
 }
 
 function applyBookmarksBar(arg) {
-  if(arg == 1) {
+  if(arg.on == 1) {
     document.getElementById('bookmarks-bar').style.display = "";
     document.body.classList.add('bookmarks-bar');
+
+    if(arg.layout == "only-icons") {
+      document.getElementById('bookmarks-bar').classList.add("only-icons");
+      document.getElementById('bookmarks-bar').classList.remove("only-labels");
+    } else if(arg.layout == "only-labels") {
+      document.getElementById('bookmarks-bar').classList.remove("only-icons");
+      document.getElementById('bookmarks-bar').classList.add("only-labels");
+    } else {
+      document.getElementById('bookmarks-bar').classList.remove("only-icons");
+      document.getElementById('bookmarks-bar').classList.remove("only-labels");
+    }
 
     updateBookmarksBar();
   } else {
     document.getElementById('bookmarks-bar').style.display = "none";
+    document.getElementById('bookmarks-bar').innerHTML = "";
     document.body.classList.remove('bookmarks-bar');
   }
 }
@@ -297,7 +371,6 @@ function newTabDrop(e) {
   e.preventDefault();
   var textData = e.dataTransfer.getData("Text");
   if (textData) {
-    tab.webview.loadURL(textData);
     tabGroup.addTab({
       title: 'New Tab',
       src: textData,
@@ -375,13 +448,15 @@ function requestSideMenu() {
 function pinSidebar() {
   document.getElementById('pin-sidebar-btn').style.display = "none";
   document.getElementById('unpin-sidebar-btn').style.display = "";
-  document.getElementById('etabs-views').classList.add('pinned');
+  document.body.classList.add('pinned-sidebar');
+  saveSidebar();
 }
 
 function unpinSidebar() {
   document.getElementById('pin-sidebar-btn').style.display = "";
   document.getElementById('unpin-sidebar-btn').style.display = "none";
-  document.getElementById('etabs-views').classList.remove('pinned');
+  document.body.classList.remove('pinned-sidebar');
+  saveSidebar();
 }
 
 function installUpdate() {
@@ -463,13 +538,11 @@ function goToDownloadsTab() {
   document.getElementById('history-btn').classList.remove('active');
 }
 
-function createBookmark() {
-  var url = tabGroup.getActiveTab().webview.getURL();
-  var name = tabGroup.getActiveTab().webview.getTitle();
-
+function createBookmark(url, name, folder) {
   let Data = {
     name: name,
-    url: url
+    url: url,
+    folder: folder
   };
 
   var arr = [];
@@ -566,9 +639,6 @@ function removeSuggestions() {
 }
 
 function getSuggestions() {
-  closeFindPanel();
-  hideSidebar();
-
   var input = document.getElementById('search-input');
   var suggest = document.getElementById('search-suggest');
   var container = document.getElementById('search-suggest-container');
@@ -800,9 +870,6 @@ function applyBorderRadius(size) {
 }
 
 function showSidebar() {
-  closeFindPanel();
-  removeSuggestions();
-
   document.getElementById("sidebar-btn").classList.add('active');
   document.getElementById('sidebar').style.display = "";
   document.getElementById('sidebar').classList.remove('hide');
@@ -834,9 +901,6 @@ function esc() {
 }
 
 function showFindPanel() {
-  removeSuggestions();
-  hideSidebar();
-
   document.getElementById("find-panel").style.display = "";
   document.getElementById('find-panel').classList.remove('hide');
   document.getElementById("find-input").select();
@@ -997,7 +1061,6 @@ function updateZoomNotif(zoom) {
 
 function zoomIn() {
   var zoomFactor = tabGroup.getActiveTab().webview.getZoomFactor();
-  console.log(zoomFactor);
   if (zoomFactor < 2.5) {
     tabGroup.getActiveTab().webview.setZoomFactor(zoomFactor + 0.1);
     updateZoomNotif(Math.round((zoomFactor + 0.1) * 100));
@@ -1007,7 +1070,6 @@ function zoomIn() {
 
 function zoomOut() {
   var zoomFactor = tabGroup.getActiveTab().webview.getZoomFactor();
-  console.log(zoomFactor);
   if (zoomFactor > 0.3) {
     tabGroup.getActiveTab().webview.setZoomFactor(zoomFactor - 0.1);
     updateZoomNotif(Math.round((zoomFactor - 0.1) * 100));
@@ -1054,20 +1116,18 @@ function updateBookmarksBar() {
     try {
       bbar.innerHTML = "";
       var jsonstr = fs.readFileSync(ppath + "\\json\\folders.json");
-      var arr = JSON.parse(jsonstr);
-      for (var i = 0; i < arr.length; i++) {
-        addFolderToBookmarksBar(arr[i].name);
+      var folders = JSON.parse(jsonstr);
+      for (var i = 0; i < folders.length; i++) {
+        addFolderToBookmarksBar(folders[i].name);
       }
 
       jsonstr = fs.readFileSync(ppath + "\\json\\bookmarks.json");
-      arr = JSON.parse(jsonstr);
+      var arr = JSON.parse(jsonstr);
       for (var i = 0; i < arr.length; i++) {
-        if(arr[i].folder == "All bookmarks") {
-          addBookmarkToBookmarksBar(arr[i].url, arr[i].name);
-        }
+        checkIfHasFolder(arr[i].url, arr[i].name, arr[i].folder, folders, i);
       }
     } catch (e) {
-  
+
     }
   }
 }
@@ -1075,34 +1135,90 @@ function updateBookmarksBar() {
 function addFolderToBookmarksBar(name) {
   var bbar = document.getElementById('bookmarks-bar');
 
-  var div = document.createElement('div');
+  var div = document.createElement('button');
   div.classList.add('folder');
-  div.innerHTML = "<img src='../imgs/icons16/folder.png'><label>" + name + "</label>";
+  div.innerHTML = "<img class='folder-icon' src='../imgs/icons16/folder.png'><span>" + name + "</span><div class='folder-div'></div>";
+  div.title = name;
 
-  div.onclick = () => {
-    ipcRenderer.send('request-folder-bookmarks', name);
+  div.ondrop = (e) => {
+    e.preventDefault();
+
+    bbar.ondrop = (e) => {
+      return false;
+    }
+
+    var textData = e.dataTransfer.getData("Text");
+    if (textData) {
+      createBookmark(textData, textData, name);
+    }
+
+    setTimeout(() => {
+      bbar.ondrop = bookmarksBarDrop;
+    }, 150);
   }
 
-  div.addEventListener('contextmenu', (e) => {
-    ipcRenderer.send('request-folder-contextmenu');
-  }, false);
+  // div.onfocus = () => {
+  //   var folderDiv = div.getElementsByClassName('folder-div')[0];
+  //   folderDiv.style.display = "block";
+  // }
+
+  // div.addEventListener('focusout', () => {
+  //   if(div.getElementsByClassName('bookmark-div').length == 0) {
+  //     div.getElementsByClassName('folder-div')[0].style.display = "none"; 
+  //   }
+  // });
+
+  // div.addEventListener('contextmenu', (e) => {
+  //   ipcRenderer.send('request-folder-contextmenu');
+  // }, false);
 
   bbar.appendChild(div);
 }
 
-function addBookmarkToBookmarksBar(url, name) {
-  var bbar = document.getElementById('bookmarks-bar');
+function checkIfHasFolder(url, name, folder, folders, index) {
+  var bool = false;
+  var folderIndex = 0;
 
+  for(var i = 0; i < folders.length; i++) {
+    if(folders[i].name == folder) {
+      bool = true;
+      folderIndex = i;
+      break;
+    }
+  }
+
+  var bbar = document.getElementById('bookmarks-bar');
+  if(bool) {
+    var elFolders = bbar.getElementsByClassName('folder-div');
+    addBookmarkToBookmarksBar(url, name, elFolders[folderIndex], index);
+  } else {
+    addBookmarkToBookmarksBar(url, name, bbar, index);
+  }
+}
+
+function addBookmarkToBookmarksBar(url, name, parent, index) {
   var div = document.createElement('div');
   div.classList.add('bookmark');
-  div.title = url;
+  div.title = name + "\n" + url;
+  div.id = "bookmark-" + index;
+  div.name = url;
+
+  div.ondragstart = (e) => {
+    e.dataTransfer.setData("text/plain", url);
+  }
 
   div.onclick = () => {
     tabGroup.getActiveTab().webview.loadURL(url);
+    return false;
   }
 
   div.addEventListener('contextmenu', (e) => {
-    ipcRenderer.send('request-bookmark-contextmenu', url);
+    let contextData = {
+      url: div.name,
+      id: div.id
+    };
+
+    ipcRenderer.send('request-bookmark-contextmenu', contextData);
   }, false);
 
   div.addEventListener('auxclick', (e) => {
@@ -1119,10 +1235,18 @@ function addBookmarkToBookmarksBar(url, name) {
      }
   }, false);
 
-  div.innerHTML = `<img src="` + 'http://www.google.com/s2/favicons?domain=' + url + `">
-                  <label>` + name + `</label>`;
+  div.innerHTML = `<img class="bookmark-icon" src="` + 'http://www.google.com/s2/favicons?domain=' + url + `">
+                  <span>` + name + `</span>`;
 
-  bbar.appendChild(div);
+  parent.appendChild(div);
+}
+
+function bookmarksBarDrop(e) {
+  e.preventDefault();
+  var textData = e.dataTransfer.getData("Text");
+  if (textData) {
+    createBookmark(textData, textData, null);
+  }
 }
 
 function loadHome() {
@@ -1156,6 +1280,15 @@ function goHome(url) {
   tabGroup.getActiveTab().webview.loadURL(url);
 }
 
+function copyText(arg) {
+  var input = document.createElement('input');
+  input.value = arg;
+  document.body.appendChild(input);
+  input.select();
+  document.execCommand('copy');
+  document.body.removeChild(input);
+}
+
 function cancelPictureIn() {
   document.getElementById('picture-in-panel').classList.add('hide');
 
@@ -1164,10 +1297,58 @@ function cancelPictureIn() {
   }, 250);
 }
 
-function pictureIn(url) {
+function saveBookmarksBar() {
+  var bbar = document.getElementById('bookmarks-bar');
+
+  var folders = bbar.getElementsByClassName('folder');
+  var foldersArray = [];
+
+  for(var i = 0; i < folders.length; i++) {
+    let Data = {
+      name: folders[i].getElementsByTagName('span')[0].innerHTML
+    };
+    foldersArray.push(Data);
+  }
+
+  fs.writeFileSync(ppath + "\\json\\folders.json", JSON.stringify(foldersArray));
+
+  var bookmarks = bbar.getElementsByClassName('bookmark');
+  var bookmarksArray = [];
+
+  for(var i = 0; i < bookmarks.length; i++) {
+    var folder = null;
+    if (bookmarks[i].parentNode != bbar) {
+      folder = bookmarks[i].parentNode.parentNode.getElementsByTagName('span')[0].innerHTML
+    } 
+
+    let Data = {
+      url: bookmarks[i].name,
+      name: bookmarks[i].getElementsByTagName('span')[0].innerHTML,
+      folder: folder
+    };
+    bookmarksArray.push(Data);
+  }
+
+  fs.writeFileSync(ppath + "\\json\\bookmarks.json", JSON.stringify(bookmarksArray));
+
+  document.getElementById('sidebar-webview').send('action-update-bookmarks');
+}
+
+async function pictureIn(url) {
+  console.log("picture in: " + url);
   document.getElementById('picture-in-panel').classList.remove('hide');
+  console.log("remove hide");
   document.getElementById('picture-in-panel').style.display = "";
-  document.getElementById('picture-in-webview').loadURL(url);
+  console.log("remove display none");
+  var webview = document.getElementById('picture-in-webview').getWebContents();
+  console.log("get web contents");
+  webview.loadURL(url);
+  console.log("load url");
+}
+
+function collapseSidebar() {
+  document.body.classList.toggle('collapse-sidebar');
+  saveSidebar();
 }
 
 /*
@@ -1179,6 +1360,97 @@ function pictureIn(url) {
 ..##..##........##....##....##....##..##.......##...###.##.....##.##.......##....##..##.......##....##.
 .####.##.........######.....##.....##.########.##....##.########..########.##.....##.########.##.....##
 */
+
+ipcRenderer.on('action-edit-bookmark', (event, arg) => {
+  var div = document.getElementById(arg.id);
+
+  if(div.getElementsByClassName('bookmark-div')[0] == null) {
+    var nameLabel = div.getElementsByTagName('span')[0];
+
+    div.onclick = function() { 
+      return false;
+    }
+    div.title = "";
+  
+    var container = document.createElement('div');
+    container.classList.add('bookmark-div');
+  
+    var inputName = document.createElement('input');
+    inputName.type = "text";
+    inputName.placeholder = "Bookmark name";
+    inputName.classList.add('bookmark-name');
+    inputName.value = nameLabel.innerHTML;
+  
+    var inputUrl = document.createElement('input');
+    inputUrl.type = "text";
+    inputUrl.placeholder = "Bookmark URL";
+    inputUrl.classList.add('bookmark-url');
+    inputUrl.value = arg.url;
+
+    var saveButton = document.createElement('img');
+    saveButton.classList.add('title-bar-btn', 'theme-icon');
+    saveButton.name = "save";
+    saveButton.title = "Save";
+    saveButton.onclick = () => {
+      div.title = inputName.value + "\n" + inputUrl.value;
+      div.name = inputUrl.value;
+      nameLabel.innerHTML = inputName.value;
+      div.getElementsByClassName('bookmark-div')[0].classList.add('hide');
+      setTimeout(() => {
+        div.onclick = () => {
+          tabGroup.getActiveTab().webview.loadURL(inputUrl.value);
+        }
+        div.removeChild(div.getElementsByClassName('bookmark-div')[0]);
+        saveBookmarksBar();
+      }, 250);
+    }
+
+    var deleteButton = document.createElement('img');
+    deleteButton.classList.add('title-bar-btn', 'theme-icon');
+    deleteButton.name = "delete";
+    deleteButton.title = "Delete";
+    deleteButton.onclick = () => {
+      div.getElementsByClassName('bookmark-div')[0].classList.add('hide');
+      setTimeout(() => {
+        div.parentNode.removeChild(div);
+        saveBookmarksBar();
+      }, 250);
+    }
+
+    var cancelButton = document.createElement('img');
+    cancelButton.classList.add('title-bar-btn', 'theme-icon');
+    cancelButton.name = "cancel";
+    cancelButton.title = "Cancel";
+    cancelButton.onclick = () => {
+      div.title = nameLabel.innerHTML + "\n" + arg.url;
+      div.getElementsByClassName('bookmark-div')[0].classList.add('hide');
+      setTimeout(() => {
+        div.onclick = () => {
+          tabGroup.getActiveTab().webview.loadURL(arg.url);
+        }
+        div.removeChild(div.getElementsByClassName('bookmark-div')[0]);
+      }, 250);
+    }
+  
+    container.appendChild(inputName);
+    container.appendChild(inputUrl);
+    container.appendChild(saveButton);
+    container.appendChild(deleteButton);
+    container.appendChild(cancelButton);
+  
+    div.appendChild(container);
+
+    inputName.focus();
+
+    var bounding = div.getElementsByClassName('bookmark-div')[0].getBoundingClientRect();
+    if (bounding.left > (window.innerWidth / 2 || document.documentElement.clientWidth / 2)) {
+      div.getElementsByClassName('bookmark-div')[0].style.left = "auto";
+      div.getElementsByClassName('bookmark-div')[0].style.right = 0;
+    }
+
+    applyTheme(document.documentElement.style.getPropertyValue('--color-back'));
+  }
+});
 
 ipcRenderer.on('action-sidebar-devtools', (event, arg) => {
   showSidebar();
@@ -1202,16 +1474,16 @@ ipcRenderer.on('action-set-bookmarks-bar', (event, arg) => {
 });
 
 ipcRenderer.on('action-copy-text', (event, arg) => {
-  var input = document.createElement('input');
-  input.value = arg;
-  document.body.appendChild(input);
-  input.select();
-  document.execCommand('copy');
-  document.body.removeChild(input);
+  copyText(arg);
 });
 
 ipcRenderer.on('action-update-home-page', (event, arg) => {
   loadHome();
+});
+
+ipcRenderer.on('action-tab-copyurl', (event, arg) => {
+  var url = tabGroup.getActiveTab().webview.getURL();
+  copyText(url);
 });
 
 ipcRenderer.on('action-tab-gohome', (event, arg) => {
@@ -1254,6 +1526,22 @@ ipcRenderer.on('action-tab-closetab', (event, arg) => {
 ipcRenderer.on('action-tab-goback', (event, arg) => {
   tabGroup.getActiveTab().webview.goBack();
 });
+ipcRenderer.on('action-tab-closeright', (event, arg) => {
+  var curPos = tabGroup.getActiveTab().getPosition(false);
+  tabGroup.eachTab((currentTab, index, tabs) => {
+    if(currentTab.getPosition(false) > curPos) {
+      currentTab.close(false);
+    }
+  });
+});
+ipcRenderer.on('action-tab-closeothers', (event, arg) => {
+  var curPos = tabGroup.getActiveTab().getPosition(false);
+  tabGroup.eachTab((currentTab, index, tabs) => {
+    if(currentTab.getPosition(false) != curPos) {
+      currentTab.close(false);
+    }
+  });
+});
 
 ipcRenderer.on('action-esc', (event, arg) => {
   esc();
@@ -1266,7 +1554,7 @@ ipcRenderer.on('action-open-bookmarks', (event, arg) => {
   goToBookmarksTab();
 });
 ipcRenderer.on('action-bookmark-this-page', (event, arg) => {
-  createBookmark();
+  createBookmark(tabGroup.getActiveTab().webview.getURL(), tabGroup.getActiveTab().webview.getTitle(), null);
 });
 
 ipcRenderer.on('action-open-downloads', (event, arg) => {
@@ -1370,6 +1658,51 @@ ipcRenderer.on('action-app-about', (event, arg) => {
   goToAboutTab();
 });
 
+ipcRenderer.on('action-tabcontext-closeright', (event, arg) => {
+  var curPos = tabGroup.getTab(arg).getPosition(false);
+  tabGroup.eachTab((currentTab, index, tabs) => {
+    if(currentTab.getPosition(false) > curPos) {
+      currentTab.close(false);
+    }
+  });
+});
+
+ipcRenderer.on('action-tabcontext-closeothers', (event, arg) => {
+  var tab = tabGroup.getTab(arg);
+  tabGroup.eachTab((currentTab, index, tabs) => {
+    if(currentTab != tab) {
+      currentTab.close(false);
+    }
+  });
+});
+
+ipcRenderer.on('action-tabcontext-back', (event, arg) => {
+  tabGroup.getTab(arg).webview.goBack();
+});
+
+ipcRenderer.on('action-tabcontext-copyurl', (event, arg) => {
+  copyText(tabGroup.getTab(arg).webview.getURL());
+});
+
+ipcRenderer.on('action-tabcontext-forward', (event, arg) => {
+  tabGroup.getTab(arg).webview.goForward();
+});
+
+ipcRenderer.on('action-tabcontext-picturein', (event, arg) => {
+  var url = tabGroup.getTab(arg).webview.getURL();
+  pictureIn(url);
+});
+
+ipcRenderer.on('action-tabcontext-gohome', (event, arg) => {
+  try {
+    var jsonstr = fs.readFileSync(ppath + "\\json\\home.json");
+    Data = JSON.parse(jsonstr);
+    tabGroup.getTab(arg).webview.loadURL(Data.url);
+  } catch (e) {
+
+  }
+});
+
 ipcRenderer.on('action-tabcontext-reload', (event, arg) => {
   tabGroup.getTab(arg).webview.reload();
 });
@@ -1435,7 +1768,7 @@ ipcRenderer.on('action-focus-window', (event, arg) => {
 
 ipcRenderer.on('action-open-url', (event, arg) => {
   tabGroup.getActiveTab().webview.loadURL(arg);
-  if(!document.getElementById('etabs-views').classList.contains('pinned')) {
+  if(!document.body.classList.contains('pinned-sidebar')) {
     hideSidebar();
   }
 });
@@ -1449,7 +1782,7 @@ ipcRenderer.on('action-open-url-in-new-tab', (event, arg) => {
       preload: "../js/webview.js"
     }
   });
-  if(!document.getElementById('etabs-views').classList.contains('pinned')) {
+  if(!document.body.classList.contains('pinned-sidebar')) {
     hideSidebar();
   }
 });
@@ -1524,6 +1857,7 @@ function init() {
   loadTheme();
   loadBorderRadius();
   loadHome();
+  loadSidebar();
   loadBookmarksBar();
 }
 

@@ -67,7 +67,7 @@
       <img name="menu" id="menu-btn" class="title-bar-btn theme-icon" title="Menu" onclick="requestSideMenu()">
     </div>
 
-    <center id="bookmarks-bar" style="display: none;"></center>
+    <div id="bookmarks-bar" style="display: none;" ondrop='bookmarksBarDrop(event)' ondragover='prevDef(event)'></div>
 
     <main>
       <div class="etabs-views" id="etabs-views"></div>
@@ -84,8 +84,6 @@
       <div id="sidebar" style="display: none;" class="hide">
         <div id="sidebar-div">
           <img name='forward' class='title-bar-btn theme-icon' title="Hide sidebar" onclick="hideSidebar()">
-          <img id="pin-sidebar-btn" name='pin' class='title-bar-btn theme-icon' title="Pin sidebar" onclick="pinSidebar()">
-          <img id="unpin-sidebar-btn" name='unpin' class='title-bar-btn theme-icon' title="Unpin sidebar" onclick="unpinSidebar()" style="display: none;">
           <hr>
           <div id="bookmarks-btn" class="nav-btn active" onclick="goToBookmarksTab()">
             <img class="theme-icon" name="bookmarks">
@@ -108,6 +106,9 @@
             <img class="theme-icon" name="about">
             <label>About</label>
           </div>
+          <img id="pin-sidebar-btn" name='pin' class='title-bar-btn theme-icon' title="Pin sidebar" onclick="pinSidebar()">
+          <img id="unpin-sidebar-btn" name='unpin' class='title-bar-btn theme-icon' title="Unpin sidebar" onclick="unpinSidebar()" style="display: none;">
+          <img id="resize-sidebar-btn" name='resize-h' class='title-bar-btn theme-icon' title="Collapse sidebar" onclick="collapseSidebar()">
         </div>
         <webview id="sidebar-webview" nodeintegration src="../html/bookmarks.html"></webview>
       </div>

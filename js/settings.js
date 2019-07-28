@@ -22,12 +22,21 @@ const fs = require("fs");
 .##........#######..##....##..######.....##....####..#######..##....##..######.
 */
 
-function changeBookmarksBar(bool) {
-  if(bool) {
-    ipcRenderer.send('request-set-bookmarks-bar', 1);
-  } else {
-    ipcRenderer.send('request-set-bookmarks-bar', 0);
+function requestBookmarksBar(on, layout) {
+  if(on != null) {
+    if(on) {
+      on = 1;
+    } else {
+      on = 0;
+    }
   }
+
+  let Data = {
+    on: on,
+    layout: layout
+  };
+
+  ipcRenderer.send('request-set-bookmarks-bar', Data);
 }
 
 function scrollToId(id) {
@@ -236,11 +245,19 @@ function loadWelcome() {
 
 function loadBookmarksBar() {
   try {
-    var bBarOn = fs.readFileSync(ppath + "\\json\\bookmarksbar.json");
-    if(bBarOn == 1) {
+    var jsonstr = fs.readFileSync(ppath + "\\json\\bookmarksbar.json");
+    let Data = JSON.parse(jsonstr);
+
+    if(Data.on) {
       document.getElementById('bookmarks-bar-checkbox').checked = true;
-    } else {
-      document.getElementById('bookmarks-bar-checkbox').checked = false;
+    }
+
+    var radios = document.getElementsByName("bbar-layout");
+    for(var i = 0; i < radios.length; i++) {
+      if(radios[i].value == Data.layout) {
+        radios[i].checked = true;
+        break;
+      }
     }
   } catch (e) {
 

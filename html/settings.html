@@ -178,7 +178,19 @@
     <div class="container">
       <div class="nav-checkbox">
         <label>Show bookmarks bar
-        <input type="checkbox" id="bookmarks-bar-checkbox" onclick="changeBookmarksBar(this.checked)">
+        <input type="checkbox" id="bookmarks-bar-checkbox" onclick="requestBookmarksBar(this.checked, null)">
+      </div>
+      <div class="nav-checkbox">
+        <label>All
+        <input type="radio" onclick="requestBookmarksBar(null, 'all')" class="checkbox" name="bbar-layout" value="all">
+      </div>
+      <div class="nav-checkbox">
+        <label>Labels only
+        <input type="radio" onclick="requestBookmarksBar(null, 'only-labels')" class="checkbox" name="bbar-layout" value="only-labels">
+      </div>
+      <div class="nav-checkbox">
+        <label>Icons only
+        <input type="radio" onclick="requestBookmarksBar(null, 'only-icons')" class="checkbox" name="bbar-layout" value="only-icons">
       </div>
     </div>
 

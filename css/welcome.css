@@ -142,7 +142,7 @@
   border-radius: var(--px-radius);
   padding: 4px;
   padding-right: 8px;
-  display: inline-block;
+  display: block;
   margin: 2px;
 }
 
@@ -195,7 +195,7 @@
   right: 0;
   left: 0;
   height: 32px;
-  background-color: var(--color-over);
+  /* background-color: var(--color-over); */
 }
 
 #titlebar.blur #window-controls {
@@ -315,10 +315,51 @@ input[type=text] {
   text-align: center;
   width: 200px;
   margin: 2px;
+  width: calc(100% - 4px);
+  display: block;
 }
 
 input[type=text]:hover, input[type=text]:focus {
   background-color: var(--color-over);
+}
+
+/*
+..######...#######..##........#######..########.
+.##....##.##.....##.##.......##.....##.##.....##
+.##.......##.....##.##.......##.....##.##.....##
+.##.......##.....##.##.......##.....##.########.
+.##.......##.....##.##.......##.....##.##...##..
+.##....##.##.....##.##.......##.....##.##....##.
+..######...#######..########..#######..##.....##
+*/
+
+.color {
+  display: inline-block;
+  width: calc(50% - 6px);
+  margin: 2px;
+  height: calc(100% - 4px);
+  border-radius: var(--px-radius);
+  padding: 8px;
+}
+
+.color:hover {
+  background-color: var(--color-over);
+}
+
+.color:active {
+  opacity: 0.5;
+}
+
+.color div {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--px-radius);
+  border: 2px solid var(--color-over);
+  display: inline-block;
+}
+
+.color label {
+  display: block;
 }
 
 /*
@@ -331,26 +372,24 @@ input[type=text]:hover, input[type=text]:focus {
 ....##....##.....##.########...######.
 */
 
-#developer-btn, #skip-btn {
+#skip-btn {
   position: absolute;
   z-index: 100;
   bottom: 2px;
   animation: anim-show;
   animation-duration: 0.25s;
-}
-
-#developer-btn {
   left: 2px;
 }
 
-#skip-btn {
-  right: 2px;
+#skip-btn.disable {
+  display: none;
 }
 
 #dots {
   position: absolute;
-  bottom: 0;
+  bottom: -4px;
   width: 100%;
+  height: 32px;
   z-index: 100;
 }
 
@@ -365,12 +404,12 @@ input[type=text]:hover, input[type=text]:focus {
   border-radius: var(--px-radius);
   display: inline-block;
   background-color: var(--color-over);
-  margin: 4px 2px;
-  transition: width 0.25s, background-color 0.25s;
+  margin: 4px;
+  transition: 0.25s;
   vertical-align: top;
 }
 
-.dot.active, .dot:hover {
+.dot:hover {
   background-color: var(--color-top);
 }
 
@@ -379,14 +418,17 @@ input[type=text]:hover, input[type=text]:focus {
 }
 
 .dot.active {
-  width: 24px;
+  background-color: var(--color-over);
+  width: 20px;
+  height: 20px;
+  margin: 0;
 }
 
 .tab {
   position: absolute;
   left: 0;
   right: 0;
-  top: 32px;
+  top: 42px;
   bottom: 0;
   display: none;
   animation-name: anim-show;
@@ -395,6 +437,10 @@ input[type=text]:hover, input[type=text]:focus {
 }
 
 .tab.active {
+  display: block;
+}
+
+.tab .subtitle {
   display: block;
 }
 
@@ -448,17 +494,19 @@ hr {
 }
 
 .container {
-  position: absolute;
-  top: 48px;
-  left: 80px;
-  right: 80px;
-  bottom: 24px;
+  background-color: var(--color-over);
+  border-radius: calc(var(--px-radius) + 4px);
+  margin: 8px 80px;
+  height: 108px;
+  width: calc(100% - 160px);
+  padding: 2px;
+  position: relative;
 }
 
 .block-container {
   background-color: var(--color-over);
   border-radius: calc(var(--px-radius) + 4px);
-  margin-2px;
+  margin: 2px;
   padding: 2px;
 }
 
@@ -505,16 +553,18 @@ hr {
 */
 
 #start-btn {
-  transition: padding 0.25s;
+  transition: width 0.25s;
   border-radius: var(--px-radius);
   background-color: var(--color-over);
   display: inline-block;
-  padding: 6px 16px;
-  margin: 8px;
+  margin: 2px;
+  padding: 16px;
+  width: 75%;
+  height: 64px;
 }
 
 #start-btn:hover {
-  padding: 6px 40px;
+  width: calc(100% - 4px);
 }
 
 #start-btn:active {
@@ -569,6 +619,7 @@ hr {
 .nav-checkbox {
   display: block;
   margin: 2px;
+  height: 32px;
 }
 
 .nav-checkbox img, .nav-checkbox label, .nav-checkbox {
@@ -595,7 +646,7 @@ input[type=radio] {
   height: 24px;
   position: relative;
   vertical-align: middle;
-  border: 2px solid var(--color-top);
+  border: 2px solid var(--color-over);
 }
 
 input[type=radio]:hover {

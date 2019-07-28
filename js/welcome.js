@@ -118,10 +118,8 @@ function chooseSlide(i) {
 
   if(i == 0) {
     document.getElementById('prev-btn').classList.add('disable');
-    document.getElementById('developer-btn').classList.remove('disable');
   } else {
     document.getElementById('prev-btn').classList.remove('disable');
-    document.getElementById('developer-btn').classList.add('disable');
   }
   if(i == dots.length - 1) {
     document.getElementById('next-btn').classList.add('disable');
@@ -149,6 +147,22 @@ function prevSlide() {
       chooseSlide(i - 1);
       break;
     }
+  }
+}
+
+function loadSearchEngine() {
+  try {
+    var searchEngine = fs.readFileSync(ppath + "\\json\\searchengine.json");
+
+    var radios = document.getElementsByName("search-engine");
+    for(var i = 0; i < radios.length; i++) {
+      if(radios[i].value == searchEngine) {
+        radios[i].checked = true;
+        break;
+      }
+    }
+  } catch (e) {
+
   }
 }
 
@@ -185,12 +199,56 @@ function loadStartPage() {
   }
 }
 
+function setStartPageLikeHomePage() {
+  try {
+    var jsonstr = fs.readFileSync(ppath + "\\json\\home.json");
+    Data = JSON.parse(jsonstr);
+    document.getElementById('start-page-input').value = Data.url;
+  } catch (e) {
+
+  }
+}
+
 function saveStartPage() {
   var url = document.getElementById('start-page-input').value;
 
   fs.writeFileSync(ppath + "\\json\\startPage.json", url);
 
-  notif("Start page saved: " + url, "success");
+  notif("New tab page saved: " + url, "success");
+}
+
+function loadBookmarksBar() {
+  try {
+    var jsonstr = fs.readFileSync(ppath + "\\json\\bookmarksbar.json");
+    let Data = JSON.parse(jsonstr);
+
+    if(Data.on) {
+      document.getElementById('bookmarks-bar-checkbox').checked = true;
+    }
+
+    var radios = document.getElementsByName("bbar-layout");
+    for(var i = 0; i < radios.length; i++) {
+      if(radios[i].value == Data.layout) {
+        radios[i].checked = true;
+        break;
+      }
+    }
+  } catch (e) {
+
+  }
+}
+
+function loadHomePage() {
+  try {
+    var jsonstr = fs.readFileSync(ppath + "\\json\\home.json");
+    Data = JSON.parse(jsonstr);
+    document.getElementById('home-page-input').value = Data.url;
+    if(Data.on == 1) {
+      document.getElementById('home-page-checkbox').checked = true;
+    }
+  } catch (e) {
+
+  }
 }
 
 function notif(text, type) {
@@ -208,8 +266,6 @@ function moreInfo(btn) {
 
 function requestSearchEngine(engine) {
   ipcRenderer.send('request-set-search-engine', engine);
-
-  notif("Search engine changed: " + engine, "success");
 }
 
 function keyDown(e) {
@@ -233,6 +289,47 @@ function loadWelcome() {
   } catch (e) {
 
   }
+}
+
+function saveHomePage() {
+  var url = document.getElementById('home-page-input').value;
+  var on = document.getElementById('home-page-checkbox').checked;
+
+  if(url.length <= 0) {
+    notif("First enter the home page URL", "warning");
+  } else {
+    if(on) {
+      on = 1;
+    } else {
+      on = 0;
+    }
+  
+    if(!fs.existsSync(ppath + "\\json")) {
+      fs.mkdirSync(ppath + "\\json");
+    } 
+    fs.writeFileSync(ppath + "\\json\\home.json", JSON.stringify({ url: url, on: on }));
+
+    notif("Home page saved: " + url, "success");
+
+    ipcRenderer.send('request-update-home-page');
+  }
+}
+
+function requestBookmarksBar(on, layout) {
+  if(on != null) {
+    if(on) {
+      on = 1;
+    } else {
+      on = 0;
+    }
+  }
+
+  let Data = {
+    on: on,
+    layout: layout
+  };
+
+  ipcRenderer.send('request-set-bookmarks-bar', Data);
 }
 
 /*
@@ -270,7 +367,10 @@ ipcRenderer.on('action-focus-window', (event, arg) => {
 function init() {
   loadTheme();
   loadBorderRadius();
+  loadSearchEngine();
+  loadHomePage();
   loadStartPage();
+  loadBookmarksBar();
   loadWelcome();
 
   ipcRenderer.send('request-set-about');
