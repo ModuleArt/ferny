@@ -337,11 +337,15 @@ hr {
     margin: 4px 8px;
 }
 
-.block-container {
-    background-color: var(--color-over);
-    border-radius: var(--px-radius);
+.block-container, .invis-container {
     padding: 2px;
     margin: 2px;
+    text-align: center;
+}
+  
+.block-container {
+    background-color: var(--color-over);
+    border-radius: calc(var(--px-radius) + 4px);
 }
 
 .block-title {

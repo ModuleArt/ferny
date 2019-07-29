@@ -9,19 +9,18 @@
   <body>
     <label class="subtitle">Settings</label>
       
-    <div class="block-title" id="shortcuts">
-      <img name="down" class="theme-icon">
-      <label>Shortcuts</label>
-    </div>
-    <div class="container">
+    <hr>
+    <div class="invis-container">
       <label class="link" onclick="scrollToId('background-color')">Themes</label>
       <label class="link" onclick="scrollToId('borders-rounding')">Borders rounding</label>
-      <label class="link" onclick="scrollToId('new-tab')">New tab</label>
       <label class="link" onclick="scrollToId('home-page')">Home page</label>
+      <label class="link" onclick="scrollToId('new-tab')">New tab</label>
       <label class="link" onclick="scrollToId('search-engine')">Search engine</label>
       <label class="link" onclick="scrollToId('bookmarks')">Bookmarks</label>
+      <label class="link" onclick="scrollToId('clear-browsing-data')">Clear browsing data</label>
       <label class="link" onclick="scrollToId('welcome-screen')">Welcome</label>
     </div>
+    <hr>
 
     <div class="block-title" id="background-color">
       <img name="color" class="theme-icon">
@@ -40,6 +39,7 @@
           <label>Modern</label>
           <img src="../imgs/themes/modern.png">
       </div>
+      <hr>
       <div class="color" onclick="requestTheme('rgb(238, 238, 238)')"><div style="background-color: rgb(238, 238, 238)"></div>Light</div>
       <div class="color" onclick="requestTheme('rgb(222, 225, 230)')"><div style="background-color: rgb(225, 225, 225)"></div>Gray</div>
       <div class="color" onclick="requestTheme('rgb(41, 42, 45)')"><div style="background-color: rgb(41, 42, 45)"></div>Dark</div>
@@ -52,41 +52,28 @@
     </div>
     <div class="container">
       <div class="nav-checkbox">
-        <label>None
+        <label>None</label>
         <input type="radio" onclick="requestBorderRadius(0)" class="checkbox" name="border-radius" value="0">
       </div>
       <div class="nav-checkbox">
-        <label>Small
+        <label>Small</label>
         <input type="radio" onclick="requestBorderRadius(4)" class="checkbox" checked name="border-radius" value="4">
       </div>
       <div class="nav-checkbox">
-        <label>Medium
+        <label>Medium</label>
         <input type="radio" onclick="requestBorderRadius(8)" class="checkbox" name="border-radius" value="8">
       </div>
       <div class="nav-checkbox">
-        <label>Large
+        <label>Large</label>
         <input type="radio" onclick="requestBorderRadius(12)" class="checkbox" name="border-radius" value="12">
       </div>
       <div class="nav-checkbox">
-        <label>Circle
+        <label>Circle</label>
         <input type="radio" onclick="requestBorderRadius(16)" class="checkbox" name="border-radius" value="16">
       </div>
+      <hr>
       <img class="more-btn theme-icon" onclick="moreInfo(this)" title="More info" name="info">
       <label class="more-label">The borders rounding of the interface elements.</label>
-    </div>
-
-    <div class="block-title" id="new-tab">
-      <img name="create" class="theme-icon">
-      <label>New tab</label>
-    </div>
-    <div class="container">
-      <input type="text" id="start-page-input" placeholder="New tab page URL">
-      <div class="nav-btn" onclick="saveStartPage()">
-        <img class="theme-icon" name="save">
-        <label>Save</label>
-      </div>
-      <img class="more-btn theme-icon" onclick="moreInfo(this)" title="More info" name="info">
-      <label class="more-label">The page that will open when you create a new tab or when you start the browser (You need to restart the browser).</label>
     </div>
 
     <div class="block-title" id="home-page">
@@ -96,15 +83,35 @@
     <div class="container">
       <input type="text" id="home-page-input" placeholder="Home page URL">
       <div class="nav-checkbox">
-        <label>Show button
+        <label>Show button</label>
         <input type="checkbox" id="home-page-checkbox" class="checkbox">
       </div>
       <div class="nav-btn" onclick="saveHomePage()">
         <img class="theme-icon" name="save">
         <label>Save</label>
       </div>
+      <hr>
       <img class="more-btn theme-icon" onclick="moreInfo(this)" title="More info" name="info">
       <label class="more-label">The page that will open when you click home button.</label>
+    </div>
+
+    <div class="block-title" id="new-tab">
+      <img name="create" class="theme-icon">
+      <label>New tab</label>
+    </div>
+    <div class="container">
+      <input type="text" id="start-page-input" placeholder="New tab page URL">
+      <div class="nav-btn" onclick="setStartPageLikeHomePage()">
+        <img class="theme-icon" name="home">
+        <label>Use home page</label>
+      </div>
+      <div class="nav-btn" onclick="saveStartPage()">
+        <img class="theme-icon" name="save">
+        <label>Save</label>
+      </div>
+      <hr>
+      <img class="more-btn theme-icon" onclick="moreInfo(this)" title="More info" name="info">
+      <label class="more-label">The page that will open when you create a new tab or when you start the browser (You need to restart the browser).</label>
     </div>
 
     <div class="block-title" id="search-engine">
@@ -114,59 +121,60 @@
     <div class="container">
       <div class="nav-checkbox">
         <img src="../imgs/engines/google.png">
-        <label>Google
+        <label>Google</label>
         <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" checked name="search-engine" value="google">
       </div>
       <div class="nav-checkbox">
         <img src="../imgs/engines/bing.png">
-        <label>Bing
+        <label>Bing</label>
         <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" name="search-engine" value="bing">
       </div>
       <div class="nav-checkbox">
         <img src="../imgs/engines/duckduckgo.png">
-        <label>DuckDuckGo
+        <label>DuckDuckGo</label>
         <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" name="search-engine" value="duckduckgo">
       </div>
       <div class="nav-checkbox">
         <img src="../imgs/engines/wikipedia.png">
-        <label>Wikipedia
+        <label>Wikipedia</label>
         <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" name="search-engine" value="wikipedia">
       </div>
       <div class="nav-checkbox">
         <img src="../imgs/engines/yahoo.png">
-        <label>Yahoo
+        <label>Yahoo</label>
         <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" name="search-engine" value="yahoo">
       </div>
       <div class="nav-checkbox">
         <img src="../imgs/engines/yandex.png">
-        <label>Yandex
+        <label>Yandex</label>
         <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" name="search-engine" value="yandex">
       </div>
       <div class="nav-checkbox">
         <img src="../imgs/engines/mailru.png">
-        <label>Mail.ru
+        <label>Mail.ru</label>
         <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" name="search-engine" value="mailru">
       </div>
       <div class="nav-checkbox">
         <img src="../imgs/engines/baidu.png">
-        <label>Baidu
+        <label>Baidu</label>
         <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" name="search-engine" value="baidu">
       </div>
       <div class="nav-checkbox">
         <img src="../imgs/engines/naver.png">
-        <label>Naver
+        <label>Naver</label>
         <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" name="search-engine" value="naver">
       </div>
       <div class="nav-checkbox">
         <img src="../imgs/engines/qwant.png">
-        <label>Qwant
+        <label>Qwant</label>
         <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" name="search-engine" value="qwant">
       </div>
       <div class="nav-checkbox">
         <img src="../imgs/engines/youtube.png">
-        <label>YouTube
+        <label>YouTube</label>
         <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" name="search-engine" value="youtube">
       </div>
+      <hr>
       <img class="more-btn theme-icon" onclick="moreInfo(this)" title="More info" name="info">
       <label class="more-label">Search engine used in the address bar.</label>
     </div>
@@ -177,20 +185,50 @@
     </div>
     <div class="container">
       <div class="nav-checkbox">
-        <label>Show bookmarks bar
+        <label>Show bookmarks bar</label>
         <input type="checkbox" id="bookmarks-bar-checkbox" onclick="requestBookmarksBar(this.checked, null)">
       </div>
+      <hr>
       <div class="nav-checkbox">
-        <label>All
+        <label>All</label>
         <input type="radio" onclick="requestBookmarksBar(null, 'all')" class="checkbox" name="bbar-layout" value="all">
       </div>
       <div class="nav-checkbox">
-        <label>Labels only
+        <label>Labels only</label>
         <input type="radio" onclick="requestBookmarksBar(null, 'only-labels')" class="checkbox" name="bbar-layout" value="only-labels">
       </div>
       <div class="nav-checkbox">
-        <label>Icons only
+        <label>Icons only</label>
         <input type="radio" onclick="requestBookmarksBar(null, 'only-icons')" class="checkbox" name="bbar-layout" value="only-icons">
+      </div>
+    </div>
+
+    <div class="block-title" id="clear-browsing-data">
+      <img name="clear" class="theme-icon">
+      <label>Clear browsing data</label>
+    </div>
+    <div class="container">
+      <!-- <div class="nav-checkbox">
+        <label>Browsing history
+        <input type="checkbox" id="clear-history-checkbox">
+      </div> -->
+      <div class="nav-checkbox">
+        <label>Cookies and other site data</label>
+        <input type="checkbox" id="clear-storage-checkbox">
+      </div>
+      <div class="nav-checkbox">
+        <label>Cached images and files</label>
+        <input type="checkbox" id="clear-cache-checkbox">
+      </div>
+      <!-- <div class="nav-checkbox">
+        <label>Autofill form data
+        <input type="checkbox" id="clear-auth-checkbox">
+      </div> -->
+      <hr>
+      <label id="cache-size-label"></label><br>
+      <div class="nav-btn" onclick="clearBrowsingData()">
+        <img class="nav-btn-icon theme-icon" name="delete">
+        <label class="nav-btn-label">Clear data</label>
       </div>
     </div>
 
@@ -200,7 +238,7 @@
     </div>
     <div class="container">
       <div class="nav-checkbox">
-        <label>Show welcome dialog at startup
+        <label>Show welcome dialog at startup</label>
         <input type="checkbox" id="welcome-checkbox" onclick="changeWelcome(this.checked)">
       </div>
       <div class="nav-btn" onclick="showWelcomeScreen()">

@@ -264,6 +264,50 @@ function loadBookmarksBar() {
   }
 }
 
+function loadCache() {
+  ipcRenderer.send('request-set-cache-size');
+}
+
+function bytesToSize(bytes) {
+  var sizes = ['bytes', 'Kb', 'Mb', 'Gb', 'Tb'];
+  if (bytes == 0) return '0 Byte';
+  var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+  return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
+}
+
+function clearBrowsingData() {
+  // var clearHistory = document.getElementById('clear-history-checkbox').checked;
+  var clearCache = document.getElementById('clear-cache-checkbox').checked;
+  var clearStorage = document.getElementById('clear-storage-checkbox').checked;
+  // var clearAuth = document.getElementById('clear-auth-checkbox').checked;
+
+  // if(clearHistory) {
+  //   try {
+  //     fs.writeFileSync(ppath + "\\json\\history.json", "");
+  //   } catch (error) {
+  
+  //   }
+  // }
+
+  let Data = {
+    cache: clearCache,
+    storage: clearStorage
+    // auth: clearAuth
+  };
+
+  ipcRenderer.send('request-clear-browsing-data', Data);
+}
+
+function setStartPageLikeHomePage() {
+  try {
+    var jsonstr = fs.readFileSync(ppath + "\\json\\home.json");
+    Data = JSON.parse(jsonstr);
+    document.getElementById('start-page-input').value = Data.url;
+  } catch (e) {
+
+  }
+}
+
 /*
 .####.########...######.....########..########.##....##.########..########.########..########.########.
 ..##..##.....##.##....##....##.....##.##.......###...##.##.....##.##.......##.....##.##.......##.....##
@@ -280,6 +324,10 @@ ipcRenderer.on('action-load-theme', (event, arg) => {
 
 ipcRenderer.on('action-load-border-radius', (event, arg) => {
   loadBorderRadius();
+});
+
+ipcRenderer.on('action-set-cache-size', (event, arg) => {
+  document.getElementById('cache-size-label').innerHTML = "Cache size: " + bytesToSize(arg.cacheSize);
 });
 
 /*
@@ -299,6 +347,7 @@ function init() {
   loadStartPage();
   loadHomePage();
   loadSearchEngine();
+  loadCache();
   loadWelcome();
 }
 

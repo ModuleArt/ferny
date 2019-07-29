@@ -29,11 +29,7 @@
                 <input type="text" id="search" placeholder="Search hotkeys" onkeyup="updateSearch()">
             </div>
 
-            <div class="block-title" id="shortcuts">
-                <img name="down" class="theme-icon">
-                <label>Shortcuts</label>
-            </div>
-            <center class="block-container">
+            <div class="invis-container">
                 <label class="link" onclick="scrollToId('tab')">Tab</label>
                 <label class="link" onclick="scrollToId('bookmarks')">Bookmarks</label>
                 <label class="link" onclick="scrollToId('history')">History</label>
@@ -45,7 +41,8 @@
                 <label class="link" onclick="scrollToId('help')">Help</label>
                 <label class="link" onclick="scrollToId('more')">More</label>
                 <label class="link" onclick="scrollToId('exit')">Exit</label>
-            </center>
+            </div>
+            <hr>
 
             <div class="block-title" id="tab">
                 <img name="tab" class="theme-icon">

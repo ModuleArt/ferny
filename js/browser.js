@@ -263,7 +263,7 @@ function loadTheme() {
 }
 
 function loadBorderRadius() {
-  var borderRadius = '8';
+  var borderRadius = '4';
 
   try {
     borderRadius = fs.readFileSync(ppath + "\\json\\radius.json");

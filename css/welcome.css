@@ -689,7 +689,7 @@ input[type=checkbox] {
   appearance: none;
   outline: none;
   border-radius: var(--px-radius);
-  width: 48px;
+  width: 40px;
   height: 24px;
   position: relative;
   vertical-align: middle;
