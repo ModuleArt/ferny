@@ -50,7 +50,6 @@ if (!gotTheLock) {
 const sideMenu = Menu.buildFromTemplate([
   { label: 'New tab', icon: app.getAppPath() + '\\imgs\\icons16\\create.png', accelerator: 'CmdOrCtrl+T', click: () => { mainWindow.webContents.send('action-tab-newtab'); } },
   //  { label: 'New private tab', accelerator: 'CmdOrCtrl+Shift+T', click: () => {  }, enabled: false },
-  { type: 'separator' },
   { label: 'Active tab', icon: app.getAppPath() + '\\imgs\\icons16\\tab.png', submenu: [
     { label: 'Back', accelerator: 'Alt+Left', icon: app.getAppPath() + '\\imgs\\icons16\\back.png', click: () => { mainWindow.webContents.send('action-tab-back'); } },
     { label: 'Forward', accelerator: 'Alt+Right', icon: app.getAppPath() + '\\imgs\\icons16\\forward.png', click: () => { mainWindow.webContents.send('action-tab-forward'); } },
@@ -65,7 +64,7 @@ const sideMenu = Menu.buildFromTemplate([
     // { label: 'Mute site', accelerator: 'CmdOrCtrl+Shift+M', click: () => {  }, enabled: false },
     { type: 'separator' },
     { label: 'Close to the right', icon: app.getAppPath() + '\\imgs\\icons16\\swipe-right.png', click: () => { mainWindow.webContents.send('action-tab-closeright'); } },
-    { label: 'Close others', icon: app.getAppPath() + '\\imgs\\icons16\\delete-shield.png', accelerator: 'CmdOrCtrl+Shift+W', click: () => { mainWindow.webContents.send('action-tab-closeothers'); } },
+    { label: 'Close others', accelerator: 'CmdOrCtrl+Shift+W', click: () => { mainWindow.webContents.send('action-tab-closeothers'); } },
     { label: 'Close tab', icon: app.getAppPath() + '\\imgs\\icons16\\close.png', accelerator: 'CmdOrCtrl+W', click: () => { mainWindow.webContents.send('action-tab-closetab'); } }
   ] },
   { type: 'separator' },
@@ -73,7 +72,7 @@ const sideMenu = Menu.buildFromTemplate([
     { label: 'Bookmark manager', icon: app.getAppPath() + '\\imgs\\icons16\\bookmarks.png', accelerator: 'CmdOrCtrl+B', click: () => { mainWindow.webContents.send('action-open-bookmarks'); } },
     { type: 'separator' },
     { label: 'Bookmark this page', icon: app.getAppPath() + '\\imgs\\icons16\\star.png', accelerator: 'CmdOrCtrl+Shift+B', click: () => { mainWindow.webContents.send('action-bookmark-this-page'); } },
-    { label: 'Bookmark all tabs', click: () => {  }, enabled: false }
+    { label: 'Bookmark all tabs', click: () => { mainWindow.webContents.send('action-quest', { text: "Are you sure to bookmark all tabs?", ops: [{ text:'Bookmark', icon:'bookmark', click:'bookmarkAllTabs(); removeNotif(this.parentNode.parentNode);' }] }); } }
   ] },
 // { label: 'Reading list', accelerator: 'CmdOrCtrl+R', click: () => {  }, enabled: false },
   { label: 'History', accelerator: 'CmdOrCtrl+H', icon: app.getAppPath() + '\\imgs\\icons16\\history.png', click: () => { mainWindow.webContents.send('action-open-history'); } },
@@ -131,6 +130,18 @@ const sideMenu = Menu.buildFromTemplate([
     { label: 'Focus address bar', icon: app.getAppPath() + '\\imgs\\icons16\\zoom.png', accelerator: 'F6', click: () => { mainWindow.webContents.send('action-page-focussearch'); } },
     { label: 'Close active panel', icon: app.getAppPath() + '\\imgs\\icons16\\close.png', accelerator: 'Esc', click: () => { mainWindow.webContents.send('action-esc'); } },
     { type: 'separator' },
+    { label: 'Switch tab', icon: app.getAppPath() + '\\imgs\\icons16\\numerical.png', submenu: [
+      { label: 'Tab 1', accelerator: 'CmdOrCtrl+1', click: () => { mainWindow.webContents.send('action-switch-tab', 1); } },
+      { label: 'Tab 2', accelerator: 'CmdOrCtrl+2', click: () => { mainWindow.webContents.send('action-switch-tab', 2); } },
+      { label: 'Tab 3', accelerator: 'CmdOrCtrl+3', click: () => { mainWindow.webContents.send('action-switch-tab', 3); } },
+      { label: 'Tab 4', accelerator: 'CmdOrCtrl+4', click: () => { mainWindow.webContents.send('action-switch-tab', 4); } },
+      { label: 'Tab 5', accelerator: 'CmdOrCtrl+5', click: () => { mainWindow.webContents.send('action-switch-tab', 5); } },
+      { label: 'Tab 6', accelerator: 'CmdOrCtrl+6', click: () => { mainWindow.webContents.send('action-switch-tab', 6); } },
+      { label: 'Tab 7', accelerator: 'CmdOrCtrl+7', click: () => { mainWindow.webContents.send('action-switch-tab', 7); } },
+      { label: 'Tab 8', accelerator: 'CmdOrCtrl+8', click: () => { mainWindow.webContents.send('action-switch-tab', 8); } },
+      { label: 'Tab 9', accelerator: 'CmdOrCtrl+9', click: () => { mainWindow.webContents.send('action-switch-tab', 9); } },
+    ] },
+    { type: 'separator' },
     { label: 'Developer [Danger]', icon: app.getAppPath() + '\\imgs\\icons16\\developer.png', submenu: [
       { label: 'Developer mode (Sidebar)', icon: app.getAppPath() + '\\imgs\\icons16\\sidebar.png', accelerator: 'CmdOrCtrl+Shift+F11', click: () => { mainWindow.webContents.send('action-sidebar-devtools'); } },
       { label: 'Developer mode (Browser)', icon: app.getAppPath() + '\\imgs\\icons16\\web.png', accelerator: 'CmdOrCtrl+Shift+F12', click: () => { mainWindow.webContents.openDevTools(); } }
@@ -139,11 +150,13 @@ const sideMenu = Menu.buildFromTemplate([
   { type: 'separator' },
   { label: 'Exit', icon: app.getAppPath() + '\\imgs\\icons16\\exit.png', accelerator: 'CmdOrCtrl+Shift+E', click: () => { app.quit(); } }
 ]);
+
 const selectionMenu = Menu.buildFromTemplate([
   { label: 'Copy', icon: app.getAppPath() + '\\imgs\\icons16\\copy.png', accelerator: 'CmdOrCtrl+C', click: () => { mainWindow.webContents.copy(); } },
   { type: 'separator' },
   { label: 'Select all', icon: app.getAppPath() + '\\imgs\\icons16\\select-all.png', accelerator: 'CmdOrCtrl+A', click: () => { mainWindow.webContents.selectAll(); } },
 ]);
+
 const inputMenu = Menu.buildFromTemplate([
   { label: 'Cut', icon: app.getAppPath() + '\\imgs\\icons16\\cut.png', accelerator: 'CmdOrCtrl+X', click: () => { mainWindow.webContents.cut(); } },
   { label: 'Copy', icon: app.getAppPath() + '\\imgs\\icons16\\copy.png', accelerator: 'CmdOrCtrl+C', click: () => { mainWindow.webContents.copy(); } },
@@ -296,7 +309,7 @@ app.on('ready', function() {
       }
     }
     if(download) {
-      mainWindow.webContents.send('action-quest', { text: "Download is in progress! Exit anyway?", ops: [{ text:'Continue', icon:'download', click:'removeNotif(this)' }, { text:'Exit', icon:'exit', click:'exitAppAnyway()' }] });
+      mainWindow.webContents.send('action-quest', { text: "Download is in progress! Exit anyway?", ops: [{ text:'Continue', icon:'download', click:'removeNotif(this.parentNode.parentNode)' }, { text:'Exit', icon:'exit', click:'exitAppAnyway()' }] });
     } else {
       saveBounds();
       app.exit();
@@ -620,6 +633,17 @@ ipcMain.on('request-clear-downloads', (event, arg) => {
   mainWindow.webContents.send('action-clear-downloads');
 });
 
+ipcMain.on('request-remove-folder', (event, arg) => {
+  mainWindow.webContents.send('action-quest', { 
+    text: "Are you sure to remove folder?", 
+    ops: [{ 
+      text:'Delete', 
+      icon:'delete', 
+      click:'removeFolder("' + arg + '"); removeNotif(this.parentNode.parentNode);' 
+    }] 
+  });
+});
+
 ipcMain.on('request-set-about', (event, arg) => {
   let Data = {
     app: app.getVersion() + " / " + os.arch()
@@ -661,7 +685,7 @@ ipcMain.on('request-tab-menu', (event, arg) => {
     // { label: 'Mute site', accelerator: 'CmdOrCtrl+Shift+M', click: () => {  }, enabled: false },
     { type: 'separator' },
     { label: 'Close to the right', icon: app.getAppPath() + '\\imgs\\icons16\\swipe-right.png', click: () => { mainWindow.webContents.send('action-tabcontext-closeright', arg); } },
-    { label: 'Close others', icon: app.getAppPath() + '\\imgs\\icons16\\delete-shield.png', accelerator: 'CmdOrCtrl+Shift+W', click: () => { mainWindow.webContents.send('action-tabcontext-closeothers', arg); } },
+    { label: 'Close others', accelerator: 'CmdOrCtrl+Shift+W', click: () => { mainWindow.webContents.send('action-tabcontext-closeothers', arg); } },
     { label: 'Close tab', icon: app.getAppPath() + '\\imgs\\icons16\\close.png', accelerator: 'CmdOrCtrl+W', click: () => { mainWindow.webContents.send('action-tabcontext-closetab', arg); } }
   ]);
   tabMenu.popup(mainWindow);
@@ -680,8 +704,7 @@ ipcMain.on('request-tab-goback', (event, arg) => {
 });
 
 ipcMain.on('request-resume-download', (event, arg) => {
-  var i;
-  for(i = 0; i < downloadsArray.length; i++) {
+  for(var i = 0; i < downloadsArray.length; i++) {
     if(downloadsArray[i].index == arg) {
       downloadsArray[i].item.resume();
     }
@@ -689,8 +712,7 @@ ipcMain.on('request-resume-download', (event, arg) => {
 });
 
 ipcMain.on('request-pause-download', (event, arg) => {
-  var i;
-  for(i = 0; i < downloadsArray.length; i++) {
+  for(var i = 0; i < downloadsArray.length; i++) {
     if(downloadsArray[i].index == arg) {
       downloadsArray[i].item.pause();
     }
@@ -698,8 +720,7 @@ ipcMain.on('request-pause-download', (event, arg) => {
 });
 
 ipcMain.on('request-cancel-download', (event, arg) => {
-  var i;
-  for(i = 0; i < downloadsArray.length; i++) {
+  for(var i = 0; i < downloadsArray.length; i++) {
     if(downloadsArray[i].index == arg) {
       downloadsArray[i].item.cancel();
     }
@@ -707,8 +728,7 @@ ipcMain.on('request-cancel-download', (event, arg) => {
 });
 
 ipcMain.on('request-remove-download', (event, arg) => {
-  var i;
-  for(i = 0; i < downloadsArray.length; i++) {
+  for(var i = 0; i < downloadsArray.length; i++) {
     if(downloadsArray[i].index == arg) {
       downloadsArray.splice(i, 1);
       break;

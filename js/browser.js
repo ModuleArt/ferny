@@ -722,7 +722,14 @@ function quest(text, ops) {
   var div = document.createElement('div');
   div.classList.add('notif');
   div.classList.add('quest');
-  div.innerHTML = "<img name='question' class='notif-icon theme-icon'><div class='notif-body'><label class='notif-text'>" + text + "</label><img class='notif-close theme-icon' onclick='removeNotif(this.parentNode.parentNode)' title='Close notification' name='cancel'><br></div>";
+  div.innerHTML = ` <img name='question' class='notif-icon theme-icon'>
+                    <div class='notif-body'>
+                      <label class='notif-text'>` + text + `</label>
+                      <img class='notif-close theme-icon' onclick='removeNotif(this.parentNode.parentNode)' title='Close notification' name='cancel'>
+                      <hr>
+                    </div>`;
+
+  var notifPanel = document.getElementById('notif-panel');
 
   for (var i = 0; i < ops.length; i++) {
     var btn = document.createElement('div');
@@ -732,7 +739,7 @@ function quest(text, ops) {
     btn.onclick = function () {
       eval(ops[j].click);
     };
-    div.childNodes[1].appendChild(btn);
+    div.getElementsByClassName('notif-body')[0].appendChild(btn);
   }
 
   document.getElementById('notif-panel').appendChild(div);
@@ -1013,6 +1020,26 @@ function etabsTabsWheel(event) {
   }
 }
 
+function removeFolder(folder) {
+  try {
+    var jsonstr = fs.readFileSync(ppath + "\\json\\folders.json");
+    var arr = JSON.parse(jsonstr);
+    for (var i = 0; i < arr.length; i++) {
+      if(arr[i].name == folder) {
+        arr.splice(i, 1);
+      }
+    }
+    fs.writeFileSync(ppath + "\\json\\folders.json", JSON.stringify(arr));
+
+    document.getElementById('sidebar-webview').send('action-remove-folder', folder);
+    updateBookmarksBar();
+
+    notif("Folder removed: " + folder, "info");
+  } catch (e) {
+
+  }
+}
+
 function zoomNotif(zoom) {
   var div = document.createElement('div');
   div.id="zoom-1";
@@ -1022,7 +1049,7 @@ function zoomNotif(zoom) {
                     <div class='notif-body'>
                         <label class='notif-text'>Zoom factor changed to ` + zoom + `%</label>
                         <img class='notif-close theme-icon' onclick='removeNotif(this.parentNode.parentNode)' title='Close notification' name='cancel'>
-                        <br>
+                        <hr>
                         <div class="nav-btn" onclick="zoomOut()">
                             <img class="nav-btn-icon theme-icon" name="zoom-out">
                             <label class="nav-btn-label">Zoom out</label>
@@ -1351,6 +1378,12 @@ function collapseSidebar() {
   saveSidebar();
 }
 
+function bookmarkAllTabs() {
+  tabGroup.eachTab((currentTab, index, tabs) => {
+    createBookmark(currentTab.webview.getURL(), currentTab.getTitle(), null);
+  });
+}
+
 /*
 .####.########...######.....########..########.##....##.########..########.########..########.########.
 ..##..##.....##.##....##....##.....##.##.......###...##.##.....##.##.......##.....##.##.......##.....##
@@ -1360,6 +1393,12 @@ function collapseSidebar() {
 ..##..##........##....##....##....##..##.......##...###.##.....##.##.......##....##..##.......##....##.
 .####.##.........######.....##.....##.########.##....##.########..########.##.....##.########.##.....##
 */
+
+ipcRenderer.on('action-switch-tab', (event, arg) => {
+  if(arg <= tabGroup.getTabs().length) {
+    tabGroup.getTabByPosition(arg).activate();
+  }
+});
 
 ipcRenderer.on('action-edit-bookmark', (event, arg) => {
   var div = document.getElementById(arg.id);

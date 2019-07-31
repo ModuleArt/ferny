@@ -161,7 +161,7 @@
   position: absolute;
   left: 0;
   top: 8px;
-  width: 300px;
+  width: 256px;
   z-index: 999;
 }
 
@@ -185,7 +185,7 @@
 .notif {
   transition: 0.25s;
   margin-bottom: 8px;
-  border-radius: 0 var(--px-radius) var(--px-radius) 0;
+  border-radius: 0 calc(var(--px-radius) + 4px) calc(var(--px-radius) + 4px) 0;
   border: 2px solid var(--color-over);
   border-left: none;
   animation-name: anim-notif;
@@ -223,10 +223,6 @@
   padding-left: 14px;
 }
 
-.notif.quest .notif-body, .notif.zoom .notif-body {
-  padding-right: 14px;
-}
-
 .notif-text {
   word-break: break-word;
   word-wrap: break-word;
@@ -260,6 +256,15 @@
 
 .notif-close:hover {
   background-color: var(--color-over);
+}
+
+.notif .nav-btn {
+  display: block;
+  margin: 2px 0;
+}
+
+.notif .nav-btn img {
+  margin-right: 4px;
 }
 
 /*
@@ -1036,7 +1041,7 @@ hr {
   z-index: 50;
   animation: anim-suggest;
   animation-duration: 0.25s;
-  border-radius: 0 0 calc(var(--px-radius) + 4px) calc(var(--px-radius) + 4px);
+  border-radius: 0 0 var(--px-radius) var(--px-radius);
   border: 2px solid var(--color-over);
   transition: transform 0.25s, opacity 0.25s;
 }
@@ -1071,7 +1076,6 @@ hr {
 .folder .folder-div .bookmark-div {
   border-radius: calc(var(--px-radius) + 4px);
   top: 16px;
-  /* left: 4px; */
   left: 16px;
 }
 
@@ -1082,7 +1086,7 @@ hr {
 }
 
 .folder .folder-div .bookmark:last-child {
-  border-radius: 0 0 calc(var(--px-radius) + 2px) calc(var(--px-radius) + 2px);
+  border-radius: 0 0 calc(var(--px-radius) - 2px) calc(var(--px-radius) - 2px);
 }
 
 .bookmark .bookmark-div input {

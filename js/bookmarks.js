@@ -433,10 +433,10 @@ function saveBookmarks() {
 .##........#######..########.########..########.##.....##..######.
 */
 
-function removeFolder(folder) {
-  folder.parentNode.removeChild(folder);
-  saveFolders();
-}
+// function removeFolder(folder) {
+//   folder.parentNode.removeChild(folder);
+//   saveFolders();
+// }
 
 function editFolder(folder) {
   showFolderEditor();
@@ -444,7 +444,8 @@ function editFolder(folder) {
   document.getElementById('edit-folder-name').value = folder.getElementsByClassName('name')[0].innerHTML;
 
   document.getElementById('remove-folder-btn').onclick = function() {
-    removeFolder(folder);
+    // removeFolder(folder);
+    ipcRenderer.send('request-remove-folder', folder.getElementsByClassName('name')[0].innerHTML);
     closeAllEditors();
   }
 
@@ -570,6 +571,15 @@ function saveFolders() {
 
 ipcRenderer.on('action-update-bookmarks', (event, arg) => {
   loadBookmarks();
+});
+
+ipcRenderer.on('action-remove-folder', (event, arg) => {
+  var arr = document.getElementsByClassName('folder');
+  for(var i = 0; i < arr.length; i++) {
+    if(arr[i].getElementsByClassName('name')[0].innerHTML == arg) {
+      arr[i].parentNode.removeChild(arr[i]);
+    }
+  }
 });
 
 ipcRenderer.on('action-load-theme', (event, arg) => {
