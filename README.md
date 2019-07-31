@@ -5,6 +5,7 @@
 <h3 align="center">Web Browser</h3>
 
 <p align="center">
+  <img alt="GitHub All Releases" src="https://img.shields.io/github/downloads/ModuleArt/ferny/total">
   <a href="https://app.fossa.com/projects/git%2Bgithub.com%2FModuleArt%2Fferny?ref=badge_shield" alt="FOSSA Status">
     <img src="https://app.fossa.com/api/projects/git%2Bgithub.com%2FModuleArt%2Fferny.svg?type=shield"/>
   </a>
