@@ -24,7 +24,6 @@
     } to {
         transform: translateY(0px);
     }
-
 }
 
 /*
@@ -71,6 +70,7 @@ header .logo {
     padding: 18px;
     text-decoration: none;
     outline: none;
+    transition: 0.25s;
 }
 
 header .logo img {
@@ -94,6 +94,10 @@ header .logo:hover img, header .logo:focus img {
 }
 
 header .logo:hover span, header .logo:focus span {
+    opacity: 0.5;
+}
+
+header .logo:active {
     opacity: 0.5;
 }
 
@@ -133,6 +137,10 @@ header .button:hover, header .button:focus {
     background-color: rgba(255, 255, 255, 0.1);
 }
 
+header a.button:active {
+    opacity: 0.5;
+}
+
 header .button.show .menu {
     display: block;
 }
@@ -170,9 +178,13 @@ header .menu a {
     text-decoration: none;
 }
 
-header .menu a:hover {
+header .menu a:hover, header .menu a:focus {
     background-color: rgba(0, 0, 0, 0.1);
     opacity: 1;
+}
+
+header .menu a:active {
+    opacity: 0.5;
 }
 
 header .menu::after {
@@ -201,6 +213,7 @@ header .links {
 }
 
 header .links a {
+    transition: 0.25s;
     outline: none;
     margin: 10px 2px;
     display: inline-block;
@@ -214,6 +227,10 @@ header .links a img {
 
 header .links a:hover img, header .links a:focus img {
     background-color: rgba(255, 255, 255, 0.1);
+}
+
+header .links a:active {
+    opacity: 0.5;
 }
 
 /*

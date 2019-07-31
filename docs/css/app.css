@@ -26,6 +26,26 @@ body {
 }
 
 /*
+....###....##....##.####.##.....##
+...##.##...###...##..##..###...###
+..##...##..####..##..##..####.####
+.##.....##.##.##.##..##..##.###.##
+.#########.##..####..##..##.....##
+.##.....##.##...###..##..##.....##
+.##.....##.##....##.####.##.....##
+*/
+
+@keyframes anim-slide-up {
+    from {
+        opacity: 0;
+        transform: translateY(-40px);
+    } to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/*
 .##.....##....###....####.##....##
 .###...###...##.##....##..###...##
 .####.####..##...##...##..####..##
@@ -130,6 +150,10 @@ body {
     border-color: white;
 }
 
+.main .links a:active {
+    opacity: 0.5;
+}
+
 .main .links a img, .main .links a span {
     vertical-align: middle;
 }
@@ -187,9 +211,18 @@ body {
     opacity: 1;
 }
 
+.main .screenshots li:active button {
+    opacity: 0.5;
+    transform: scale(1.5);
+}
+
 .main .screenshots li.slick-active button {
     opacity: 1;
     transform: scale(2);
+}
+
+.main .screenshots img {
+    outline: none;
 }
 
 /*
@@ -248,6 +281,8 @@ body {
     margin: 8px;
     margin-top: 48px;
     padding-top: 4px;
+    animation: anim-slide-up;
+    animation-duration: 0.25s;
 }
 
 .main .update.show {
@@ -287,12 +322,18 @@ body {
     vertical-align: middle;
 }
 
-.main .update button:hover, .main .update button:focus, .main.update button:active {
+.main .update button:hover, .main .update button:focus {
     background-color: rgba(255, 255, 255, 0.1);
+}
+
+.main .update button:active {
+    opacity: 0.5;
 }
 
 .main .update .text {
     display: none;
+    animation: anim-slide-up;
+    animation-duration: 0.25s;
 }
 
 .main .update.expand .text {
@@ -307,6 +348,7 @@ body {
 }
 
 .main .update a img {
+    transition: 0.25s;
     padding: 4px;
     margin-bottom: -4px;
     border-radius: 50%;
@@ -314,6 +356,10 @@ body {
 
 .main .update a:hover img, .main .update a:focus img {
     background-color: rgba(255, 255, 255, 0.1);
+}
+
+.main .update a:active {
+    opacity: 0.5;
 }
 
 .main .updates .more {
@@ -327,9 +373,32 @@ body {
     padding: 12px 24px;
 }
 
-.main .updates .more:hover, .main .updates .more:active, .main .updates .more:focus {
+.main .updates .more:hover, .main .updates .more:focus {
     border-color: white;
     transform: translateY(-4px);
+}
+
+.main .updates .more:active {
+    opacity: 0.5;
+}
+
+/*
+..######...####.########.##.....##.##.....##.########.....########..########.##....##..######.
+.##....##...##.....##....##.....##.##.....##.##.....##....##.....##....##....###...##.##....##
+.##.........##.....##....##.....##.##.....##.##.....##....##.....##....##....####..##.##......
+.##...####..##.....##....#########.##.....##.########.....########.....##....##.##.##..######.
+.##....##...##.....##....##.....##.##.....##.##.....##....##.....##....##....##..####.......##
+.##....##...##.....##....##.....##.##.....##.##.....##....##.....##....##....##...###.##....##
+..######...####....##....##.....##..#######..########.....########.....##....##....##..######.
+*/
+
+.main .github-btns {
+    margin: 48px 0;
+}
+
+.main .github-btns .button {
+    display: inline-block;
+    margin: 4px 8px;
 }
 
 /*

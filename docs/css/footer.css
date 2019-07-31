@@ -51,10 +51,15 @@ footer .column a {
     padding-bottom: 8px;
     text-decoration: none;
     outline: none;
+    transition: 0.25s;
 }
 
 footer .column a:hover, footer .column a:focus {
     opacity: 1;
+}
+
+footer .column a:active {
+    text-decoration: underline;
 }
 
 /*
