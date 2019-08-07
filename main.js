@@ -63,6 +63,8 @@ const sideMenu = Menu.buildFromTemplate([
     // { type: 'separator' },
     // { label: 'Mute site', accelerator: 'CmdOrCtrl+Shift+M', click: () => {  }, enabled: false },
     { type: 'separator' },
+    { label: 'Reload ignoring cache', accelerator: 'CmdOrCtrl+F5', click: () => { mainWindow.webContents.send('action-tab-ignorecache'); } },
+    { type: 'separator' },
     { label: 'Close to the right', icon: app.getAppPath() + '\\imgs\\icons16\\swipe-right.png', click: () => { mainWindow.webContents.send('action-tab-closeright'); } },
     { label: 'Close others', accelerator: 'CmdOrCtrl+Shift+W', click: () => { mainWindow.webContents.send('action-tab-closeothers'); } },
     { label: 'Close tab', icon: app.getAppPath() + '\\imgs\\icons16\\close.png', accelerator: 'CmdOrCtrl+W', click: () => { mainWindow.webContents.send('action-tab-closetab'); } }
@@ -131,6 +133,9 @@ const sideMenu = Menu.buildFromTemplate([
     { label: 'Close active panel', icon: app.getAppPath() + '\\imgs\\icons16\\close.png', accelerator: 'Esc', click: () => { mainWindow.webContents.send('action-esc'); } },
     { type: 'separator' },
     { label: 'Switch tab', icon: app.getAppPath() + '\\imgs\\icons16\\numerical.png', submenu: [
+      { label: 'Next tab', icon: app.getAppPath() + '\\imgs\\icons16\\next.png', accelerator: 'CmdOrCtrl+Tab', click: () => { mainWindow.webContents.send('action-next-tab'); } },
+      { label: 'Previous tab', icon: app.getAppPath() + '\\imgs\\icons16\\prev.png', accelerator: 'CmdOrCtrl+Shift+Tab', click: () => { mainWindow.webContents.send('action-prev-tab'); } },
+      { type: 'separator' },
       { label: 'Tab 1', accelerator: 'CmdOrCtrl+1', click: () => { mainWindow.webContents.send('action-switch-tab', 1); } },
       { label: 'Tab 2', accelerator: 'CmdOrCtrl+2', click: () => { mainWindow.webContents.send('action-switch-tab', 2); } },
       { label: 'Tab 3', accelerator: 'CmdOrCtrl+3', click: () => { mainWindow.webContents.send('action-switch-tab', 3); } },
@@ -148,7 +153,7 @@ const sideMenu = Menu.buildFromTemplate([
     ] },
   ] },
   { type: 'separator' },
-  { label: 'Exit', icon: app.getAppPath() + '\\imgs\\icons16\\exit.png', accelerator: 'CmdOrCtrl+Shift+E', click: () => { app.quit(); } }
+  { label: 'Quit Ferny', icon: app.getAppPath() + '\\imgs\\icons16\\exit.png', accelerator: 'CmdOrCtrl+Shift+Q', click: () => { app.quit(); } }
 ]);
 
 const selectionMenu = Menu.buildFromTemplate([
@@ -275,15 +280,17 @@ app.on('ready', function() {
   mainWindow.on('unmaximize', () => {
     mainWindow.webContents.send('action-unmaximize-window');
   });
-
-  mainWindow.webContents.once('did-finish-load', () => {
-    loadAllData();
-    mainWindow.show();
-
+  
+  mainWindow.webContents.once('ready-to-show', () => {
     if (process.platform == 'win32' && process.argv.length >= 2) {
       var openFilePath = process.argv[1];
       mainWindow.webContents.send('action-open-url', openFilePath);
     }
+  });
+
+  mainWindow.webContents.once('did-finish-load', () => {
+    loadAllData();
+    mainWindow.show();
   });
 
   mainWindow.on('maximize', () => {
@@ -518,6 +525,8 @@ ipcMain.on('request-home-button-contextmenu', (event, arg) => {
 
 ipcMain.on('request-folder-contextmenu', (event, arg) => {
   let folderMenu = Menu.buildFromTemplate([
+    { label: 'Edit folder', icon: app.getAppPath() + '\\imgs\\icons16\\edit.png', click: () => { mainWindow.webContents.send('action-edit-folder', arg); } },
+    { type: "separator" },
     { label: 'Bookmarks settings', icon: app.getAppPath() + '\\imgs\\icons16\\settings.png', click: () => { mainWindow.webContents.send('action-open-settings', 'bookmarks'); } },
     { label: 'Bookmark manager', accelerator: 'CmdOrCtrl+B', icon: app.getAppPath() + '\\imgs\\icons16\\bookmarks.png', click: () => { mainWindow.webContents.send('action-open-bookmarks'); } }
   ]);
@@ -529,7 +538,7 @@ ipcMain.on('request-bookmark-contextmenu', (event, arg) => {
     { label: 'Open in new tab', icon: app.getAppPath() + '\\imgs\\icons16\\tab.png', click: () => { mainWindow.webContents.send('action-open-url-in-new-tab', arg.url); } },
     { label: 'Copy URL', icon: app.getAppPath() + '\\imgs\\icons16\\copy-link.png', click: () => { mainWindow.webContents.send('action-copy-text', arg.url); } },
     { type: "separator" },
-    { label: 'Edit', icon: app.getAppPath() + '\\imgs\\icons16\\edit.png', click: () => { mainWindow.webContents.send('action-edit-bookmark', arg); } },
+    { label: 'Edit bookmark', icon: app.getAppPath() + '\\imgs\\icons16\\edit.png', click: () => { mainWindow.webContents.send('action-edit-bookmark', arg); } },
     { type: "separator" },
     { label: 'Bookmarks settings', icon: app.getAppPath() + '\\imgs\\icons16\\settings.png', click: () => { mainWindow.webContents.send('action-open-settings', 'bookmarks'); } },
     { label: 'Bookmark manager', accelerator: 'CmdOrCtrl+B', icon: app.getAppPath() + '\\imgs\\icons16\\bookmarks.png', click: () => { mainWindow.webContents.send('action-open-bookmarks',); } }
@@ -558,10 +567,7 @@ ipcMain.on('request-set-bookmarks-bar', (event, arg) => {
     }
 
     mainWindow.webContents.send('action-set-bookmarks-bar', arg);
-    if(!fs.existsSync(ppath + "\\json")) {
-      fs.mkdirSync(ppath + "\\json");
-    } 
-    fs.writeFileSync(ppath + "\\json\\bookmarksbar.json", JSON.stringify(arg));
+    saveFileToJsonFolder('bookmarksbar', JSON.stringify(arg));
   } catch (e) {
 
   }
@@ -582,13 +588,7 @@ ipcMain.on('request-add-history-item', (event, arg) => {
       if (err) throw err;
     });
   } catch (error) {
-    if(!fs.existsSync(ppath + "\\json")) {
-      fs.mkdirSync(ppath + "\\json");
-    } 
-    fs.writeFileSync(ppath + "\\json\\history.json", "");
-    fs.appendFileSync(ppath + "\\json\\history.json", JSON.stringify(Data), function (err) {
-      if (err) throw err;
-    });
+    saveFileToJsonFolder('history', JSON.stringify(Data));
   }
 
   mainWindow.webContents.send('action-add-history-item', Data);
@@ -659,14 +659,44 @@ ipcMain.on('request-check-for-updates', (event, arg) => {
 ipcMain.on('request-tabs-list', (event, arg) => {
   let m = new Menu();
   for(let i = 0; i < arg.length; i++) {
-    let mi = new MenuItem({
-      type: 'checkbox',
-      label: "[" + (i + 1) + "] " + arg[i].label,
-      checked: arg[i].active,
-      click: () => { mainWindow.webContents.send('action-activate-tab', i); }
-    });
-    m.append(mi);
+    let num = i + 1;
+    if (i < 9) {
+      let mi = new MenuItem({
+        type: 'checkbox',
+        label: arg[i].label,
+        checked: arg[i].active,
+        accelerator: "CmdOrCtrl+" + num,
+        click: () => { mainWindow.webContents.send('action-activate-tab', i); }
+      });
+      m.append(mi);
+    } else {
+      let mi = new MenuItem({
+        type: 'checkbox',
+        label: arg[i].label + " [" + num + "]",
+        checked: arg[i].active,
+        click: () => { mainWindow.webContents.send('action-activate-tab', i); }
+      });
+      m.append(mi);
+    }
   }
+  
+  let sep = new MenuItem({ type: 'separator' });
+  m.append(sep);
+  let nextItem = new MenuItem({ 
+    label: 'Next tab', 
+    icon: app.getAppPath() + '\\imgs\\icons16\\next.png', 
+    accelerator: 'CmdOrCtrl+Tab', 
+    click: () => { mainWindow.webContents.send('action-next-tab'); } 
+  });
+  m.append(nextItem);
+  let prevItem = new MenuItem({ 
+    label: 'Previous tab', 
+    icon: app.getAppPath() + '\\imgs\\icons16\\prev.png', 
+    accelerator: 'CmdOrCtrl+Shift+Tab', 
+    click: () => { mainWindow.webContents.send('action-prev-tab'); } 
+  });
+  m.append(prevItem);
+
   m.popup(mainWindow);
 });
 
@@ -681,7 +711,8 @@ ipcMain.on('request-tab-menu', (event, arg) => {
     { label: 'Go home', icon: app.getAppPath() + '\\imgs\\icons16\\home.png', accelerator: 'CmdOrCtrl+Shift+H', click: () => { mainWindow.webContents.send('action-tabcontext-gohome', arg); } },
     { type: 'separator' },
     { label: 'Picture in picture', icon: app.getAppPath() + '\\imgs\\icons16\\picture-in.png', accelerator: 'CmdOrCtrl+Shift+P', click: () => { mainWindow.webContents.send('action-tabcontext-picturein', arg); } },
-    // { type: 'separator' },
+    { type: 'separator' },
+    { label: 'Reload ignoring cache', accelerator: 'CmdOrCtrl+F5', click: () => { mainWindow.webContents.send('action-tabcontext-ignorecache'); } },
     // { label: 'Mute site', accelerator: 'CmdOrCtrl+Shift+M', click: () => {  }, enabled: false },
     { type: 'separator' },
     { label: 'Close to the right', icon: app.getAppPath() + '\\imgs\\icons16\\swipe-right.png', click: () => { mainWindow.webContents.send('action-tabcontext-closeright', arg); } },
@@ -759,22 +790,12 @@ ipcMain.on('request-unmaximize-window', (event, arg) => {
 
 ipcMain.on('request-change-theme', (event, arg) => {
   mainWindow.webContents.send('action-change-theme', arg);
-
-  if(!fs.existsSync(ppath + "\\json")) {
-    fs.mkdirSync(ppath + "\\json");
-  } 
-
-  fs.writeFileSync(ppath + "\\json\\theme.json", arg);
+  saveFileToJsonFolder('theme', arg);
 });
 
 ipcMain.on('request-change-border-radius', (event, arg) => {
   mainWindow.webContents.send('action-change-border-radius', arg);
-
-  if(!fs.existsSync(ppath + "\\json")) {
-    fs.mkdirSync(ppath + "\\json");
-  } 
-
-  fs.writeFileSync(ppath + "\\json\\radius.json", arg);
+  saveFileToJsonFolder('radius', arg);
 });
 
 ipcMain.on('request-toggle-fullscreen', (event, arg) => {
@@ -947,30 +968,18 @@ function saveAllData() {
 }
 
 function saveDownloads() {
-  if(!fs.existsSync(ppath + "\\json")) {
-    fs.mkdirSync(ppath + "\\json");
-  } 
-
-  fs.writeFileSync(ppath + "\\json\\curdownloadnum.json", curDownloadNum);
-  fs.writeFileSync(ppath + "\\json\\downloads.json", JSON.stringify(downloadsArray));
+  saveFileToJsonFolder('curdownloadnum', curDownloadNum);
+  saveFileToJsonFolder('downloads', JSON.stringify(downloadsArray));
   console.log("saved DOWNLOADS: " + downloadsArray.length);
 }
 
 function saveStartPage() {
-  if(!fs.existsSync(ppath + "\\json")) {
-    fs.mkdirSync(ppath + "\\json");
-  } 
-
-  fs.writeFileSync(ppath + "\\json\\startpage.json", startPage);
+  saveFileToJsonFolder('startpage', startPage);
   console.log("saved STARTPAGE: " + startPage);
 }
 
 function saveSearchEngine() {
-  if(!fs.existsSync(ppath + "\\json")) {
-    fs.mkdirSync(ppath + "\\json");
-  } 
-
-  fs.writeFileSync(ppath + "\\json\\searchengine.json", searchEngine);
+  saveFileToJsonFolder('searchengine', searchEngine);
   console.log("saved SEARCHENGINE: " + searchEngine);
 }
 
@@ -982,12 +991,14 @@ function saveBounds() {
     height: mainWindow.getBounds().height,
     maximize: mainWindow.isMaximized()
   }
+  saveFileToJsonFolder('bounds', JSON.stringify(Data));
+}
 
+function saveFileToJsonFolder(fileName, data) {
   if(!fs.existsSync(ppath + "\\json")) {
     fs.mkdirSync(ppath + "\\json");
   } 
-
-  fs.writeFileSync(ppath + "\\json\\bounds.json", JSON.stringify(Data));
+  fs.writeFileSync(ppath + "\\json\\" + fileName + ".json", data);
 }
 
 /*
@@ -1052,7 +1063,7 @@ function loadWelcome() {
       showWelcomeWindow();
     }
   } catch (e) {
-    fs.writeFileSync(ppath + "\\json\\welcome.json", 1);
+    saveFileToJsonFolder('welcome', 1);
     showWelcomeWindow();
   }
 }

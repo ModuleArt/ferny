@@ -176,9 +176,9 @@ function moreSettings(shortcutId) {
 
 function changeWelcome(bool) {
   if(bool) {
-    fs.writeFileSync(ppath + "\\json\\welcome.json", 1);
+    saveFileToJsonFolder('welcome', 1);
   } else {
-    fs.writeFileSync(ppath + "\\json\\welcome.json", 0);
+    saveFileToJsonFolder('welcome', 0);
   }
 }
 
@@ -199,6 +199,13 @@ function loadStartPage() {
   }
 }
 
+function saveFileToJsonFolder(fileName, data) {
+  if(!fs.existsSync(ppath + "\\json")) {
+    fs.mkdirSync(ppath + "\\json");
+  } 
+  fs.writeFileSync(ppath + "\\json\\" + fileName + ".json", data);
+}
+
 function setStartPageLikeHomePage() {
   try {
     var jsonstr = fs.readFileSync(ppath + "\\json\\home.json");
@@ -212,7 +219,7 @@ function setStartPageLikeHomePage() {
 function saveStartPage() {
   var url = document.getElementById('start-page-input').value;
 
-  fs.writeFileSync(ppath + "\\json\\startPage.json", url);
+  saveFileToJsonFolder('startpage', url);
 
   notif("New tab page saved: " + url, "success");
 }
@@ -307,7 +314,7 @@ function saveHomePage() {
     if(!fs.existsSync(ppath + "\\json")) {
       fs.mkdirSync(ppath + "\\json");
     } 
-    fs.writeFileSync(ppath + "\\json\\home.json", JSON.stringify({ url: url, on: on }));
+    saveFileToJsonFolder('home', JSON.stringify({ url: url, on: on }));
 
     notif("Home page saved: " + url, "success");
 

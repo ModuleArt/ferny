@@ -3,14 +3,28 @@
   "productName": "Ferny",
   "companyName": "Module Art",
   "description": "Your web browser",
-  "version": "2.0.0",
-  "license": "UNLICENSED",
+  "version": "2.1.0",
+  "license": "GPL-3.0",
+  "keywords": [
+    "web-browser",
+    "electron",
+    "styled-components"
+  ],
   "author": {
     "name": "ModuleArt",
     "email": "module.art.team@gmail.com"
   },
+  "contributors": [
+    {
+      "name": "Jake Volynko",
+      "email": "volynko.ua@gmail.com"
+    }
+  ],
   "main": "main.js",
   "homepage": "https://moduleart.github.io/ferny",
+  "bugs": {
+    "url": "https://github.com/ModuleArt/ferny/issues"
+  },
   "repository": {
     "url": "https://github.com/ModuleArt/ferny"
   },
@@ -33,8 +47,8 @@
     "validate.io-uri": "^1.0.0"
   },
   "devDependencies": {
-    "electron-builder": "^20.40.2",
-    "electron": "^6.0.0-beta.10"
+    "electron": "^6.0.1",
+    "electron-builder": "^20.40.2"
   },
   "build": {
     "appId": "com.moduleart.ferny",
@@ -42,18 +56,82 @@
     "fileAssociations": [
       {
         "ext": "htm",
-        "name": "HTM document",
+        "name": "Web page document [HTM]",
+        "description": "Ferny: Web page document [HTM]",
         "role": "Viewer"
       },
       {
         "ext": "html",
-        "name": "HTML document",
+        "name": "Web page document [HTML]",
+        "description": "Ferny: Web page document [HTML]",
+        "role": "Viewer"
+      },
+      {
+        "ext": "gif",
+        "name": "Bitmap image [GIF]",
+        "description": "Ferny: Bitmap image [GIF]",
+        "role": "Viewer"
+      },
+      {
+        "ext": "png",
+        "name": "Raster-graphics file [PNG]",
+        "description": "Ferny: Raster-graphics file [PNG]",
+        "role": "Viewer"
+      },
+      {
+        "ext": "jpeg",
+        "name": "Compressed image [JPEG]",
+        "description": "Ferny: Compressed image [JPEG]",
+        "role": "Viewer"
+      },
+      {
+        "ext": "jpg",
+        "name": "Compressed image [JPG]",
+        "description": "Ferny: Compressed image [JPG]",
+        "role": "Viewer"
+      },
+      {
+        "ext": "mp3",
+        "name": "Digital audio file [MP3]",
+        "description": "Ferny: Digital audio file [MP3]",
+        "role": "Viewer"
+      },
+      {
+        "ext": "txt",
+        "name": "Plain text document [TXT]",
+        "description": "Ferny: Plain text document [TXT]",
+        "role": "Viewer"
+      },
+      {
+        "ext": "js",
+        "name": "JavaScript code file [JS]",
+        "description": "Ferny: JavaScript code file [JS]",
+        "role": "Viewer"
+      },
+      {
+        "ext": "json",
+        "name": "JavaScript object data [JSON]",
+        "description": "Ferny: JavaScript object data [JSON]",
+        "role": "Viewer"
+      },
+      {
+        "ext": "sql",
+        "name": "Structured query file [SQL]",
+        "description": "Ferny: Structured query file [SQL]",
+        "role": "Viewer"
+      },
+      {
+        "ext": "css",
+        "name": "Cascading style sheet [CSS]",
+        "description": "Ferny: Cascading style sheet [CSS]",
         "role": "Viewer"
       }
     ],
     "nsis": {
-      "oneClick": false
+      "oneClick": false,
+      "include": "installer.nsh"
     },
+    "asar": true,
     "win": {
       "publish": {
         "provider": "github",
@@ -63,12 +141,43 @@
         "protocol": "https",
         "releaseType": "release"
       },
-      "target": "nsis",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
       "icon": "imgs/icon.ico"
+    },
+    "mac": {
+      "category": "public.app-category.navigation"
     },
     "linux": {
       "category": "Network",
-      "target": "AppImage"
+      "target": [
+        {
+          "target": "deb",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        },
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ]
     }
   }
 }

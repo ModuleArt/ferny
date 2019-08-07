@@ -253,10 +253,7 @@ function loadTheme() {
   try {
     themeColor = fs.readFileSync(ppath + "\\json\\theme.json");
   } catch (e) {
-    if(!fs.existsSync(ppath + "\\json")) {
-      fs.mkdirSync(ppath + "\\json");
-    } 
-    fs.writeFileSync(ppath + "\\json\\theme.json", themeColor);
+    saveFileToJsonFolder("theme", themeColor);
   }
 
   applyTheme(themeColor);
@@ -268,10 +265,7 @@ function loadBorderRadius() {
   try {
     borderRadius = fs.readFileSync(ppath + "\\json\\radius.json");
   } catch (e) {
-    if(!fs.existsSync(ppath + "\\json")) {
-      fs.mkdirSync(ppath + "\\json");
-    } 
-    fs.writeFileSync(ppath + "\\json\\radius.json", borderRadius);
+    saveFileToJsonFolder('radius', borderRadius);
   }
 
   applyBorderRadius(borderRadius);
@@ -296,7 +290,7 @@ function saveSidebar() {
     collapse: collapse
   };
 
-  fs.writeFileSync(ppath + "\\json\\sidebar.json", JSON.stringify(Data));
+  saveFileToJsonFolder('sidebar', JSON.stringify(Data));
 }
 
 function loadSidebar() {
@@ -309,10 +303,7 @@ function loadSidebar() {
     var jsonstr = fs.readFileSync(ppath + "\\json\\sidebar.json");
     Data = JSON.parse(jsonstr);
   } catch (e) {
-    if(!fs.existsSync(ppath + "\\json")) {
-      fs.mkdirSync(ppath + "\\json");
-    } 
-    fs.writeFileSync(ppath + "\\json\\sidebar.json", JSON.stringify(Data));
+    saveFileToJsonFolder('sidebar', JSON.stringify(Data));
   }
 
   if(Data.pin == 1) {
@@ -334,10 +325,7 @@ function loadBookmarksBar() {
     var jsonstr = fs.readFileSync(ppath + "\\json\\bookmarksbar.json");
     Data = JSON.parse(jsonstr);
   } catch (e) {
-    if(!fs.existsSync(ppath + "\\json")) {
-      fs.mkdirSync(ppath + "\\json");
-    } 
-    fs.writeFileSync(ppath + "\\json\\bookmarksbar.json", JSON.stringify(Data));
+    saveFileToJsonFolder('bookmarksbar', JSON.stringify(Data));
   }
 
   applyBookmarksBar(Data);
@@ -555,7 +543,7 @@ function createBookmark(url, name, folder) {
 
   arr.push(Data);
 
-  fs.writeFileSync(ppath + "\\json\\bookmarks.json", JSON.stringify(arr));
+  saveFileToJsonFolder('bookmarks', JSON.stringify(arr));
 
   document.getElementById('sidebar-webview').send('action-update-bookmarks');
 
@@ -795,7 +783,7 @@ function removeNotif(div) {
   if(typeof(div) != "undefined") {
     div.classList.add('closed');
     setTimeout(function () {
-      document.getElementById('notif-panel').removeChild(div);
+      div.parentNode.removeChild(div);
     }, 250);
   }
 }
@@ -1029,7 +1017,7 @@ function removeFolder(folder) {
         arr.splice(i, 1);
       }
     }
-    fs.writeFileSync(ppath + "\\json\\folders.json", JSON.stringify(arr));
+    saveFileToJsonFolder('folders', JSON.stringify(arr));
 
     document.getElementById('sidebar-webview').send('action-remove-folder', folder);
     updateBookmarksBar();
@@ -1145,7 +1133,7 @@ function updateBookmarksBar() {
       var jsonstr = fs.readFileSync(ppath + "\\json\\folders.json");
       var folders = JSON.parse(jsonstr);
       for (var i = 0; i < folders.length; i++) {
-        addFolderToBookmarksBar(folders[i].name);
+        addFolderToBookmarksBar(folders[i].name, i);
       }
 
       jsonstr = fs.readFileSync(ppath + "\\json\\bookmarks.json");
@@ -1159,13 +1147,14 @@ function updateBookmarksBar() {
   }
 }
 
-function addFolderToBookmarksBar(name) {
+function addFolderToBookmarksBar(name, index) {
   var bbar = document.getElementById('bookmarks-bar');
 
   var div = document.createElement('button');
   div.classList.add('folder');
   div.innerHTML = "<img class='folder-icon' src='../imgs/icons16/folder.png'><span>" + name + "</span><div class='folder-div'></div>";
   div.title = name;
+  div.id = "folder-" + index;
 
   div.ondrop = (e) => {
     e.preventDefault();
@@ -1195,9 +1184,9 @@ function addFolderToBookmarksBar(name) {
   //   }
   // });
 
-  // div.addEventListener('contextmenu', (e) => {
-  //   ipcRenderer.send('request-folder-contextmenu');
-  // }, false);
+  div.getElementsByTagName('span')[0].addEventListener('contextmenu', (e) => {
+    ipcRenderer.send('request-folder-contextmenu', div.id);
+  }, false);
 
   bbar.appendChild(div);
 }
@@ -1244,7 +1233,6 @@ function addBookmarkToBookmarksBar(url, name, parent, index) {
       url: div.name,
       id: div.id
     };
-
     ipcRenderer.send('request-bookmark-contextmenu', contextData);
   }, false);
 
@@ -1286,10 +1274,7 @@ function loadHome() {
     var jsonstr = fs.readFileSync(ppath + "\\json\\home.json");
     Data = JSON.parse(jsonstr);
   } catch (e) {
-    if(!fs.existsSync(ppath + "\\json")) {
-      fs.mkdirSync(ppath + "\\json");
-    } 
-    fs.writeFileSync(ppath + "\\json\\home.json", JSON.stringify(Data));
+    saveFileToJsonFolder('home', JSON.stringify(Data))
   }
 
   var btn = document.getElementById('home-btn');
@@ -1337,7 +1322,7 @@ function saveBookmarksBar() {
     foldersArray.push(Data);
   }
 
-  fs.writeFileSync(ppath + "\\json\\folders.json", JSON.stringify(foldersArray));
+  saveFileToJsonFolder('folders', JSON.stringify(foldersArray));
 
   var bookmarks = bbar.getElementsByClassName('bookmark');
   var bookmarksArray = [];
@@ -1356,7 +1341,7 @@ function saveBookmarksBar() {
     bookmarksArray.push(Data);
   }
 
-  fs.writeFileSync(ppath + "\\json\\bookmarks.json", JSON.stringify(bookmarksArray));
+  saveFileToJsonFolder('bookmarks', JSON.stringify(bookmarksArray));
 
   document.getElementById('sidebar-webview').send('action-update-bookmarks');
 }
@@ -1384,6 +1369,13 @@ function bookmarkAllTabs() {
   });
 }
 
+function saveFileToJsonFolder(fileName, data) {
+  if(!fs.existsSync(ppath + "\\json")) {
+    fs.mkdirSync(ppath + "\\json");
+  } 
+  fs.writeFileSync(ppath + "\\json\\" + fileName + ".json", data);
+}
+
 /*
 .####.########...######.....########..########.##....##.########..########.########..########.########.
 ..##..##.....##.##....##....##.....##.##.......###...##.##.....##.##.......##.....##.##.......##.....##
@@ -1397,6 +1389,79 @@ function bookmarkAllTabs() {
 ipcRenderer.on('action-switch-tab', (event, arg) => {
   if(arg <= tabGroup.getTabs().length) {
     tabGroup.getTabByPosition(arg).activate();
+  }
+});
+
+ipcRenderer.on('action-edit-folder', (event, arg) => {
+  var div = document.getElementById(arg);
+
+  if(div.getElementsByClassName('edit-folder-div')[0] == null) {
+    var nameLabel = div.getElementsByTagName('span')[0];
+    div.title = "";
+  
+    var container = document.createElement('div');
+    container.classList.add('edit-folder-div');
+  
+    var inputName = document.createElement('input');
+    inputName.type = "text";
+    inputName.placeholder = "Folder name";
+    inputName.classList.add('folder-name');
+    inputName.value = nameLabel.innerHTML;
+
+    var saveButton = document.createElement('img');
+    saveButton.classList.add('title-bar-btn', 'theme-icon');
+    saveButton.name = "save";
+    saveButton.title = "Save";
+    saveButton.onclick = () => {
+      div.title = inputName.value;
+      nameLabel.innerHTML = inputName.value;
+      div.getElementsByClassName('edit-folder-div')[0].classList.add('hide');
+      setTimeout(() => {
+        div.removeChild(div.getElementsByClassName('edit-folder-div')[0]);
+        saveBookmarksBar();
+      }, 250);
+    }
+
+    var deleteButton = document.createElement('img');
+    deleteButton.classList.add('title-bar-btn', 'theme-icon');
+    deleteButton.name = "delete";
+    deleteButton.title = "Delete";
+    deleteButton.onclick = () => {
+      div.getElementsByClassName('edit-folder-div')[0].classList.add('hide');
+      setTimeout(() => {
+        div.parentNode.removeChild(div);
+        saveBookmarksBar();
+      }, 250);
+    }
+
+    var cancelButton = document.createElement('img');
+    cancelButton.classList.add('title-bar-btn', 'theme-icon');
+    cancelButton.name = "cancel";
+    cancelButton.title = "Cancel";
+    cancelButton.onclick = () => {
+      div.title = nameLabel.innerHTML;
+      div.getElementsByClassName('edit-folder-div')[0].classList.add('hide');
+      setTimeout(() => {
+        div.removeChild(div.getElementsByClassName('edit-folder-div')[0]);
+      }, 250);
+    }
+  
+    container.appendChild(inputName);
+    container.appendChild(saveButton);
+    container.appendChild(deleteButton);
+    container.appendChild(cancelButton);
+  
+    div.appendChild(container);
+
+    inputName.focus();
+
+    var bounding = div.getElementsByClassName('edit-folder-div')[0].getBoundingClientRect();
+    if (bounding.left > (window.innerWidth / 2 || document.documentElement.clientWidth / 2)) {
+      div.getElementsByClassName('edit-folder-div')[0].style.left = "auto";
+      div.getElementsByClassName('edit-folder-div')[0].style.right = 0;
+    }
+
+    applyTheme(document.documentElement.style.getPropertyValue('--color-back'));
   }
 });
 
@@ -1545,26 +1610,37 @@ ipcRenderer.on('action-open-history', (event, arg) => {
 ipcRenderer.on('action-tab-newtab', (event, arg) => {
   tabGroup.addTab();
 });
+
 ipcRenderer.on('action-tab-reload', (event, arg) => {
   tabGroup.getActiveTab().webview.reload();
 });
+
+ipcRenderer.on('action-tab-ignoringcache', (event, arg) => {
+  tabGroup.getActiveTab().webview.reloadIgnoringCache();
+});
+
 ipcRenderer.on('action-tab-back', (event, arg) => {
   tabGroup.getActiveTab().webview.goBack();
 });
+
 ipcRenderer.on('action-tab-forward', (event, arg) => {
   tabGroup.getActiveTab().webview.goForward();
 });
+
 ipcRenderer.on('action-tab-duplicatetab', (event, arg) => {
   var url = tabGroup.getActiveTab().webview.src;
   tabGroup.addTab();
   tabGroup.getActiveTab().webview.loadURL(url);
 });
+
 ipcRenderer.on('action-tab-closetab', (event, arg) => {
   tabGroup.getActiveTab().close(false);
 });
+
 ipcRenderer.on('action-tab-goback', (event, arg) => {
   tabGroup.getActiveTab().webview.goBack();
 });
+
 ipcRenderer.on('action-tab-closeright', (event, arg) => {
   var curPos = tabGroup.getActiveTab().getPosition(false);
   tabGroup.eachTab((currentTab, index, tabs) => {
@@ -1573,6 +1649,7 @@ ipcRenderer.on('action-tab-closeright', (event, arg) => {
     }
   });
 });
+
 ipcRenderer.on('action-tab-closeothers', (event, arg) => {
   var curPos = tabGroup.getActiveTab().getPosition(false);
   tabGroup.eachTab((currentTab, index, tabs) => {
@@ -1585,6 +1662,7 @@ ipcRenderer.on('action-tab-closeothers', (event, arg) => {
 ipcRenderer.on('action-esc', (event, arg) => {
   esc();
 });
+
 ipcRenderer.on('action-page-focussearch', (event, arg) => {
   focusSearch();
 });
@@ -1592,6 +1670,7 @@ ipcRenderer.on('action-page-focussearch', (event, arg) => {
 ipcRenderer.on('action-open-bookmarks', (event, arg) => {
   goToBookmarksTab();
 });
+
 ipcRenderer.on('action-bookmark-this-page', (event, arg) => {
   createBookmark(tabGroup.getActiveTab().webview.getURL(), tabGroup.getActiveTab().webview.getTitle(), null);
 });
@@ -1746,6 +1825,10 @@ ipcRenderer.on('action-tabcontext-reload', (event, arg) => {
   tabGroup.getTab(arg).webview.reload();
 });
 
+ipcRenderer.on('action-tabcontext-ignorecache', (event, arg) => {
+  tabGroup.getTab(arg).webview.reloadIgnoringCache();
+});
+
 ipcRenderer.on('action-tabcontext-duplicatetab', (event, arg) => {
   var url = tabGroup.getTab(arg).webview.src;
   tabGroup.addTab();
@@ -1795,6 +1878,20 @@ ipcRenderer.on('action-toggle-fullscreen', (event, arg) => {
 
 ipcRenderer.on('action-activate-tab', (event, arg) => {
   tabGroup.getTabByPosition(arg + 1).activate();
+});
+
+ipcRenderer.on('action-next-tab', (event, arg) => {
+  let pos = tabGroup.getActiveTab().getPosition();
+  if(tabGroup.getTabByPosition(pos + 1) != null) {
+    tabGroup.getTabByPosition(pos + 1).activate();
+  }
+});
+
+ipcRenderer.on('action-prev-tab', (event, arg) => {
+  let pos = tabGroup.getActiveTab().getPosition();
+  if(tabGroup.getTabByPosition(pos - 1) != null) {
+    tabGroup.getTabByPosition(pos - 1).activate();
+  }
 });
 
 ipcRenderer.on('action-blur-window', (event, arg) => {

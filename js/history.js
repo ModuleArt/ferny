@@ -38,10 +38,7 @@ function loadHistory() {
   reader.read();
 }
 
-// appearance
 function changeTheme(color) {
-  // document.body.style.backgroundColor = color;
-
   if(checkIfDark(color)) {
     setIconsStyle('light');
 
@@ -54,6 +51,7 @@ function changeTheme(color) {
     document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.1)');
   }
 }
+
 function setIconsStyle(str) {
   var icons = document.getElementsByClassName('theme-icon');
 
@@ -61,6 +59,7 @@ function setIconsStyle(str) {
     icons[i].src = "../themes/" + str + "/icons/" + icons[i].name + ".png";
   }
 }
+
 function checkIfDark(color) {
     var r, g, b, hsp;
     if (String(color).match(/^rgb/)) {
@@ -86,6 +85,7 @@ function checkIfDark(color) {
         return true;
     }
 }
+
 function loadTheme() {
   try {
     var themeColor = fs.readFileSync(ppath + "\\json\\theme.json");
@@ -94,6 +94,7 @@ function loadTheme() {
 
   }
 }
+
 function loadBorderRadius() {
   try {
     var borderRadius = fs.readFileSync(ppath + "\\json\\radius.json");
@@ -109,14 +110,21 @@ function loadBorderRadius() {
 
   }
 }
+
 function changeBorderRadius(size) {
   document.documentElement.style.setProperty('--px-radius', size + 'px');
 }
 
-// history
+function saveFileToJsonFolder(fileName, data) {
+  if(!fs.existsSync(ppath + "\\json")) {
+    fs.mkdirSync(ppath + "\\json");
+  } 
+  fs.writeFileSync(ppath + "\\json\\" + fileName + ".json", data);
+}
+
 function clearHistory() {
   try {
-    fs.writeFileSync(ppath + "\\json\\history.json", "");
+    saveFileToJsonFolder('history', "");
     var container = document.getElementById('history');
     if(container.innerHTML == "") {
       notif('History is already empty', 'info');

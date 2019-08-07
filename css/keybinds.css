@@ -286,6 +286,7 @@ body {
     width: calc(100% - 176px);
     vertical-align: middle;
     margin: 2px;
+    text-align: left;
 }
 
 .key {

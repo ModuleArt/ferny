@@ -397,16 +397,17 @@
   background-color: var(--color-over);
 }
 
-.title-bar-btn.disable {
-  opacity: var(--opacity-blur);
-}
-
 .title-bar-btn.active {
   background-color: var(--color-over);
 }
 
 .title-bar-btn:active, #search-input:active {
   opacity: 0.5;
+}
+
+.title-bar-btn.disable {
+  opacity: var(--opacity-blur);
+  background-color: transparent;
 }
 
 .title-bar-vr {
@@ -435,10 +436,6 @@
   height: 32px;
 }
 
-.etabs-tabgroup.blur #window-controls {
-  opacity: 0.5;
-}
-
 #window-controls span {
   font-family: SegMDL2;
   font-size: 10px;
@@ -453,6 +450,10 @@
   height: 100%;
   color: var(--color-top);
   transition: background-color 0.25s;
+}
+
+.etabs-tabgroup.blur #window-controls .button, .etabs-tabgroup.blur .theme-icon {
+  opacity: 0.5;
 }
 
 #window-controls .button:hover {
@@ -478,6 +479,7 @@
 #window-controls #close-btn:hover {
   background-color: #E81022;
   color: white;
+  opacity: 1;
 }
 
 /*
@@ -589,8 +591,9 @@ body.collapse-sidebar #sidebar-div {
 }
 
 body.collapse-sidebar #sidebar-div .nav-btn {
-  border-radius: 0;
-  width: calc(100% + 4px);
+  border-radius: var(--px-radius);
+  margin-left: 2px;
+  padding-left: 4px;
 }
 
 body.collapse-sidebar #sidebar-div .nav-btn label {
@@ -796,8 +799,12 @@ hr {
   background: none;
   border: none;
   font-size: var(--px-font);
-  padding: 8px;
+  padding: 0;
   height: 32px;
+}
+
+.etabs-buttons button img {
+  padding: 8px;
 }
 
 .etabs-buttons button:hover {
@@ -1019,12 +1026,15 @@ hr {
   font-size: 12px;
   overflow: hidden;
   position: absolute;
-  right: 8px;
-  left: 28px;
+  right: 0;
+  top: 0;
+  left: 0;
   white-space: nowrap;
   word-break: keep-all;
   text-overflow: ellipsis;
   color: var(--color-top);
+  padding: 8px;
+  padding-left: 28px;
 }
 
 .bookmark img:first, .folder img:first {
@@ -1033,7 +1043,7 @@ hr {
   height: 16px;
 }
 
-.bookmark .bookmark-div, .folder .folder-div {
+.bookmark .bookmark-div, .folder .folder-div, .folder .edit-folder-div {
   position: absolute;
   left: 0;
   background-color: var(--color-back);
@@ -1053,13 +1063,13 @@ hr {
   color: var(--color-top);
 }
 
-.bookmark .bookmark-div {
+.bookmark .bookmark-div, .folder .edit-folder-div {
   width: 256px;
   text-align: center;
   padding: 2px;
 }
 
-.bookmark .bookmark-div.hide {
+.bookmark .bookmark-div.hide, .folder .edit-folder-div.hide {
   opacity: 0;
   transform: translateY(-40px);
 }
@@ -1089,7 +1099,7 @@ hr {
   border-radius: 0 0 calc(var(--px-radius) - 2px) calc(var(--px-radius) - 2px);
 }
 
-.bookmark .bookmark-div input {
+.bookmark .bookmark-div input, .folder .edit-folder-div input {
   width: calc(100% - 4px);
 }
 
@@ -1116,11 +1126,10 @@ hr {
 }
 
 #bookmarks-bar.only-labels .bookmark span, #bookmarks-bar.only-labels .folder span {
-  left: 8px;
-  top: 4px;
+  padding: 4px 8px;
 }
 
-#bookmarks-bar.only-labels .bookmark-div {
+#bookmarks-bar.only-labels .bookmark-div, #bookmarks-bar.only-labels .edit-folder-div {
   top: 24px;
 }
 

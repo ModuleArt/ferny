@@ -418,9 +418,16 @@ function saveBookmarks() {
     bookmarksArray.push(Data);
   }
 
-  fs.writeFileSync(ppath + "\\json\\bookmarks.json", JSON.stringify(bookmarksArray));
+  saveFileToJsonFolder('bookmarks', JSON.stringify(bookmarksArray));
 
   ipcRenderer.send('request-update-bookmarks-bar');
+}
+
+function saveFileToJsonFolder(fileName, data) {
+  if(!fs.existsSync(ppath + "\\json")) {
+    fs.mkdirSync(ppath + "\\json");
+  } 
+  fs.writeFileSync(ppath + "\\json\\" + fileName + ".json", data);
 }
 
 /*
@@ -554,7 +561,7 @@ function saveFolders() {
       folderArray.push(Data);
     }
   }
-  fs.writeFileSync(ppath + "\\json\\folders.json", JSON.stringify(folderArray));
+  saveFileToJsonFolder('folders', JSON.stringify(folderArray));
 
   ipcRenderer.send('request-update-bookmarks-bar');
 }
