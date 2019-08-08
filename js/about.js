@@ -23,6 +23,10 @@ const isDarkColor = require("is-dark-color");
 .##........#######..##....##..######.....##....####..#######..##....##..######.
 */
 
+function openLicenseFile() {
+  ipcRenderer.send('request-open-license-file');
+}
+
 function changeBorderRadius(size) {
   document.documentElement.style.setProperty('--px-radius', size + 'px');
 }

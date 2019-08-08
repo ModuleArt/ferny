@@ -20,6 +20,10 @@ const isDarkColor = require("is-dark-color");
 const fs = require("fs");
 const ppath = require('persist-path')('Ferny');
 
+// const checkFile = require('check-file');
+const fileExtension = require('file-extension');
+const parsePath = require("parse-path")
+
 // const bookmarkDrag = dragula([document.getElementById('bookmarks-bar')], {
 //   moves: function(el, container, handle) {
 //     return !el.classList.contains('folder');
@@ -45,8 +49,10 @@ let tabGroup = new TabGroup({
   newTab: {
     title: 'New Tab',
     active: true,
+    visible: true,
     webviewAttributes: {
-      preload: "../js/webview.js"
+      preload: "../js/webview.js",
+      enableBlinkFeatures: false
     }
   },
   newTabButtonText: `<img title='New tab' name='create16' class='theme-icon' ondrop='newTabDrop(event)' ondragover='prevDef(event)'/>`,
@@ -100,6 +106,7 @@ tabGroup.on("tab-added", (tab, tabGroup) => {
   tab.on("active", (tab) => {
     document.getElementById('search-input').value = webview.getURL();
     applyFindPanel();
+    
     if (webview.canGoBack()) {
       document.getElementById('back-btn').classList.remove('disable');
     } else {
@@ -117,6 +124,9 @@ tabGroup.on("tab-added", (tab, tabGroup) => {
       document.getElementById('stop-btn').style.display = "none";
       document.getElementById('refresh-btn').style.display = "";
     }
+
+    webview.blur();
+    webview.focus();
   });
 
   webview.addEventListener('update-target-url', (e) => {
@@ -125,23 +135,9 @@ tabGroup.on("tab-added", (tab, tabGroup) => {
 
   webview.addEventListener('new-window', (e) => {
     if(e.disposition == "background-tab") {
-      tabGroup.addTab({
-        title: 'New Background Tab',
-        src: e.url,
-        active: false,
-        webviewAttributes: {
-          preload: "../js/webview.js"
-        }
-      });
+      newTab(e.url, 'New Background Tab', false);
     } else {
-      tabGroup.addTab({
-        title: 'New Tab',
-        src: e.url,
-        active: true,
-        webviewAttributes: {
-          preload: "../js/webview.js"
-        }
-      });
+      newTab(e.url, null, null);
     }
   });
 
@@ -175,6 +171,59 @@ tabGroup.on("tab-added", (tab, tabGroup) => {
   webview.addEventListener('did-stop-loading', () => {
     document.getElementById("refresh-btn").style.display = "";
     document.getElementById("stop-btn").style.display = "none";
+
+    var url = webview.getURL();
+    console.log(url);
+    if (parsePath(url).protocol == 'file') {
+      tab.setTitle(url);
+      tab.tab.title = url;
+
+      var ext = fileExtension(url);
+      if(ext == "html" || ext == "htm") {
+        tab.setIcon('../imgs/icons16/html.png');
+      } else if(ext == "png") {
+        tab.setIcon('../imgs/icons16/png.png');
+      } else if(ext == "gif") {
+        tab.setIcon('../imgs/icons16/gif.png');
+      } else if(ext == "jpeg" || ext == "jpg") {
+        tab.setIcon('../imgs/icons16/jpg.png');
+      } else if(ext == "m4a") {
+        tab.setIcon('../imgs/icons16/mpeg.png');
+      } else  if(ext == "mp3") {
+        tab.setIcon('../imgs/icons16/mp3.png');
+      } else if(ext == "txt") {
+        tab.setIcon('../imgs/icons16/txt.png');
+      } else if(ext == "js") {
+        tab.setIcon('../imgs/icons16/js.png');
+      } else if(ext == "json") {
+        tab.setIcon('../imgs/icons16/json.png');
+      } else if(ext == "sql") {
+        tab.setIcon('../imgs/icons16/sql.png');
+      } else if(ext == "css") {
+        tab.setIcon('../imgs/icons16/css.png');
+      } else if(ext == "md") {
+        tab.setIcon('../imgs/icons16/markdown.png');
+      } else if(ext == "license") {
+        tab.setIcon('../imgs/icons16/license.png');
+      } else if(ext == "wav") {
+        tab.setIcon('../imgs/icons16/wav.png');
+      } else if(ext == "m4a") {
+        tab.setIcon('../imgs/icons16/mpeg.png');
+      } else if(ext == "ogg") {
+        tab.setIcon('../imgs/icons16/ogg.png');
+      } else if(ext == "php") {
+        tab.setIcon('../imgs/icons16/php.png');
+      } else {
+        tab.setIcon('../imgs/icons16/page.png');
+      }
+
+      var img = tab.tab.getElementsByTagName('img')[0];
+      var color = new getAvColor(img);
+      color.mostUsed(result => {
+        // tab.tab.style.backgroundImage = "linear-gradient(" + result[0] + ", var(--color-back), var(--color-back))"; 
+        tab.tab.style.borderTop = "4px solid " + result[0];
+      });
+    }
   });
 
   webview.addEventListener('did-navigate', (e) => {
@@ -268,6 +317,26 @@ tabGroup.on("tab-removed", (tab, tabGroup) => {
 .##.......##.....##.##...###.##....##....##.....##..##.....##.##...###.##....##
 .##........#######..##....##..######.....##....####..#######..##....##..######.
 */
+
+function newTab(url, title, active) {
+  if(title == null) {
+    title = 'New Tab'
+  }
+  if(active == null) {
+    active = true;
+  }
+
+  tabGroup.addTab({
+    src: url,
+    title: title, 
+    active: active,
+    visible: true,
+    webviewAttributes: {
+      preload: "../js/webview.js",
+      enableBlinkFeatures: false
+    }
+  });
+}
 
 function showTabPreview(tab, timeout, capturePage) {
   var div = tab.getElementsByTagName('div')[0];
@@ -455,24 +524,10 @@ function newTabDrop(e) {
   e.preventDefault();
   var textData = e.dataTransfer.getData("Text");
   if (textData) {
-    tabGroup.addTab({
-      title: 'New Tab',
-      src: textData,
-      active: true,
-      webviewAttributes: {
-        preload: "../js/webview.js"
-      }
-    });
+    newTab(textData, null, null);
   } else if(e.dataTransfer.files.length > 0) {
     for(var i = 0; i < e.dataTransfer.files.length; i++) {
-      tabGroup.addTab({
-        title: 'New Tab',
-        src: e.dataTransfer.files[i].path,
-        active: true,
-        webviewAttributes: {
-          preload: "../js/webview.js"
-        }
-      });
+      newTab(e.dataTransfer.files[i].path, null, null)
     }
   }
 }
@@ -1310,16 +1365,9 @@ function addBookmarkToBookmarksBar(url, name, parent, index) {
 
   div.addEventListener('auxclick', (e) => {
     e.preventDefault();
-     if(e.which == 2) {
-      tabGroup.addTab({
-        title: 'New Tab',
-        src: url,
-        active: true,
-        webviewAttributes: {
-          preload: "../js/webview.js"
-        }
-      });
-     }
+    if(e.which == 2) {
+      newTab(url, null, null);
+    }
   }, false);
 
   div.innerHTML = `<img class="bookmark-icon" src="` + 'http://www.google.com/s2/favicons?domain=' + url + `">
@@ -1821,14 +1869,7 @@ ipcRenderer.on('action-page-devtools', (event, arg) => {
 
 ipcRenderer.on('action-page-viewsource', (event, arg) => {
   var sourceUrl = 'view-source:' + tabGroup.getActiveTab().webview.getURL();
-  tabGroup.addTab({
-    title: 'View page source',
-    src: sourceUrl,
-    active: true,
-    webviewAttributes: {
-      preload: "../js/webview.js"
-    }
-  });
+  newTab(sourceUrl, 'View Page Source', null);
 });
 
 ipcRenderer.on('action-page-inspect', (event, arg) => {
@@ -1986,14 +2027,7 @@ ipcRenderer.on('action-open-url', (event, arg) => {
 });
 
 ipcRenderer.on('action-open-url-in-new-tab', (event, arg) => {
-  tabGroup.addTab({
-    title: 'New Tab',
-    src: arg,
-    active: true,
-    webviewAttributes: {
-      preload: "../js/webview.js"
-    }
-  });
+  newTab(arg, null, null);
   if(!document.body.classList.contains('pinned-sidebar')) {
     hideSidebar();
   }

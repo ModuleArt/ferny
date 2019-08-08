@@ -638,6 +638,10 @@ ipcMain.on('request-close-pageinfo', (event, arg) => {
   pageInfoWindow.close();
 });
 
+ipcMain.on('request-open-license-file', (event, arg) => {
+  mainWindow.webContents.send('action-open-url-in-new-tab', app.getAppPath() + "/LICENSE");
+});
+
 /*
 .########.##.....##.##....##..######..########.####..#######..##....##..######.
 .##.......##.....##.###...##.##....##....##.....##..##.....##.###...##.##....##
@@ -652,7 +656,7 @@ function showMainWindow() {
   let Data = {
     x: null,
     y: null,
-    width: 1280,
+    width: 1000,
     height: 720,
     maximize: false
   };
@@ -666,12 +670,19 @@ function showMainWindow() {
     saveFileToJsonFolder("theme", themeColor);
   }
 
+  if(Data.maximize) {
+    Data.x = null;
+    Data.y = null;
+    Data.width = 1000;
+    Data.height = 720;
+  }
+
   mainWindow = new BrowserWindow({
     x: Data.x, y: Data.y,
     width: Data.width, height: Data.height,
     minWidth: 480, minHeight: 240,
     frame: false,
-    // show: false,
+    show: false,
     icon: app.getAppPath() + '\\imgs\\icon.ico',
     webPreferences: {
       nodeIntegration: true,
@@ -709,9 +720,12 @@ function showMainWindow() {
     mainWindow.webContents.send('action-unmaximize-window');
   });
 
-  // mainWindow.once('ready-to-show', () => {
-  //   mainWindow.show();
-  // });
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show();
+    if(Data.maximize) {
+      mainWindow.maximize();
+    }
+  });
 
   mainWindow.on('maximize', () => {
     mainWindow.webContents.send('action-maximize-window');
@@ -902,7 +916,7 @@ function showKeyBindsWindow() {
   keyBindsWindow.loadFile(app.getAppPath() + '\\html\\keybinds.html');
 
   keyBindsWindow.webContents.once('did-finish-load', () => {
-    keyBindsWindow.webContents.openDevTools();
+    // keyBindsWindow.webContents.openDevTools();
     keyBindsWindow.show();
   });
 }
