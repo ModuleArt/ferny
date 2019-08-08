@@ -23,7 +23,7 @@
             </div>
         </div>
 
-        <center>
+        <center onmousewheel="tabsWheel(event)">
             <div id="dots">
                 <div class="dot active" onclick="chooseSlide(0)"></div>
                 <div class="dot" onclick="chooseSlide(1)"></div>
@@ -46,13 +46,17 @@
                 <img src="../imgs/color48/theme.png">
                 <label class="subtitle">Theme</label>
                 <div class="container">
-                    <div class="color" onclick="requestTheme('rgb(255, 255, 255)')">
-                        <div style="background-color: rgb(255, 255, 255);"></div>
+                    <div class="color" onclick="requestTheme('#ffffff')">
+                        <div style="background-color: #ffffff;"></div>
                         <label>White</label>
                     </div>
-                    <div class="color" onclick="requestTheme('rgb(30, 39, 46)')">
-                        <div style="background-color: rgb(30, 39, 46);"></div>
+                    <div class="color" onclick="requestTheme('#1e272e')">
+                        <div style="background-color: #1e272e;"></div>
                         <label>Night</label>
+                    </div>
+                    <div class="color" onclick="requestTheme('#485460')">
+                        <div style="background-color: #485460;"></div>
+                        <label>Modern</label>
                     </div>
                 </div>
                 <label class="link" onclick="moreSettings('background-color')" title="More settings">More settings</label>
@@ -140,6 +144,7 @@
                     </div>
                     <div id="start-btn" onclick="closeWindow()"><label class="subtitle">Get started</label></div>
                 </div>
+                <label class="link" onclick="moreSettings(null)" title="Open settings">Open settings</label>
             </div>
 
             <img class="theme-icon disable" name="back" onclick="prevSlide()" id="prev-btn" title="Previous">

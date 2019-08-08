@@ -16,9 +16,10 @@
       <label class="link" onclick="scrollToId('home-page')">Home page</label>
       <label class="link" onclick="scrollToId('new-tab')">New tab</label>
       <label class="link" onclick="scrollToId('search-engine')">Search engine</label>
+      <label class="link" onclick="scrollToId('last-tab')">Last tab</label>
       <label class="link" onclick="scrollToId('bookmarks')">Bookmarks</label>
-      <label class="link" onclick="scrollToId('clear-browsing-data')">Clear browsing data</label>
       <label class="link" onclick="scrollToId('welcome-screen')">Welcome</label>
+      <label class="link" onclick="scrollToId('clear-browsing-data')">Clear browsing data</label>
     </div>
     <hr>
 
@@ -27,23 +28,23 @@
       <label>Themes</label>
     </div>
     <div class="container">
-      <div class="theme-preview" onclick="requestTheme('rgb(255, 255, 255)')">
+      <div class="theme-preview" onclick="requestTheme('#ffffff')">
           <label>White</label>
           <img src="../imgs/themes/white.png">
       </div>
-      <div class="theme-preview" onclick="requestTheme('rgb(30, 39, 46)')">
+      <div class="theme-preview" onclick="requestTheme('#1e272e')">
           <label>Night</label>
           <img src="../imgs/themes/night.png">
       </div>
-      <div class="theme-preview" onclick="requestTheme('rgb(72, 84, 96)')">
+      <div class="theme-preview" onclick="requestTheme('#485460')">
           <label>Modern</label>
           <img src="../imgs/themes/modern.png">
       </div>
       <hr>
-      <div class="color" onclick="requestTheme('rgb(238, 238, 238)')"><div style="background-color: rgb(238, 238, 238)"></div>Light</div>
-      <div class="color" onclick="requestTheme('rgb(222, 225, 230)')"><div style="background-color: rgb(225, 225, 225)"></div>Gray</div>
-      <div class="color" onclick="requestTheme('rgb(41, 42, 45)')"><div style="background-color: rgb(41, 42, 45)"></div>Dark</div>
-      <div class="color" onclick="requestTheme('rgb(34, 34, 34)')"><div style="background-color: rgb(34, 34, 34)"></div>Black</div>
+      <div class="color" onclick="requestTheme('#eeeeee')"><div style="background-color: rgb(238, 238, 238)"></div>Light</div>
+      <div class="color" onclick="requestTheme('#dee1e6')"><div style="background-color: rgb(225, 225, 225)"></div>Gray</div>
+      <div class="color" onclick="requestTheme('#292a2d')"><div style="background-color: rgb(41, 42, 45)"></div>Dark</div>
+      <div class="color" onclick="requestTheme('#222222')"><div style="background-color: rgb(34, 34, 34)"></div>Black</div>
     </div>
 
     <div class="block-title" id="borders-rounding">
@@ -111,7 +112,7 @@
       </div>
       <hr>
       <img class="more-btn theme-icon" onclick="moreInfo(this)" title="More info" name="info">
-      <label class="more-label">The page that will open when you create a new tab or when you start the browser (You need to restart the browser).</label>
+      <label class="more-label">The page that will open when you create a new tab or when you start the browser.</label>
     </div>
 
     <div class="block-title" id="search-engine">
@@ -179,6 +180,25 @@
       <label class="more-label">Search engine used in the address bar.</label>
     </div>
 
+    <div class="block-title" id="last-tab">
+      <img name="close-tab" class="theme-icon">
+      <label>Last tab</label>
+    </div>
+    <div class="container">
+      <div class="nav-checkbox">
+        <label>Open new tab</label>
+        <input type="radio" onclick="requestLastTab(this.value)" class="checkbox" name="last-tab" value="new-tab">
+      </div>
+      <div class="nav-checkbox">
+        <label>Do nothing</label>
+        <input type="radio" onclick="requestLastTab(this.value)" class="checkbox" name="last-tab" value="nothing">
+      </div>
+      <div class="nav-checkbox">
+        <label>Quit app</label>
+        <input type="radio" onclick="requestLastTab(this.value)" class="checkbox" name="last-tab" value="quit">
+      </div>
+    </div>
+
     <div class="block-title" id="bookmarks">
       <img name="bookmarks" class="theme-icon">
       <label>Bookmarks</label>
@@ -200,6 +220,21 @@
       <div class="nav-checkbox">
         <label>Icons only</label>
         <input type="radio" onclick="requestBookmarksBar(null, 'only-icons')" class="checkbox" name="bbar-layout" value="only-icons">
+      </div>
+    </div>
+
+    <div class="block-title" id="welcome-screen">
+      <img name="box" class="theme-icon">
+      <label>Welcome</label>
+    </div>
+    <div class="container">
+      <div class="nav-checkbox">
+        <label>Show welcome dialog at startup</label>
+        <input type="checkbox" id="welcome-checkbox" onclick="changeWelcome(this.checked)">
+      </div>
+      <div class="nav-btn" onclick="showWelcomeScreen()">
+        <img class="nav-btn-icon theme-icon" name="show">
+        <label class="nav-btn-label">Show welcome screen</label>
       </div>
     </div>
 
@@ -229,21 +264,6 @@
       <div class="nav-btn" onclick="clearBrowsingData()">
         <img class="nav-btn-icon theme-icon" name="delete">
         <label class="nav-btn-label">Clear data</label>
-      </div>
-    </div>
-
-    <div class="block-title" id="welcome-screen">
-      <img name="box" class="theme-icon">
-      <label>Welcome</label>
-    </div>
-    <div class="container">
-      <div class="nav-checkbox">
-        <label>Show welcome dialog at startup</label>
-        <input type="checkbox" id="welcome-checkbox" onclick="changeWelcome(this.checked)">
-      </div>
-      <div class="nav-btn" onclick="showWelcomeScreen()">
-        <img class="nav-btn-icon theme-icon" name="show">
-        <label class="nav-btn-label">Show welcome screen</label>
       </div>
     </div>
     

@@ -11,6 +11,7 @@
 const { ipcRenderer } = require('electron');
 const ppath = require('persist-path')('Ferny');
 const fs = require("fs");
+const isDarkColor = require("is-dark-color");
 
 /*
 .########.##.....##.##....##..######..########.####..#######..##....##..######.
@@ -21,6 +22,10 @@ const fs = require("fs");
 .##.......##.....##.##...###.##....##....##.....##..##.....##.##...###.##....##
 .##........#######..##....##..######.....##....####..#######..##....##..######.
 */
+
+function requestLastTab(lastTab) {
+  saveFileToJsonFolder('lasttab', lastTab);
+}
 
 function requestBookmarksBar(on, layout) {
   if(on != null) {
@@ -62,7 +67,7 @@ function changeBorderRadius(size) {
 }
 
 function changeTheme(color) {
-  if(checkIfDark(color)) {
+  if(isDarkColor(color)) {
     setIconsStyle('light');
 
     document.documentElement.style.setProperty('--color-top', 'white');
@@ -81,32 +86,6 @@ function setIconsStyle(str) {
   for(var i = 0; i < icons.length; i++) {
     icons[i].src = "../themes/" + str + "/icons/" + icons[i].name + ".png";
   }
-}
-
-function checkIfDark(color) {
-    var r, g, b, hsp;
-    if (String(color).match(/^rgb/)) {
-        color = String(color).match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/);
-
-        r = color[1];
-        g = color[2];
-        b = color[3];
-    } else {
-        color = +("0x" + color.slice(1).replace(
-        color.length < 5 && /./g, '$&$&'));
-
-        r = color >> 16;
-        g = color >> 8 & 255;
-        b = color & 255;
-    }
-
-    hsp = Math.sqrt(0.299 * (r * r) + 0.587 * (g * g) + 0.114 * (b * b));
-
-    if (hsp > 127.5) {
-        return false;
-    } else {
-        return true;
-    }
 }
 
 function loadTheme() {
@@ -210,11 +189,13 @@ function showWelcomeScreen() {
 }
 
 function saveStartPage() {
-  var url = document.getElementById('start-page-input').value;
+  var startPage = document.getElementById('start-page-input').value;
 
-  saveFileToJsonFolder('startpage', url);
+  saveFileToJsonFolder('startpage', startPage);
 
-  notif("Start page saved: " + url, "success");
+  notif("Start page saved: " + startPage, "success");
+
+  ipcRenderer.send('request-set-start-page', startPage);
 }
 
 function notif(text, type) {
@@ -261,6 +242,23 @@ function loadBookmarksBar() {
     }
   } catch (e) {
 
+  }
+}
+
+function loadLastTab() {
+  var lastTab = "new-tab";
+  
+  try {
+    lastTab = fs.readFileSync(ppath + "\\json\\lasttab.json");
+  } catch (e) {
+    saveFileToJsonFolder("lasttab", lastTab);
+  }
+  var radios = document.getElementsByName("last-tab");
+  for(var i = 0; i < radios.length; i++) {
+    if(radios[i].value == lastTab) {
+      radios[i].checked = true;
+      break;
+    }
   }
 }
 
@@ -355,6 +353,7 @@ function init() {
   loadHomePage();
   loadSearchEngine();
   loadCache();
+  loadLastTab();
   loadWelcome();
 }
 

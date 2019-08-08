@@ -13,6 +13,7 @@ const dragula = require("dragula");
 const ppath = require('persist-path')('Ferny');
 const fs = require("fs");
 const getAvColor = require('color.js');
+const isDarkColor = require("is-dark-color");
 
 const folderDrag = dragula([document.getElementById('folders')], {
   moves: function(el, container, handle) {
@@ -55,9 +56,7 @@ bookmarkDrag.on('drop', function(el, target, source, sibling) {
 */
 
 function changeTheme(color) {
-  // document.body.style.backgroundColor = color;
-
-  if(checkIfDark(color)) {
+  if(isDarkColor(color)) {
     setIconsStyle('light');
 
     document.documentElement.style.setProperty('--color-top', 'white');
@@ -69,9 +68,11 @@ function changeTheme(color) {
     document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.1)');
   }
 }
+
 function changeBorderRadius(size) {
   document.documentElement.style.setProperty('--px-radius', size + 'px');
 }
+
 function setIconsStyle(str) {
   var icons = document.getElementsByClassName('theme-icon');
 
@@ -79,31 +80,7 @@ function setIconsStyle(str) {
     icons[i].src = "../themes/" + str + "/icons/" + icons[i].name + ".png";
   }
 }
-function checkIfDark(color) {
-    var r, g, b, hsp;
-    if (String(color).match(/^rgb/)) {
-        color = String(color).match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/);
 
-        r = color[1];
-        g = color[2];
-        b = color[3];
-    } else {
-        color = +("0x" + color.slice(1).replace(
-        color.length < 5 && /./g, '$&$&'));
-
-        r = color >> 16;
-        g = color >> 8 & 255;
-        b = color & 255;
-    }
-
-    hsp = Math.sqrt(0.299 * (r * r) + 0.587 * (g * g) + 0.114 * (b * b));
-
-    if (hsp > 127.5) {
-        return false;
-    } else {
-        return true;
-    }
-}
 function loadTheme() {
   try {
     var themeColor = fs.readFileSync(ppath + "\\json\\theme.json");
@@ -112,6 +89,7 @@ function loadTheme() {
 
   }
 }
+
 function loadBorderRadius() {
   try {
     var borderRadius = fs.readFileSync(ppath + "\\json\\radius.json");

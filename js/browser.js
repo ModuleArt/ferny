@@ -11,9 +11,12 @@
 const { ipcRenderer } = require('electron');
 const TabGroup = require("electron-tabs");
 const dragula = require("dragula");
-const autoSuggest = require('google-autocomplete');
+// const autoSuggest = require('google-autocomplete');
+// const autoSuggest = require('google-autosuggest');
+const autoSuggest = require('suggestion');
 const isUrl = require('validate.io-uri');
 const getAvColor = require('color.js');
+const isDarkColor = require("is-dark-color");
 const fs = require("fs");
 const ppath = require('persist-path')('Ferny');
 
@@ -43,8 +46,7 @@ let tabGroup = new TabGroup({
     title: 'New Tab',
     active: true,
     webviewAttributes: {
-      preload: "../js/webview.js",
-      enableBlinkFeatures: false
+      preload: "../js/webview.js"
     }
   },
   newTabButtonText: `<img title='New tab' name='create16' class='theme-icon' ondrop='newTabDrop(event)' ondragover='prevDef(event)'/>`,
@@ -56,6 +58,7 @@ dragula([tabGroup.tabContainer], {
 
 tabGroup.on("tab-added", (tab, tabGroup) => {
   let webview = tab.webview;
+  let previewTimeout = null;
 
   tab.tab.addEventListener('contextmenu', (e) => {
     e.preventDefault();
@@ -69,6 +72,14 @@ tabGroup.on("tab-added", (tab, tabGroup) => {
 
   tab.tab.addEventListener('dragover', (e) => {
     e.preventDefault();
+  });
+
+  tab.tab.addEventListener('mouseenter', (e) => {
+    previewTimeout = showTabPreview(tab.tab, previewTimeout, webview.getWebContents().capturePage());
+  });
+
+  tab.tab.addEventListener('mouseleave', (e) => {
+    hideTabPreview(tab.tab, previewTimeout);
   });
 
   tab.tab.addEventListener('drop', (e) => {
@@ -233,7 +244,18 @@ tabGroup.on("tab-added", (tab, tabGroup) => {
 
 tabGroup.on("tab-removed", (tab, tabGroup) => {
   if (tabGroup.getTabs().length <= 0) {
-    tabGroup.addTab();
+    var lastTab = "new-tab";
+  
+    try {
+      lastTab = fs.readFileSync(ppath + "\\json\\lasttab.json");
+    } catch (e) {
+      saveFileToJsonFolder("lasttab", lastTab);
+    }
+    if(lastTab == "new-tab") {
+      tabGroup.addTab();
+    } else if(lastTab == "quit") {
+      closeWindow();
+    }
   }
 });
 
@@ -246,6 +268,41 @@ tabGroup.on("tab-removed", (tab, tabGroup) => {
 .##.......##.....##.##...###.##....##....##.....##..##.....##.##...###.##....##
 .##........#######..##....##..######.....##....####..#######..##....##..######.
 */
+
+function showTabPreview(tab, timeout, capturePage) {
+  var div = tab.getElementsByTagName('div')[0];
+  if(div == null) {
+    timeout = setTimeout(function() {
+      div = document.createElement('div');
+  
+      capturePage.then(function(natImg) {
+        var img = document.createElement('img');
+        img.src = natImg.toDataURL();
+    
+        div.appendChild(img);
+      });
+    
+      tab.appendChild(div);
+    }, 500);
+  } else {
+    capturePage.then(function(natImg) {
+      var img = div.getElementsByTagName('img')[0];
+      img.src = natImg.toDataURL();
+    });
+  }
+  
+  return timeout;
+}
+
+function hideTabPreview(tab, timeout) {
+  clearTimeout(timeout);
+
+  var div = tab.getElementsByTagName('div')[0];
+  if(div != null) {
+    var div = tab.getElementsByTagName('div')[0];
+    tab.removeChild(div);
+  }
+}
 
 function loadTheme() {
   var themeColor = "rgb(255, 255, 255)";
@@ -329,6 +386,45 @@ function loadBookmarksBar() {
   }
 
   applyBookmarksBar(Data);
+}
+
+function loadStartPage() {
+  var startPage = 'https://duckduckgo.com';
+
+  try {
+    startPage = fs.readFileSync(ppath + "\\json\\startpage.json");
+  } catch (e) {
+    saveFileToJsonFolder('startpage', startPage);
+  }
+
+  applyStartPage(startPage);
+}
+
+function loadSearchEngine() {
+  var searchEngine = 'duckduckgo';
+
+  try {
+    searchEngine = fs.readFileSync(ppath + "\\json\\searchengine.json");
+  } catch (e) {
+    saveFileToJsonFolder('searchengine', searchEngine);
+  }
+
+  applySearchEngine(searchEngine);
+}
+
+function applyStartPage(startPage) {
+  tabGroup.options.newTab.src = startPage;
+}
+
+function applySearchEngine(arg) {
+  var engines = document.getElementsByClassName('search-engine');
+  for(var i = 0; i < engines.length; i++) {
+    if(engines[i].name == arg) {
+      engines[i].classList.add('active');
+    } else {
+      engines[i].classList.remove('active');
+    }
+  }
 }
 
 function applyBookmarksBar(arg) {
@@ -637,12 +733,13 @@ function getSuggestions() {
   container.innerHTML = "<input class='active' type='button' value='" + input.value + "' onclick='navigateSuggest(this.value)' />";
 
   if (input.value.length > 0) {
-    autoSuggest.getQuerySuggestions(input.value, function (err, suggestions) {
+    autoSuggest(input.value, function (err, suggestions) {
+      if (err) throw err;
       if (suggestions != null && suggestions.length > 0) {
         if (container.childNodes.length < 5) {
           for (var i = 0; i < 5; i++) {
             if (suggestions[i] != null) {
-              var button = "<input type='button' value='" + suggestions[i].suggestion + "' onclick='navigateSuggest(this.value)' />";
+              var button = "<input type='button' value='" + suggestions[i] + "' onclick='navigateSuggest(this.value)' />";
               container.innerHTML += button;
             }
           }
@@ -803,39 +900,14 @@ function setIconsStyle(str) {
 
   for (var i = 0; i < icons.length; i++) {
     icons[i].src = "../themes/" + str + "/icons/" + icons[i].name + ".png";
-  }
-}
-
-function checkIfDark(color) {
-  var r, g, b, hsp;
-  if (String(color).match(/^rgb/)) {
-    color = String(color).match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/);
-
-    r = color[1];
-    g = color[2];
-    b = color[3];
-  } else {
-    color = +("0x" + color.slice(1).replace(
-      color.length < 5 && /./g, '$&$&'));
-
-    r = color >> 16;
-    g = color >> 8 & 255;
-    b = color & 255;
-  }
-
-  hsp = Math.sqrt(0.299 * (r * r) + 0.587 * (g * g) + 0.114 * (b * b));
-
-  if (hsp > 127.5) {
-    return false;
-  } else {
-    return true;
+    icons[i].style.opacity = "1";
   }
 }
 
 function applyTheme(color) {
   document.documentElement.style.setProperty('--color-back', color);
 
-  if (checkIfDark(color)) {
+  if (isDarkColor(color)) {
     setIconsStyle('light');
 
     document.documentElement.style.setProperty('--color-top', 'white');
@@ -1374,6 +1446,10 @@ function saveFileToJsonFolder(fileName, data) {
     fs.mkdirSync(ppath + "\\json");
   } 
   fs.writeFileSync(ppath + "\\json\\" + fileName + ".json", data);
+}
+
+function checkOpenWith() {
+  ipcRenderer.send('request-check-open-with');
 }
 
 /*
@@ -1924,18 +2000,11 @@ ipcRenderer.on('action-open-url-in-new-tab', (event, arg) => {
 });
 
 ipcRenderer.on('action-set-search-engine', (event, arg) => {
-  var engines = document.getElementsByClassName('search-engine');
-  for(var i = 0; i < engines.length; i++) {
-    if(engines[i].name == arg) {
-      engines[i].classList.add('active');
-    } else {
-      engines[i].classList.remove('active');
-    }
-  }
+  applySearchEngine(arg);
 });
 
 ipcRenderer.on('action-set-start-page', (event, arg) => {
-  tabGroup.options.newTab.src = arg;
+  applyStartPage(arg);
 });
 
 ipcRenderer.on('action-add-history-item', (event, arg) => {
@@ -1992,9 +2061,13 @@ ipcRenderer.on('action-set-download-process', (event, arg) => {
 function init() {
   loadTheme();
   loadBorderRadius();
+  loadStartPage();
   loadHome();
   loadSidebar();
   loadBookmarksBar();
+  loadSearchEngine();
+  
+  checkOpenWith();
 }
 
 document.onreadystatechange = () => {

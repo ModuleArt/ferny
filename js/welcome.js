@@ -11,6 +11,7 @@
 const { ipcRenderer } = require('electron');
 const ppath = require('persist-path')('Ferny');
 const fs = require("fs");
+const isDarkColor = require("is-dark-color");
 
 /*
 .########.##.....##.##....##..######..########.####..#######..##....##..######.
@@ -35,7 +36,7 @@ function requestBorderRadius(size) {
 function changeTheme(color) {
   document.body.style.backgroundColor = color;
 
-  if(checkIfDark(color)) {
+  if(isDarkColor(color)) {
     setIconsStyle('light');
 
     document.documentElement.style.setProperty('--color-top', 'white');
@@ -54,32 +55,6 @@ function setIconsStyle(str) {
   for(var i = 0; i < icons.length; i++) {
     icons[i].src = "../themes/" + str + "/icons/" + icons[i].name + ".png";
   }
-}
-
-function checkIfDark(color) {
-    var r, g, b, hsp;
-    if (String(color).match(/^rgb/)) {
-        color = String(color).match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/);
-
-        r = color[1];
-        g = color[2];
-        b = color[3];
-    } else {
-        color = +("0x" + color.slice(1).replace(
-        color.length < 5 && /./g, '$&$&'));
-
-        r = color >> 16;
-        g = color >> 8 & 255;
-        b = color & 255;
-    }
-
-    hsp = Math.sqrt(0.299 * (r * r) + 0.587 * (g * g) + 0.114 * (b * b));
-
-    if (hsp > 127.5) {
-        return false;
-    } else {
-        return true;
-    }
 }
 
 function changeBorderRadius(size) {
@@ -166,6 +141,15 @@ function loadSearchEngine() {
   }
 }
 
+function tabsWheel(event) {
+  if (event.deltaY < 0) {
+    prevSlide();
+  }
+  if (event.deltaY > 0) {
+    nextSlide();
+  }
+}
+
 function closeWindow() {
   ipcRenderer.send('request-close-welcome');
 }
@@ -217,11 +201,13 @@ function setStartPageLikeHomePage() {
 }
 
 function saveStartPage() {
-  var url = document.getElementById('start-page-input').value;
+  var startPage = document.getElementById('start-page-input').value;
 
-  saveFileToJsonFolder('startpage', url);
+  saveFileToJsonFolder('startpage', startPage);
 
-  notif("New tab page saved: " + url, "success");
+  notif("Start page saved: " + startPage, "success");
+
+  ipcRenderer.send('request-set-start-page', startPage);
 }
 
 function loadBookmarksBar() {
@@ -350,7 +336,7 @@ function requestBookmarksBar(on, layout) {
 */
 
 ipcRenderer.on('action-set-about', (event, arg) => {
-  document.getElementById('version').innerHTML = "v" + arg.app;
+  document.getElementById('version').innerHTML = "v" + arg.version + " / " + arg.arch + " / " + arg.platform;
 });
 
 ipcRenderer.on('action-blur-window', (event, arg) => {

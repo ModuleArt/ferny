@@ -19,9 +19,9 @@
 }
 
 :root{
-  --color-back: rgb(0, 0, 0);
-  --color-over: rgba(0, 0, 0, 0.1);
-  --color-top: rgb(255, 255, 255);
+  --color-back: transparent;
+  --color-over: transparent;
+  --color-top: transparent;
 
   --color-red: rgb(255, 63, 52);
   --color-green: rgb(11, 232, 129);
@@ -452,16 +452,12 @@
   transition: background-color 0.25s;
 }
 
-.etabs-tabgroup.blur #window-controls .button, .etabs-tabgroup.blur .theme-icon {
+.etabs-tabgroup.blur #window-controls .button, .etabs-tabgroup.blur .theme-icon, #window-cotnrols .button:active {
   opacity: 0.5;
 }
 
 #window-controls .button:hover {
   background-color: var(--color-over);
-}
-
-#window-controls .button:active {
-  opacity: 0.5;
 }
 
 #window-controls #min-button {
@@ -620,6 +616,11 @@ main {
   flex: 1;
 }
 
+/* theme icon */
+.theme-icon {
+  opacity: 0;
+}
+
 /*
 .##.....##.####....########.##.......########.##.....##.########.##....##.########..######.
 .##.....##..##.....##.......##.......##.......###...###.##.......###...##....##....##....##
@@ -727,6 +728,37 @@ hr {
 }
 
 /*
+.########....###....########.....########..########..########.##.....##.####.########.##......##
+....##......##.##...##.....##....##.....##.##.....##.##.......##.....##..##..##.......##..##..##
+....##.....##...##..##.....##....##.....##.##.....##.##.......##.....##..##..##.......##..##..##
+....##....##.....##.########.....########..########..######...##.....##..##..######...##..##..##
+....##....#########.##.....##....##........##...##...##........##...##...##..##.......##..##..##
+....##....##.....##.##.....##....##........##....##..##.........##.##....##..##.......##..##..##
+....##....##.....##.########.....##........##.....##.########....###....####.########..###..###.
+*/
+
+.etabs-tab div {
+  position: absolute;
+  left: 4px;
+  width: calc(100% - 8px);
+  top: 32px;
+  background-color: var(--color-back);
+  border: 2px solid var(--color-over);
+  border-radius: calc(var(--px-radius) + 4px);
+  text-align: center;
+  padding: 4px;
+  animation: anim-suggest;
+  animation-duration: 0.25s;
+  min-width: 128px;
+}
+
+.etabs-tab div img {
+  width: 100%;
+  border-radius: var(--px-radius);
+  margin-bottom: -4px;
+}
+
+/*
 .########....###....########...######.
 ....##......##.##...##.....##.##....##
 ....##.....##...##..##.....##.##......
@@ -740,13 +772,14 @@ hr {
   background-color: var(--color-over);
   cursor: default;
   font-size: var(--px-font);
+  z-index: 200;
 }
 
 .etabs-tabs {
   max-width: calc(100% - 256px);
   float: left;
-  overflow-y: hidden;
-  overflow-x: auto;
+  /* overflow-y: hidden; */
+  /* overflow-x: auto; */
   display: flex;
   flex-direction: row;
 }
@@ -763,7 +796,6 @@ hr {
   min-width: 28px;
   border-top: 4px solid transparent;
   flex-grow: 1;
-  transition: 0.25s;
 }
 
 .etabs-tab:hover {

@@ -148,9 +148,9 @@ const sideMenu = Menu.buildFromTemplate([
     ] },
     { type: 'separator' },
     { label: 'Developer [Danger]', icon: app.getAppPath() + '\\imgs\\icons16\\developer.png', submenu: [
-      { label: 'Developer mode (Sidebar)', icon: app.getAppPath() + '\\imgs\\icons16\\sidebar.png', accelerator: 'CmdOrCtrl+Shift+F11', click: () => { mainWindow.webContents.send('action-sidebar-devtools'); } },
-      { label: 'Developer mode (Browser)', icon: app.getAppPath() + '\\imgs\\icons16\\web.png', accelerator: 'CmdOrCtrl+Shift+F12', click: () => { mainWindow.webContents.openDevTools(); } }
-    ] },
+      { label: 'Developer mode (Main window)', icon: app.getAppPath() + '\\imgs\\icons16\\web.png', accelerator: 'CmdOrCtrl+Shift+F12', click: () => { mainWindow.webContents.openDevTools(); } },
+      { label: 'Developer mode (Sidebar)', icon: app.getAppPath() + '\\imgs\\icons16\\sidebar.png', accelerator: 'CmdOrCtrl+Shift+F11', click: () => { mainWindow.webContents.send('action-sidebar-devtools'); } }    
+    ] }
   ] },
   { type: 'separator' },
   { label: 'Quit Ferny', icon: app.getAppPath() + '\\imgs\\icons16\\exit.png', accelerator: 'CmdOrCtrl+Shift+Q', click: () => { app.quit(); } }
@@ -183,23 +183,17 @@ var pageInfoWindow = null;
 var downloadsArray = [];
 var curDownloadNum = 0;
 
-var startPage = "https://duckduckgo.com/";
-var searchEngine = "duckduckgo";
-
-app.on('ready', function() {
-
 /*
-....###....##.....##.########..#######.....##.....##.########..########.....###....########.########.########.
-...##.##...##.....##....##....##.....##....##.....##.##.....##.##.....##...##.##......##....##.......##.....##
-..##...##..##.....##....##....##.....##....##.....##.##.....##.##.....##..##...##.....##....##.......##.....##
-.##.....##.##.....##....##....##.....##....##.....##.########..##.....##.##.....##....##....######...########.
-.#########.##.....##....##....##.....##....##.....##.##........##.....##.#########....##....##.......##...##..
-.##.....##.##.....##....##....##.....##....##.....##.##........##.....##.##.....##....##....##.......##....##.
-.##.....##..#######.....##.....#######......#######..##........########..##.....##....##....########.##.....##
+....###....########..########.
+...##.##...##.....##.##.....##
+..##...##..##.....##.##.....##
+.##.....##.########..########.
+.#########.##........##.......
+.##.....##.##........##.......
+.##.....##.##........##.......
 */
 
-  // autoUpdater.autoDownload = false;
-  // autoUpdater.autoInstallOnAppQuit = false;
+app.on('ready', function() {
   autoUpdater.logger = require("electron-log");
   autoUpdater.logger.transports.file.level = "info";
 
@@ -229,190 +223,9 @@ app.on('ready', function() {
     mainWindow.webContents.send('action-update-loader', { percent: percent, id: 'update-0' });
   });
 
-/*
-.##.....##....###....####.##....##....##......##.####.##....##.########...#######..##......##
-.###...###...##.##....##..###...##....##..##..##..##..###...##.##.....##.##.....##.##..##..##
-.####.####..##...##...##..####..##....##..##..##..##..####..##.##.....##.##.....##.##..##..##
-.##.###.##.##.....##..##..##.##.##....##..##..##..##..##.##.##.##.....##.##.....##.##..##..##
-.##.....##.#########..##..##..####....##..##..##..##..##..####.##.....##.##.....##.##..##..##
-.##.....##.##.....##..##..##...###....##..##..##..##..##...###.##.....##.##.....##.##..##..##
-.##.....##.##.....##.####.##....##.....###..###..####.##....##.########...#######...###..###.
-*/
-
-  mainWindow = new BrowserWindow({
-    width: 1280, height: 720,
-    minWidth: 480, minHeight: 240,
-    frame: false,
-    show: false,
-    icon: app.getAppPath() + '\\imgs\\icon.ico',
-    webPreferences: {
-      nodeIntegration: true,
-      webviewTag: true
-    },
-    backgroundColor: 'rgb(0, 0, 0)'
-  });
-  mainWindow.setMenu(sideMenu);
-
-  // mainWindow.webContents.openDevTools();
-  mainWindow.loadFile(app.getAppPath() + '\\html\\browser.html');
-
-  mainWindow.webContents.on('context-menu', (e, props) => {
-    const { selectionText, isEditable } = props;
-    if (isEditable) {
-      inputMenu.popup(mainWindow);
-    } else if (selectionText && selectionText.trim() !== '') {
-      selectionMenu.popup(mainWindow);
-    }
-  });
-
-  mainWindow.on('focus', () => {
-    mainWindow.webContents.send('action-focus-window');
-  });
-
-  mainWindow.on('blur', () => {
-    mainWindow.webContents.send('action-blur-window');
-  });
-
-  mainWindow.on('maximize', () => {
-    mainWindow.webContents.send('action-maximize-window');
-  });
-
-  mainWindow.on('unmaximize', () => {
-    mainWindow.webContents.send('action-unmaximize-window');
-  });
-  
-  mainWindow.webContents.once('ready-to-show', () => {
-    if (process.platform == 'win32' && process.argv.length >= 2) {
-      var openFilePath = process.argv[1];
-      mainWindow.webContents.send('action-open-url', openFilePath);
-    }
-  });
-
-  mainWindow.webContents.once('did-finish-load', () => {
-    loadAllData();
-    mainWindow.show();
-  });
-
-  mainWindow.on('maximize', () => {
-    mainWindow.webContents.send('action-maximize-window');
-  });
-
-  mainWindow.on('unmaximize', () => {
-    mainWindow.webContents.send('action-unmaximize-window');
-  });
-
-  mainWindow.on('close', function(event) {
-    event.preventDefault();
-
-    var download = false;
-    for (var i = 0; i < downloadsArray.length; i++) {
-      try {
-        if(downloadsArray[i].item.getState() == "progressing") {
-          download = true;
-          break;
-        }
-      } catch (e) {
-
-      }
-    }
-    if(download) {
-      mainWindow.webContents.send('action-quest', { text: "Download is in progress! Exit anyway?", ops: [{ text:'Continue', icon:'download', click:'removeNotif(this.parentNode.parentNode)' }, { text:'Exit', icon:'exit', click:'exitAppAnyway()' }] });
-    } else {
-      saveBounds();
-      app.exit();
-    }
-  });
-
-/*
-.########...#######..##......##.##....##.##........#######.....###....########...######.
-.##.....##.##.....##.##..##..##.###...##.##.......##.....##...##.##...##.....##.##....##
-.##.....##.##.....##.##..##..##.####..##.##.......##.....##..##...##..##.....##.##......
-.##.....##.##.....##.##..##..##.##.##.##.##.......##.....##.##.....##.##.....##..######.
-.##.....##.##.....##.##..##..##.##..####.##.......##.....##.#########.##.....##.......##
-.##.....##.##.....##.##..##..##.##...###.##.......##.....##.##.....##.##.....##.##....##
-.########...#######...###..###..##....##.########..#######..##.....##.########...######.
-*/
-
-  mainWindow.webContents.session.on('will-download', (event, item, webContents) => {
-    curDownloadNum++;
-
-    let curnum = curDownloadNum;
-
-    let Item = {
-      index: curnum,
-      item: item,
-      url: item.getURL(),
-      name: item.getFilename(),
-      path: "",
-      time: item.getStartTime()
-    };
-
-    downloadsArray.push(Item);
-    saveDownloads();
-
-    let Data = {
-      index: curnum,
-      url: item.getURL(),
-      name: item.getFilename(),
-      time: item.getStartTime()
-    };
-
-    mainWindow.webContents.send('action-create-download', Data);
-
-    item.on('updated', (event, state) => {
-      if (state === 'interrupted') {
-        let Data = {
-          index: curnum,
-          name: item.getFilename()
-        };
-        mainWindow.webContents.send('action-set-download-status-interrupted', Data);
-      } else if (state === 'progressing') {
-        if (item.isPaused()) {
-          let Data = {
-            index: curnum,
-            bytes: item.getReceivedBytes(),
-            total: item.getTotalBytes(),
-            name: item.getFilename()
-          };
-          mainWindow.webContents.send('action-set-download-status-pause', Data);
-        } else {
-          let Data = {
-            index: curnum,
-            bytes: item.getReceivedBytes(),
-            total: item.getTotalBytes(),
-            name: item.getFilename()
-          };
-          mainWindow.webContents.send('action-set-download-process', Data);
-        }
-      }
-    });
-
-    item.once('done', (event, state) => {
-      if (state === 'completed') {
-        let Data = {
-          index: curnum,
-          name: item.getFilename(),
-          path: item.getSavePath()
-        };
-        mainWindow.webContents.send('action-set-download-status-done', Data);
-        var i;
-        for(i = 0; i < downloadsArray.length; i++) {
-          if(downloadsArray[i].index == curnum) {
-            downloadsArray[i].path = item.getSavePath();
-            saveDownloads();
-          }
-        }
-      } else {
-        let Data = {
-          index: curnum,
-          state: state,
-          name: item.getFilename(),
-          url: item.getURL()
-        };
-        mainWindow.webContents.send('action-set-download-status-failed', Data);
-      }
-    });
-  });
+  showMainWindow();
+  loadWelcome();
+  loadDownloads();
 });
 
 /*
@@ -424,6 +237,17 @@ app.on('ready', function() {
 ..##..##........##....##....##.....##.##.....##..##..##...###
 .####.##.........######.....##.....##.##.....##.####.##....##
 */
+
+ipcMain.on('request-set-start-page', (event, arg) => {
+  mainWindow.webContents.send('action-set-start-page', arg);
+});
+
+ipcMain.on('request-check-open-with', (event, arg) => {
+  if (process.platform == 'win32' && process.argv.length >= 2) {
+    var openFilePath = process.argv[1];
+    mainWindow.webContents.send('action-open-url-in-new-tab', openFilePath);
+  }
+});
 
 // ipcMain.on('request-save-as-page', (event, arg) => {
 //   let saveAsWindow = new BrowserWindow({
@@ -600,8 +424,6 @@ ipcMain.on('request-install-update', (event, arg) => {
 });
 
 ipcMain.on('request-set-search-engine', (event, arg) => {
-  searchEngine = arg;
-  saveSearchEngine();
   mainWindow.webContents.send('action-set-search-engine', arg);
 });
 
@@ -646,7 +468,9 @@ ipcMain.on('request-remove-folder', (event, arg) => {
 
 ipcMain.on('request-set-about', (event, arg) => {
   let Data = {
-    app: app.getVersion() + " / " + os.arch()
+    version: app.getVersion(),
+    arch: os.arch(),
+    platform: process.platform
   };
 
   event.sender.send('action-set-about', Data);
@@ -824,6 +648,183 @@ ipcMain.on('request-close-pageinfo', (event, arg) => {
 .##........#######..##....##..######.....##....####..#######..##....##..######.
 */
 
+function showMainWindow() {
+  let Data = {
+    x: null,
+    y: null,
+    width: 1280,
+    height: 720,
+    maximize: false
+  };
+  let themeColor = "#FFFFFF";
+
+  try {
+    Data = JSON.parse(fs.readFileSync(ppath + "\\json\\bounds.json"));
+    themeColor = fs.readFileSync(ppath + "\\json\\theme.json");
+  } catch (e) {
+    saveFileToJsonFolder('bounds', JSON.stringify(Data));
+    saveFileToJsonFolder("theme", themeColor);
+  }
+
+  mainWindow = new BrowserWindow({
+    x: Data.x, y: Data.y,
+    width: Data.width, height: Data.height,
+    minWidth: 480, minHeight: 240,
+    frame: false,
+    // show: false,
+    icon: app.getAppPath() + '\\imgs\\icon.ico',
+    webPreferences: {
+      nodeIntegration: true,
+      webviewTag: true
+    },
+    backgroundColor: themeColor.toString()
+  });
+  mainWindow.setMenu(sideMenu);
+
+  // mainWindow.webContents.openDevTools();
+  mainWindow.loadFile(app.getAppPath() + '\\html\\browser.html');
+
+  mainWindow.webContents.on('context-menu', (e, props) => {
+    const { selectionText, isEditable } = props;
+    if (isEditable) {
+      inputMenu.popup(mainWindow);
+    } else if (selectionText && selectionText.trim() !== '') {
+      selectionMenu.popup(mainWindow);
+    }
+  });
+
+  mainWindow.on('focus', () => {
+    mainWindow.webContents.send('action-focus-window');
+  });
+
+  mainWindow.on('blur', () => {
+    mainWindow.webContents.send('action-blur-window');
+  });
+
+  mainWindow.on('maximize', () => {
+    mainWindow.webContents.send('action-maximize-window');
+  });
+
+  mainWindow.on('unmaximize', () => {
+    mainWindow.webContents.send('action-unmaximize-window');
+  });
+
+  // mainWindow.once('ready-to-show', () => {
+  //   mainWindow.show();
+  // });
+
+  mainWindow.on('maximize', () => {
+    mainWindow.webContents.send('action-maximize-window');
+  });
+
+  mainWindow.on('unmaximize', () => {
+    mainWindow.webContents.send('action-unmaximize-window');
+  });
+
+  mainWindow.on('close', function(event) {
+    event.preventDefault();
+
+    var download = false;
+    for (var i = 0; i < downloadsArray.length; i++) {
+      try {
+        if(downloadsArray[i].item.getState() == "progressing") {
+          download = true;
+          break;
+        }
+      } catch (e) {
+
+      }
+    }
+    if(download) {
+      mainWindow.webContents.send('action-quest', { text: "Download is in progress! Exit anyway?", ops: [{ text:'Continue', icon:'download', click:'removeNotif(this.parentNode.parentNode)' }, { text:'Exit', icon:'exit', click:'exitAppAnyway()' }] });
+    } else {
+      saveBounds();
+      app.exit();
+    }
+  });
+
+  mainWindow.webContents.session.on('will-download', (event, item, webContents) => {
+    curDownloadNum++;
+
+    let curnum = curDownloadNum;
+
+    let Item = {
+      index: curnum,
+      item: item,
+      url: item.getURL(),
+      name: item.getFilename(),
+      path: "",
+      time: item.getStartTime()
+    };
+
+    downloadsArray.push(Item);
+    saveDownloads();
+
+    let Data = {
+      index: curnum,
+      url: item.getURL(),
+      name: item.getFilename(),
+      time: item.getStartTime()
+    };
+
+    mainWindow.webContents.send('action-create-download', Data);
+
+    item.on('updated', (event, state) => {
+      if (state === 'interrupted') {
+        let Data = {
+          index: curnum,
+          name: item.getFilename()
+        };
+        mainWindow.webContents.send('action-set-download-status-interrupted', Data);
+      } else if (state === 'progressing') {
+        if (item.isPaused()) {
+          let Data = {
+            index: curnum,
+            bytes: item.getReceivedBytes(),
+            total: item.getTotalBytes(),
+            name: item.getFilename()
+          };
+          mainWindow.webContents.send('action-set-download-status-pause', Data);
+        } else {
+          let Data = {
+            index: curnum,
+            bytes: item.getReceivedBytes(),
+            total: item.getTotalBytes(),
+            name: item.getFilename()
+          };
+          mainWindow.webContents.send('action-set-download-process', Data);
+        }
+      }
+    });
+
+    item.once('done', (event, state) => {
+      if (state === 'completed') {
+        let Data = {
+          index: curnum,
+          name: item.getFilename(),
+          path: item.getSavePath()
+        };
+        mainWindow.webContents.send('action-set-download-status-done', Data);
+        var i;
+        for(i = 0; i < downloadsArray.length; i++) {
+          if(downloadsArray[i].index == curnum) {
+            downloadsArray[i].path = item.getSavePath();
+            saveDownloads();
+          }
+        }
+      } else {
+        let Data = {
+          index: curnum,
+          state: state,
+          name: item.getFilename(),
+          url: item.getURL()
+        };
+        mainWindow.webContents.send('action-set-download-status-failed', Data);
+      }
+    });
+  });
+}
+
 function toggleFullscreen() {
   if(mainWindow.isFullScreen()) {
     mainWindow.setFullScreen(false);
@@ -901,7 +902,7 @@ function showKeyBindsWindow() {
   keyBindsWindow.loadFile(app.getAppPath() + '\\html\\keybinds.html');
 
   keyBindsWindow.webContents.once('did-finish-load', () => {
-    // keyBindsWindow.webContents.openDevTools();
+    keyBindsWindow.webContents.openDevTools();
     keyBindsWindow.show();
   });
 }
@@ -962,25 +963,10 @@ function openFileDialog() {
 .########..##.....##....##....##.....##.....######..##.....##....###....########..######.
 */
 
-function saveAllData() {
-  saveDownloads();
-  saveStartPage();
-}
-
 function saveDownloads() {
   saveFileToJsonFolder('curdownloadnum', curDownloadNum);
   saveFileToJsonFolder('downloads', JSON.stringify(downloadsArray));
   console.log("saved DOWNLOADS: " + downloadsArray.length);
-}
-
-function saveStartPage() {
-  saveFileToJsonFolder('startpage', startPage);
-  console.log("saved STARTPAGE: " + startPage);
-}
-
-function saveSearchEngine() {
-  saveFileToJsonFolder('searchengine', searchEngine);
-  console.log("saved SEARCHENGINE: " + searchEngine);
 }
 
 function saveBounds() {
@@ -1010,29 +996,6 @@ function saveFileToJsonFolder(fileName, data) {
 .##.....##.##.....##....##....##.....##....##.......##.....##.##.....##.##.....##
 .########..##.....##....##....##.....##....########..#######..##.....##.########.
 */
-
-function loadAllData() {
-  if(fs.existsSync(ppath + "\\json")) {
-    loadWelcome();
-    loadBounds();
-    loadStartPage();
-    loadSearchEngine();
-    loadDownloads();
-  } else {
-    fs.mkdirSync(ppath + "\\json");
-    saveAllData();
-  }
-}
-
-function loadSearchEngine() {
-  try {
-    searchEngine = fs.readFileSync(ppath + "\\json\\searchengine.json");
-  } catch (e) {
-    saveSearchEngine();
-  }
-
-  mainWindow.webContents.send('action-set-search-engine', searchEngine);
-}
 
 function loadDownloads() {
   try {
@@ -1066,36 +1029,6 @@ function loadWelcome() {
     saveFileToJsonFolder('welcome', 1);
     showWelcomeWindow();
   }
-}
-
-function loadBounds() {
-  try {
-    let Data = JSON.parse(fs.readFileSync(ppath + "\\json\\bounds.json"));
-
-    if(Data.maximize == true) {
-      mainWindow.maximize();
-    } else {
-      mainWindow.setBounds({
-        x: Data.x,
-        y: Data.y,
-        width: Data.width,
-        height: Data.height
-      });
-    }
-  } catch (e) {
-    saveBounds();
-  }
-}
-
-function loadStartPage() {
-  try {
-    startPage = fs.readFileSync(ppath + "\\json\\startpage.json");
-  } catch (e) {
-    saveStartPage();
-  }
-
-  mainWindow.webContents.send('action-set-start-page', startPage);
-  mainWindow.webContents.send('action-open-url-in-new-tab', startPage);
 }
 
 /*
