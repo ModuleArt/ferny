@@ -12,17 +12,33 @@ const { ipcRenderer } = require('electron');
 const TabGroup = require("electron-tabs");
 const dragula = require("dragula");
 // const autoSuggest = require('google-autocomplete');
-// const autoSuggest = require('google-autosuggest');
 const autoSuggest = require('suggestion');
 const isUrl = require('validate.io-uri');
 const getAvColor = require('color.js');
 const isDarkColor = require("is-dark-color");
 const fs = require("fs");
 const ppath = require('persist-path')('Ferny');
-
 // const checkFile = require('check-file');
 const fileExtension = require('file-extension');
-const parsePath = require("parse-path")
+const parsePath = require("parse-path");
+
+/*
+.##.....##..#######..########..##.....##.##.......########..######.
+.###...###.##.....##.##.....##.##.....##.##.......##.......##....##
+.####.####.##.....##.##.....##.##.....##.##.......##.......##......
+.##.###.##.##.....##.##.....##.##.....##.##.......######....######.
+.##.....##.##.....##.##.....##.##.....##.##.......##.............##
+.##.....##.##.....##.##.....##.##.....##.##.......##.......##....##
+.##.....##..#######..########...#######..########.########..######.
+*/
+
+const extToImagePath = require("../modules/extToImagePath.js");
+const saveFileToJsonFolder = require("../modules/saveFileToJsonFolder.js");
+const applyBgColor = require("../modules/applyBgColor.js");
+const loadBgColor = require("../modules/loadBgColor.js");
+const applyBorderRadius = require("../modules/applyBorderRadius.js");
+const loadBorderRadius = require("../modules/loadBorderRadius.js");
+const applyWinControls = require("../modules/applyWinControls.js");
 
 // const bookmarkDrag = dragula([document.getElementById('bookmarks-bar')], {
 //   moves: function(el, container, handle) {
@@ -173,49 +189,12 @@ tabGroup.on("tab-added", (tab, tabGroup) => {
     document.getElementById("stop-btn").style.display = "none";
 
     var url = webview.getURL();
-    console.log(url);
     if (parsePath(url).protocol == 'file') {
       tab.setTitle(url);
       tab.tab.title = url;
 
       var ext = fileExtension(url);
-      if(ext == "html" || ext == "htm") {
-        tab.setIcon('../imgs/icons16/html.png');
-      } else if(ext == "png") {
-        tab.setIcon('../imgs/icons16/png.png');
-      } else if(ext == "gif") {
-        tab.setIcon('../imgs/icons16/gif.png');
-      } else if(ext == "jpeg" || ext == "jpg") {
-        tab.setIcon('../imgs/icons16/jpg.png');
-      } else if(ext == "m4a") {
-        tab.setIcon('../imgs/icons16/mpeg.png');
-      } else  if(ext == "mp3") {
-        tab.setIcon('../imgs/icons16/mp3.png');
-      } else if(ext == "txt") {
-        tab.setIcon('../imgs/icons16/txt.png');
-      } else if(ext == "js") {
-        tab.setIcon('../imgs/icons16/js.png');
-      } else if(ext == "json") {
-        tab.setIcon('../imgs/icons16/json.png');
-      } else if(ext == "sql") {
-        tab.setIcon('../imgs/icons16/sql.png');
-      } else if(ext == "css") {
-        tab.setIcon('../imgs/icons16/css.png');
-      } else if(ext == "md") {
-        tab.setIcon('../imgs/icons16/markdown.png');
-      } else if(ext == "license") {
-        tab.setIcon('../imgs/icons16/license.png');
-      } else if(ext == "wav") {
-        tab.setIcon('../imgs/icons16/wav.png');
-      } else if(ext == "m4a") {
-        tab.setIcon('../imgs/icons16/mpeg.png');
-      } else if(ext == "ogg") {
-        tab.setIcon('../imgs/icons16/ogg.png');
-      } else if(ext == "php") {
-        tab.setIcon('../imgs/icons16/php.png');
-      } else {
-        tab.setIcon('../imgs/icons16/page.png');
-      }
+      tab.setIcon(extToImagePath(ext));
 
       var img = tab.tab.getElementsByTagName('img')[0];
       var color = new getAvColor(img);
@@ -296,7 +275,7 @@ tabGroup.on("tab-removed", (tab, tabGroup) => {
     var lastTab = "new-tab";
   
     try {
-      lastTab = fs.readFileSync(ppath + "\\json\\lasttab.json");
+      lastTab = fs.readFileSync(ppath + "/json/lasttab.json");
     } catch (e) {
       saveFileToJsonFolder("lasttab", lastTab);
     }
@@ -373,30 +352,6 @@ function hideTabPreview(tab, timeout) {
   }
 }
 
-function loadTheme() {
-  var themeColor = "rgb(255, 255, 255)";
-  
-  try {
-    themeColor = fs.readFileSync(ppath + "\\json\\theme.json");
-  } catch (e) {
-    saveFileToJsonFolder("theme", themeColor);
-  }
-
-  applyTheme(themeColor);
-}
-
-function loadBorderRadius() {
-  var borderRadius = '4';
-
-  try {
-    borderRadius = fs.readFileSync(ppath + "\\json\\radius.json");
-  } catch (e) {
-    saveFileToJsonFolder('radius', borderRadius);
-  }
-
-  applyBorderRadius(borderRadius);
-}
-
 function saveSidebar() {
   var pin = document.body.classList.contains('pinned-sidebar');
   if(pin) {
@@ -426,7 +381,7 @@ function loadSidebar() {
   };
 
   try {
-    var jsonstr = fs.readFileSync(ppath + "\\json\\sidebar.json");
+    var jsonstr = fs.readFileSync(ppath + "/json/sidebar.json");
     Data = JSON.parse(jsonstr);
   } catch (e) {
     saveFileToJsonFolder('sidebar', JSON.stringify(Data));
@@ -448,7 +403,7 @@ function loadBookmarksBar() {
   };
 
   try {
-    var jsonstr = fs.readFileSync(ppath + "\\json\\bookmarksbar.json");
+    var jsonstr = fs.readFileSync(ppath + "/json/bookmarksbar.json");
     Data = JSON.parse(jsonstr);
   } catch (e) {
     saveFileToJsonFolder('bookmarksbar', JSON.stringify(Data));
@@ -461,19 +416,19 @@ function loadStartPage() {
   var startPage = 'https://duckduckgo.com';
 
   try {
-    startPage = fs.readFileSync(ppath + "\\json\\startpage.json");
+    startPage = fs.readFileSync(ppath + "/json/startpage.json");
   } catch (e) {
     saveFileToJsonFolder('startpage', startPage);
   }
 
-  applyStartPage(startPage);
+  return startPage;
 }
 
 function loadSearchEngine() {
   var searchEngine = 'duckduckgo';
 
   try {
-    searchEngine = fs.readFileSync(ppath + "\\json\\searchengine.json");
+    searchEngine = fs.readFileSync(ppath + "/json/searchengine.json");
   } catch (e) {
     saveFileToJsonFolder('searchengine', searchEngine);
   }
@@ -686,7 +641,7 @@ function createBookmark(url, name, folder) {
 
   var arr = [];
   try {
-    var jsonstr = fs.readFileSync(ppath + "\\json\\bookmarks.json");
+    var jsonstr = fs.readFileSync(ppath + "/json/bookmarks.json");
     arr = JSON.parse(jsonstr);
   } catch (e) {
 
@@ -845,7 +800,7 @@ function notif(text, type) {
 
   notifPanel.insertBefore(div, notifPanel.firstChild);
 
-  applyTheme(document.documentElement.style.getPropertyValue('--color-back'));
+  applyBgColor();
 
   if (notifPanel.childNodes.length > 5) {
     for(var i = notifPanel.childNodes.length; i > 5; i--) {
@@ -884,7 +839,7 @@ function quest(text, ops) {
 
   document.getElementById('notif-panel').appendChild(div);
 
-  applyTheme(document.documentElement.style.getPropertyValue('--color-back'));
+  applyBgColor();
 
   if (notifPanel.childNodes.length > 5) {
     for(var i = notifPanel.childNodes.length; i > 5; i--) {
@@ -922,7 +877,7 @@ function loader(text, id) {
 
   notifPanel.appendChild(div);
 
-  applyTheme(document.documentElement.style.getPropertyValue('--color-back'));
+  applyBgColor();
 
   if (notifPanel.childNodes.length > 5) {
     for(var i = notifPanel.childNodes.length; i > 5; i--) {
@@ -950,53 +905,10 @@ function removeNotifById(id) {
   }
 }
 
-function setIconsStyle(str) {
-  var icons = document.getElementsByClassName('theme-icon');
-
-  for (var i = 0; i < icons.length; i++) {
-    icons[i].src = "../themes/" + str + "/icons/" + icons[i].name + ".png";
-    icons[i].style.opacity = "1";
-  }
-}
-
-function applyTheme(color) {
-  document.documentElement.style.setProperty('--color-back', color);
-
-  if (isDarkColor(color)) {
-    setIconsStyle('light');
-
-    document.documentElement.style.setProperty('--color-top', 'white');
-    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.3)');
-  } else {
-    setIconsStyle('dark');
-
-    document.documentElement.style.setProperty('--color-top', 'black');
-    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.1)');
-  }
-
-  try {
-    document.getElementById('sidebar-webview').send('action-load-theme');
-  } catch(e) {
-
-  }
-}
-
-function applyBorderRadius(size) {
-  document.documentElement.style.setProperty('--px-radius', size + 'px');
-
-  try {
-    document.getElementById('sidebar-webview').send('action-load-border-radius');
-  } catch(e) {
-    
-  }
-}
-
 function showSidebar() {
   document.getElementById("sidebar-btn").classList.add('active');
   document.getElementById('sidebar').style.display = "";
   document.getElementById('sidebar').classList.remove('hide');
-
-  // document.getElementById('sidebar-webview').openDevTools();
 }
 
 function hideSidebar() {
@@ -1137,7 +1049,7 @@ function etabsTabsWheel(event) {
 
 function removeFolder(folder) {
   try {
-    var jsonstr = fs.readFileSync(ppath + "\\json\\folders.json");
+    var jsonstr = fs.readFileSync(ppath + "/json/folders.json");
     var arr = JSON.parse(jsonstr);
     for (var i = 0; i < arr.length; i++) {
       if(arr[i].name == folder) {
@@ -1179,7 +1091,7 @@ function zoomNotif(zoom) {
 
   notifPanel.insertBefore(div, notifPanel.firstChild);
 
-  applyTheme(document.documentElement.style.getPropertyValue('--color-back'));
+  applyBgColor();
 
   if (notifPanel.childNodes.length > 5) {
     for(var i = notifPanel.childNodes.length; i > 5; i--) {
@@ -1257,13 +1169,13 @@ function updateBookmarksBar() {
   if(bbar.style.display != "none") {
     try {
       bbar.innerHTML = "";
-      var jsonstr = fs.readFileSync(ppath + "\\json\\folders.json");
+      var jsonstr = fs.readFileSync(ppath + "/json/folders.json");
       var folders = JSON.parse(jsonstr);
       for (var i = 0; i < folders.length; i++) {
         addFolderToBookmarksBar(folders[i].name, i);
       }
 
-      jsonstr = fs.readFileSync(ppath + "\\json\\bookmarks.json");
+      jsonstr = fs.readFileSync(ppath + "/json/bookmarks.json");
       var arr = JSON.parse(jsonstr);
       for (var i = 0; i < arr.length; i++) {
         checkIfHasFolder(arr[i].url, arr[i].name, arr[i].folder, folders, i);
@@ -1340,7 +1252,7 @@ function checkIfHasFolder(url, name, folder, folders, index) {
 }
 
 function addBookmarkToBookmarksBar(url, name, parent, index) {
-  var div = document.createElement('div');
+  var div = document.createElement('button');
   div.classList.add('bookmark');
   div.title = name + "\n" + url;
   div.id = "bookmark-" + index;
@@ -1370,6 +1282,13 @@ function addBookmarkToBookmarksBar(url, name, parent, index) {
     }
   }, false);
 
+  // div.addEventListener('focusout', () => {
+  //   var bookmarkDiv = div.getElementsByClassName('bookmark-div')[0];
+  //   if(bookmarkDiv != null) {
+  //     bookmarkDiv.parentNode.removeChild(bookmarkDiv);
+  //   }
+  // });
+
   div.innerHTML = `<img class="bookmark-icon" src="` + 'http://www.google.com/s2/favicons?domain=' + url + `">
                   <span>` + name + `</span>`;
 
@@ -1391,7 +1310,7 @@ function loadHome() {
   };
 
   try {
-    var jsonstr = fs.readFileSync(ppath + "\\json\\home.json");
+    var jsonstr = fs.readFileSync(ppath + "/json/home.json");
     Data = JSON.parse(jsonstr);
   } catch (e) {
     saveFileToJsonFolder('home', JSON.stringify(Data))
@@ -1489,12 +1408,12 @@ function bookmarkAllTabs() {
   });
 }
 
-function saveFileToJsonFolder(fileName, data) {
-  if(!fs.existsSync(ppath + "\\json")) {
-    fs.mkdirSync(ppath + "\\json");
-  } 
-  fs.writeFileSync(ppath + "\\json\\" + fileName + ".json", data);
-}
+// function saveFileToJsonFolder(fileName, data) {
+//   if(!fs.existsSync(ppath + "/json")) {
+//     fs.mkdirSync(ppath + "/json");
+//   } 
+//   fs.writeFileSync(ppath + "/json/" + fileName + ".json", data);
+// }
 
 function checkOpenWith() {
   ipcRenderer.send('request-check-open-with');
@@ -1585,7 +1504,7 @@ ipcRenderer.on('action-edit-folder', (event, arg) => {
       div.getElementsByClassName('edit-folder-div')[0].style.right = 0;
     }
 
-    applyTheme(document.documentElement.style.getPropertyValue('--color-back'));
+    applyBgColor();
   }
 });
 
@@ -1676,7 +1595,7 @@ ipcRenderer.on('action-edit-bookmark', (event, arg) => {
       div.getElementsByClassName('bookmark-div')[0].style.right = 0;
     }
 
-    applyTheme(document.documentElement.style.getPropertyValue('--color-back'));
+    applyBgColor();
   }
 });
 
@@ -1930,7 +1849,7 @@ ipcRenderer.on('action-tabcontext-picturein', (event, arg) => {
 
 ipcRenderer.on('action-tabcontext-gohome', (event, arg) => {
   try {
-    var jsonstr = fs.readFileSync(ppath + "\\json\\home.json");
+    var jsonstr = fs.readFileSync(ppath + "/json/home.json");
     Data = JSON.parse(jsonstr);
     tabGroup.getTab(arg).webview.loadURL(Data.url);
   } catch (e) {
@@ -1973,7 +1892,7 @@ ipcRenderer.on('action-update-loader', (event, arg) => {
 });
 
 ipcRenderer.on('action-change-theme', (event, arg) => {
-  applyTheme(arg);
+  applyBgColor(arg);
 });
 
 ipcRenderer.on('action-toggle-sidebar', (event, arg) => {
@@ -2093,15 +2012,20 @@ ipcRenderer.on('action-set-download-process', (event, arg) => {
 */
 
 function init() {
-  loadTheme();
-  loadBorderRadius();
-  loadStartPage();
+  applyWinControls();
+  applyBgColor(loadBgColor());
+  applyBorderRadius(loadBorderRadius());
+  
+  var startPage = loadStartPage();
+  applyStartPage(startPage);
+  newTab(startPage, null, null);
+
   loadHome();
   loadSidebar();
   loadBookmarksBar();
   loadSearchEngine();
   
-  checkOpenWith();
+  // checkOpenWith();
 }
 
 document.onreadystatechange = () => {

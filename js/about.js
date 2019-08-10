@@ -14,6 +14,21 @@ const fs = require("fs");
 const isDarkColor = require("is-dark-color");
 
 /*
+.##.....##..#######..########..##.....##.##.......########..######.
+.###...###.##.....##.##.....##.##.....##.##.......##.......##....##
+.####.####.##.....##.##.....##.##.....##.##.......##.......##......
+.##.###.##.##.....##.##.....##.##.....##.##.......######....######.
+.##.....##.##.....##.##.....##.##.....##.##.......##.............##
+.##.....##.##.....##.##.....##.##.....##.##.......##.......##....##
+.##.....##..#######..########...#######..########.########..######.
+*/
+
+const applyBgColor = require("../modules/applyBgColor.js");
+const applyBorderRadius = require("../modules/applyBorderRadius.js");
+const loadBgColor = require("../modules/loadBgColor.js");
+const loadBorderRadius = require("../modules/loadBorderRadius.js");
+
+/*
 .########.##.....##.##....##..######..########.####..#######..##....##..######.
 .##.......##.....##.###...##.##....##....##.....##..##.....##.###...##.##....##
 .##.......##.....##.####..##.##..........##.....##..##.....##.####..##.##......
@@ -27,65 +42,12 @@ function openLicenseFile() {
   ipcRenderer.send('request-open-license-file');
 }
 
-function changeBorderRadius(size) {
-  document.documentElement.style.setProperty('--px-radius', size + 'px');
-}
-
-function loadBorderRadius() {
-  try {
-    var borderRadius = fs.readFileSync(ppath + "\\json\\radius.json");
-    changeBorderRadius(borderRadius);
-
-    var radios = document.getElementsByName("border-radius");
-    for(var i = 0; i < radios.length; i++) {
-      if(radios[i].value == borderRadius) {
-        radios[i].checked = true;
-      }
-    }
-  } catch (e) {
-
-  }
-}
-
 function loadAbout() {
   document.getElementById('about-electron').innerHTML = "Electron: v" + process.versions.electron;
   document.getElementById('about-chrome').innerHTML = "Chrome: v" + process.versions.chrome;
   document.getElementById('about-node').innerHTML = "Node: " + process.version;
 
   ipcRenderer.send('request-set-about');
-}
-
-function changeTheme(color) {
-  // document.body.style.backgroundColor = color;
-
-  if(isDarkColor(color)) {
-    setIconsStyle('light');
-
-    document.documentElement.style.setProperty('--color-top', 'white');
-    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.3)');
-  } else {
-    setIconsStyle('dark');
-
-    document.documentElement.style.setProperty('--color-top', 'black');
-    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.1)');
-  }
-}
-
-function setIconsStyle(str) {
-  var icons = document.getElementsByClassName('theme-icon');
-
-  for(var i = 0; i < icons.length; i++) {
-    icons[i].src = "../themes/" + str + "/icons/" + icons[i].name + ".png";
-  }
-}
-
-function loadTheme() {
-  try {
-    var themeColor = fs.readFileSync(ppath + "\\json\\theme.json");
-    changeTheme(themeColor);
-  } catch (e) {
-
-  }
 }
 
 function openIssuesPage() {
@@ -146,14 +108,6 @@ ipcRenderer.on('action-set-about', (event, arg) => {
   document.getElementById('about-app').innerHTML = "v" + arg.version + " / " + arg.arch + " / " + arg.platform;
 });
 
-ipcRenderer.on('action-load-theme', (event, arg) => {
-  loadTheme();
-});
-
-ipcRenderer.on('action-load-border-radius', (event, arg) => {
-  loadBorderRadius();
-});
-
 /*
 .####.##....##.####.########
 ..##..###...##..##.....##...
@@ -165,9 +119,10 @@ ipcRenderer.on('action-load-border-radius', (event, arg) => {
 */
 
 function init() {
-  loadTheme();
+  applyBgColor(loadBgColor());
+  applyBorderRadius(loadBorderRadius());
+
   loadAbout();
-  loadBorderRadius();
 }
 
 document.onreadystatechange = () => {

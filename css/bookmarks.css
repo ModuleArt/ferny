@@ -201,6 +201,16 @@ input:hover, input:focus {
   background-color: var(--color-over);
 }
 
+.bookmark::before {
+  position: absolute;
+  content: " ";
+  left: -4px;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background-color: var(--color-over);
+}
+
 .bookmark label {
   margin: 6px 0;
   width: calc(100% - 44px);
@@ -291,7 +301,7 @@ input:hover, input:focus {
 }
 
 .folder .name {
-  transition: 0.25s;
+  transition: width 0.25s;
   margin: 2px;
   padding: 6px;
   display: inline-block;
@@ -327,12 +337,12 @@ input:hover, input:focus {
   margin-left: 2px;
 }
 
-.folder:hover .edit-btn:hover {
+.edit-btn:hover {
   background-color: var(--color-over);
 }
 
-.folder:hover .edit-btn:active {
-  opacity: 0.5;
+.edit-btn:active {
+  opacity: 0.5 !important;
 }
 
 .folder .bookmarks:empty::before {

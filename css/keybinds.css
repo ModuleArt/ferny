@@ -169,14 +169,22 @@
     grid-template-columns: repeat(3, 46px);
     float: right;
     height: 100%;
-}
-
-#titlebar #window-controls span {
+  }
+  
+  #titlebar #window-controls.linux {
+    grid-template-columns: repeat(1, 32px);
+  }
+  
+  #titlebar #window-controls span {
     font-family: SegMDL2;
     font-size: 10px;
-}
-
-#titlebar #window-controls .button {
+  }
+  
+  #window-controls .title-bar-btn {
+    padding: 8px;
+  }
+  
+  #titlebar #window-controls .button {
     grid-row: 1 / span 1;
     display: flex;
     justify-content: center;
@@ -186,17 +194,24 @@
     color: var(--color-top);
     transition: background-color 0.25s;
     grid-column: 3;
-}
-
-#titlebar.blur #window-controls .button, #window-controls .button:active {
+  }
+  
+  #titlebar.blur #window-controls .button, #titlebar #window-controls .button:active, 
+  #titlebar.blur #window-controls .title-bar-btn, #titlebar #window-controls .title-bar-btn:active {
     opacity: 0.5;
-}
-
-#titlebar #window-controls .button:hover {
+  }
+  
+  #titlebar #window-controls .button:hover {
     background-color: #E81022;
     color: white;
     opacity: 1;
-}
+  }
+  
+  #titlebar #window-controls .title-bar-btn:hover {
+    background-color: #E81022;
+    color: white;
+    opacity: 1;
+  }
 
 /*
 .####.##....##.########..##.....##.########

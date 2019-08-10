@@ -13,7 +13,6 @@ const dragula = require("dragula");
 const ppath = require('persist-path')('Ferny');
 const fs = require("fs");
 const getAvColor = require('color.js');
-const isDarkColor = require("is-dark-color");
 
 const folderDrag = dragula([document.getElementById('folders')], {
   moves: function(el, container, handle) {
@@ -39,6 +38,22 @@ bookmarkDrag.on('drop', function(el, target, source, sibling) {
 });
 
 /*
+.##.....##..#######..########..##.....##.##.......########..######.
+.###...###.##.....##.##.....##.##.....##.##.......##.......##....##
+.####.####.##.....##.##.....##.##.....##.##.......##.......##......
+.##.###.##.##.....##.##.....##.##.....##.##.......######....######.
+.##.....##.##.....##.##.....##.##.....##.##.......##.............##
+.##.....##.##.....##.##.....##.##.....##.##.......##.......##....##
+.##.....##..#######..########...#######..########.########..######.
+*/
+
+const saveFileToJsonFolder = require("../modules/saveFileToJsonFolder.js");
+const applyBgColor = require("../modules/applyBgColor.js");
+const applyBorderRadius = require("../modules/applyBorderRadius.js");
+const loadBgColor = require("../modules/loadBgColor.js");
+const loadBorderRadius = require("../modules/loadBorderRadius.js");
+
+/*
 .########.##.....##.##....##..######..########.####..#######..##....##..######.
 .##.......##.....##.###...##.##....##....##.....##..##.....##.###...##.##....##
 .##.......##.....##.####..##.##..........##.....##..##.....##.####..##.##......
@@ -47,64 +62,6 @@ bookmarkDrag.on('drop', function(el, target, source, sibling) {
 .##.......##.....##.##...###.##....##....##.....##..##.....##.##...###.##....##
 .##........#######..##....##..######.....##....####..#######..##....##..######.
 */
-
-/*
- ## ### ### ###  ## ###  ## ##  ### ###
-# # # # # # ##  # # #   # # # # #   ##
-### ### ### ### ### #   ### # # ### ###
-    #   #
-*/
-
-function changeTheme(color) {
-  if(isDarkColor(color)) {
-    setIconsStyle('light');
-
-    document.documentElement.style.setProperty('--color-top', 'white');
-    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.3)');
-  } else {
-    setIconsStyle('dark');
-
-    document.documentElement.style.setProperty('--color-top', 'black');
-    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.1)');
-  }
-}
-
-function changeBorderRadius(size) {
-  document.documentElement.style.setProperty('--px-radius', size + 'px');
-}
-
-function setIconsStyle(str) {
-  var icons = document.getElementsByClassName('theme-icon');
-
-  for(var i = 0; i < icons.length; i++) {
-    icons[i].src = "../themes/" + str + "/icons/" + icons[i].name + ".png";
-  }
-}
-
-function loadTheme() {
-  try {
-    var themeColor = fs.readFileSync(ppath + "\\json\\theme.json");
-    changeTheme(themeColor);
-  } catch (e) {
-
-  }
-}
-
-function loadBorderRadius() {
-  try {
-    var borderRadius = fs.readFileSync(ppath + "\\json\\radius.json");
-    changeBorderRadius(borderRadius);
-
-    var radios = document.getElementsByName("border-radius");
-    for(var i = 0; i < radios.length; i++) {
-      if(radios[i].value == borderRadius) {
-        radios[i].checked = true;
-      }
-    }
-  } catch (e) {
-
-  }
-}
 
 function closeAllEditors() {
   cancelSearch();
@@ -344,7 +301,7 @@ function appendBookmark(name, url, folderEl) {
 
   folderEl.getElementsByTagName('div')[0].appendChild(div);
 
-  loadTheme();
+  applyBgColor();
 }
 
 function createBookmark(name, url, folder) {
@@ -372,7 +329,7 @@ function loadBookmarks() {
     for(var i = 0; i < folders.length; i++) {
       folders[i].getElementsByTagName('div')[0].innerHTML = "";
     }
-    var jsonstr = fs.readFileSync(ppath + "\\json\\bookmarks.json");
+    var jsonstr = fs.readFileSync(ppath + "/json/bookmarks.json");
     var arr = JSON.parse(jsonstr);
     for (var i = 0; i < arr.length; i++) {
       createBookmark(arr[i].name, arr[i].url, arr[i].folder);
@@ -399,13 +356,6 @@ function saveBookmarks() {
   saveFileToJsonFolder('bookmarks', JSON.stringify(bookmarksArray));
 
   ipcRenderer.send('request-update-bookmarks-bar');
-}
-
-function saveFileToJsonFolder(fileName, data) {
-  if(!fs.existsSync(ppath + "\\json")) {
-    fs.mkdirSync(ppath + "\\json");
-  } 
-  fs.writeFileSync(ppath + "\\json\\" + fileName + ".json", data);
 }
 
 /*
@@ -513,12 +463,12 @@ function createFolder(name) {
 
   bookmarkDrag.containers.push(div.getElementsByTagName('div')[0]);
 
-  loadTheme();
+  applyBgColor();
 }
 
 function loadFolders() {
   try {
-    var jsonstr = fs.readFileSync(ppath + "\\json\\folders.json");
+    var jsonstr = fs.readFileSync(ppath + "/json/folders.json");
     var arr = JSON.parse(jsonstr);
     for (var i = 0; i < arr.length; i++) {
       createFolder(arr[i].name);
@@ -567,14 +517,6 @@ ipcRenderer.on('action-remove-folder', (event, arg) => {
   }
 });
 
-ipcRenderer.on('action-load-theme', (event, arg) => {
-  loadTheme();
-});
-
-ipcRenderer.on('action-load-border-radius', (event, arg) => {
-  loadBorderRadius();
-});
-
 /*
 .####.##....##.####.########
 ..##..###...##..##.....##...
@@ -586,10 +528,11 @@ ipcRenderer.on('action-load-border-radius', (event, arg) => {
 */
 
 function init() {
+  applyBgColor(loadBgColor());
+  applyBorderRadius(loadBorderRadius());
+
   loadFolders();
   loadBookmarks();
-  loadTheme();
-  loadBorderRadius();
 }
 
 document.onreadystatechange = () => {

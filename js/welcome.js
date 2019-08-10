@@ -14,6 +14,23 @@ const fs = require("fs");
 const isDarkColor = require("is-dark-color");
 
 /*
+.##.....##..#######..########..##.....##.##.......########..######.
+.###...###.##.....##.##.....##.##.....##.##.......##.......##....##
+.####.####.##.....##.##.....##.##.....##.##.......##.......##......
+.##.###.##.##.....##.##.....##.##.....##.##.......######....######.
+.##.....##.##.....##.##.....##.##.....##.##.......##.............##
+.##.....##.##.....##.##.....##.##.....##.##.......##.......##....##
+.##.....##..#######..########...#######..########.########..######.
+*/
+
+const saveFileToJsonFolder = require("../modules/saveFileToJsonFolder.js");
+const applyBgColor = require("../modules/applyBgColor.js");
+const applyBorderRadius = require("../modules/applyBorderRadius.js");
+const loadBgColor = require("../modules/loadBgColor.js");
+const loadBorderRadius = require("../modules/loadBorderRadius.js");
+const applyWinControls = require("../modules/applyWinControls.js");
+
+/*
 .########.##.....##.##....##..######..########.####..#######..##....##..######.
 .##.......##.....##.###...##.##....##....##.....##..##.....##.###...##.##....##
 .##.......##.....##.####..##.##..........##.....##..##.....##.####..##.##......
@@ -24,59 +41,13 @@ const isDarkColor = require("is-dark-color");
 */
 
 function requestTheme(color) {
-  changeTheme(color);
   ipcRenderer.send('request-change-theme', color);
+  applyBgColor(color);
 }
 
 function requestBorderRadius(size) {
-  changeBorderRadius(size);
+  applyBorderRadius(size);
   ipcRenderer.send('request-change-border-radius', size);
-}
-
-function changeTheme(color) {
-  document.body.style.backgroundColor = color;
-
-  if(isDarkColor(color)) {
-    setIconsStyle('light');
-
-    document.documentElement.style.setProperty('--color-top', 'white');
-    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.3)');
-  } else {
-    setIconsStyle('dark');
-
-    document.documentElement.style.setProperty('--color-top', 'black');
-    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.1)');
-  }
-}
-
-function setIconsStyle(str) {
-  var icons = document.getElementsByClassName('theme-icon');
-
-  for(var i = 0; i < icons.length; i++) {
-    icons[i].src = "../themes/" + str + "/icons/" + icons[i].name + ".png";
-  }
-}
-
-function changeBorderRadius(size) {
-  document.documentElement.style.setProperty('--px-radius', size + 'px');
-}
-
-function loadTheme() {
-  try {
-    var themeColor = fs.readFileSync(ppath + "\\json\\theme.json");
-    changeTheme(themeColor);
-  } catch (e) {
-
-  }
-}
-
-function loadBorderRadius() {
-  try {
-    var borderRadius = fs.readFileSync(ppath + "\\json\\radius.json");
-    changeBorderRadius(borderRadius);
-  } catch (e) {
-
-  }
 }
 
 function chooseSlide(i) {
@@ -127,7 +98,7 @@ function prevSlide() {
 
 function loadSearchEngine() {
   try {
-    var searchEngine = fs.readFileSync(ppath + "\\json\\searchengine.json");
+    var searchEngine = fs.readFileSync(ppath + "/json/searchengine.json");
 
     var radios = document.getElementsByName("search-engine");
     for(var i = 0; i < radios.length; i++) {
@@ -176,23 +147,16 @@ function openDeveloperPage() {
 
 function loadStartPage() {
   try {
-    var startPage = fs.readFileSync(ppath + "\\json\\startpage.json");
+    var startPage = fs.readFileSync(ppath + "/json/startpage.json");
     document.getElementById('start-page-input').value = startPage;
   } catch (e) {
 
   }
 }
 
-function saveFileToJsonFolder(fileName, data) {
-  if(!fs.existsSync(ppath + "\\json")) {
-    fs.mkdirSync(ppath + "\\json");
-  } 
-  fs.writeFileSync(ppath + "\\json\\" + fileName + ".json", data);
-}
-
 function setStartPageLikeHomePage() {
   try {
-    var jsonstr = fs.readFileSync(ppath + "\\json\\home.json");
+    var jsonstr = fs.readFileSync(ppath + "/json/home.json");
     Data = JSON.parse(jsonstr);
     document.getElementById('start-page-input').value = Data.url;
   } catch (e) {
@@ -212,7 +176,7 @@ function saveStartPage() {
 
 function loadBookmarksBar() {
   try {
-    var jsonstr = fs.readFileSync(ppath + "\\json\\bookmarksbar.json");
+    var jsonstr = fs.readFileSync(ppath + "/json/bookmarksbar.json");
     let Data = JSON.parse(jsonstr);
 
     if(Data.on) {
@@ -233,7 +197,7 @@ function loadBookmarksBar() {
 
 function loadHomePage() {
   try {
-    var jsonstr = fs.readFileSync(ppath + "\\json\\home.json");
+    var jsonstr = fs.readFileSync(ppath + "/json/home.json");
     Data = JSON.parse(jsonstr);
     document.getElementById('home-page-input').value = Data.url;
     if(Data.on == 1) {
@@ -273,7 +237,7 @@ function keyDown(e) {
 
 function loadWelcome() {
   try {
-    var welcomeOn = fs.readFileSync(ppath + "\\json\\welcome.json");
+    var welcomeOn = fs.readFileSync(ppath + "/json/welcome.json");
     if(welcomeOn == 1) {
       document.getElementById('welcome-checkbox').checked = true;
     } else {
@@ -297,8 +261,8 @@ function saveHomePage() {
       on = 0;
     }
   
-    if(!fs.existsSync(ppath + "\\json")) {
-      fs.mkdirSync(ppath + "\\json");
+    if(!fs.existsSync(ppath + "/json")) {
+      fs.mkdirSync(ppath + "/json");
     } 
     saveFileToJsonFolder('home', JSON.stringify({ url: url, on: on }));
 
@@ -358,8 +322,10 @@ ipcRenderer.on('action-focus-window', (event, arg) => {
 */
 
 function init() {
-  loadTheme();
-  loadBorderRadius();
+  applyWinControls('only-close');
+  applyBgColor(loadBgColor());
+  applyBorderRadius(loadBorderRadius());
+  
   loadSearchEngine();
   loadHomePage();
   loadStartPage();

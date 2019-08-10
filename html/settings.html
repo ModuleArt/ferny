@@ -28,23 +28,15 @@
       <label>Themes</label>
     </div>
     <div class="container">
-      <div class="theme-preview" onclick="requestTheme('#ffffff')">
-          <label>White</label>
-          <img src="../imgs/themes/white.png">
-      </div>
-      <div class="theme-preview" onclick="requestTheme('#1e272e')">
-          <label>Night</label>
-          <img src="../imgs/themes/night.png">
-      </div>
-      <div class="theme-preview" onclick="requestTheme('#485460')">
-          <label>Modern</label>
-          <img src="../imgs/themes/modern.png">
-      </div>
-      <hr>
-      <div class="color" onclick="requestTheme('#eeeeee')"><div style="background-color: rgb(238, 238, 238)"></div>Light</div>
-      <div class="color" onclick="requestTheme('#dee1e6')"><div style="background-color: rgb(225, 225, 225)"></div>Gray</div>
-      <div class="color" onclick="requestTheme('#292a2d')"><div style="background-color: rgb(41, 42, 45)"></div>Dark</div>
-      <div class="color" onclick="requestTheme('#222222')"><div style="background-color: rgb(34, 34, 34)"></div>Black</div>
+      <div class="color" onclick="requestTheme('#ffffff')"><div style="background-color: #ffffff"></div>White</div>
+      <div class="color" onclick="requestTheme('#eeeeee')"><div style="background-color: #eeeeee"></div>Light</div>
+      <div class="color" onclick="requestTheme('#dee1e6')"><div style="background-color: #dee1e6"></div>Gray</div>
+      <div class="color" onclick="requestTheme('#485460')"><div style="background-color: #485460"></div>Modern</div>
+      <div class="color" onclick="requestTheme('#3D4248')"><div style="background-color: #3D4248"></div>Elementary</div>
+      <div class="color" onclick="requestTheme('#263238')"><div style="background-color: #263238"></div>Material</div>
+      <div class="color" onclick="requestTheme('#1e272e')"><div style="background-color: #1e272e"></div>Night</div>
+      <div class="color" onclick="requestTheme('#292a2d')"><div style="background-color: #292a2d"></div>Dark</div>
+      <div class="color" onclick="requestTheme('#222222')"><div style="background-color: #222222"></div>Black</div>
     </div>
 
     <div class="block-title" id="borders-rounding">
@@ -197,6 +189,9 @@
         <label>Quit app</label>
         <input type="radio" onclick="requestLastTab(this.value)" class="checkbox" name="last-tab" value="quit">
       </div>
+      <hr>
+      <img class="more-btn theme-icon" onclick="moreInfo(this)" title="More info" name="info">
+      <label class="more-label">Action when the last tab is closed.</label>
     </div>
 
     <div class="block-title" id="bookmarks">

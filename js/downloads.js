@@ -13,7 +13,25 @@ const { shell } = require('electron');
 const ppath = require('persist-path')('Ferny');
 const fs = require("fs");
 const getAvColor = require('color.js');
-const isDarkColor = require("is-dark-color");
+const fileExtension = require('file-extension');
+
+/*
+.##.....##..#######..########..##.....##.##.......########..######.
+.###...###.##.....##.##.....##.##.....##.##.......##.......##....##
+.####.####.##.....##.##.....##.##.....##.##.......##.......##......
+.##.###.##.##.....##.##.....##.##.....##.##.......######....######.
+.##.....##.##.....##.##.....##.##.....##.##.......##.............##
+.##.....##.##.....##.##.....##.##.....##.##.......##.......##....##
+.##.....##..#######..########...#######..########.########..######.
+*/
+
+const applyBgColor = require("../modules/applyBgColor.js");
+const epochToDate = require("../modules/epochToDate.js");
+const epochToTime = require("../modules/epochToTime.js");
+const applyBorderRadius = require("../modules/applyBorderRadius.js");
+const loadBgColor = require("../modules/loadBgColor.js");
+const loadBorderRadius = require("../modules/loadBorderRadius.js");
+const extToImagePath = require("../modules/extToImagePath.js");
 
 /*
 .########.##.....##.##....##..######..########.####..#######..##....##..######.
@@ -25,62 +43,9 @@ const isDarkColor = require("is-dark-color");
 .##........#######..##....##..######.....##....####..#######..##....##..######.
 */
 
-// appearance
-function changeTheme(color) {
-  if(isDarkColor(color)) {
-    setIconsStyle('light');
-
-    document.documentElement.style.setProperty('--color-top', 'white');
-    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.3)');
-  } else {
-    setIconsStyle('dark');
-
-    document.documentElement.style.setProperty('--color-top', 'black');
-    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.1)');
-  }
-}
-
-function setIconsStyle(str) {
-  var icons = document.getElementsByClassName('theme-icon');
-
-  for(var i = 0; i < icons.length; i++) {
-    icons[i].src = "../themes/" + str + "/icons/" + icons[i].name + ".png";
-  }
-}
-
-function loadTheme() {
-  try {
-    var themeColor = fs.readFileSync(ppath + "\\json\\theme.json");
-    changeTheme(themeColor);
-  } catch (e) {
-
-  }
-}
-
-function loadBorderRadius() {
-  try {
-    var borderRadius = fs.readFileSync(ppath + "\\json\\radius.json");
-    changeBorderRadius(borderRadius);
-
-    var radios = document.getElementsByName("border-radius");
-    for(var i = 0; i < radios.length; i++) {
-      if(radios[i].value == borderRadius) {
-        radios[i].checked = true;
-      }
-    }
-  } catch (e) {
-
-  }
-}
-
-function changeBorderRadius(size) {
-  document.documentElement.style.setProperty('--px-radius', size + 'px');
-}
-
-// downloads
 function loadDownloads() {
   try {
-    var jsonstr = fs.readFileSync(ppath + "\\json\\downloads.json");
+    var jsonstr = fs.readFileSync(ppath + "/json/downloads.json");
     var arr = JSON.parse(jsonstr);
     var i;
     for (i = 0; i < arr.length; i++) {
@@ -91,14 +56,17 @@ function loadDownloads() {
   }
 }
 
-// downloads
 function createDownload(index, name, url, time) {
   var div = document.createElement('div');
   div.classList.add('download');
   div.id = "download-" + index;
   div.name = "starting";
+
+  var ext = fileExtension(url);
   div.innerHTML = `
-    <img class="download-icon" src="` + 'http://www.google.com/s2/favicons?domain=' + url + `"><label class="download-status">Starting</label><hr>
+    <img class="download-icon" src="` + extToImagePath(ext) + `">
+    <label class="download-ext">` + ext.toUpperCase() + ` file</label>
+    <label class="download-status">Starting</label><hr>
     <label>File: </label><label class="download-file" title="` + name + `">` + name + `</label><br>
     <label>Url: </label><label class="download-link" title="` + url + `">` + url + `</label><br>
     <label>Date: </label><label class="download-date">` + epochToDate(time) + `</label> / <label>Time: </label><label class="download-time">` + epochToTime(time) + `</label><hr>
@@ -125,11 +93,21 @@ function createStoppedDownload(index, name, url, path, time) {
   div.classList.add('download');
   div.id = "download-" + index;
   div.name = "stopped";
+
+  var ext = fileExtension(url);
   div.innerHTML = `
-    <img class="download-icon" src="` + 'http://www.google.com/s2/favicons?domain=' + url + `"><label class="download-status">Finished</label><hr>
+    <img class="download-icon" src="` + extToImagePath(ext) + `">
+    <label class="download-ext">` + ext.toUpperCase() + ` file</label>
+    <label class="download-status">Finished</label>
+    <hr>
     File: <label class="download-file" title="` + name + `">` + name + `</label><br>
     Url: <label class="download-link" title="` + url + `">` + url + `</label><br>
     Date: <label class="download-date">` + epochToDate(time) + `</label> / Time: <label class="download-time">` + epochToTime(time) + `</label><hr>`;
+
+  var color = new getAvColor(div.getElementsByTagName('img')[0]);
+  color.mostUsed(result => {
+    div.style.borderLeft = "4px solid " + result[0];
+  });
 
   if (fs.existsSync(path.replace(/\\/g, "/"))) {
     div.innerHTML += `
@@ -169,7 +147,7 @@ function createStoppedDownload(index, name, url, path, time) {
     container.appendChild(div);
   }
 
-  loadTheme();
+  applyBgColor();
 
   // console.log(div.name);
 }
@@ -194,7 +172,7 @@ function setDownloadProcess(index, bytes, total, name) {
       </div>`;
   }
 
-  loadTheme();
+  applyBgColor();
 
   // console.log(div.name);
 }
@@ -219,7 +197,7 @@ function setDownloadStatusPause(index, bytes, total, name) {
       </div>`;
   } 
 
-  loadTheme();
+  applyBgColor();
 
   // console.log(div.name);
 }
@@ -247,7 +225,7 @@ function setDownloadStatusDone(index, name, path) {
       <label>Remove</label>
     </div>`;
 
-  loadTheme();
+  applyBgColor();
 
   // console.log(div.name);
 }
@@ -271,7 +249,7 @@ function setDownloadStatusFailed(index, state, name, link) {
       <label>Remove</label>
     </div>`;
 
-  loadTheme();
+  applyBgColor();
 
   // console.log(div.name);
 }
@@ -295,7 +273,7 @@ function setDownloadStatusInterrupted(index, name) {
       <label>Cancel</label>
     </div>`;
 
-  loadTheme();
+  applyBgColor();
 
   // console.log(div.name);
 }
@@ -381,32 +359,6 @@ function notif(text, type) {
     type: type
   };
   ipcRenderer.send('request-notif', Data)
-}
-
-function epochToDate(time) {
-  let date = new Date(0);
-  date.setUTCSeconds(time);
-  var str = date.getDate() + " " + numberToMonth(date.getMonth()) + " " + date.getFullYear(); 
-  return str;
-}
-
-function epochToTime(time) {
-  let date = new Date(0);
-  date.setUTCSeconds(time);
-
-  var minutes = date.getMinutes();
-  var hours = date.getHours()
-
-  if(minutes <= 9) {
-    minutes = "0" + minutes;
-  }
-
-  if(hours <= 9) {
-    hours = "0" + hours;
-  }
-
-  var str = hours + ":" + minutes;
-  return str;
 }
 
 function numberToMonth(number) {
@@ -499,14 +451,6 @@ ipcRenderer.on('action-set-download-process', (event, arg) => {
   setDownloadProcess(arg.index, arg.bytes, arg.total, arg.name);
 });
 
-ipcRenderer.on('action-load-theme', (event, arg) => {
-  loadTheme();
-});
-
-ipcRenderer.on('action-load-border-radius', (event, arg) => {
-  loadBorderRadius();
-});
-
 /*
 .####.##....##.####.########
 ..##..###...##..##.....##...
@@ -518,9 +462,10 @@ ipcRenderer.on('action-load-border-radius', (event, arg) => {
 */
 
 function init() {
+  applyBgColor(loadBgColor());
+  applyBorderRadius(loadBorderRadius());
+
   loadDownloads();
-  loadTheme();
-  loadBorderRadius();
 }
 
 document.onreadystatechange = () => {

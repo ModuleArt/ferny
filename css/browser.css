@@ -430,15 +430,23 @@
 
 #window-controls {
   -webkit-app-region: no-drag;
-  display: grid;
-  grid-template-columns: repeat(3, 46px);
   float: right;
   height: 32px;
+  display: grid;
+  grid-template-columns: repeat(3, 46px);
+}
+
+#window-controls.linux {
+  grid-template-columns: repeat(3, 32px);
 }
 
 #window-controls span {
   font-family: SegMDL2;
   font-size: 10px;
+}
+
+#window-controls .title-bar-btn {
+  grid-row: 1 / span 1;
 }
 
 #window-controls .button {
@@ -798,6 +806,16 @@ hr {
   flex-grow: 1;
 }
 
+.etabs-tab::before {
+  position: absolute;
+  content: " ";
+  left: 0;
+  top: -4px;
+  right: 0;
+  height: 4px;
+  background-color: var(--color-over);
+}
+
 .etabs-tab:hover {
   background-color: var(--color-over);
 }
@@ -1023,8 +1041,11 @@ hr {
 }
 
 #bookmarks-bar:empty::before {
+  font-size: 12px;
   content: "\2205  No bookmarks... Try to bookmark something...";
   color: var(--color-top);
+  margin: 2px;
+  margin-bottom: 4px;
 }
 
 .bookmark, .folder {

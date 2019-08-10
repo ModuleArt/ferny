@@ -269,6 +269,16 @@ input:hover, input:focus {
   border-left: 4px solid transparent;
 }
 
+.download::before {
+  position: absolute;
+  content: " ";
+  left: -4px;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background-color: var(--color-over);
+}
+
 .download:last-child {
   margin-bottom: 0;
 }
@@ -279,7 +289,12 @@ input:hover, input:focus {
   margin-top: 4px;
 }
 
-.download-link, .download-file, .download-status {
+.download-status {
+  float: right;
+  margin-right: 4px;
+}
+
+.download-link, .download-file, .download-ext {
   overflow:hidden;
   position: absolute;
   white-space: nowrap;

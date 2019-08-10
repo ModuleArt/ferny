@@ -12,18 +12,37 @@ const { ipcRenderer } = require('electron');
 const getTitleAtUrl = require('get-title-at-url');
 const readl = require('readl-async');
 const ppath = require('persist-path')('Ferny');
-const fs = require("fs");
 const getAvColor = require('color.js');
-const isDarkColor = require("is-dark-color");
+const parsePath = require("parse-path");
+const fileExtension = require('file-extension');
 
 var historyLineNumber = 0;
-var reader = new readl(ppath + "\\json\\history.json", { encoding: 'utf8' });
+var reader = new readl(ppath + "/json/history.json", { encoding: 'utf8' });
 
 reader.on('line', function(line, index, start, end) {
   var obj = JSON.parse(line);
   createHistoryItem(historyLineNumber, obj.url, obj.time, false);
   historyLineNumber++;
 });
+
+/*
+.##.....##..#######..########..##.....##.##.......########..######.
+.###...###.##.....##.##.....##.##.....##.##.......##.......##....##
+.####.####.##.....##.##.....##.##.....##.##.......##.......##......
+.##.###.##.##.....##.##.....##.##.....##.##.......######....######.
+.##.....##.##.....##.##.....##.##.....##.##.......##.............##
+.##.....##.##.....##.##.....##.##.....##.##.......##.......##....##
+.##.....##..#######..########...#######..########.########..######.
+*/
+
+const saveFileToJsonFolder = require("../modules/saveFileToJsonFolder.js");
+const extToImagePath = require("../modules/extToImagePath.js");
+const applyBgColor = require("../modules/applyBgColor.js");
+const epochToDate = require("../modules/epochToDate.js");
+const epochToTime = require("../modules/epochToTime.js");
+const applyBorderRadius = require("../modules/applyBorderRadius.js");
+const loadBgColor = require("../modules/loadBgColor.js");
+const loadBorderRadius = require("../modules/loadBorderRadius.js");
 
 /*
 .########.##.....##.##....##..######..########.####..#######..##....##..######.
@@ -37,64 +56,6 @@ reader.on('line', function(line, index, start, end) {
 
 function loadHistory() {
   reader.read();
-}
-
-function changeTheme(color) {
-  if(isDarkColor(color)) {
-    setIconsStyle('light');
-
-    document.documentElement.style.setProperty('--color-top', 'white');
-    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.3)');
-  } else {
-    setIconsStyle('dark');
-
-    document.documentElement.style.setProperty('--color-top', 'black');
-    document.documentElement.style.setProperty('--color-over', 'rgba(0, 0, 0, 0.1)');
-  }
-}
-
-function setIconsStyle(str) {
-  var icons = document.getElementsByClassName('theme-icon');
-
-  for(var i = 0; i < icons.length; i++) {
-    icons[i].src = "../themes/" + str + "/icons/" + icons[i].name + ".png";
-  }
-}
-
-function loadTheme() {
-  try {
-    var themeColor = fs.readFileSync(ppath + "\\json\\theme.json");
-    changeTheme(themeColor);
-  } catch (e) {
-
-  }
-}
-
-function loadBorderRadius() {
-  try {
-    var borderRadius = fs.readFileSync(ppath + "\\json\\radius.json");
-    changeBorderRadius(borderRadius);
-
-    var radios = document.getElementsByName("border-radius");
-    for(var i = 0; i < radios.length; i++) {
-      if(radios[i].value == borderRadius) {
-        radios[i].checked = true;
-      }
-    }
-  } catch (e) {
-
-  }
-}
-
-function changeBorderRadius(size) {
-  document.documentElement.style.setProperty('--px-radius', size + 'px');
-}
-
-function saveFileToJsonFolder(fileName, data) {
-  if(!fs.existsSync(ppath + "\\json")) {
-    fs.mkdirSync(ppath + "\\json");
-  } 
-  fs.writeFileSync(ppath + "\\json\\" + fileName + ".json", data);
 }
 
 function clearHistory() {
@@ -118,7 +79,7 @@ function createHistoryItem(index, url, time, begin) {
     div.classList.add('history-item');
     div.id = "history-" + index;
     
-    div.innerHTML = `<img class="history-icon" src="` + 'http://www.google.com/s2/favicons?domain=' + url + `"><label class="history-name">Loading...</label><hr>
+    div.innerHTML = `<hr>
                     Url: <label class="history-url" title="` + url + `">` + url + `</label><br>
                     Date: <label class="history-date">` + epochToDate(time) + `</label> / <label>Time: </label><label class="history-time">` + epochToTime(time) + `</label><hr>
                     <center class="history-buttons">
@@ -132,6 +93,15 @@ function createHistoryItem(index, url, time, begin) {
                       </div>
                       
                     </center>`;
+
+    if (parsePath(url).protocol == 'file') {
+      var ext = fileExtension(url);
+      div.innerHTML = `<img class="history-icon" src=` + extToImagePath(ext) + `><label class="history-name">` + ext.toUpperCase() + ` file</label>` + div.innerHTML;
+    } else {
+      div.innerHTML = `<img class="history-icon" src="` + 'http://www.google.com/s2/favicons?domain=' + url + `"><label class="history-name">Loading...</label>` + div.innerHTML;
+      applyTitle(url, index);
+    }
+
     div.addEventListener('auxclick', (e) => {
       e.preventDefault();
       if(e.which == 2) {
@@ -155,19 +125,15 @@ function createHistoryItem(index, url, time, begin) {
       container.appendChild(div);
     }
 
-    applyTitle(url, index);
-
-    loadTheme();
+    applyBgColor();
   });
 }
-
-
 
 // function removeHistoryItem(index) {
 //   var div = document.getElementById('history-' + index);
 //   div.parentNode.removeChild(div);
 
-//   replace({ files: ppath + "\\json\\history.json", from: , to:  }, (error, results) => {
+//   replace({ files: ppath + "/json/history.json", from: , to:  }, (error, results) => {
 //     if (error) {
 //       return console.error('Error occurred:', error);
 //     } else {
@@ -198,39 +164,12 @@ function openUrlInNewTab(url) {
   ipcRenderer.send('request-open-url-in-new-tab', url);
 }
 
-
 function notif(text, type) {
   let Data = {
     text: text,
     type: type
   };
   ipcRenderer.send('request-notif', Data)
-}
-
-function epochToDate(time) {
-  let date = new Date(0);
-  date.setUTCSeconds(time);
-  var str = date.getDate() + " " + numberToMonth(date.getMonth()) + " " + date.getFullYear(); 
-  return str;
-}
-
-function epochToTime(time) {
-  let date = new Date(0);
-  date.setUTCSeconds(time);
-
-  var minutes = date.getMinutes();
-  var hours = date.getHours()
-
-  if(minutes <= 9) {
-    minutes = "0" + minutes;
-  }
-
-  if(hours <= 9) {
-    hours = "0" + hours;
-  }
-
-  var str = hours + ":" + minutes;
-  return str;
 }
 
 function numberToMonth(number) {
@@ -305,14 +244,6 @@ ipcRenderer.on('action-add-history-item', (event, arg) => {
   createHistoryItem(arg.index, arg.url, arg.time, true);
 });
 
-ipcRenderer.on('action-load-theme', (event, arg) => {
-  loadTheme();
-});
-
-ipcRenderer.on('action-load-border-radius', (event, arg) => {
-  loadBorderRadius();
-});
-
 /*
 .####.##....##.####.########
 ..##..###...##..##.....##...
@@ -324,8 +255,9 @@ ipcRenderer.on('action-load-border-radius', (event, arg) => {
 */
 
 function init() {
-  loadTheme();
-  loadBorderRadius();
+  applyBgColor(loadBgColor());
+  applyBorderRadius(loadBorderRadius());
+  
   loadHistory();
 }
 

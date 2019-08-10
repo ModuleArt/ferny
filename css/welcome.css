@@ -19,9 +19,9 @@
 }
 
 :root{
-  --color-back: rgb(255, 255, 255);
-  --color-over: rgba(0, 0, 0, 0.05);
-  --color-top: rgb(0, 0, 0);
+  --color-back: transparent;
+  --color-over: transparent;
+  --color-top: transparent;
   --color-shadow: rgba(0, 0, 0, 0.5);
 
   --color-red: rgb(255, 63, 52);
@@ -216,9 +216,17 @@
   height: 100%;
 }
 
+#titlebar #window-controls.linux {
+  grid-template-columns: repeat(1, 32px);
+}
+
 #titlebar #window-controls span {
   font-family: SegMDL2;
   font-size: 10px;
+}
+
+#window-controls .title-bar-btn {
+  padding: 8px;
 }
 
 #titlebar #window-controls .button {
@@ -233,11 +241,18 @@
   grid-column: 3;
 }
 
-#titlebar.blur #window-controls .button, #window-controls .button:active {
+#titlebar.blur #window-controls .button, #titlebar #window-controls .button:active, 
+#titlebar.blur #window-controls .title-bar-btn, #titlebar #window-controls .title-bar-btn:active {
   opacity: 0.5;
 }
 
 #titlebar #window-controls .button:hover {
+  background-color: #E81022;
+  color: white;
+  opacity: 1;
+}
+
+#titlebar #window-controls .title-bar-btn:hover {
   background-color: #E81022;
   color: white;
   opacity: 1;
@@ -265,6 +280,7 @@ body {
   margin: 0;
   padding: 0;
   overflow: hidden;
+  background-color: var(--color-back);
 }
 
 /*
