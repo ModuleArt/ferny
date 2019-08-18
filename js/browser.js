@@ -567,6 +567,7 @@ function goToBookmarksTab() {
   document.getElementById('settings-btn').classList.remove('active');
   document.getElementById('about-btn').classList.remove('active');
   document.getElementById('history-btn').classList.remove('active');
+  document.getElementById('certificate-btn').classList.remove('active');
 }
 
 function goToHistoryTab() {
@@ -581,6 +582,7 @@ function goToHistoryTab() {
   document.getElementById('settings-btn').classList.remove('active');
   document.getElementById('about-btn').classList.remove('active');
   document.getElementById('history-btn').classList.add('active');
+  document.getElementById('certificate-btn').classList.remove('active');
 }
 
 function goToAboutTab() {
@@ -595,6 +597,22 @@ function goToAboutTab() {
   document.getElementById('settings-btn').classList.remove('active');
   document.getElementById('about-btn').classList.add('active');
   document.getElementById('history-btn').classList.remove('active');
+  document.getElementById('certificate-btn').classList.remove('active');
+}
+
+function goToCertificateTab() {
+  var sidebarWebview = document.getElementById('sidebar-webview');
+  sidebarWebview.stop();
+  showSidebar();
+
+  sidebarWebview.src = '../html/certificate.html';
+
+  document.getElementById('bookmarks-btn').classList.remove('active');
+  document.getElementById('downloads-btn').classList.remove('active');
+  document.getElementById('settings-btn').classList.remove('active');
+  document.getElementById('about-btn').classList.remove('active');
+  document.getElementById('history-btn').classList.remove('active');
+  document.getElementById('certificate-btn').classList.add('active');
 }
 
 function goToSettingsTab(shortcutId) {
@@ -613,6 +631,7 @@ function goToSettingsTab(shortcutId) {
   document.getElementById('settings-btn').classList.add('active');
   document.getElementById('about-btn').classList.remove('active');
   document.getElementById('history-btn').classList.remove('active');
+  document.getElementById('certificate-btn').classList.remove('active');
 }
 
 function goToDownloadsTab() {
@@ -627,6 +646,7 @@ function goToDownloadsTab() {
   document.getElementById('settings-btn').classList.remove('active');
   document.getElementById('about-btn').classList.remove('active');
   document.getElementById('history-btn').classList.remove('active');
+  document.getElementById('certificate-btn').classList.remove('active');
 }
 
 function createBookmark(url, name, folder) {
@@ -1909,8 +1929,16 @@ ipcRenderer.on('action-page-findinpage', (event, arg) => {
   showFindPanel();
 });
 
+ipcRenderer.on('action-load-certificate', (event, arg) => {
+  if(arg == null) {
+    arg = tabGroup.getActiveTab().webview.getURL();
+  }
+  document.getElementById('sidebar-webview').send('action-load-certificate', arg);
+});
+
 ipcRenderer.on('action-page-certificate', (event, arg) => {
-  ipcRenderer.send('request-show-certificate-info', tabGroup.getActiveTab().webview.src);
+  // ipcRenderer.send('request-show-certificate-info', tabGroup.getActiveTab().webview.src);
+  goToCertificateTab();
 });
 
 // ipcRenderer.on('action-page-saveas', (event, arg) => {

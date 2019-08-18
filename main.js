@@ -169,7 +169,6 @@ const sideMenu = Menu.buildFromTemplate([
 var mainWindow = null;
 var welcomeWindow = null;
 var keyBindsWindow = null;
-var pageInfoWindow = null;
 
 var downloadsArray = [];
 var curDownloadNum = 0;
@@ -448,10 +447,6 @@ ipcMain.on('request-set-bookmarks-bar', (event, arg) => {
   }
 });
 
-ipcMain.on('request-show-certificate-info', (event, arg) => {
-  showPageInfoWindow(arg);
-});
-
 ipcMain.on('request-add-history-item', (event, arg) => {
   let Data = {
     url: arg,
@@ -484,6 +479,10 @@ ipcMain.on('request-show-welcome-screen', (event, arg) => {
 
 ipcMain.on('request-notif', (event, arg) => {
   mainWindow.webContents.send('action-notif', arg);
+});
+
+ipcMain.on('request-load-certificate', (event, arg) => {
+  mainWindow.webContents.send('action-load-certificate', arg);
 });
 
 ipcMain.on('request-open-url', (event, arg) => {
@@ -692,10 +691,6 @@ ipcMain.on('request-close-welcome', (event, arg) => {
 
 ipcMain.on('request-close-keybinds', (event, arg) => {
   keyBindsWindow.close();
-});
-
-ipcMain.on('request-close-pageinfo', (event, arg) => {
-  pageInfoWindow.close();
 });
 
 ipcMain.on('request-open-license-file', (event, arg) => {
@@ -1024,46 +1019,6 @@ function showKeyBindsWindow() {
     keyBindsWindow.once('ready-to-show', () => {
       // keyBindsWindow.webContents.openDevTools();
       keyBindsWindow.show();
-    });
-  });
-}
-
-function showPageInfoWindow(certificate) {
-  loadTheme().then(function(theme) {
-    pageInfoWindow = new BrowserWindow({
-      width: 480, height: 480,
-      minWidth: 480, minHeight: 180,
-      frame: loadWinControls().frame,
-      show: false,
-      modal: true,
-      parent: mainWindow,
-      icon: app.getAppPath() + '/imgs/icon.ico',
-      minimizable: false,
-      maximizable: false,
-      webPreferences: {
-        nodeIntegration: true
-      },
-      backgroundColor: theme.colorBack
-    }); 
-  
-    pageInfoWindow.setMenu(null);
-  
-    pageInfoWindow.on('focus', () => {
-      pageInfoWindow.webContents.send('action-focus-window');
-    });
-    pageInfoWindow.on('blur', () => {
-      pageInfoWindow.webContents.send('action-blur-window');
-    });
-  
-    pageInfoWindow.loadFile(app.getAppPath() + '/html/pageinfo.html');
-  
-    pageInfoWindow.once('ready-to-show', () => {
-      // pageInfoWindow.webContents.openDevTools();
-      pageInfoWindow.show();
-    });
-  
-    pageInfoWindow.webContents.once('did-finish-load', () => {
-      pageInfoWindow.webContents.send('action-load-certificate', certificate);
     });
   });
 }

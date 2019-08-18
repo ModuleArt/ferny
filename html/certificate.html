@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <link rel="stylesheet" href="../css/modules/input.css">
+    <link rel="stylesheet" href="../css/modules/webkit.css">
+    <link rel="stylesheet" href="../css/modules/nav-btn.css">
+    <link rel="stylesheet" href="../css/modules/block-title.css">
+    <link rel="stylesheet" href="../css/modules/link.css">
+    <link rel="stylesheet" href="../css/certificate.css">
+  </head>
+  <body>
+    <label class="sidebar-title">Certificate</label>
+    <div class="title-buttons">
+        <button class="nav-btn" title="Get certeficate at active tab" onclick="getActiveURL()">
+            <img name="link-16" class="theme-icon">
+        </button>
+    </div>
+
+    <div class="block-title">
+        <img name="link-16" class="theme-icon">
+        <label>Link</label>
+    </div>
+    <div class="container">
+        <input type="text" id="link-input">
+        <button class="nav-btn" onclick="getCertificateAtURL()">
+            <img class="theme-icon" name="license-16">
+            <label>Get certificate</label>
+        </button>
+    </div>
+      
+    <div class="block-title">
+        <img name="user-16" class="theme-icon">
+        <label>Subject</label>
+    </div>
+    <div class="container">
+        <label>C (Country):</label><span id="subject-c">Loading...</span><br>
+        <label>ST (State):</label><span id="subject-st">Loading...</span><br>
+        <label>L (Locality):</label><span id="subject-l">Loading...</span><br>
+        <label>O (Organization):</label><span id="subject-o">Loading...</span><br>
+        <label>CN (Common name):</label><span id="subject-cn">Loading...</span>
+    </div>
+    
+    <div class="block-title">
+        <img name="license-16" class="theme-icon">
+        <label>Issuer</label>
+    </div>
+    <div class="container">
+        <label>C (Country):</label><span id="issuer-c">Loading...</span><br>
+        <label>O (Organization):</label><span id="issuer-o">Loading...</span><br>
+        <label>CN (Common name):</label><span id="issuer-cn">Loading...</span>
+    </div>
+    
+    <div class="block-title">
+        <img name="history-16" class="theme-icon">
+        <label>Valid</label>
+    </div>
+    <div class="container">
+        <label>From:</label><span id="valid-from">Loading...</span><br>
+        <label>To:</label><span id="valid-to">Loading...</span>
+    </div>
+    
+    <div class="block-title">
+        <img name="info-16" class="theme-icon">
+        <label>Details</label>
+    </div>
+    <div class="container">
+        <label>Serial number:</label><span id="serial-number">Loading...</span><hr>
+        <label>Fingerprint:</label><span id="fingerprint">Loading...</span><hr>
+        <label>Fingerprint256:</label><span id="fingerprint256">Loading...</span><hr>
+        <label>Subject alt name:</label><span id="alt-name">Loading...</span><hr>
+        <label>Bits:</label><span id="bits">Loading...</span><br>
+        <label>Exponent:</label><span id="exponent">Loading...</span><hr>
+        <label>Pem encoded:</label><span id="pem-encoded">Loading...</span><hr>
+        <label>Modulus:</label><span id="modulus">Loading...</span><br>
+    </div>
+    
+    <script type="text/javascript" src="../js/certificate.js"></script>
+  </body>
+</html>

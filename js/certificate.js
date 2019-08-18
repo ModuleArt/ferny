@@ -23,8 +23,6 @@ const sslCertificate = require('get-ssl-certificate');
 
 const loadTheme = require("../modules/loadTheme.js");
 const applyTheme = require("../modules/applyTheme.js");
-const applyWinControls = require("../modules/applyWinControls.js");
-const loadWinControls = require("../modules/loadWinControls.js");
 
 /*
 .########.##.....##.##....##..######..########.####..#######..##....##..######.
@@ -36,15 +34,13 @@ const loadWinControls = require("../modules/loadWinControls.js");
 .##........#######..##....##..######.....##....####..#######..##....##..######.
 */
 
-function updateTheme() {
-  loadTheme().then(function(theme) {
-    applyTheme(theme);
-  });
+function getActiveURL() {
+  ipcRenderer.send('request-load-certificate');
 }
 
-// window
-function closeWindow() {
-  ipcRenderer.send('request-close-pageinfo');
+function getCertificateAtURL() {
+  var url = document.getElementById('link-input').value;
+  ipcRenderer.send('request-load-certificate', url);
 }
 
 /*
@@ -57,15 +53,10 @@ function closeWindow() {
 .####.##.........######.....##.....##.########.##....##.########..########.##.....##.########.##.....##
 */
 
-// window
-ipcRenderer.on('action-blur-window', (event, arg) => {
-  document.getElementById('titlebar').classList.add('blur');
-});
-ipcRenderer.on('action-focus-window', (event, arg) => {
-  document.getElementById('titlebar').classList.remove('blur');
-});
-
 ipcRenderer.on('action-load-certificate', (event, arg) => {
+  document.getElementById('link-input').value = arg;
+  console.log(arg);
+
   var hostname = arg.split('/')[2];
   sslCertificate.get(hostname).then(function (certificate) {
     console.log(certificate);
@@ -106,15 +97,11 @@ ipcRenderer.on('action-load-certificate', (event, arg) => {
 */
 
 function init() {
-  var winControls = loadWinControls();
-  if(winControls.frame) {
-    document.body.classList.add('no-titlebar');
-    document.getElementById('titlebar').parentNode.removeChild(document.getElementById('titlebar'));
-  } else {
-    applyWinControls('only-close');
-  }
+  loadTheme().then(function(theme) {
+    applyTheme(theme);
+  });
 
-  updateTheme();
+  getActiveURL();
 }
 
 document.onreadystatechange = () => {
