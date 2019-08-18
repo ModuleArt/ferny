@@ -1,0 +1,255 @@
+/*
+.########...#######...#######..########
+.##.....##.##.....##.##.....##....##...
+.##.....##.##.....##.##.....##....##...
+.########..##.....##.##.....##....##...
+.##...##...##.....##.##.....##....##...
+.##....##..##.....##.##.....##....##...
+.##.....##..#######...#######.....##...
+*/
+
+@font-face {
+    font-family: OpenSans;
+    src: url(../fonts/OpenSans-Semibold.ttf);
+}
+
+* {
+    font-family: OpenSans;
+    font-size: 14px;
+    color: white;
+}
+
+body {
+    background-color: rgb(36, 40, 42);
+    padding: 0;
+    margin: 0;
+}
+
+/*
+.##.....##....###....####.##....##
+.###...###...##.##....##..###...##
+.####.####..##...##...##..####..##
+.##.###.##.##.....##..##..##.##.##
+.##.....##.#########..##..##..####
+.##.....##.##.....##..##..##...###
+.##.....##.##.....##.####.##....##
+*/
+
+.main {
+    padding: 64px 18px;
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+.main-title {
+    font-size: 28px;
+    display: block;
+}
+
+/*
+.########.####.########.##.......########
+....##.....##.....##....##.......##......
+....##.....##.....##....##.......##......
+....##.....##.....##....##.......######..
+....##.....##.....##....##.......##......
+....##.....##.....##....##.......##......
+....##....####....##....########.########
+*/
+
+.main .title img {
+    width: 64px;
+    height: 64px;
+    vertical-align: middle;
+}
+
+.main .title label {
+    padding: 16px;
+    font-size: 48px;
+    vertical-align: middle;
+}
+
+/*
+.########..########..######...######.
+.##.....##.##.......##....##.##....##
+.##.....##.##.......##.......##......
+.##.....##.######....######..##......
+.##.....##.##.............##.##......
+.##.....##.##.......##....##.##....##
+.########..########..######...######.
+*/
+
+.main .description {
+    font-size: 16px;
+    display: block;
+    margin-top: 24px;
+    margin-bottom: 48px;
+    opacity: 0.5;
+}
+
+/*
+....###....########..########...######.
+...##.##...##.....##.##.....##.##....##
+..##...##..##.....##.##.....##.##......
+.##.....##.########..########...######.
+.#########.##........##..............##
+.##.....##.##........##........##....##
+.##.....##.##........##.........######.
+*/
+
+.main .apps {
+    margin: 48px 0;
+}
+
+.main .apps .app {
+    width: calc(50% - 18px);
+    margin: 8px;
+    margin-bottom: 32px;
+    display: inline-block;
+    transition: 0.25s;
+    text-decoration: none;
+    vertical-align: top;
+    outline: none;
+}
+
+.main .apps .app:hover .container, .main .apps .app:focus .container {
+    transform: translateY(-40px);
+}
+
+.main .apps .app:hover .preview::after, .main .apps .app:focus .preview::after {
+    height: 128px;
+}
+
+.main .apps .app:hover .title, .main .apps .app:focus {
+    text-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+}
+
+.main .apps .app:active {
+    opacity: 0.5;
+}
+
+.main .apps .app .preview {
+    position: relative;
+    width: 100%;
+    z-index: -100;
+}
+
+.main .apps .app .preview img {
+    width: 100%;
+    border-radius: 4px;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+    margin-bottom: -4px;
+}
+
+.main .apps .app .preview::after {
+    position: absolute;
+    content: " ";
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 64px;
+    opacity: 0.5;
+    background: linear-gradient(transparent, black);
+    border-radius: 0 0 4px 4px;
+    transition: 0.25s;
+}
+
+.main .apps .app .icon {
+    width: 64px;
+    height: 64px;
+    vertical-align: middle;
+    margin-right: 16px;
+    border-radius: 4px;
+}
+
+.main .apps .app .container {
+    margin-top: 8px;
+    transition: 0.25s;
+}
+
+.main .apps .app .title {
+    vertical-align: middle;
+    font-size: 36px;
+    transition: 0.25s;
+}
+
+.main .apps .app .subtitle {
+    display: block;
+    padding: 8px;
+    opacity: 0.5;
+    font-size: 16px;
+    transition: 0.25s;
+}
+
+.main .apps .app:hover .subtitle, .main .apps .app:focus .subtitle {
+    opacity: 1;
+    cursor: pointer;
+}
+
+.main .apps .app .title:hover, .main .apps .app .title:focus {
+    cursor: pointer;
+}
+
+.main .apps .app .platform {
+    opacity: 0.5;
+}
+
+/*
+.##.....##.########.########..####....###...
+.###...###.##.......##.....##..##....##.##..
+.####.####.##.......##.....##..##...##...##.
+.##.###.##.######...##.....##..##..##.....##
+.##.....##.##.......##.....##..##..#########
+.##.....##.##.......##.....##..##..##.....##
+.##.....##.########.########..####.##.....##
+*/
+
+@media only screen and (max-width: 800px) {
+    .main .apps .app {
+        display: block;
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
+@media only screen and (max-width: 420px) {
+    .main {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .main .apps .app .preview {
+        border-radius: 0;
+    }
+
+    .main .description {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .main .title label {
+        display: block;
+    }
+
+    .main .title img {
+        opacity: 0.5;
+        width: 128px;
+        height: 128px;
+        margin-bottom: -80px;
+    }
+
+    .main .apps .app .icon {
+        width: 32px;
+        height: 32px;
+    }
+}
+
+/*
+.########.##.....##.########....########.##....##.########.
+....##....##.....##.##..........##.......###...##.##.....##
+....##....##.....##.##..........##.......####..##.##.....##
+....##....#########.######......######...##.##.##.##.....##
+....##....##.....##.##..........##.......##..####.##.....##
+....##....##.....##.##..........##.......##...###.##.....##
+....##....##.....##.########....########.##....##.########.
+*/
