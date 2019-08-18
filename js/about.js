@@ -9,9 +9,6 @@
 */
 
 const { ipcRenderer } = require('electron');
-const ppath = require('persist-path')('Ferny');
-const fs = require("fs");
-const isDarkColor = require("is-dark-color");
 
 /*
 .##.....##..#######..########..##.....##.##.......########..######.
@@ -23,10 +20,8 @@ const isDarkColor = require("is-dark-color");
 .##.....##..#######..########...#######..########.########..######.
 */
 
-const applyBgColor = require("../modules/applyBgColor.js");
-const applyBorderRadius = require("../modules/applyBorderRadius.js");
-const loadBgColor = require("../modules/loadBgColor.js");
-const loadBorderRadius = require("../modules/loadBorderRadius.js");
+const loadTheme = require("../modules/loadTheme.js");
+const applyTheme = require("../modules/applyTheme.js");
 
 /*
 .########.##.....##.##....##..######..########.####..#######..##....##..######.
@@ -105,7 +100,7 @@ function checkForUpdates() {
 */
 
 ipcRenderer.on('action-set-about', (event, arg) => {
-  document.getElementById('about-app').innerHTML = "v" + arg.version + " / " + arg.arch + " / " + arg.platform;
+  document.getElementById('about-app').innerHTML = "Beta v" + arg.version + "<br>" + arg.arch + " / " + arg.platform;
 });
 
 /*
@@ -119,8 +114,9 @@ ipcRenderer.on('action-set-about', (event, arg) => {
 */
 
 function init() {
-  applyBgColor(loadBgColor());
-  applyBorderRadius(loadBorderRadius());
+  loadTheme().then(function(theme) {
+    applyTheme(theme);
+  });
 
   loadAbout();
 }

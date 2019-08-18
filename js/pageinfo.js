@@ -10,9 +10,6 @@
 
 const { ipcRenderer } = require('electron');
 const sslCertificate = require('get-ssl-certificate');
-const fs = require("fs");
-const ppath = require('persist-path')('Ferny');
-const isDarkColor = require("is-dark-color");
 
 /*
 .##.....##..#######..########..##.....##.##.......########..######.
@@ -24,11 +21,10 @@ const isDarkColor = require("is-dark-color");
 .##.....##..#######..########...#######..########.########..######.
 */
 
-const applyBorderRadius = require("../modules/applyBorderRadius.js");
-const applyBgColor = require("../modules/applyBgColor.js");
-const loadBgColor = require("../modules/loadBgColor.js");
-const loadBorderRadius = require("../modules/loadBorderRadius.js");
+const loadTheme = require("../modules/loadTheme.js");
+const applyTheme = require("../modules/applyTheme.js");
 const applyWinControls = require("../modules/applyWinControls.js");
+const loadWinControls = require("../modules/loadWinControls.js");
 
 /*
 .########.##.....##.##....##..######..########.####..#######..##....##..######.
@@ -39,6 +35,12 @@ const applyWinControls = require("../modules/applyWinControls.js");
 .##.......##.....##.##...###.##....##....##.....##..##.....##.##...###.##....##
 .##........#######..##....##..######.....##....####..#######..##....##..######.
 */
+
+function updateTheme() {
+  loadTheme().then(function(theme) {
+    applyTheme(theme);
+  });
+}
 
 // window
 function closeWindow() {
@@ -104,9 +106,15 @@ ipcRenderer.on('action-load-certificate', (event, arg) => {
 */
 
 function init() {
-  applyWinControls('only-close');
-  applyBgColor(loadBgColor());
-  applyBorderRadius(loadBorderRadius());
+  var winControls = loadWinControls();
+  if(winControls.frame) {
+    document.body.classList.add('no-titlebar');
+    document.getElementById('titlebar').parentNode.removeChild(document.getElementById('titlebar'));
+  } else {
+    applyWinControls('only-close');
+  }
+
+  updateTheme();
 }
 
 document.onreadystatechange = () => {

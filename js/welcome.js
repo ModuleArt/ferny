@@ -11,7 +11,6 @@
 const { ipcRenderer } = require('electron');
 const ppath = require('persist-path')('Ferny');
 const fs = require("fs");
-const isDarkColor = require("is-dark-color");
 
 /*
 .##.....##..#######..########..##.....##.##.......########..######.
@@ -24,11 +23,10 @@ const isDarkColor = require("is-dark-color");
 */
 
 const saveFileToJsonFolder = require("../modules/saveFileToJsonFolder.js");
-const applyBgColor = require("../modules/applyBgColor.js");
-const applyBorderRadius = require("../modules/applyBorderRadius.js");
-const loadBgColor = require("../modules/loadBgColor.js");
-const loadBorderRadius = require("../modules/loadBorderRadius.js");
+const loadTheme = require("../modules/loadTheme.js");
+const applyTheme = require("../modules/applyTheme.js");
 const applyWinControls = require("../modules/applyWinControls.js");
+const loadWinControls = require("../modules/loadWinControls.js");
 
 /*
 .########.##.....##.##....##..######..########.####..#######..##....##..######.
@@ -40,14 +38,19 @@ const applyWinControls = require("../modules/applyWinControls.js");
 .##........#######..##....##..######.....##....####..#######..##....##..######.
 */
 
-function requestTheme(color) {
-  ipcRenderer.send('request-change-theme', color);
-  applyBgColor(color);
+function updateTheme() {
+  loadTheme().then(function(theme) {
+    applyTheme(theme);
+  });
 }
 
-function requestBorderRadius(size) {
-  applyBorderRadius(size);
-  ipcRenderer.send('request-change-border-radius', size);
+function requestTheme(theme) {
+  saveFileToJsonFolder('theme', theme).then(function(bool) {
+    loadTheme(theme).then(function(themeObj) {
+      ipcRenderer.send('request-change-theme', themeObj);
+      applyTheme(themeObj);
+    });
+  });
 }
 
 function chooseSlide(i) {
@@ -322,9 +325,15 @@ ipcRenderer.on('action-focus-window', (event, arg) => {
 */
 
 function init() {
-  applyWinControls('only-close');
-  applyBgColor(loadBgColor());
-  applyBorderRadius(loadBorderRadius());
+  var winControls = loadWinControls();
+  if(winControls.frame) {
+    document.body.classList.add('no-titlebar');
+    document.getElementById('titlebar').parentNode.removeChild(document.getElementById('titlebar'));
+  } else {
+    applyWinControls('only-close');
+  }
+
+  updateTheme();
   
   loadSearchEngine();
   loadHomePage();

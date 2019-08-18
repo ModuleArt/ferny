@@ -1,0 +1,13 @@
+{
+  "name": "Cupertino",
+  "type": "Light",
+  "icons": "black",
+  "colorBack": "#EEEEEE",
+  "colorElement": "#FFFFFF",
+  "colorBorder": "#CCCCCC",
+  "colorSecond": "#DDDDDD",
+  "colorTop": "#000000",
+  "shadowFocus": "inset 0 0 4px rgba(0, 0, 0, 0.5)",
+  "opacityOver": "0.25",
+  "pxRadius": "8px"
+}

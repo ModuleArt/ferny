@@ -1,0 +1,40 @@
+.nav-btn {
+    height: 32px;
+    border-radius: var(--px-radius);
+    display: inline-block;
+    margin: 2px;
+    vertical-align: middle;
+    background: none;
+    border: 1px solid var(--color-border);
+    outline: none;
+    background-color: var(--color-element);
+    padding: 0;
+}
+
+.nav-btn label {
+    padding-right: 8px;
+    vertical-align: middle;
+}
+
+.nav-btn img {
+    padding: 7px;
+    vertical-align: middle;
+}
+
+.nav-btn:hover {
+    background-color: var(--color-second);
+}
+
+.nav-btn:focus, .nav-btn.active {
+    box-shadow: var(--shadow-focus);
+}
+
+.nav-btn:active, .nav-btn.active {
+    background-color: var(--color-border);
+}
+
+.nav-btn:disabled {
+    background-color: transparent;
+    border-color: transparent;
+    opacity: var(--opacity-over);
+}

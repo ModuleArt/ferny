@@ -15,7 +15,6 @@ const dragula = require("dragula");
 const autoSuggest = require('suggestion');
 const isUrl = require('validate.io-uri');
 const getAvColor = require('color.js');
-const isDarkColor = require("is-dark-color");
 const fs = require("fs");
 const ppath = require('persist-path')('Ferny');
 // const checkFile = require('check-file');
@@ -34,22 +33,12 @@ const parsePath = require("parse-path");
 
 const extToImagePath = require("../modules/extToImagePath.js");
 const saveFileToJsonFolder = require("../modules/saveFileToJsonFolder.js");
-const applyBgColor = require("../modules/applyBgColor.js");
-const loadBgColor = require("../modules/loadBgColor.js");
-const applyBorderRadius = require("../modules/applyBorderRadius.js");
-const loadBorderRadius = require("../modules/loadBorderRadius.js");
+const applyTheme = require("../modules/applyTheme.js");
+const loadTheme = require("../modules/loadTheme.js");
 const applyWinControls = require("../modules/applyWinControls.js");
-
-// const bookmarkDrag = dragula([document.getElementById('bookmarks-bar')], {
-//   moves: function(el, container, handle) {
-//     return !el.classList.contains('folder');
-//   },
-//   direction: "horizontal"
-// });
-
-// bookmarkDrag.on('drop', function(el, target, source, sibling) {
-//   saveBookmarksBar();
-// });
+const bytesToSize = require("../modules/bytesToSize.js");
+const loadWinControls = require("../modules/loadWinControls.js");
+const rgbToRgbaString = require("../modules/rgbToRgbaString.js");
 
 /*
 .########....###....########...######.
@@ -67,11 +56,10 @@ let tabGroup = new TabGroup({
     active: true,
     visible: true,
     webviewAttributes: {
-      preload: "../js/webview.js",
       enableBlinkFeatures: false
     }
   },
-  newTabButtonText: `<img title='New tab' name='create16' class='theme-icon' ondrop='newTabDrop(event)' ondragover='prevDef(event)'/>`,
+  newTabButtonText: `<img title='New tab' name='create-12' class='theme-icon' ondrop='newTabDrop(event)' ondragover='prevDef(event)'/>`,
   closeButtonText: "&nbsp;"
 });
 dragula([tabGroup.tabContainer], {
@@ -81,6 +69,16 @@ dragula([tabGroup.tabContainer], {
 tabGroup.on("tab-added", (tab, tabGroup) => {
   let webview = tab.webview;
   let previewTimeout = null;
+
+  webview.getWebContents().on('context-menu', (event, params) => {
+    let Data = {
+      id: tab.id,
+      params: params
+    }
+
+    ipcRenderer.send('request-webview-contextmenu', Data);
+  });
+
 
   tab.tab.addEventListener('contextmenu', (e) => {
     e.preventDefault();
@@ -96,13 +94,13 @@ tabGroup.on("tab-added", (tab, tabGroup) => {
     e.preventDefault();
   });
 
-  tab.tab.addEventListener('mouseenter', (e) => {
-    previewTimeout = showTabPreview(tab.tab, previewTimeout, webview.getWebContents().capturePage());
-  });
+  // tab.tab.addEventListener('mouseenter', (e) => {
+  //   previewTimeout = showTabPreview(tab.tab, previewTimeout, webview.getWebContents().capturePage());
+  // });
 
-  tab.tab.addEventListener('mouseleave', (e) => {
-    hideTabPreview(tab.tab, previewTimeout);
-  });
+  // tab.tab.addEventListener('mouseleave', (e) => {
+  //   hideTabPreview(tab.tab, previewTimeout);
+  // });
 
   tab.tab.addEventListener('drop', (e) => {
     e.preventDefault();
@@ -115,8 +113,8 @@ tabGroup.on("tab-added", (tab, tabGroup) => {
   });
 
   document.getElementById('search-input').value = "";
-  document.getElementById('back-btn').classList.add('disable');
-  document.getElementById('forward-btn').classList.add('disable');
+  document.getElementById('back-btn').disabled = true;
+  document.getElementById('forward-btn').disabled = true;
   applyFindPanel();
 
   tab.on("active", (tab) => {
@@ -124,14 +122,14 @@ tabGroup.on("tab-added", (tab, tabGroup) => {
     applyFindPanel();
     
     if (webview.canGoBack()) {
-      document.getElementById('back-btn').classList.remove('disable');
+      document.getElementById('back-btn').disabled = false;
     } else {
-      document.getElementById('back-btn').classList.add('disable');
+      document.getElementById('back-btn').disabled = true;
     }
     if (webview.canGoForward()) {
-      document.getElementById('forward-btn').classList.remove('disable');
+      document.getElementById('forward-btn').disabled = false;
     } else {
-      document.getElementById('forward-btn').classList.add('disable');
+      document.getElementById('forward-btn').disabled = true;
     }
     if (webview.isLoading()) {
       document.getElementById('stop-btn').style.display = "";
@@ -162,8 +160,9 @@ tabGroup.on("tab-added", (tab, tabGroup) => {
     var img = tab.tab.getElementsByTagName('img')[0];
     var color = new getAvColor(img);
     color.mostUsed(result => {
-      // tab.tab.style.backgroundImage = "linear-gradient(" + result[0] + ", var(--color-back), var(--color-back))"; 
-      tab.tab.style.borderTop = "4px solid " + result[0];
+      if(document.body.classList.contains('color-tabs')) {
+        tab.tab.style.backgroundColor = rgbToRgbaString(result[0]);
+      }
     });
   });
 
@@ -199,8 +198,9 @@ tabGroup.on("tab-added", (tab, tabGroup) => {
       var img = tab.tab.getElementsByTagName('img')[0];
       var color = new getAvColor(img);
       color.mostUsed(result => {
-        // tab.tab.style.backgroundImage = "linear-gradient(" + result[0] + ", var(--color-back), var(--color-back))"; 
-        tab.tab.style.borderTop = "4px solid " + result[0];
+        if(document.body.classList.contains('color-tabs')) {
+          tab.tab.style.backgroundColor = rgbToRgbaString(result[0]);
+        }
       });
     }
   });
@@ -210,14 +210,14 @@ tabGroup.on("tab-added", (tab, tabGroup) => {
     tab.setIcon("../imgs/gifs/page-loading.gif");
 
     if (webview.canGoBack()) {
-      document.getElementById('back-btn').classList.remove('disable');
+      document.getElementById('back-btn').disabled = false;
     } else {
-      document.getElementById('back-btn').classList.add('disable');
+      document.getElementById('back-btn').disabled = true;
     }
     if (webview.canGoForward()) {
-      document.getElementById('forward-btn').classList.remove('disable');
+      document.getElementById('forward-btn').disabled = false;
     } else {
-      document.getElementById('forward-btn').classList.add('disable');
+      document.getElementById('forward-btn').disabled = true;
     }
     
     ipcRenderer.send('request-add-history-item', e.url);
@@ -227,14 +227,14 @@ tabGroup.on("tab-added", (tab, tabGroup) => {
     if (e.isMainFrame) {
       document.getElementById('search-input').value = e.url;
       if (webview.canGoBack()) {
-        document.getElementById('back-btn').classList.remove('disable');
+        document.getElementById('back-btn').disabled = false;
       } else {
-        document.getElementById('back-btn').classList.add('disable');
+        document.getElementById('back-btn').disabled = true;
       }
       if (webview.canGoForward()) {
-        document.getElementById('forward-btn').classList.remove('disable');
+        document.getElementById('forward-btn').disabled = false;
       } else {
-        document.getElementById('forward-btn').classList.add('disable');
+        document.getElementById('forward-btn').disabled = true;
       }
     }
   });
@@ -254,14 +254,14 @@ tabGroup.on("tab-added", (tab, tabGroup) => {
 
   webview.addEventListener('did-fail-load', (e) => {
     if (webview.canGoBack()) {
-      document.getElementById('back-btn').classList.remove('disable');
+      document.getElementById('back-btn').disabled = false;
     } else {
-      document.getElementById('back-btn').classList.add('disable');
+      document.getElementById('back-btn').disabled = true;
     }
     if (webview.canGoForward()) {
-      document.getElementById('forward-btn').classList.remove('disable');
+      document.getElementById('forward-btn').disabled = false;
     } else {
-      document.getElementById('forward-btn').classList.add('disable');
+      document.getElementById('forward-btn').disabled = true;
     }
 
     notif("Connection failed: " + e.errorDescription + " (" + e.errorCode + ")", "error");
@@ -272,17 +272,17 @@ tabGroup.on("tab-added", (tab, tabGroup) => {
 
 tabGroup.on("tab-removed", (tab, tabGroup) => {
   if (tabGroup.getTabs().length <= 0) {
-    var lastTab = "new-tab";
-  
     try {
-      lastTab = fs.readFileSync(ppath + "/json/lasttab.json");
+      fs.readFile(ppath + "/json/lasttab.json", function(err, data) {
+        if(data == "new-tab") {
+          tabGroup.addTab();
+        } else if(data == "quit") {
+          closeWindow();
+        }
+      });
     } catch (e) {
-      saveFileToJsonFolder("lasttab", lastTab);
-    }
-    if(lastTab == "new-tab") {
+      saveFileToJsonFolder("lasttab", "new-tab");
       tabGroup.addTab();
-    } else if(lastTab == "quit") {
-      closeWindow();
     }
   }
 });
@@ -311,7 +311,6 @@ function newTab(url, title, active) {
     active: active,
     visible: true,
     webviewAttributes: {
-      preload: "../js/webview.js",
       enableBlinkFeatures: false
     }
   });
@@ -487,6 +486,12 @@ function newTabDrop(e) {
   }
 }
 
+function updateTheme() {
+  loadTheme().then(function(theme) {
+    applyTheme(theme);
+  });
+}
+
 function prevDef(event) {
   event.preventDefault();
 }
@@ -540,16 +545,8 @@ function requestSideMenu() {
 }
 
 function pinSidebar() {
-  document.getElementById('pin-sidebar-btn').style.display = "none";
-  document.getElementById('unpin-sidebar-btn').style.display = "";
-  document.body.classList.add('pinned-sidebar');
-  saveSidebar();
-}
-
-function unpinSidebar() {
-  document.getElementById('pin-sidebar-btn').style.display = "";
-  document.getElementById('unpin-sidebar-btn').style.display = "none";
-  document.body.classList.remove('pinned-sidebar');
+  document.body.classList.toggle('pinned-sidebar');
+  document.getElementById('pin-sidebar-btn').classList.toggle('active');
   saveSidebar();
 }
 
@@ -740,16 +737,15 @@ function getSuggestions() {
   suggest.style.display = "";
   suggest.classList.remove("hide");
 
-  container.innerHTML = "<input class='active' type='button' value='" + input.value + "' onclick='navigateSuggest(this.value)' />";
+  container.innerHTML = "<input tabIndex='-1' class='active' type='button' value='" + input.value + "' onclick='navigateSuggest(this.value)' />";
 
   if (input.value.length > 0) {
     autoSuggest(input.value, function (err, suggestions) {
-      if (err) throw err;
       if (suggestions != null && suggestions.length > 0) {
         if (container.childNodes.length < 5) {
           for (var i = 0; i < 5; i++) {
             if (suggestions[i] != null) {
-              var button = "<input type='button' value='" + suggestions[i] + "' onclick='navigateSuggest(this.value)' />";
+              var button = "<input tabIndex='-1' type='button' value='" + suggestions[i] + "' onclick='navigateSuggest(this.value)' />";
               container.innerHTML += button;
             }
           }
@@ -800,7 +796,7 @@ function notif(text, type) {
 
   notifPanel.insertBefore(div, notifPanel.firstChild);
 
-  applyBgColor();
+  updateTheme();
 
   if (notifPanel.childNodes.length > 5) {
     for(var i = notifPanel.childNodes.length; i > 5; i--) {
@@ -839,7 +835,7 @@ function quest(text, ops) {
 
   document.getElementById('notif-panel').appendChild(div);
 
-  applyBgColor();
+  updateTheme();
 
   if (notifPanel.childNodes.length > 5) {
     for(var i = notifPanel.childNodes.length; i > 5; i--) {
@@ -848,20 +844,35 @@ function quest(text, ops) {
   }
 }
 
-function updateLoader(percent, id) {
+function updateLoader(percent, id, speed, transferred, total) {
   var div = document.getElementById(id);
   if(typeof(div) != "undefined") {
     var bar = div.childNodes[1].getElementsByClassName('notif-bar')[0];
-    var line = bar.getElementsByTagName('div')[0];
-    var label = bar.getElementsByTagName('label')[0];
 
+    bar.innerHTML = "<div></div>"
+
+    var line = bar.getElementsByTagName('div')[0];
     line.style.width = (percent / 100 * bar.clientWidth) + "px";
 
-    label.innerHTML = percent + "%";
+    if(transferred != null && total != null) {
+      bar.innerHTML += "<label>" + percent + "% (" + bytesToSize(transferred) + "/" + bytesToSize(total) + ")</label>";
+    } else {
+      bar.innerHTML += "<label>" + percent + "%</label>";
+    } 
+
+    if(speed != null) {
+      bar.innerHTML += "<label>Speed: " + bytesToSize(speed) + "/s</label>";
+    }
   }
 }
 
-function loader(text, id) {
+function cancelUpdate() {
+  ipcRenderer.send('request-cancel-update');
+  removeNotif(document.getElementById('update-0'));
+  notif('Update cancelled', 'error');
+}
+
+function loader(text, id, stopBtn) {
   var notifPanel = document.getElementById('notif-panel');
 
   var div = document.createElement('div');
@@ -872,12 +883,22 @@ function loader(text, id) {
 
   var bar = document.createElement('div');
   bar.classList.add('notif-bar');
-  bar.innerHTML = "<div style='width: 0px;'></div><label>Loading...</label>";
+  bar.innerHTML = "<div style='width: 0px;'></div>";
   div.childNodes[1].appendChild(bar);
+
+  if(stopBtn != null) {
+    var btn = document.createElement('div');
+    btn.classList.add('nav-btn');
+    btn.innerHTML = "<img name='" + stopBtn.icon + "' class='theme-icon'><label>" + stopBtn.text + "</label>";
+    btn.onclick = function () {
+      eval(stopBtn.click);
+    };
+    div.getElementsByClassName('notif-body')[0].appendChild(btn);
+  }
 
   notifPanel.appendChild(div);
 
-  applyBgColor();
+  updateTheme();
 
   if (notifPanel.childNodes.length > 5) {
     for(var i = notifPanel.childNodes.length; i > 5; i--) {
@@ -915,9 +936,11 @@ function hideSidebar() {
   document.getElementById('sidebar').classList.add('hide');
   setTimeout(function() {
     document.getElementById('sidebar').style.display = "none";
-    unpinSidebar();
     document.getElementById("sidebar-btn").classList.remove('active');
   }, 250);
+  if(document.body.classList.contains('pinned-sidebar')) {
+    pinSidebar();
+  }
 }
 
 function checkForUpdates() {
@@ -1004,11 +1027,15 @@ function searchKeyUp(event) {
   if (document.getElementById("search-input").value.length > 0) {
     if (event.keyCode === 13) {
       var suggestions = document.getElementById('search-suggest-container').childNodes;
-      var i = 0;
-      while (i < suggestions.length && !suggestions[i].classList.contains('active')) {
-        i++;
+      if(suggestions.length > 0) {
+        var i = 0;
+        while (i < suggestions.length && !suggestions[i].classList.contains('active')) {
+          i++;
+        }
+        navigateSuggest(suggestions[i].value);
+      } else {
+        navigateSuggest(document.getElementById('search-input').value);
       }
-      navigateSuggest(suggestions[i].value);
     }
     if (event.keyCode === 40) {
       var suggestions = document.getElementById('search-suggest-container').childNodes;
@@ -1091,7 +1118,7 @@ function zoomNotif(zoom) {
 
   notifPanel.insertBefore(div, notifPanel.firstChild);
 
-  applyBgColor();
+  updateTheme();
 
   if (notifPanel.childNodes.length > 5) {
     for(var i = notifPanel.childNodes.length; i > 5; i--) {
@@ -1169,19 +1196,21 @@ function updateBookmarksBar() {
   if(bbar.style.display != "none") {
     try {
       bbar.innerHTML = "";
-      var jsonstr = fs.readFileSync(ppath + "/json/folders.json");
-      var folders = JSON.parse(jsonstr);
-      for (var i = 0; i < folders.length; i++) {
-        addFolderToBookmarksBar(folders[i].name, i);
-      }
+      fs.readFile(ppath + "/json/folders.json", function(err, foldersData) {
+        var folders = JSON.parse(foldersData);
+        for (var i = 0; i < folders.length; i++) {
+          addFolderToBookmarksBar(folders[i].name, i);
+        }
 
-      jsonstr = fs.readFileSync(ppath + "/json/bookmarks.json");
-      var arr = JSON.parse(jsonstr);
-      for (var i = 0; i < arr.length; i++) {
-        checkIfHasFolder(arr[i].url, arr[i].name, arr[i].folder, folders, i);
-      }
+        fs.readFile(ppath + "/json/bookmarks.json", function(err, bookmarksData) {
+          var arr = JSON.parse(bookmarksData);
+          for (var i = 0; i < arr.length; i++) {
+            checkIfHasFolder(arr[i].url, arr[i].name, arr[i].folder, folders, i);
+          }
+        });
+      });
     } catch (e) {
-
+      console.log(e);
     }
   }
 }
@@ -1223,12 +1252,53 @@ function addFolderToBookmarksBar(name, index) {
   //   }
   // });
 
+  div.addEventListener('mouseenter', (e) => {
+    if(div.getElementsByClassName('edit-folder-div').length == 0) {
+      div.classList.add('show');
+    }
+  });
+
+  div.addEventListener('mouseleave', (e) => {
+    // var folderDiv = div.getElementsByClassName('folder-div')[0];
+    // var books = folderDiv.getElementsByClassName('bookmark');
+    // var flag = false;
+    // for(var i = 0; i < books.length; i++) {
+    //   if(books[i] == document.activeElement) {
+    //     flag = true;
+    //     break;
+    //   }
+    // }
+
+    if(div.getElementsByClassName('bookmark-div').length == 0) {
+      div.classList.remove('show');
+    }
+  });
+
   div.getElementsByTagName('span')[0].addEventListener('contextmenu', (e) => {
     ipcRenderer.send('request-folder-contextmenu', div.id);
   }, false);
 
   bbar.appendChild(div);
 }
+
+// function searchFocusOut() {
+//   var searchDiv = document.getElementById('search-div');
+
+//   var inputs = searchDiv.getElementsByTagName('input');
+
+//   var focus = false;
+//   for(var i = 0; i < inputs.length; i++) {
+//     console.log(inputs[i].id);
+//     console.log(document.activeElement.id);
+//     if(inputs[i].id == document.activeElement.id) {
+//       focus = true;
+//     }
+//   }
+
+//   if(!focus) {
+//     removeSuggestions();
+//   }
+// }
 
 function checkIfHasFolder(url, name, folder, folders, index) {
   var bool = false;
@@ -1408,13 +1478,6 @@ function bookmarkAllTabs() {
   });
 }
 
-// function saveFileToJsonFolder(fileName, data) {
-//   if(!fs.existsSync(ppath + "/json")) {
-//     fs.mkdirSync(ppath + "/json");
-//   } 
-//   fs.writeFileSync(ppath + "/json/" + fileName + ".json", data);
-// }
-
 function checkOpenWith() {
   ipcRenderer.send('request-check-open-with');
 }
@@ -1428,6 +1491,26 @@ function checkOpenWith() {
 ..##..##........##....##....##....##..##.......##...###.##.....##.##.......##....##..##.......##....##.
 .####.##.........######.....##.....##.########.##....##.########..########.##.....##.########.##.....##
 */
+
+ipcRenderer.on('action-set-color-tabs', (event, arg) => {
+  if(arg) {
+    document.body.classList.add('color-tabs');
+    tabGroup.eachTab((currentTab, index, tabs) => {
+      var img = currentTab.tab.getElementsByTagName('img')[0];
+      var color = new getAvColor(img);
+      color.mostUsed(result => {
+        if(document.body.classList.contains('color-tabs')) {
+          currentTab.tab.style.backgroundColor = rgbToRgbaString(result[0]);
+        }
+      });
+    });
+  } else {
+    document.body.classList.remove('color-tabs');
+    tabGroup.eachTab((currentTab, index, tabs) => {
+      currentTab.tab.style.backgroundColor = "";
+    });
+  }
+});
 
 ipcRenderer.on('action-switch-tab', (event, arg) => {
   if(arg <= tabGroup.getTabs().length) {
@@ -1451,9 +1534,9 @@ ipcRenderer.on('action-edit-folder', (event, arg) => {
     inputName.classList.add('folder-name');
     inputName.value = nameLabel.innerHTML;
 
-    var saveButton = document.createElement('img');
-    saveButton.classList.add('title-bar-btn', 'theme-icon');
-    saveButton.name = "save";
+    var saveButton = document.createElement('button');
+    saveButton.classList.add('nav-btn');
+    saveButton.innerHTML = "<img name='save-16' class='theme-icon'>"
     saveButton.title = "Save";
     saveButton.onclick = () => {
       div.title = inputName.value;
@@ -1465,9 +1548,9 @@ ipcRenderer.on('action-edit-folder', (event, arg) => {
       }, 250);
     }
 
-    var deleteButton = document.createElement('img');
-    deleteButton.classList.add('title-bar-btn', 'theme-icon');
-    deleteButton.name = "delete";
+    var deleteButton = document.createElement('button');
+    deleteButton.classList.add('nav-btn');
+    deleteButton.innerHTML = "<img name='delete-16' class='theme-icon'>"
     deleteButton.title = "Delete";
     deleteButton.onclick = () => {
       div.getElementsByClassName('edit-folder-div')[0].classList.add('hide');
@@ -1477,9 +1560,9 @@ ipcRenderer.on('action-edit-folder', (event, arg) => {
       }, 250);
     }
 
-    var cancelButton = document.createElement('img');
-    cancelButton.classList.add('title-bar-btn', 'theme-icon');
-    cancelButton.name = "cancel";
+    var cancelButton = document.createElement('button');
+    cancelButton.classList.add('nav-btn');
+    cancelButton.innerHTML = "<img name='cancel-16' class='theme-icon'>"
     cancelButton.title = "Cancel";
     cancelButton.onclick = () => {
       div.title = nameLabel.innerHTML;
@@ -1504,7 +1587,7 @@ ipcRenderer.on('action-edit-folder', (event, arg) => {
       div.getElementsByClassName('edit-folder-div')[0].style.right = 0;
     }
 
-    applyBgColor();
+    updateTheme();
   }
 });
 
@@ -1512,12 +1595,21 @@ ipcRenderer.on('action-edit-bookmark', (event, arg) => {
   var div = document.getElementById(arg.id);
 
   if(div.getElementsByClassName('bookmark-div')[0] == null) {
+    var folder = div.parentNode.parentNode;
+    if(!folder.classList.contains('folder')) {
+      folder = null;
+    }
+    if(folder != null) {
+      folder.classList.add('show');
+    }
+
     var nameLabel = div.getElementsByTagName('span')[0];
 
     div.onclick = function() { 
       return false;
     }
     div.title = "";
+    div.style.webkitUserDrag = 'none';
   
     var container = document.createElement('div');
     container.classList.add('bookmark-div');
@@ -1534,9 +1626,9 @@ ipcRenderer.on('action-edit-bookmark', (event, arg) => {
     inputUrl.classList.add('bookmark-url');
     inputUrl.value = arg.url;
 
-    var saveButton = document.createElement('img');
-    saveButton.classList.add('title-bar-btn', 'theme-icon');
-    saveButton.name = "save";
+    var saveButton = document.createElement('button');
+    saveButton.classList.add('nav-btn');
+    saveButton.innerHTML = "<img name='save-16' class='theme-icon'>"
     saveButton.title = "Save";
     saveButton.onclick = () => {
       div.title = inputName.value + "\n" + inputUrl.value;
@@ -1548,25 +1640,33 @@ ipcRenderer.on('action-edit-bookmark', (event, arg) => {
           tabGroup.getActiveTab().webview.loadURL(inputUrl.value);
         }
         div.removeChild(div.getElementsByClassName('bookmark-div')[0]);
+        div.style.webkitUserDrag = 'element';
         saveBookmarksBar();
       }, 250);
+      if(folder != null) {
+        folder.classList.remove('show');
+      }
     }
 
-    var deleteButton = document.createElement('img');
-    deleteButton.classList.add('title-bar-btn', 'theme-icon');
-    deleteButton.name = "delete";
+    var deleteButton = document.createElement('button');
+    deleteButton.classList.add('nav-btn');
+    deleteButton.innerHTML = "<img name='delete-16' class='theme-icon'>"
     deleteButton.title = "Delete";
     deleteButton.onclick = () => {
       div.getElementsByClassName('bookmark-div')[0].classList.add('hide');
       setTimeout(() => {
         div.parentNode.removeChild(div);
+        div.style.webkitUserDrag = 'element';
         saveBookmarksBar();
       }, 250);
+      if(folder != null) {
+        folder.classList.remove('show');
+      }
     }
 
-    var cancelButton = document.createElement('img');
-    cancelButton.classList.add('title-bar-btn', 'theme-icon');
-    cancelButton.name = "cancel";
+    var cancelButton = document.createElement('button');
+    cancelButton.classList.add('nav-btn');
+    cancelButton.innerHTML = "<img name='cancel-16' class='theme-icon'>"
     cancelButton.title = "Cancel";
     cancelButton.onclick = () => {
       div.title = nameLabel.innerHTML + "\n" + arg.url;
@@ -1575,8 +1675,12 @@ ipcRenderer.on('action-edit-bookmark', (event, arg) => {
         div.onclick = () => {
           tabGroup.getActiveTab().webview.loadURL(arg.url);
         }
+        div.style.webkitUserDrag = 'element';
         div.removeChild(div.getElementsByClassName('bookmark-div')[0]);
       }, 250);
+      if(folder != null) {
+        folder.classList.remove('show');
+      }
     }
   
     container.appendChild(inputName);
@@ -1595,7 +1699,7 @@ ipcRenderer.on('action-edit-bookmark', (event, arg) => {
       div.getElementsByClassName('bookmark-div')[0].style.right = 0;
     }
 
-    applyBgColor();
+    updateTheme();
   }
 });
 
@@ -1620,9 +1724,9 @@ ipcRenderer.on('action-set-bookmarks-bar', (event, arg) => {
   applyBookmarksBar(arg);
 });
 
-ipcRenderer.on('action-copy-text', (event, arg) => {
-  copyText(arg);
-});
+// ipcRenderer.on('action-copy-text', (event, arg) => {
+//   copyText(arg);
+// });
 
 ipcRenderer.on('action-update-home-page', (event, arg) => {
   loadHome();
@@ -1758,6 +1862,11 @@ ipcRenderer.on('action-edit-paste', (event, arg) => {
   tabGroup.getActiveTab().webview.focus();
 });
 
+ipcRenderer.on('action-edit-pastematchstyle', (event, arg) => {
+  tabGroup.getActiveTab().webview.pasteAndMatchStyle();
+  tabGroup.getActiveTab().webview.focus();
+});
+
 ipcRenderer.on('action-edit-undo', (event, arg) => {
   tabGroup.getActiveTab().webview.undo();
   tabGroup.getActiveTab().webview.focus();
@@ -1875,6 +1984,10 @@ ipcRenderer.on('action-tabcontext-closetab', (event, arg) => {
   tabGroup.getTab(arg).close();
 });
 
+ipcRenderer.on('action-navigate-suggest', (event, arg) => {
+  navigateSuggest(arg);
+});
+
 ipcRenderer.on('action-notif', (event, arg) => {
   notif(arg.text, arg.type);
 });
@@ -1884,23 +1997,19 @@ ipcRenderer.on('action-quest', (event, arg) => {
 });
 
 ipcRenderer.on('action-loader', (event, arg) => {
-  loader(arg.text, arg.id);
+  loader(arg.text, arg.id, arg.stopBtn);
 });
 
 ipcRenderer.on('action-update-loader', (event, arg) => {
-  updateLoader(arg.percent, arg.id);
+  updateLoader(Math.round(arg.percent), arg.id, arg.speed, arg.transferred, arg.total);
 });
 
 ipcRenderer.on('action-change-theme', (event, arg) => {
-  applyBgColor(arg);
+  applyTheme(arg);
 });
 
 ipcRenderer.on('action-toggle-sidebar', (event, arg) => {
   toggleSidebar();
-});
-
-ipcRenderer.on('action-change-border-radius', (event, arg) => {
-  applyBorderRadius(arg);
 });
 
 ipcRenderer.on('action-toggle-fullscreen', (event, arg) => {
@@ -1998,7 +2107,37 @@ ipcRenderer.on('action-set-download-status-interrupted', (event, arg) => {
 
 ipcRenderer.on('action-set-download-process', (event, arg) => {
   document.getElementById('sidebar-webview').send('action-set-download-process', arg);
-  updateLoader(Math.round(arg.bytes / arg.total * 100), "download-" + arg.index)
+  updateLoader(Math.round(arg.bytes / arg.total * 100), "download-" + arg.index, null, arg.bytes, arg.total);
+});
+
+/*
+.####.########...######................##......##.##.....##.....######...#######..##....##.########.########.##.....##.########
+..##..##.....##.##....##...............##..##..##.##.....##....##....##.##.....##.###...##....##....##........##...##.....##...
+..##..##.....##.##.....................##..##..##.##.....##....##.......##.....##.####..##....##....##.........##.##......##...
+..##..########..##..........#######....##..##..##.##.....##....##.......##.....##.##.##.##....##....######......###.......##...
+..##..##........##.....................##..##..##..##...##.....##.......##.....##.##..####....##....##.........##.##......##...
+..##..##........##....##...............##..##..##...##.##......##....##.##.....##.##...###....##....##........##...##.....##...
+.####.##.........######.................###..###.....###........######...#######..##....##....##....########.##.....##....##...
+*/
+
+ipcRenderer.on('action-webview-contextmenu', (event, arg) => {
+  if(arg.action == 'cut') {
+    tabGroup.getTab(arg.id).webview.cut();
+  } else if(arg.action == 'copy') {
+    tabGroup.getTab(arg.id).webview.copy();
+  } else if(arg.action == 'paste') {
+    tabGroup.getTab(arg.id).webview.paste();
+  } else if(arg.action == 'paste-match-style') {
+    tabGroup.getTab(arg.id).webview.pasteAndMatchStyle();
+  } else if(arg.action == 'undo') {
+    tabGroup.getTab(arg.id).webview.undo();
+  } else if(arg.action == 'redo') {
+    tabGroup.getTab(arg.id).webview.redo();
+  } else if(arg.action == 'select-all') {
+    tabGroup.getTab(arg.id).webview.selectAll();
+  } else if(arg.action == 'delete') {
+    tabGroup.getTab(arg.id).webview.delete();
+  } 
 });
 
 /*
@@ -2012,9 +2151,21 @@ ipcRenderer.on('action-set-download-process', (event, arg) => {
 */
 
 function init() {
-  applyWinControls();
-  applyBgColor(loadBgColor());
-  applyBorderRadius(loadBorderRadius());
+  var winControls = loadWinControls();
+  if(winControls.frame) {
+    document.body.classList.add('system-titlebar');
+
+    if(!winControls.hideMenu) {
+      document.body.classList.add('show-menubar');
+    }
+  } else {
+    applyWinControls();
+  }
+  if(winControls.color) {
+    document.body.classList.add('color-tabs');
+  }
+
+  updateTheme();
   
   var startPage = loadStartPage();
   applyStartPage(startPage);

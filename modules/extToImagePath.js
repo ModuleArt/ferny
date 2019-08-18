@@ -19,17 +19,14 @@ function extToImagePath(ext) {
     if(ext == "mp3") {
         res = '../imgs/icons16/mp3.png';
     } else 
-    if(ext == "txt") {
-        res = '../imgs/icons16/txt.png';
+    if(ext == "txt" || ext == "yml" || ext == "yaml") {
+        res = '../imgs/icons16/document.png';
     } else 
     if(ext == "js") {
         res = '../imgs/icons16/js.png';
     } else 
     if(ext == "json") {
         res = '../imgs/icons16/json.png';
-    } else 
-    if(ext == "sql") {
-        res = '../imgs/icons16/sql.png';
     } else 
     if(ext == "css") {
         res = '../imgs/icons16/css.png';
@@ -53,7 +50,7 @@ function extToImagePath(ext) {
         res = '../imgs/icons16/ttf.png';
     } else 
     if(ext == "doc" || ext == "docx") {
-        res = '../imgs/icons16/doc.png';
+        res = '../imgs/icons16/word.png';
     } else 
     if(ext == "ogg") {
         res = '../imgs/icons16/ogg.png';
@@ -76,13 +73,13 @@ function extToImagePath(ext) {
     if(ext == "ppt" || ext == "pptx" || ext == "pps") {
         res = '../imgs/icons16/ppt.png';
     } else
-    if(ext == "bmp" || ext == "ico") {
+    if(ext == "bmp" || ext == "ico" || ext == "tga" || ext == "pdn") {
         res = '../imgs/icons16/image.png';
     } else
     if(ext == "iso" || ext == "vcd") {
         res = '../imgs/icons16/cd.png';
     } else
-    if(ext == "db" || ext == "dat") {
+    if(ext == "db" || ext == "dat" || ext == "sql") {
         res = '../imgs/icons16/database.png';
     } else
     if(ext == "dmg") {
@@ -141,6 +138,9 @@ function extToImagePath(ext) {
     } else
     if(ext == "flv") {
         res = '../imgs/icons16/flv.png';
+    } else
+    if(ext == "c") {
+        res = '../imgs/icons16/c.png';
     } else
     if(ext == "mov") {
         res = '../imgs/icons16/mov.png';

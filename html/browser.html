@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
   <head>	
+    <link rel="stylesheet" href="../css/modules/nav-btn.css">
+    <link rel="stylesheet" href="../css/modules/input.css">
     <link rel="stylesheet" href="../css/browser.css">
     <link rel="stylesheet" href="../node_modules/dragula/dist/dragula.css">
   </head>
@@ -10,87 +12,86 @@
     <div class="etabs-tabgroup" id="etabs-tabgroup">
       <div class="etabs-tabs" id="etabs-tabs" onmousewheel="etabsTabsWheel(event)"></div>
       <div class="etabs-buttons">
-        <img name="down16" class="theme-icon title-bar-btn" id="tabs-list-btn"  title="Tabs list" onclick="requestTabsList()">
+        <button title="Tabs list" id="tabs-list-btn" onclick="requestTabsList()"><img name="down-12" class="theme-icon"></button>
       </div>
       <div id="window-controls"></div>
     </div>
 
     <div id="titlebar">
-      <img name="back" id="back-btn" class="title-bar-btn theme-icon" title="Go back" onclick="goBack()">
-      <img name="forward" id="forward-btn" class="title-bar-btn theme-icon" title="Go forward" onclick="goForward()">
-      <img name="refresh" id="refresh-btn" class="title-bar-btn theme-icon" title="Reload this page" onclick="goReload()">
-      <img name="stop" id="stop-btn" class="title-bar-btn theme-icon" title="Stop loading this page" style="display: none" onclick="goStop()">
+      <button id="back-btn" class='nav-btn' title="Go back" onclick="goBack()"><img name="back-16" class="theme-icon"></button>
+      <button id="forward-btn" class='nav-btn' title="Go forward" onclick="goForward()"><img name="forward-16" class="theme-icon"></button>
+      <button id="refresh-btn" class='nav-btn' title="Reload this page" onclick="goReload()"><img name="reload-16" class="theme-icon"></button>
+      <button id="stop-btn" class='nav-btn' title="Stop loading this page" onclick="goStop()"><img name="cancel-16" class="theme-icon"></button>
       <div class="title-bar-vr"></div>
-      <img name="info" id="info-btn" class="title-bar-btn theme-icon" title="Website info" onclick="popupInfoContextMenu()">
+      <button id="info-btn" class='nav-btn' title="Website info" onclick="popupInfoContextMenu()" oncontextmenu="popupInfoContextMenu()"><img name="info-16" class="theme-icon"></button>
       <div id="search-div">
         <input type="text" placeholder="Search or type a URL" id="search-input" oninput="getSuggestions()" onfocusout="removeSuggestions()" onkeyup="searchKeyUp(event)" onfocus="focusSearch()">
         <div id="search-suggest" style="display: none;" class="hide">
           <div id="search-suggest-container" onmousewheel="searchSuggestWheel(event)"></div>
-          <hr>
           <div id="search-engines">
-            <img name="google" class="title-bar-btn search-engine" title="Search with Google" src="../imgs/engines/google.png" onclick="searchWith(null, this.name)">
-            <img name="bing" class="title-bar-btn search-engine" title="Search with Bing" src="../imgs/engines/bing.png" onclick="searchWith(null, this.name)">
-            <img name="duckduckgo" class="title-bar-btn search-engine" title="Search with DuckDuckGo" src="../imgs/engines/duckduckgo.png" onclick="searchWith(null, this.name)">
-            <img name="wikipedia" class="title-bar-btn search-engine" title="Search with Wikipedia" src="../imgs/engines/wikipedia.png" onclick="searchWith(null, this.name)">
-            <img name="yahoo" class="title-bar-btn search-engine" title="Search with Yahoo" src="../imgs/engines/yahoo.png" onclick="searchWith(null, this.name)">
-            <img name="yandex" class="title-bar-btn search-engine" title="Search with Yandex" src="../imgs/engines/yandex.png" onclick="searchWith(null, this.name)">
-            <img name="mailru" class="title-bar-btn search-engine" title="Search with Mail.ru" src="../imgs/engines/mailru.png" onclick="searchWith(null, this.name)">
-            <img name="baidu" class="title-bar-btn search-engine" title="Search with Baidu" src="../imgs/engines/baidu.png" onclick="searchWith(null, this.name)">
-            <img name="naver" class="title-bar-btn search-engine" title="Search with Naver" src="../imgs/engines/naver.png" onclick="searchWith(null, this.name)">
-            <img name="qwant" class="title-bar-btn search-engine" title="Search with Qwant" src="../imgs/engines/qwant.png" onclick="searchWith(null, this.name)">
-            <img name="youtube" class="title-bar-btn search-engine" title="Search with YouTube" src="../imgs/engines/youtube.png" onclick="searchWith(null, this.name)">
+            <button tabIndex='-1' name="google" class="nav-btn search-engine" title="Search with Google" onclick="searchWith(null, this.name)"><img src="../imgs/engines/google.png"></button>
+            <button tabIndex='-1' name="bing" class="nav-btn search-engine" title="Search with Bing" onclick="searchWith(null, this.name)"><img src="../imgs/engines/bing.png"></button>
+            <button tabIndex='-1' name="duckduckgo" class="nav-btn search-engine" title="Search with DuckDuckGo" onclick="searchWith(null, this.name)"><img src="../imgs/engines/duckduckgo.png"></button>
+            <button tabIndex='-1' name="wikipedia" class="nav-btn search-engine" title="Search with Wikipedia" onclick="searchWith(null, this.name)"><img src="../imgs/engines/wikipedia.png"></button>
+            <button tabIndex='-1' name="yahoo" class="nav-btn search-engine" title="Search with Yahoo" onclick="searchWith(null, this.name)"><img src="../imgs/engines/yahoo.png"></button>
+            <button tabIndex='-1' name="yandex" class="nav-btn search-engine" title="Search with Yandex" onclick="searchWith(null, this.name)"><img src="../imgs/engines/yandex.png"></button>
+            <button tabIndex='-1' name="mailru" class="nav-btn search-engine" title="Search with Mail.ru" onclick="searchWith(null, this.name)"><img src="../imgs/engines/mailru.png"></button>
+            <button tabIndex='-1' name="baidu" class="nav-btn search-engine" title="Search with Baidu" onclick="searchWith(null, this.name)"><img src="../imgs/engines/baidu.png"></button>
+            <button tabIndex='-1' name="naver" class="nav-btn search-engine" title="Search with Naver" onclick="searchWith(null, this.name)"><img src="../imgs/engines/naver.png"></button>
+            <button tabIndex='-1' name="qwant" class="nav-btn search-engine" title="Search with Qwant" onclick="searchWith(null, this.name)"><img src="../imgs/engines/qwant.png"></button>
+            <button tabIndex='-1' name="youtube" class="nav-btn search-engine" title="Search with YouTube" onclick="searchWith(null, this.name)"><img src="../imgs/engines/youtube.png"></button>
           </div>
         </div>
       </div>
-      <img name="bookmark" class="title-bar-btn theme-icon" title="Bookmark this page" onclick="createBookmark()">
+      <button id="bookmark-btn" class='nav-btn' title="Bookmark this page" onclick="createBookmark()"><img name="add-bookmark-16" class="theme-icon"></button>
       <div class="title-bar-vr"></div>
-      <img name="home" id="home-btn" class="title-bar-btn theme-icon" title="Go home" onclick="goHome()" style="display: none;" oncontextmenu="popupHomeButtonContextMenu()">
-      <img name="bookmarks-book" id="sidebar-btn" class="title-bar-btn theme-icon" title="Toggle sidebar" onclick="toggleSidebar()">
-      <img name="menu" id="menu-btn" class="title-bar-btn theme-icon" title="Menu" onclick="requestSideMenu()">
+      <button id="home-btn" class='nav-btn' title="Go home" onclick="goHome()" style="display: none;" oncontextmenu="popupHomeButtonContextMenu()"><img name="home-16" class="theme-icon"></button>
+      <button id="sidebar-btn" class='nav-btn' title="Toggle sidebar" onclick="toggleSidebar()"><img name="sidebar-16" class="theme-icon"></button>
+      <button id="menu-btn" class='nav-btn' title="Menu" onclick="requestSideMenu()"><img name="menu-16" class="theme-icon"></button>
     </div>
 
     <div id="bookmarks-bar" style="display: none;" ondrop='bookmarksBarDrop(event)' ondragover='prevDef(event)'></div>
 
     <main>
+      <img src="../imgs/watermark.png" id="watermark">
       <div class="etabs-views" id="etabs-views"></div>
       <div id="picture-in-panel" style="display: none;">
         <div>
           <!-- <img name="back" class="title-bar-btn theme-icon" title="Go back" onclick="goBackPictureIn()">
           <img name="forward" class="title-bar-btn theme-icon" title="Go forward" onclick="goForwardPictureIn()">
           <img name="refresh" class="title-bar-btn theme-icon" title="Reload page" onclick="refreshPictureIn()"> -->
-          <img name="cancel" class="title-bar-btn theme-icon" title="Close" onclick="cancelPictureIn()" id="cancel-picture-in-btn">
+          <img name="cancel-16" class="title-bar-btn theme-icon" title="Close" onclick="cancelPictureIn()" id="cancel-picture-in-btn">
         </div>
         <webview id="picture-in-webview" src="https://duckduckgo.com"></webview>
       </div>
       <label id="target-url"></label>
       <div id="sidebar" style="display: none;" class="hide">
         <div id="sidebar-div">
-          <img name='forward' class='title-bar-btn theme-icon' title="Hide sidebar" onclick="hideSidebar()">
+          <button class="nav-btn" title="Hide sidebar" onclick="hideSidebar()"><img name='forward-16' class='theme-icon'></button>
           <hr>
-          <div id="bookmarks-btn" class="nav-btn active" onclick="goToBookmarksTab()">
-            <img class="theme-icon" name="bookmarks">
+          <button id="bookmarks-btn" class="nav-btn tab-btn active" onclick="goToBookmarksTab()" title="Bookmarks">
+            <img class="theme-icon" name="bookmarks-16">
             <label>Bookmarks</label>
-          </div>
-          <div id="history-btn" class="nav-btn" onclick="goToHistoryTab()">
-            <img class="theme-icon" name="history">
+          </button>
+          <button id="history-btn" class="nav-btn tab-btn" onclick="goToHistoryTab()" title="History">
+            <img class="theme-icon" name="history-16">
             <label>History</label>
-          </div>
-          <div id="downloads-btn" class="nav-btn" onclick="goToDownloadsTab()">
-            <img class="theme-icon" name="download">
+          </button>
+          <button id="downloads-btn" class="nav-btn tab-btn" onclick="goToDownloadsTab()" title="Downloads">
+            <img class="theme-icon" name="download-16">
             <label>Downloads</label>
-          </div>
+          </button>
           <hr>
-          <div id="settings-btn" class="nav-btn" onclick="goToSettingsTab()">
-            <img class="theme-icon" name="settings">
+          <button id="settings-btn" class="nav-btn tab-btn" onclick="goToSettingsTab()" title="Settings">
+            <img class="theme-icon" name="settings-16">
             <label>Settings</label>
-          </div>
-          <div id="about-btn" class="nav-btn" onclick="goToAboutTab()">
-            <img class="theme-icon" name="about">
+          </button>
+          <button id="about-btn" class="nav-btn tab-btn" onclick="goToAboutTab()" title="About">
+            <img class="theme-icon" name="about-16">
             <label>About</label>
-          </div>
-          <img id="pin-sidebar-btn" name='pin' class='title-bar-btn theme-icon' title="Pin sidebar" onclick="pinSidebar()">
-          <img id="unpin-sidebar-btn" name='unpin' class='title-bar-btn theme-icon' title="Unpin sidebar" onclick="unpinSidebar()" style="display: none;">
-          <img id="resize-sidebar-btn" name='resize-h' class='title-bar-btn theme-icon' title="Collapse sidebar" onclick="collapseSidebar()">
+          </button>
+          <button id="pin-sidebar-btn" class='nav-btn' title="Toggle pin sidebar" onclick="pinSidebar()"><img name='pin-16' class='theme-icon'></button>
+          <button id="resize-sidebar-btn" class='nav-btn' title="Toggle collapse sidebar" onclick="collapseSidebar()"><img name='resize-horizontal-16' class='theme-icon'></button>
         </div>
         <webview id="sidebar-webview" nodeintegration src="../html/bookmarks.html"></webview>
       </div>
@@ -98,16 +99,19 @@
     </main>
 
     <center id="find-panel" style="display: none;" class="hide">
+      <img name="search-16" class="theme-icon find-panel-icon">
       <input type="text" id="find-input" placeholder="Text to find in page" onkeyup="nextFindInPage()">
-      <div class="nav-btn" onclick="previousFindInPage()">
-        <img class="theme-icon" name="up">
+      <button class="nav-btn" onclick="previousFindInPage()">
+        <img class="theme-icon" name="up-16">
         <label>Previous</label>
-      </div>
-      <div class="nav-btn" onclick="nextFindInPage()">
-        <img class="theme-icon" name="down">
+      </button>
+      <button class="nav-btn" onclick="nextFindInPage()">
+        <img class="theme-icon" name="down-16">
         <label>Next</label>
-      </div>
-      <img name='cancel' class='title-bar-btn theme-icon' title="Close find panel" onclick="closeFindPanel()">
+      </button>
+      <button class="nav-btn close-btn" onclick="closeFindPanel()" title="Close find panel">
+        <img class="theme-icon" name="cancel-16">
+      </button>
     </center>
 
     <script type="text/javascript" src="../js/browser.js"></script>

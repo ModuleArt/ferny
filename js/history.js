@@ -8,7 +8,7 @@
 .##.....##.##.....##.####.##....##
 */
 
-const { ipcRenderer } = require('electron');
+const { ipcRenderer, clipboard } = require('electron');
 const getTitleAtUrl = require('get-title-at-url');
 const readl = require('readl-async');
 const ppath = require('persist-path')('Ferny');
@@ -37,12 +37,11 @@ reader.on('line', function(line, index, start, end) {
 
 const saveFileToJsonFolder = require("../modules/saveFileToJsonFolder.js");
 const extToImagePath = require("../modules/extToImagePath.js");
-const applyBgColor = require("../modules/applyBgColor.js");
+const loadTheme = require("../modules/loadTheme.js");
 const epochToDate = require("../modules/epochToDate.js");
 const epochToTime = require("../modules/epochToTime.js");
-const applyBorderRadius = require("../modules/applyBorderRadius.js");
-const loadBgColor = require("../modules/loadBgColor.js");
-const loadBorderRadius = require("../modules/loadBorderRadius.js");
+const applyTheme = require("../modules/applyTheme.js");
+const rgbToRgbaString = require("../modules/rgbToRgbaString.js");
 
 /*
 .########.##.....##.##....##..######..########.####..#######..##....##..######.
@@ -53,6 +52,16 @@ const loadBorderRadius = require("../modules/loadBorderRadius.js");
 .##.......##.....##.##...###.##....##....##.....##..##.....##.##...###.##....##
 .##........#######..##....##..######.....##....####..#######..##....##..######.
 */
+
+function updateTheme() {
+  loadTheme().then(function(theme) {
+    applyTheme(theme);
+  });
+}
+
+function copyUrl(url) {
+  clipboard.writeText(url);
+}
 
 function loadHistory() {
   reader.read();
@@ -83,14 +92,18 @@ function createHistoryItem(index, url, time, begin) {
                     Url: <label class="history-url" title="` + url + `">` + url + `</label><br>
                     Date: <label class="history-date">` + epochToDate(time) + `</label> / <label>Time: </label><label class="history-time">` + epochToTime(time) + `</label><hr>
                     <center class="history-buttons">
-                      <div class="nav-btn" onclick="openUrl('` + url + `')" title="Open url">
-                        <img class="nav-btn-icon theme-icon" name="url">
+                      <button class="nav-btn" onclick="openUrl('` + url + `')" title="Open URL">
+                        <img class="nav-btn-icon theme-icon" name="link-16">
                         <label>Open</label>
-                      </div>
-                      <div class="nav-btn" onclick="openUrlInNewTab('` + url + `')" title="Open url in new tab">
-                        <img class="nav-btn-icon theme-icon" name="tab">
+                      </button>
+                      <button class="nav-btn" onclick="openUrlInNewTab('` + url + `')" title="Open URL in new tab">
+                        <img class="nav-btn-icon theme-icon" name="tab-16">
                         <label>New tab</label>
-                      </div>
+                      </button>
+                      <button class="nav-btn" onclick="copyUrl('` + url + `')" title="Copy URL">
+                        <img class="nav-btn-icon theme-icon" name="copy-16">
+                        <label>Copy</label>
+                      </button>
                       
                     </center>`;
 
@@ -114,7 +127,7 @@ function createHistoryItem(index, url, time, begin) {
 
     var color = new getAvColor(div.getElementsByTagName('img')[0]);
     color.mostUsed(result => {
-      div.style.borderLeft = "4px solid " + result[0];
+      div.style.backgroundColor = rgbToRgbaString(result[0]);
     });
 
     var container = document.getElementById('history');
@@ -125,7 +138,7 @@ function createHistoryItem(index, url, time, begin) {
       container.appendChild(div);
     }
 
-    applyBgColor();
+    updateTheme();
   });
 }
 
@@ -255,8 +268,7 @@ ipcRenderer.on('action-add-history-item', (event, arg) => {
 */
 
 function init() {
-  applyBgColor(loadBgColor());
-  applyBorderRadius(loadBorderRadius());
+  updateTheme();
   
   loadHistory();
 }

@@ -1,0 +1,13 @@
+{
+  "name": "Material",
+  "type": "Light",
+  "icons": "black",
+  "colorBack": "#FFFFFF",
+  "colorElement": "#F3F3F3",
+  "colorBorder": "#DCDCDC",
+  "colorSecond": "#DCDCDC",
+  "colorTop": "#000000",
+  "shadowFocus": "inset 0 0 4px rgba(0, 0, 0, 0.25)",
+  "opacityOver": "0.25",
+  "pxRadius": "12px"
+}

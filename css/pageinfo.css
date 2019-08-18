@@ -19,21 +19,19 @@
 }
 
 :root{
-    --color-back: rgb(255, 255, 255);
-    --color-over: rgba(0, 0, 0, 0.05);
-    --color-top: rgb(0, 0, 0);
-    --color-shadow: rgba(0, 0, 0, 0.5);
+    --color-back: transparent;
+    --color-over: transparent;
+    --color-top: transparent;
 
     --color-red: rgb(255, 63, 52);
     --color-green: rgb(11, 232, 129);
     --color-blue: rgb(15, 188, 249);
     --color-orange: rgb(255, 168, 1);
 
-    --px-radius: 4px;
+    --px-radius: 0;
     --px-font: 14px;
-    --px-shadow: 8px;
 
-    --opacity-blur: 0.5;
+    --opacity-over: 0;
 }
 
 * {
@@ -196,21 +194,18 @@
     grid-column: 3;
   }
   
-  #titlebar.blur #window-controls .button, #titlebar #window-controls .button:active, 
-  #titlebar.blur #window-controls .title-bar-btn, #titlebar #window-controls .title-bar-btn:active {
+  #titlebar #window-controls .title-bar-btn:hover, #titlebar #window-controls .button:hover {
+    background-color: #E81022;
+    color: white;
+    opacity: 1 !important;
+  }
+
+  #titlebar.blur #window-controls .button, #titlebar.blur #window-controls .title-bar-btn {
     opacity: 0.5;
   }
-  
-  #titlebar #window-controls .button:hover {
-    background-color: #E81022;
-    color: white;
-    opacity: 1;
-  }
-  
-  #titlebar #window-controls .title-bar-btn:hover {
-    background-color: #E81022;
-    color: white;
-    opacity: 1;
+
+  #titlebar #window-controls .button:active, #titlebar #window-controls .title-bar-btn:active {
+    opacity: 0.5 !important;
   }
 
 /*
@@ -265,14 +260,6 @@ body {
     overflow: hidden;
 }
 
-label.link {
-    color: var(--color-blue);
-}
-
-label.link:hover {
-    text-decoration: underline;
-}
-
 .container {
     position: absolute;
     top: 32px;
@@ -283,9 +270,18 @@ label.link:hover {
     overflow-y: scroll;
 }
 
+body.no-titlebar .container {
+    top: 0;
+}
+
 .container img {
     vertical-align: middle;
 }
+
+/* theme icon */
+.theme-icon {
+    opacity: 0;
+  }
 
 /*
 .########..##........#######...######..##....##

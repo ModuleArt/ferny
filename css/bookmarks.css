@@ -13,21 +13,24 @@
   src: url(../fonts/OpenSans-Semibold.ttf);
 }
 
-:root{
-  --color-back: rgb(0, 0, 0);
-  --color-over: rgba(0, 0, 0, 0.1);
-  --color-top: rgb(255, 255, 255);
-
-  --color-red: rgb(255, 63, 52);
+:root {
+  --color-red: rgb(12, 5, 5);
   --color-green: rgb(11, 232, 129);
   --color-blue: rgb(15, 188, 249);
   --color-orange: rgb(255, 168, 1);
 
-  --color-shadow: rgba(0, 0, 0, 0.5);
-
-  --px-radius: 4px;
+  --px-radius: 0;
   --px-font: 14px;
-  --px-shadow: 8px;
+
+  --opacity-over: 0;
+
+  --shadow-focus: inset 0 0 0 rgba(0, 0, 0, 0);
+
+  --color-back: transparent;
+  --color-element: transparent;
+  --color-border: transparent;
+  --color-second: transparent;
+  --color-top: transparent;
 }
 
 * {
@@ -42,29 +45,6 @@
 
   font-family: OpenSans;
   font-size: var(--px-font);
-}
-
-/*
-.##......##.########.########..##....##.####.########
-.##..##..##.##.......##.....##.##...##...##.....##...
-.##..##..##.##.......##.....##.##..##....##.....##...
-.##..##..##.######...########..#####.....##.....##...
-.##..##..##.##.......##.....##.##..##....##.....##...
-.##..##..##.##.......##.....##.##...##...##.....##...
-..###..###..########.########..##....##.####....##...
-*/
-
-::-webkit-scrollbar {
-  width: 14px;
-  background-color: var(--color-over);
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: var(--color-over);
-}
-
-::-webkit-input-placeholder {
-  color: var(--color-top);
 }
 
 /*
@@ -111,72 +91,19 @@
 
 body {
   margin: 0;
-  padding: 2px;
+  padding: 0;
   overflow-x: hidden;
+  padding-bottom: 48px;
+  /* background-color: var(--color-element); */
 }
 
 label {
   color: var(--color-top);
 }
 
-/*
-.########.####.########.##.......########
-....##.....##.....##....##.......##......
-....##.....##.....##....##.......##......
-....##.....##.....##....##.......######..
-....##.....##.....##....##.......##......
-....##.....##.....##....##.......##......
-....##....####....##....########.########
-*/
-
-label.subtitle {
-  font-size: 24px;
-  display: inline-block;
-  margin: 8px 16px;
-}
-
-.title-btn {
-  padding: 4px;
-  border-radius: var(--px-radius);
-  float: right;
-  margin: 8px;
-  margin-left: 4px;
-}
-
-.title-btn:hover, .title-btn.active {
-  background-color: var(--color-over);
-}
-
-.title-btn:active {
-  opacity: 0.5;
-}
-
-/*
-.####.##....##.########..##.....##.########
-..##..###...##.##.....##.##.....##....##...
-..##..####..##.##.....##.##.....##....##...
-..##..##.##.##.########..##.....##....##...
-..##..##..####.##........##.....##....##...
-..##..##...###.##........##.....##....##...
-.####.##....##.##.........#######.....##...
-*/
-
-input {
-  outline: none;
-  border: none;
-  color: var(--color-top);
-  font-size: var(--px-font);
-  height: 32px;
-  padding: 8px;
-  border-radius: var(--px-radius);
-  background-color: transparent;
-  text-align: center;
-  width: calc(100% - 4px);
-  margin: 2px;
-}
-
-input:hover, input:focus {
-  background-color: var(--color-over);
+/* theme icon */
+.theme-icon {
+  opacity: 0;
 }
 
 /*
@@ -193,26 +120,24 @@ input:hover, input:focus {
   display: inline-block;
   margin: 2px;
   text-decoration: none;
-  width: calc(50% - 4px);
+  width: calc(100% - 4px);
   vertical-align: top;
   text-align: left;
   position: relative;
   border-left: 4px solid transparent;
-  background-color: var(--color-over);
+  background-color: var(--color-element);
+  border: 1px solid var(--color-border);
+  border-radius: var(--px-radius);
+  outline: none;
+  padding: 0;
 }
 
-.bookmark::before {
-  position: absolute;
-  content: " ";
-  left: -4px;
-  top: 0;
-  bottom: 0;
-  width: 4px;
-  background-color: var(--color-over);
+.bookmark:focus {
+  box-shadow: var(--shadow-focus);
 }
 
-.bookmark label {
-  margin: 6px 0;
+.bookmark label:first {
+  margin: 10px 0;
   width: calc(100% - 44px);
   overflow: hidden;
   position: absolute;
@@ -233,31 +158,44 @@ input:hover, input:focus {
 }
 
 .bookmark-options {
-  transition: width 0.25s, height 0.25s;
+  border-radius: calc(var(--px-radius) - 2px);
   position: absolute;
   right: 0;
   top: 0;
-  width: 0;
-  height: 32px;
-  padding: 4px;
+  margin: 0;
+  border: none;
+  background: none;
+  display: none;
+  padding: 8px;
+  opacity: 0.5;
+  outline: none;
+  padding-bottom: 4px;
+  border-radius: calc(var(--px-radius) - 2px);
 }
 
 .bookmark-options:hover {
-  background-color: var(--color-over);
+  opacity: 1;
+}
+
+.bookmark-options:focus {
+  box-shadow: var(--shadow-focus);
 }
 
 .bookmark-options:active {
-  opacity: 0.5;
+  opacity: 0.25;
 }
 
 .bookmark:hover .bookmark-options {
-  width: 32px;
+  display: block;
+}
+
+.bookmark .bookmark-options:hover {
+  border-color: var(--color-border);
 }
 
 .bookmark-menu {
-  margin-left: -4px;
   padding: 2px;
-  border-top: 2px solid var(--color-over);
+  border-top: 1px solid var(--color-border);
   display: none;
   animation: anim-menu;
   animation-duration: 0.25s;
@@ -267,19 +205,17 @@ input:hover, input:focus {
   display: block;
 }
 
-.bookmark-menu-btn {
-  border-radius: var(--px-radius);
-  padding: 4px;
-  margin: 2px;
-  vertical-align: top;
-}
+/*
+  # #    # #####  #    # ##### 
+  # ##   # #    # #    #   #   
+  # # #  # #    # #    #   #   
+  # #  # # #####  #    #   #   
+  # #   ## #      #    #   #   
+  # #    # #       ####    #   
+*/
 
-.bookmark-menu-btn:hover {
-  background-color: var(--color-over);
-}
-
-.bookmark-menu-btn:active {
-  opacity: 0.5;
+input[type=text] {
+  width: calc(100% - 4px);
 }
 
 /*
@@ -297,17 +233,20 @@ input:hover, input:focus {
 }
 
 .folder {
-  margin-top: 32px;
+  margin-top: 48px;
+  background-color: var(--color-back);
+  border: 1px solid var(--color-border);
+  position: relative;
+  padding: 2px;
+  margin-left: -1px;
+  margin-right: -1px;
 }
 
 .folder .name {
   transition: width 0.25s;
-  margin: 2px;
   padding: 6px;
   display: inline-block;
   width: calc(100% - 4px);
-  background-color: var(--color-over);
-  border-radius: calc(var(--px-radius) + 4px) calc(var(--px-radius) + 4px) 0 0;
   text-align: center;
   height: 32px;
   vertical-align: middle;
@@ -321,104 +260,50 @@ input:hover, input:focus {
   width: calc(100% - 4px);
 }
 
-.folder .edit-btn {
-  display: inline-block;
-  padding: 4px 0;
-  border-radius: calc(var(--px-radius) + 4px) calc(var(--px-radius) + 4px) 0 0;
-  vertical-align: middle;
-  height: 32px;
-  width: 0;
-  transition: width 0.25s, padding 0.25s, margin 0.25s;
+.folder .edit-btn, .folder .add-bookmark-btn {
+  position: absolute;
+  right: -1px;
+  top: -1px;
+  background-color: transparent;
+  display: none;
+  border-radius: 0;
+  margin: 0;
+  animation: anim-show;
+  animation-duration: 0.25s;
 }
 
-.folder:hover .edit-btn {
-  width: 32px;
-  padding: 4px;
-  margin-left: 2px;
+.folder .add-bookmark-btn {
+  right: 30px;
+  border-radius: 0 0 0 var(--px-radius);
 }
 
-.edit-btn:hover {
-  background-color: var(--color-over);
+.folder:hover .edit-btn, .folder:hover .add-bookmark-btn {
+  border-width: 1px;
+  display: block;
 }
 
-.edit-btn:active {
-  opacity: 0.5 !important;
+.folder .edit-btn img, .folder .add-bookmark-btn img {
+  padding: 7px 0;
+  transition: padding 0.25s;
+  margin: -8px;
+}
+
+.folder:hover .edit-btn img, .folder:hover .add-bookmark-btn img {
+  padding: 7px;
+  margin: 0;
+}
+
+.folder .edit-btn:hover, .folder .add-bookmark-btn:hover {
+  background-color: var(--color-second);
 }
 
 .folder .bookmarks:empty::before {
   content: "\2205  Empty folder... Try to bookmark something...";
   color: var(--color-top);
-  background-color: var(--color-over);
   display: block;
-  padding: 8px;
-  margin: 2px;
-  border-radius: 0 0 calc(var(--px-radius) + 4px) calc(var(--px-radius) + 4px);
-  text-align: center;
-}
-
-/*
-.########..##........#######...######..##....##
-.##.....##.##.......##.....##.##....##.##...##.
-.##.....##.##.......##.....##.##.......##..##..
-.########..##.......##.....##.##.......#####...
-.##.....##.##.......##.....##.##.......##..##..
-.##.....##.##.......##.....##.##....##.##...##.
-.########..########..#######...######..##....##
-*/
-
-hr {
-  border: 1px solid var(--color-over);
-  margin: 4px 8px;
-}
-
-.container {
-  background-color: var(--color-over);
-  border-radius: calc(var(--px-radius) + 4px);
-  padding: 2px;
-  margin: 2px;
-  text-align: center;
-  animation: anim-show;
-  animation-duration: 0.25s;
-}
-
-.block-title {
-  margin-top: 32px;
-  text-align: center;
-}
-
-.block-title label {
-  vertical-align: super;
-}
-
-/*
-.##....##....###....##.....##....########..########.##....##
-.###...##...##.##...##.....##....##.....##....##....###...##
-.####..##..##...##..##.....##....##.....##....##....####..##
-.##.##.##.##.....##.##.....##....########.....##....##.##.##
-.##..####.#########..##...##.....##.....##....##....##..####
-.##...###.##.....##...##.##......##.....##....##....##...###
-.##....##.##.....##....###.......########.....##....##....##
-*/
-
-.nav-btn img {
-  margin-bottom: -7px;
-}
-
-.nav-btn {
-  height: 32px;
-  border-radius: var(--px-radius);
   padding: 4px;
-  padding-right: 8px;
   margin: 2px;
-  display: inline-block;
-}
-
-.nav-btn:hover {
-  background-color: var(--color-over);
-}
-
-.nav-btn:active {
-  opacity: 0.5;
+  text-align: center;
 }
 
 /*

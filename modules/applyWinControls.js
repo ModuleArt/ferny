@@ -40,10 +40,10 @@ function setLinux(type) {
 
     if(type == null) {
         windowControls.innerHTML = `
-            <img name="minimize16" id="min-btn" class="title-bar-btn theme-icon" title="Minimize" onclick="minimizeWindow()">
-            <img name="square16" id="max-btn" class="title-bar-btn theme-icon" title="Maximize" onclick="maximizeWindow()">
-            <img name="restore16" id="restore-btn" class="title-bar-btn theme-icon" title="Restore Down" onclick="restoreWindow()" style="display: none;">
-            <img name="close16" id="close-btn" class="title-bar-btn theme-icon" title="Close" onclick="closeWindow()">`;
+            <button class="nav-btn" title="Minimize" id="min-btn" onclick="minimizeWindow()"><img name="minimize-12" class="theme-icon"></button>
+            <button class="nav-btn" title="Maximize" id="max-btn" onclick="maximizeWindow()"><img name="square-12" class="theme-icon"></button>
+            <img name="restore-12" id="restore-btn" class="title-bar-btn theme-icon" title="Restore Down" onclick="restoreWindow()" style="display: none;">
+            <button class="nav-btn" title="Close" id="close-btn" onclick="closeWindow()"><img name="close-12" class="theme-icon"></button>`;
     } else if(type == "only-close") {
         windowControls.innerHTML = `
             <img name="close16" id="close-btn" class="title-bar-btn theme-icon" title="Close" onclick="closeWindow()">`;

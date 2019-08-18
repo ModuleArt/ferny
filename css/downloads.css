@@ -14,16 +14,16 @@
 }
 
 :root{
-  --color-back: rgb(0, 0, 0);
-  --color-over: rgba(0, 0, 0, 0.1);
-  --color-top: rgb(255, 255, 255);
+  --color-back: transparent;
+  --color-over: transparent;
+  --color-top: transparent;
 
   --color-red: rgb(255, 63, 52);
   --color-green: rgb(11, 232, 129);
   --color-blue: rgb(15, 188, 249);
   --color-orange: rgb(255, 168, 1);
 
-  --px-radius: 4px;
+  --px-radius: 0;
   --px-font: 14px;
 }
 
@@ -39,36 +39,6 @@
 
   font-family: OpenSans;
   font-size: var(--px-font);
-}
-
-/*
-.##......##.########.########..##....##.####.########
-.##..##..##.##.......##.....##.##...##...##.....##...
-.##..##..##.##.......##.....##.##..##....##.....##...
-.##..##..##.######...########..#####.....##.....##...
-.##..##..##.##.......##.....##.##..##....##.....##...
-.##..##..##.##.......##.....##.##...##...##.....##...
-..###..###..########.########..##....##.####....##...
-*/
-
-::-webkit-scrollbar {
-  width: 14px;
-  background-color: var(--color-over);
-}
-::-webkit-scrollbar-thumb {
-  background-color: var(--color-over);
-}
-::-webkit-scrollbar-button {
-  width: 0;
-  height: 0;
-  display: none;
-}
-::-webkit-scrollbar-corner {
-  background-color: transparent;
-}
-
-::-webkit-input-placeholder {
-  color: var(--color-top);
 }
 
 /*
@@ -104,137 +74,33 @@
 
 body {
   margin: 0;
-  padding: 2px;
+  padding: 0;
   /* animation-name: anim-slide;
   animation-duration: 0.25s; */
   overflow-x: hidden;
+  padding-bottom: 48px;
 }
 
 label {
   color: var(--color-top);
 }
 
-/*
-.########.####.########.##.......########
-....##.....##.....##....##.......##......
-....##.....##.....##....##.......##......
-....##.....##.....##....##.......######..
-....##.....##.....##....##.......##......
-....##.....##.....##....##.......##......
-....##....####....##....########.########
-*/
-
-label.subtitle {
-  font-size: 24px;
-  display: inline-block;
-  margin: 8px 16px;
-}
-
-.title-btn {
-  padding: 4px;
-  border-radius: var(--px-radius);
-  float: right;
-  margin: 8px;
-  margin-left: 4px;
-}
-
-.title-btn:hover, .title-btn.active {
-  background-color: var(--color-over);
-}
-
-.title-btn:active {
-  opacity: 0.5;
+/* theme icon */
+.theme-icon {
+  opacity: 0;
 }
 
 /*
-.########..##........#######...######..##....##....########.####.########.##.......########
-.##.....##.##.......##.....##.##....##.##...##........##.....##.....##....##.......##......
-.##.....##.##.......##.....##.##.......##..##.........##.....##.....##....##.......##......
-.########..##.......##.....##.##.......#####..........##.....##.....##....##.......######..
-.##.....##.##.......##.....##.##.......##..##.........##.....##.....##....##.......##......
-.##.....##.##.......##.....##.##....##.##...##........##.....##.....##....##.......##......
-.########..########..#######...######..##....##.......##....####....##....########.########
+  # #    # #####  #    # ##### 
+  # ##   # #    # #    #   #   
+  # # #  # #    # #    #   #   
+  # #  # # #####  #    #   #   
+  # #   ## #      #    #   #   
+  # #    # #       ####    #   
 */
 
-hr {
-  border: 1px solid var(--color-over);
-  margin: 4px 8px;
-}
-
-.container {
-  background-color: var(--color-over);
-  border-radius: calc(var(--px-radius) + 4px);
-  padding: 2px;
-  margin: 2px;
-  text-align: center;
-}
-
-.block-title {
-  margin-top: 32px;
-  text-align: center;
-}
-
-.block-title label {
-  vertical-align: super;
-}
-
-/*
-.####.##....##.########..##.....##.########
-..##..###...##.##.....##.##.....##....##...
-..##..####..##.##.....##.##.....##....##...
-..##..##.##.##.########..##.....##....##...
-..##..##..####.##........##.....##....##...
-..##..##...###.##........##.....##....##...
-.####.##....##.##.........#######.....##...
-*/
-
-input {
-  outline: none;
-  border: none;
-  color: var(--color-top);
-  font-size: var(--px-font);
-  height: 32px;
-  padding: 8px;
-  border-radius: var(--px-radius);
-  background-color: transparent;
-  text-align: center;
+input[type=text] {
   width: calc(100% - 4px);
-  margin: 2px;
-}
-
-input:hover, input:focus {
-  background-color: var(--color-over);
-}
-
-/*
-.##....##....###....##.....##....########..########.##....##
-.###...##...##.##...##.....##....##.....##....##....###...##
-.####..##..##...##..##.....##....##.....##....##....####..##
-.##.##.##.##.....##.##.....##....########.....##....##.##.##
-.##..####.#########..##...##.....##.....##....##....##..####
-.##...###.##.....##...##.##......##.....##....##....##...###
-.##....##.##.....##....###.......########.....##....##....##
-*/
-
-.nav-btn img {
-  margin-bottom: -7px;
-}
-
-.nav-btn {
-  height: 32px;
-  border-radius: var(--px-radius);
-  padding: 4px;
-  padding-right: 8px;
-  display: inline-block;
-  margin: 2px;
-}
-
-.nav-btn:hover {
-  background-color: var(--color-over);
-}
-
-.nav-btn:active {
-  opacity: 0.5;
 }
 
 /*
@@ -250,33 +116,20 @@ input:hover, input:focus {
 #sidebar-downloads:empty::before {
   content: "\2205  No downloads... Try to download something...";
   color: var(--color-top);
-  background-color: var(--color-over);
   display: block;
-  padding: 8px;
+  padding: 4px;
   margin: 2px;
-  border-radius: calc(var(--px-radius) + 4px);
   text-align: center;
 }
 
 .download {
-  margin: 4px 2px;
-  background-color: var(--color-over);
-  border-radius: 0 calc(var(--px-radius) + 4px) calc(var(--px-radius) + 4px) 0;
+  border-radius: var(--px-radius);
+  margin: 4px;
   text-align: left;
   padding: 6px;
   position: relative;
   color: var(--color-top);
-  border-left: 4px solid transparent;
-}
-
-.download::before {
-  position: absolute;
-  content: " ";
-  left: -4px;
-  top: 0;
-  bottom: 0;
-  width: 4px;
-  background-color: var(--color-over);
+  border: 1px solid var(--color-border);
 }
 
 .download:last-child {
@@ -287,6 +140,7 @@ input:hover, input:focus {
   margin-left: -4px;
   margin-bottom: -4px;
   margin-top: 4px;
+  text-align: center;
 }
 
 .download-status {
@@ -313,7 +167,7 @@ input:hover, input:focus {
   height: 16px;
   /* filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.5)); */
   vertical-align: middle;
-  margin: 2px;
+  margin-bottom: 4px;
 }
 
 /*

@@ -1,0 +1,23 @@
+.link {
+    color: var(--color-top);
+    display: inline-block;
+    margin: 2px;
+    padding: 2px 8px;
+    border-radius: var(--px-radius);
+    background-color: var(--color-element);
+    border: 1px solid var(--color-border);
+    outline: none;
+    font-size: 12px;
+}
+
+.link:hover {
+    background-color: var(--color-second);
+}
+
+.link:focus {
+    box-shadow: var(--shadow-focus);
+}
+
+.link:active {
+    background-color: var(--color-border);
+}

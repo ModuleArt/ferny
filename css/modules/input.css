@@ -1,0 +1,31 @@
+input[type=text] {
+    outline: none;
+    color: var(--color-top);
+    font-size: var(--px-font);
+    height: 32px;
+    padding: 3px;
+    border-radius: var(--px-radius);
+    background-color: var(--color-element);
+    text-align: center;
+    margin: 2px;
+    display: inline-block;
+    vertical-align: middle;
+    border: 1px solid var(--color-border);
+  }
+  
+  input[type=text]:hover, input[type=text].active {
+    background-color: var(--color-second);
+  }
+  
+  input[type=text]:focus, input[type=text].active {
+    box-shadow: var(--shadow-focus);
+  }
+  
+  input[type=text]:active {
+    background-color: var(--color-border);
+  }
+  
+  input[type=text]:disabled {
+    border-color: transparent;
+    opacity: var(--opacity-over);
+  }

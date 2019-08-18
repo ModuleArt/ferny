@@ -14,17 +14,23 @@
 }
 
 :root{
-  --color-back: rgb(0, 0, 0);
-  --color-over: rgba(0, 0, 0, 0.1);
-  --color-top: rgb(255, 255, 255);
-
   --color-red: rgb(255, 63, 52);
   --color-green: rgb(11, 232, 129);
   --color-blue: rgb(15, 188, 249);
   --color-orange: rgb(255, 168, 1);
 
-  --px-radius: 4px;
+  --px-radius: 0;
   --px-font: 14px;
+
+  --opacity-over: 0;
+
+  --shadow-focus: inset 0 0 0 rgba(0, 0, 0, 0);
+
+  --color-back: transparent;
+  --color-element: transparent;
+  --color-border: transparent;
+  --color-second: transparent;
+  --color-top: transparent;
 }
 
 * {
@@ -39,28 +45,6 @@
 
   font-family: OpenSans;
   font-size: var(--px-font);
-}
-
-/*
-.##......##.########.########..##....##.####.########
-.##..##..##.##.......##.....##.##...##...##.....##...
-.##..##..##.##.......##.....##.##..##....##.....##...
-.##..##..##.######...########..#####.....##.....##...
-.##..##..##.##.......##.....##.##..##....##.....##...
-.##..##..##.##.......##.....##.##...##...##.....##...
-..###..###..########.########..##....##.####....##...
-*/
-
-::-webkit-scrollbar {
-  width: 14px;
-  background-color: var(--color-over);
-}
-::-webkit-scrollbar-thumb {
-  background-color: var(--color-over);
-}
-
-::-webkit-input-placeholder {
-  color: var(--color-top);
 }
 
 /*
@@ -96,12 +80,19 @@
 
 body {
   margin: 0;
-  padding: 2px;
+  padding: 0;
   overflow-x: hidden;
+  /* background-color: var(--color-element); */
+  padding-bottom: 48px;
 }
 
 label {
   color: var(--color-top);
+}
+
+/* theme icon */
+.theme-icon {
+  opacity: 0;
 }
 
 /*
@@ -114,68 +105,15 @@ label {
 ....##....####....##....########.########
 */
 
+label.title {
+  font-size: 36px;
+  display: inline-block;
+}
+
 label.subtitle {
-  font-size: 24px;
+  font-size: 18px;
   display: inline-block;
-  margin: 8px 16px;
-}
-
-/*
-.##.......####.##....##.##....##
-.##........##..###...##.##...##.
-.##........##..####..##.##..##..
-.##........##..##.##.##.#####...
-.##........##..##..####.##..##..
-.##........##..##...###.##...##.
-.########.####.##....##.##....##
-*/
-
-label.link {
-  color: var(--color-top);
-  display: inline-block;
-  margin: 2px;
-  padding: 2px 8px;
-  border-radius: var(--px-radius);
-}
-
-label.link:hover {
-  background-color: var(--color-over);
-}
-
-label.link:active {
-  opacity: 0.5;
-}
-
-/*
-.########..##........#######...######..##....##
-.##.....##.##.......##.....##.##....##.##...##.
-.##.....##.##.......##.....##.##.......##..##..
-.########..##.......##.....##.##.......#####...
-.##.....##.##.......##.....##.##.......##..##..
-.##.....##.##.......##.....##.##....##.##...##.
-.########..########..#######...######..##....##
-*/
-
-hr {
-  border: 1px solid var(--color-over);
-  margin: 4px 8px;
-}
-
-.container {
-  background-color: var(--color-over);
-  border-radius: calc(var(--px-radius) + 4px);
-  padding: 2px;
-  margin: 2px;
-  text-align: center;
-}
-
-.block-title {
-  margin-top: 32px;
-  text-align: center;
-}
-
-.block-title label {
-  vertical-align: super;
+  margin-bottom: 16px;
 }
 
 /*
@@ -188,54 +126,42 @@ hr {
 .##.....##.##........##...........####..######...#######..##....##
 */
 
-.about-icon {
+.about-div {
+  position: relative;
+  display: inline-block;
+}
+
+.about-div button {
+  background: none;
+  border: 1px solid transparent;
   border-radius: 50%;
   padding: 8px;
   margin: 2px;
+  outline: none;
 }
 
-.about-icon:hover {
-  background-color: var(--color-over);
+.about-div button:hover {
+  background-color: var(--color-second);
+  border-color: var(--color-border);
 }
 
-.about-icon:active {
-  opacity: 0.5;
+.about-div button:active {
+  background-color: var(--color-border);
 }
 
-#about-app {
-  margin: 2px;
-  display: block;
+.about-div button:focus {
+  box-shadow: var(--shadow-focus);
 }
 
-/*
-.##....##....###....##.....##....########..########.##....##
-.###...##...##.##...##.....##....##.....##....##....###...##
-.####..##..##...##..##.....##....##.....##....##....####..##
-.##.##.##.##.....##.##.....##....########.....##....##.##.##
-.##..####.#########..##...##.....##.....##....##....##..####
-.##...###.##.....##...##.##......##.....##....##....##...###
-.##....##.##.....##....###.......########.....##....##....##
-*/
-
-.nav-btn img {
-  margin-bottom: -7px;
+.about-div .beta {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  filter: drop-shadow(0 0 4px black);
 }
 
-.nav-btn {
-  height: 32px;
-  border-radius: var(--px-radius);
-  padding: 4px;
-  padding-right: 8px;
-  display: inline-block;
-  margin: 2px;
-}
-
-.nav-btn:hover {
-  background-color: var(--color-over);
-}
-
-.nav-btn:active {
-  opacity: 0.5;
+.about-div .icon {
+  margin-bottom: -4px;
 }
 
 /*

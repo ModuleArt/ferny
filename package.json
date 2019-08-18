@@ -3,7 +3,7 @@
   "productName": "Ferny",
   "companyName": "Module Art",
   "description": "Your web browser",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "license": "GPL-3.0",
   "keywords": [
     "web-browser",
@@ -67,102 +67,6 @@
         "ext": "html",
         "name": "Web page document [HTML]",
         "description": "Web page document [HTML] - Ferny",
-        "role": "Viewer"
-      },
-      {
-        "ext": "gif",
-        "name": "Bitmap image [GIF]",
-        "description": "Bitmap image [GIF] - Ferny",
-        "role": "Viewer"
-      },
-      {
-        "ext": "png",
-        "name": "Raster-graphics file [PNG]",
-        "description": "Raster-graphics file [PNG] - Ferny",
-        "role": "Viewer"
-      },
-      {
-        "ext": "jpeg",
-        "name": "Compressed image [JPEG]",
-        "description": "Compressed image [JPEG] - Ferny",
-        "role": "Viewer"
-      },
-      {
-        "ext": "jpg",
-        "name": "Compressed image [JPG]",
-        "description": "Compressed image [JPG] - Ferny",
-        "role": "Viewer"
-      },
-      {
-        "ext": "mp3",
-        "name": "Digital audio file [MP3]",
-        "description": "Digital audio file [MP3] - Ferny",
-        "role": "Viewer"
-      },
-      {
-        "ext": "txt",
-        "name": "Plain text document [TXT]",
-        "description": "Plain text document [TXT] - Ferny",
-        "role": "Viewer"
-      },
-      {
-        "ext": "js",
-        "name": "JavaScript code file [JS]",
-        "description": "JavaScript code file [JS] - Ferny",
-        "role": "Viewer"
-      },
-      {
-        "ext": "json",
-        "name": "JavaScript object data [JSON]",
-        "description": "JavaScript object data [JSON] - Ferny",
-        "role": "Viewer"
-      },
-      {
-        "ext": "sql",
-        "name": "Structured query file [SQL]",
-        "description": "Structured query file [SQL] - Ferny",
-        "role": "Viewer"
-      },
-      {
-        "ext": "css",
-        "name": "Cascading style sheet [CSS]",
-        "description": "Cascading style sheet [CSS] - Ferny",
-        "role": "Viewer"
-      },
-      {
-        "ext": "md",
-        "name": "Lightweight markup document [MD]",
-        "description": "Lightweight markup document [MD] - Ferny",
-        "role": "Viewer"
-      },
-      {
-        "ext": "license",
-        "name": "License file [LICENSE]",
-        "description": "License file [LICENSE] - Ferny",
-        "role": "Viewer"
-      },
-      {
-        "ext": "php",
-        "name": "Sever scripting file [PHP]",
-        "description": "Sever scripting file [PHP] - Ferny",
-        "role": "Viewer"
-      },
-      {
-        "ext": "m4a",
-        "name": "Encoded audio file [M4A]",
-        "description": "Encoded audio file [M4A] - Ferny",
-        "role": "Viewer"
-      },
-      {
-        "ext": "wav",
-        "name": "Waveform audio file [WAV]",
-        "description": "Waveform audio file [WAV] - Ferny",
-        "role": "Viewer"
-      },
-      {
-        "ext": "ogg",
-        "name": "Multimedia container audio file [OGG]",
-        "description": "Multimedia container audio file [OGG] - Ferny",
         "role": "Viewer"
       }
     ],

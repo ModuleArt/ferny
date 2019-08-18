@@ -1,0 +1,17 @@
+::-webkit-scrollbar {
+    width: 14px;
+    background-color: var(--color-back);
+    border-left: 1px solid var(--color-border);
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--color-border);
+}
+
+::-webkit-scrollbar-thumb:active {
+    box-shadow: var(--shadow-focus);
+}
+
+::-webkit-input-placeholder {
+    color: var(--color-top);
+}

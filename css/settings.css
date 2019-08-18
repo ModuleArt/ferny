@@ -14,17 +14,23 @@
 }
 
 :root{
-  --color-back: rgb(0, 0, 0);
-  --color-over: rgba(0, 0, 0, 0.1);
-  --color-top: rgb(255, 255, 255);
-
   --color-red: rgb(255, 63, 52);
   --color-green: rgb(11, 232, 129);
   --color-blue: rgb(15, 188, 249);
   --color-orange: rgb(255, 168, 1);
 
-  --px-radius: 4px;
+  --px-radius: 0;
   --px-font: 14px;
+
+  --opacity-over: 0;
+
+  --shadow-focus: inset 0 0 0 rgba(0, 0, 0, 0);
+
+  --color-back: transparent;
+  --color-element: transparent;
+  --color-border: transparent;
+  --color-second: transparent;
+  --color-top: transparent;
 }
 
 * {
@@ -39,36 +45,6 @@
 
   font-family: OpenSans;
   font-size: var(--px-font);
-}
-
-/*
-.##......##.########.########..##....##.####.########
-.##..##..##.##.......##.....##.##...##...##.....##...
-.##..##..##.##.......##.....##.##..##....##.....##...
-.##..##..##.######...########..#####.....##.....##...
-.##..##..##.##.......##.....##.##..##....##.....##...
-.##..##..##.##.......##.....##.##...##...##.....##...
-..###..###..########.########..##....##.####....##...
-*/
-
-::-webkit-scrollbar {
-  width: 14px;
-  background-color: var(--color-over);
-}
-::-webkit-scrollbar-thumb {
-  background-color: var(--color-over);
-}
-::-webkit-scrollbar-button {
-  width: 0;
-  height: 0;
-  display: none;
-}
-::-webkit-scrollbar-corner {
-  background-color: transparent;
-}
-
-::-webkit-input-placeholder {
-  color: var(--color-top);
 }
 
 /*
@@ -104,151 +80,79 @@
 
 body {
   margin: 0;
-  padding: 2px;
-  /* animation-name: anim-slide;
-  animation-duration: 0.25s; */
+  padding: 0;
   overflow-x: hidden;
+  /* background-color: var(--color-element); */
+  padding-bottom: 48px;
 }
 
 label {
   color: var(--color-top);
 }
 
-/*
-.########.####.########.##.......########
-....##.....##.....##....##.......##......
-....##.....##.....##....##.......##......
-....##.....##.....##....##.......######..
-....##.....##.....##....##.......##......
-....##.....##.....##....##.......##......
-....##....####....##....########.########
+/* theme icon */
+.theme-icon {
+  opacity: 0;
+}
+
+/*                        
+  ##### #    # ###### #    # ######  ####  
+    #   #    # #      ##  ## #      #      
+    #   ###### #####  # ## # #####   ####  
+    #   #    # #      #    # #           # 
+    #   #    # #      #    # #      #    # 
+    #   #    # ###### #    # ######  ####  
 */
 
-label.subtitle {
-  font-size: 24px;
+.theme {
   display: inline-block;
-  margin: 8px 16px;
-}
-
-/*
-.##.......####.##....##.##....##
-.##........##..###...##.##...##.
-.##........##..####..##.##..##..
-.##........##..##.##.##.#####...
-.##........##..##..####.##..##..
-.##........##..##...###.##...##.
-.########.####.##....##.##....##
-*/
-
-label.link {
-  color: var(--color-top);
-  display: inline-block;
-  margin: 2px;
-  padding: 2px 8px;
-  border-radius: var(--px-radius);
-}
-
-label.link:hover {
-  background-color: var(--color-over);
-}
-
-label.link:active {
-  opacity: 0.5;
-}
-
-/*
-.########..##........#######...######..##....##
-.##.....##.##.......##.....##.##....##.##...##.
-.##.....##.##.......##.....##.##.......##..##..
-.########..##.......##.....##.##.......#####...
-.##.....##.##.......##.....##.##.......##..##..
-.##.....##.##.......##.....##.##....##.##...##.
-.########..########..#######...######..##....##
-*/
-
-hr {
-  border: 1px solid var(--color-over);
-  margin: 2px 8px;
-}
-
-.container, .invis-container {
+  width: calc(50% - 4px);
+  background-color: var(--color-element);
   padding: 2px;
   margin: 2px;
-  text-align: center;
-}
-
-.container {
-  background-color: var(--color-over);
   border-radius: calc(var(--px-radius) + 4px);
+  border: 1px solid var(--color-border);
+  text-align: left;
 }
 
-.block-title {
-  margin-top: 32px;
-  text-align: center;
-}
-
-.block-title label {
-  vertical-align: super;
-}
-
-/*
-.####.##....##.########..##.....##.########
-..##..###...##.##.....##.##.....##....##...
-..##..####..##.##.....##.##.....##....##...
-..##..##.##.##.########..##.....##....##...
-..##..##..####.##........##.....##....##...
-..##..##...###.##........##.....##....##...
-.####.##....##.##.........#######.....##...
-*/
-
-input[type=text] {
-  outline: none;
-  border: none;
-  color: var(--color-top);
-  font-size: var(--px-font);
-  height: 32px;
-  padding: 8px;
-  border-radius: var(--px-radius);
-  background-color: transparent;
-  text-align: center;
+.theme button {
   width: calc(100% - 4px);
-  margin: 2px;
 }
 
-input[type=text]:hover, input[type=text]:focus {
-  background-color: var(--color-over);
-}
-
-/*
-.##....##....###....##.....##....########..########.##....##
-.###...##...##.##...##.....##....##.....##....##....###...##
-.####..##..##...##..##.....##....##.....##....##....####..##
-.##.##.##.##.....##.##.....##....########.....##....##.##.##
-.##..####.#########..##...##.....##.....##....##....##..####
-.##...###.##.....##...##.##......##.....##....##....##...###
-.##....##.##.....##....###.......########.....##....##....##
-*/
-
-.nav-btn img {
-  margin-bottom: -7px;
-}
-
-.nav-btn {
-  height: 32px;
-  border-radius: var(--px-radius);
+.theme div {
+  margin: 6px;
   padding: 4px;
-  padding-right: 8px;
   display: inline-block;
-  margin: 2px;
+  width: calc(100% - 12px);
+}
+
+.theme div label, .theme div span {
+  padding: 4px 8px;
+  display: inline-block;
   vertical-align: middle;
 }
 
-.nav-btn:hover {
-  background-color: var(--color-over);
+.theme div label {
+  margin-bottom: 4px;
 }
 
-.nav-btn:active {
-  opacity: 0.5;
+.theme div img {
+  opacity: var(--opacity-over);
+  vertical-align: middle;
+  padding: 4px;
+}
+
+/*
+  # #    # #####  #    # ##### 
+  # ##   # #    # #    #   #   
+  # # #  # #    # #    #   #   
+  # #  # # #####  #    #   #   
+  # #   ## #      #    #   #   
+  # #    # #       ####    #   
+*/
+
+input[type=text] {
+  width: calc(100% - 4px);
 }
 
 /*
@@ -262,27 +166,38 @@ input[type=text]:hover, input[type=text]:focus {
 */
 
 .more-btn {
-  padding: 4px;
+  padding: 0;
   border-radius: var(--px-radius);
   display: inline-block;
   vertical-align: middle;
   margin: 2px;
+  background: none;
+  border: 1px solid transparent;
+  outline: none;
 }
 
-.more-btn:hover, .more-btn.active {
-  background-color: var(--color-over);
+.more-btn img {
+  padding: 7px;
+  margin-bottom: -4px;
+}
+
+.more-btn:hover {
+  background-color: var(--color-second);
+  border-color: var(--color-border);
 }
 
 .more-btn:active {
-  opacity: 0.5;
+  background-color: var(--color-border);
+}
+
+.more-btn:focus {
+  box-shadow: var(--shadow-focus);
 }
 
 .more-label {
   margin: 2px;
   display: none;
-  padding: 4px;
-  background-color: var(--color-over);
-  border-radius: var(--px-radius);
+  padding: 2px;
 }
 
 .more-label.active {
@@ -305,7 +220,7 @@ input[type=text]:hover, input[type=text]:focus {
   border-radius: var(--px-radius);
   color: var(--color-top);
   margin: 2px;
-  width: calc(33% - 6px);
+  width: calc(50% - 6px);
 }
 
 .color div {
@@ -343,103 +258,6 @@ input[type=text]:hover, input[type=text]:focus {
 
 .nav-checkbox img, .nav-checkbox label {
   vertical-align: middle;
-}
-
-/*
-.########.....###....########..####..#######.
-.##.....##...##.##...##.....##..##..##.....##
-.##.....##..##...##..##.....##..##..##.....##
-.########..##.....##.##.....##..##..##.....##
-.##...##...#########.##.....##..##..##.....##
-.##....##..##.....##.##.....##..##..##.....##
-.##.....##.##.....##.########..####..#######.
-*/
-
-input[type=radio] {
-  margin-left: 4px;
-  margin-top: 0;
-  -webkit-appearance: none;
-  appearance: none;
-  outline: none;
-  border-radius: var(--px-radius);
-  width: 24px;
-  height: 24px;
-  position: relative;
-  vertical-align: middle;
-  border: 2px solid var(--color-top);
-}
-
-input[type=radio]:hover {
-  background-color: var(--color-over);
-}
-
-input[type=radio]:active {
-  opacity: 0.5;
-}
-
-input[type=radio]::after {
-  position: absolute;
-  left: 4px;
-  top: 4px;
-  width: 12px;
-  height: 12px;
-  content: "";
-  background-color: var(--color-over);
-  border-radius: calc(var(--px-radius) - 4px);
-  transition: 0.25s;
-}
-
-input[type=radio]:checked::after {
-  background-color: var(--color-top);
-}
-
-/*
-..######..##.....##.########..######..##....##.########...#######..##.....##
-.##....##.##.....##.##.......##....##.##...##..##.....##.##.....##..##...##.
-.##.......##.....##.##.......##.......##..##...##.....##.##.....##...##.##..
-.##.......#########.######...##.......#####....########..##.....##....###...
-.##.......##.....##.##.......##.......##..##...##.....##.##.....##...##.##..
-.##....##.##.....##.##.......##....##.##...##..##.....##.##.....##..##...##.
-..######..##.....##.########..######..##....##.########...#######..##.....##
-*/
-
-input[type=checkbox] {
-  margin-left: 4px;
-  margin-top: 0;
-  -webkit-appearance: none;
-  appearance: none;
-  outline: none;
-  border-radius: var(--px-radius);
-  width: 40px;
-  height: 24px;
-  position: relative;
-  vertical-align: middle;
-  border: 2px solid var(--color-top);
-}
-
-input[type=checkbox]:hover {
-  background-color: var(--color-over);
-}
-
-input[type=checkbox]:active {
-  opacity: 0.5;
-}
-
-input[type=checkbox]::after {
-  position: absolute;
-  left: 4px;
-  top: 4px;
-  width: 12px;
-  height: 12px;
-  content: "";
-  background-color: var(--color-over);
-  border-radius: calc(var(--px-radius) - 4px);
-  transition: 0.25s;
-}
-
-input[type=checkbox]:checked::after {
-  background-color: var(--color-top);
-  left: calc(100% - 16px);
 }
 
 /*

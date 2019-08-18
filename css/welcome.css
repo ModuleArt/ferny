@@ -19,21 +19,23 @@
 }
 
 :root{
-  --color-back: transparent;
-  --color-over: transparent;
-  --color-top: transparent;
-  --color-shadow: rgba(0, 0, 0, 0.5);
-
-  --color-red: rgb(255, 63, 52);
+  --color-red: rgb(12, 5, 5);
   --color-green: rgb(11, 232, 129);
   --color-blue: rgb(15, 188, 249);
   --color-orange: rgb(255, 168, 1);
 
-  --px-radius: 4px;
+  --px-radius: 0;
   --px-font: 14px;
-  --px-shadow: 8px;
 
-  --opacity-blur: 0.2;
+  --opacity-over: 0;
+
+  --shadow-focus: inset 0 0 0 rgba(0, 0, 0, 0);
+
+  --color-back: transparent;
+  --color-element: transparent;
+  --color-border: transparent;
+  --color-second: transparent;
+  --color-top: transparent;
 }
 
 * {
@@ -124,41 +126,6 @@
 }
 
 /*
-.##....##....###....##.....##....########..########.##....##
-.###...##...##.##...##.....##....##.....##....##....###...##
-.####..##..##...##..##.....##....##.....##....##....####..##
-.##.##.##.##.....##.##.....##....########.....##....##.##.##
-.##..####.#########..##...##.....##.....##....##....##..####
-.##...###.##.....##...##.##......##.....##....##....##...###
-.##....##.##.....##....###.......########.....##....##....##
-*/
-
-.nav-btn img {
-  margin-bottom: -7px;
-}
-
-.nav-btn {
-  height: 32px;
-  border-radius: var(--px-radius);
-  padding: 4px;
-  padding-right: 8px;
-  display: block;
-  margin: 2px;
-}
-
-.nav-btn:hover {
-  background-color: var(--color-over);
-}
-
-.nav-btn:active {
-  opacity: 0.5;
-}
-
-.nav-btn.disable {
-  display: none;
-}
-
-/*
 .########.####.########.##.......########.########.....###....########.
 ....##.....##.....##....##.......##.......##.....##...##.##...##.....##
 ....##.....##.....##....##.......##.......##.....##..##...##..##.....##
@@ -241,21 +208,18 @@
   grid-column: 3;
 }
 
-#titlebar.blur #window-controls .button, #titlebar #window-controls .button:active, 
-#titlebar.blur #window-controls .title-bar-btn, #titlebar #window-controls .title-bar-btn:active {
+#titlebar #window-controls .title-bar-btn:hover, #titlebar #window-controls .button:hover {
+  background-color: #E81022;
+  color: white;
+  opacity: 1 !important;
+}
+
+#titlebar.blur #window-controls .button, #titlebar.blur #window-controls .title-bar-btn {
   opacity: 0.5;
 }
 
-#titlebar #window-controls .button:hover {
-  background-color: #E81022;
-  color: white;
-  opacity: 1;
-}
-
-#titlebar #window-controls .title-bar-btn:hover {
-  background-color: #E81022;
-  color: white;
-  opacity: 1;
+#titlebar #window-controls .button:active, #titlebar #window-controls .title-bar-btn:active {
+  opacity: 0.5 !important;
 }
 
 /*
@@ -274,6 +238,7 @@ label {
 
 label.subtitle {
   font-size: 24px;
+  margin-bottom: 8px;
 }
 
 body {
@@ -283,60 +248,13 @@ body {
   background-color: var(--color-back);
 }
 
-/*
-.##.......####.##....##.##....##
-.##........##..###...##.##...##.
-.##........##..####..##.##..##..
-.##........##..##.##.##.#####...
-.##........##..##..####.##..##..
-.##........##..##...###.##...##.
-.########.####.##....##.##....##
-*/
-
-label.link {
-  color: var(--color-top);
-  display: inline-block;
-  margin: 2px;
-  padding: 2px 8px;
-  border-radius: var(--px-radius);
+body.no-titlebar .tab {
+  top: 16px;
 }
 
-label.link:hover {
-  background-color: var(--color-over);
-}
-
-label.link:active {
-  opacity: 0.5;
-}
-
-/*
-.####.##....##.########..##.....##.########
-..##..###...##.##.....##.##.....##....##...
-..##..####..##.##.....##.##.....##....##...
-..##..##.##.##.########..##.....##....##...
-..##..##..####.##........##.....##....##...
-..##..##...###.##........##.....##....##...
-.####.##....##.##.........#######.....##...
-*/
-
-input[type=text] {
-  outline: none;
-  border: none;
-  color: var(--color-top);
-  font-size: var(--px-font);
-  height: 32px;
-  padding: 8px;
-  border-radius: var(--px-radius);
-  background-color: transparent;
-  text-align: center;
-  width: 200px;
-  margin: 2px;
-  width: calc(100% - 4px);
-  display: block;
-}
-
-input[type=text]:hover, input[type=text]:focus {
-  background-color: var(--color-over);
+/* theme icon */
+.theme-icon {
+  opacity: 0;
 }
 
 /*
@@ -409,32 +327,33 @@ input[type=text]:hover, input[type=text]:focus {
   z-index: 100;
 }
 
-#dots .link {
-  float: right;
-  margin: 2px;
-}
-
 .dot {
   width: 12px;
   height: 12px;
   border-radius: var(--px-radius);
   display: inline-block;
-  background-color: var(--color-over);
+  background-color: var(--color-element);
   margin: 4px;
+  padding: 0;
   transition: 0.25s;
   vertical-align: top;
+  border: 1px solid var(--color-border);
+  outline: none;
 }
 
 .dot:hover {
-  background-color: var(--color-top);
+  background-color: var(--color-second);
+}
+
+.dot:focus {
+  box-shadow: var(--shadow-focus);
 }
 
 .dot:active {
-  opacity: 0.5;
+  background-color: var(--color-border);
 }
 
 .dot.active {
-  background-color: var(--color-over);
   width: 20px;
   height: 20px;
   margin: 0;
@@ -461,33 +380,49 @@ input[type=text]:hover, input[type=text]:focus {
 }
 
 #next-btn, #prev-btn {
-  background-color: var(--color-over);
+  background-color: var(--color-element);
   position: absolute;
-  padding: 16px 4px;
   top: calc(50% - 16px);
+  border: 1px solid var(--color-border);
+  margin: 0;
+  padding: 0;
+  outline: none;
+}
+
+#next-btn img, #prev-btn img {
+  padding: 16px 8px;
   transition: padding 0.25s;
+  margin-bottom: -4px;
 }
 
 #prev-btn {
-  left: 0;
+  left: -1px;
   border-radius: 0 var(--px-radius) var(--px-radius) 0;
   animation: anim-prev;
   animation-duration: 0.25s;
 }
 
 #next-btn {
-  right: 0;
+  right: -1px;
   border-radius: var(--px-radius) 0 0 var(--px-radius);
   animation: anim-next;
   animation-duration: 0.25s;
 }
 
 #next-btn:hover, #prev-btn:hover {
+  background-color: var(--color-second);
+}
+
+#next-btn:hover img, #prev-btn:hover img {
   padding: 16px;
 }
 
+#next-btn:focus, #prev-btn:focus {
+  box-shadow: var(--shadow-focus);
+}
+
 #next-btn:active, #prev-btn:active {
-  opacity: 0.5
+  background-color: var(--color-border);
 }
 
 #next-btn.disable, #prev-btn.disable {
@@ -495,44 +430,49 @@ input[type=text]:hover, input[type=text]:focus {
 }
 
 /*
-.########..##........#######...######..##....##
-.##.....##.##.......##.....##.##....##.##...##.
-.##.....##.##.......##.....##.##.......##..##..
-.########..##.......##.....##.##.......#####...
-.##.....##.##.......##.....##.##.......##..##..
-.##.....##.##.......##.....##.##....##.##...##.
-.########..########..#######...######..##....##
+  # #    # #####  #    # ##### 
+  # ##   # #    # #    #   #   
+  # # #  # #    # #    #   #   
+  # #  # # #####  #    #   #   
+  # #   ## #      #    #   #   
+  # #    # #       ####    #   
 */
 
-hr {
-  border: 1px solid var(--color-over);
-  margin: 4px 8px;
+input[type=text] {
+  width: calc(100% - 4px);
 }
 
-.container {
+/*
+ #####   ##   #####      ####   ####  #    # #####   ##   # #    # ###### #####
+   #    #  #  #    #    #    # #    # ##   #   #    #  #  # ##   # #      #    #
+   #   #    # #####     #      #    # # #  #   #   #    # # # #  # #####  #    #
+   #   ###### #    #    #      #    # #  # #   #   ###### # #  # # #      #####
+   #   #    # #    #    #    # #    # #   ##   #   #    # # #   ## #      #   #
+   #   #    # #####      ####   ####  #    #   #   #    # # #    # ###### #    #
+*/
+
+.tab-container {
   background-color: var(--color-over);
   border-radius: calc(var(--px-radius) + 4px);
   margin: 8px 80px;
-  height: 108px;
+  height: 114px;
   width: calc(100% - 160px);
   padding: 2px;
   position: relative;
+  border: 1px solid var(--color-border);
 }
 
-.block-container {
-  background-color: var(--color-over);
-  border-radius: calc(var(--px-radius) + 4px);
-  margin: 2px;
-  padding: 2px;
-}
+/*
+ #    #   ##   #    #    #####  ##### #    #
+ ##   #  #  #  #    #    #    #   #   ##   #
+ # #  # #    # #    #    #####    #   # #  #
+ #  # # ###### #    #    #    #   #   #  # #
+ #   ## #    #  #  #     #    #   #   #   ##
+ #    # #    #   ##      #####    #   #    #
+*/
 
-.block-title {
-  margin-top: 32px;
-  padding: 4px;
-}
-
-.block-title label {
-  vertical-align: super;
+.nav-btn {
+  width: calc(100% - 4px);
 }
 
 /*
@@ -545,17 +485,42 @@ hr {
 .##.....##.##........##...........####..######...#######..##....##
 */
 
-.about-icon {
+.about-div {
+  position: relative;
+  display: inline-block;
+}
+
+.about-div button {
+  background: none;
+  border: 1px solid transparent;
   border-radius: 50%;
   padding: 8px;
+  margin: 2px;
+  outline: none;
 }
 
-.about-icon:hover {
-  background-color: var(--color-over);
+.about-div button:hover {
+  background-color: var(--color-second);
+  border-color: var(--color-border);
 }
 
-.about-icon:active {
-  opacity: 0.5;
+.about-div button:active {
+  background-color: var(--color-border);
+}
+
+.about-div button:focus {
+  box-shadow: var(--shadow-focus);
+}
+
+.about-div .beta {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  filter: drop-shadow(0 0 4px black);
+}
+
+.about-div .icon {
+  margin-bottom: -4px;
 }
 
 /*
@@ -569,22 +534,14 @@ hr {
 */
 
 #start-btn {
-  transition: width 0.25s;
-  border-radius: var(--px-radius);
-  background-color: var(--color-over);
-  display: inline-block;
-  margin: 2px;
   padding: 16px;
   width: 75%;
-  height: 64px;
+  height: 68px;
+  transition: width 0.25s;
 }
 
 #start-btn:hover {
   width: calc(100% - 4px);
-}
-
-#start-btn:active {
-  opacity: 0.5;
 }
 
 /*
@@ -633,108 +590,14 @@ hr {
 */
 
 .nav-checkbox {
-  display: block;
+  display: inline-block;
+  width: calc(100% - 4px);
   margin: 2px;
   height: 32px;
 }
 
 .nav-checkbox img, .nav-checkbox label, .nav-checkbox {
   vertical-align: middle;
-}
-
-/*
-.########.....###....########..####..#######.
-.##.....##...##.##...##.....##..##..##.....##
-.##.....##..##...##..##.....##..##..##.....##
-.########..##.....##.##.....##..##..##.....##
-.##...##...#########.##.....##..##..##.....##
-.##....##..##.....##.##.....##..##..##.....##
-.##.....##.##.....##.########..####..#######.
-*/
-
-input[type=radio] {
-  margin-left: 4px;
-  -webkit-appearance: none;
-  appearance: none;
-  outline: none;
-  border-radius: var(--px-radius);
-  width: 24px;
-  height: 24px;
-  position: relative;
-  vertical-align: middle;
-  border: 2px solid var(--color-over);
-}
-
-input[type=radio]:hover {
-  background-color: var(--color-over);
-}
-
-input[type=radio]:active {
-  opacity: 0.5;
-}
-
-input[type=radio]::after {
-  position: absolute;
-  left: 4px;
-  top: 4px;
-  width: 12px;
-  height: 12px;
-  content: "";
-  background-color: var(--color-over);
-  border-radius: calc(var(--px-radius) - 4px);
-  transition: 0.25s;
-}
-
-input[type=radio]:checked::after {
-  background-color: var(--color-top);
-}
-
-/*
-..######..##.....##.########..######..##....##.########...#######..##.....##
-.##....##.##.....##.##.......##....##.##...##..##.....##.##.....##..##...##.
-.##.......##.....##.##.......##.......##..##...##.....##.##.....##...##.##..
-.##.......#########.######...##.......#####....########..##.....##....###...
-.##.......##.....##.##.......##.......##..##...##.....##.##.....##...##.##..
-.##....##.##.....##.##.......##....##.##...##..##.....##.##.....##..##...##.
-..######..##.....##.########..######..##....##.########...#######..##.....##
-*/
-
-input[type=checkbox] {
-  margin-left: 4px;
-  -webkit-appearance: none;
-  appearance: none;
-  outline: none;
-  border-radius: var(--px-radius);
-  width: 40px;
-  height: 24px;
-  position: relative;
-  vertical-align: middle;
-  border: 2px solid var(--color-top);
-}
-
-input[type=checkbox]:hover {
-  background-color: var(--color-over);
-}
-
-input[type=checkbox]:active {
-  opacity: 0.5;
-}
-
-input[type=checkbox]::after {
-  position: absolute;
-  left: 4px;
-  top: 4px;
-  width: 12px;
-  height: 12px;
-  content: "";
-  background-color: var(--color-over);
-  border-radius: calc(var(--px-radius) - 4px);
-  transition: 0.25s;
-}
-
-input[type=checkbox]:checked::after {
-  background-color: var(--color-top);
-  left: calc(100% - 16px);
 }
 
 /*

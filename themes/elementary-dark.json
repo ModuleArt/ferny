@@ -1,0 +1,13 @@
+{
+  "name": "Elementary",
+  "type": "Dark",
+  "icons": "white",
+  "colorBack": "#34383C",
+  "colorElement": "#3D4248",
+  "colorBorder": "#282A2C",
+  "colorSecond": "#2C2F32",
+  "colorTop": "#FAFAFA",
+  "shadowFocus": "inset 0 0 4px rgba(0, 0, 0, 1)",
+  "opacityOver": "0.5",
+  "pxRadius": "4px"
+}

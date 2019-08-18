@@ -11,7 +11,7 @@
 const { ipcRenderer } = require('electron');
 const ppath = require('persist-path')('Ferny');
 const fs = require("fs");
-const isDarkColor = require("is-dark-color");
+const path = require("path");
 
 /*
 .##.....##..#######..########..##.....##.##.......########..######.
@@ -24,10 +24,9 @@ const isDarkColor = require("is-dark-color");
 */
 
 const saveFileToJsonFolder = require("../modules/saveFileToJsonFolder.js");
-const applyBgColor = require("../modules/applyBgColor.js");
-const applyBorderRadius = require("../modules/applyBorderRadius.js");
-const loadBgColor = require("../modules/loadBgColor.js");
-const loadBorderRadius = require("../modules/loadBorderRadius.js");
+const loadTheme = require("../modules/loadTheme.js");
+const applyTheme = require("../modules/applyTheme.js");
+const loadWinControls = require("../modules/loadWinControls.js");
 
 /*
 .########.##.....##.##....##..######..########.####..#######..##....##..######.
@@ -38,6 +37,28 @@ const loadBorderRadius = require("../modules/loadBorderRadius.js");
 .##.......##.....##.##...###.##....##....##.....##..##.....##.##...###.##....##
 .##........#######..##....##..######.....##....####..#######..##....##..######.
 */
+
+function updateTheme() {
+  loadTheme().then(function(theme) {
+    applyTheme(theme);
+  });
+}
+
+function changeWinControls() {
+  var frame = document.getElementById('system-titlebar-checkbox').checked;
+  var autoHide = document.getElementById('autohide-menubar-checkbox').checked;
+  var colorTabs = document.getElementById('color-tabs-checkbox').checked;
+
+  let Data = {
+    frame: frame,
+    hideMenu: autoHide,
+    color: colorTabs
+  };
+
+  saveFileToJsonFolder('wincontrols', JSON.stringify(Data));
+
+  ipcRenderer.send('request-set-color-tabs', Data.color);
+}
 
 function requestLastTab(lastTab) {
   saveFileToJsonFolder('lasttab', lastTab);
@@ -70,14 +91,65 @@ function requestSearchEngine(engine) {
   ipcRenderer.send('request-set-search-engine', engine);
 }
 
-function requestTheme(color) {
-  ipcRenderer.send('request-change-theme', color);
-  applyBgColor(color);
+function loadThemesFromFolder() {
+  let themesFolder = path.join(__dirname, "..", "themes");
+  let themeManager = document.getElementById('theme-manager');
+
+  fs.readdir(themesFolder, (err, files) => {
+    files.forEach(file => {
+      fs.readFile(path.join(themesFolder, file), function(err, data) {
+        let themeObj = JSON.parse(data);
+
+        let theme = document.createElement('div');
+        theme.classList.add('theme');
+        theme.style.borderRadius = 'calc(' + themeObj.pxRadius + ' + 4px);'
+        theme.innerHTML = `
+          <div>
+            <label>` + themeObj.name + `</label>
+            <span>` + themeObj.type + `</span>
+            <img src='../imgs/theme-icons/` + themeObj.icons + `/theme-16.png'>
+          </div>
+          <button class='nav-btn' onclick="requestTheme('` + file.split(".")[0] + `')">
+            <img name='check-16' class='theme-icon'>
+            <label>Apply</label>
+          </button>`;
+
+        let div = theme.getElementsByTagName('div')[0];
+        div.style.backgroundColor = themeObj.colorBack;
+        div.style.borderRadius = "calc(" + themeObj.pxRadius + " + 4px)";
+        div.style.border = "1px solid " + themeObj.colorBorder;
+
+        let label = div.getElementsByTagName('label')[0];
+        label.style.color = themeObj.colorTop;
+        label.style.backgroundColor = themeObj.colorElement;
+        label.style.border = "1px solid " + themeObj.colorBorder;
+        label.style.borderRadius = themeObj.pxRadius;
+
+        let span = div.getElementsByTagName('span')[0];
+        span.style.color = themeObj.colorTop;
+        span.style.backgroundColor = themeObj.colorSecond;
+        span.style.border = "1px solid " + themeObj.colorBorder;
+        span.style.borderRadius = themeObj.pxRadius;
+        span.style.boxShadow = themeObj.shadowFocus;
+
+        let img = div.getElementsByTagName('img')[0];
+        img.style.opacity = themeObj.opacityOver;
+
+        themeManager.appendChild(theme);
+
+        updateTheme();
+      });
+    });
+  });
 }
 
-function requestBorderRadius(size) {
-  ipcRenderer.send('request-change-border-radius', size);
-  applyBorderRadius(size);
+function requestTheme(theme) {
+  saveFileToJsonFolder('theme', theme).then(function(bool) {
+    loadTheme(theme).then(function(themeObj) {
+      ipcRenderer.send('request-change-theme', themeObj);
+      applyTheme(themeObj);
+    });
+  });
 }
 
 function changeWelcome(bool) {
@@ -90,8 +162,9 @@ function changeWelcome(bool) {
 
 function loadStartPage() {
   try {
-    var startPage = fs.readFileSync(ppath + "/json/startpage.json");
-    document.getElementById('start-page-input').value = startPage;
+    fs.readFile(ppath + "/json/startpage.json", function(err, data) {
+      document.getElementById('start-page-input').value = data;
+    });
   } catch (e) {
 
   }
@@ -99,12 +172,13 @@ function loadStartPage() {
 
 function loadHomePage() {
   try {
-    var jsonstr = fs.readFileSync(ppath + "/json/home.json");
-    Data = JSON.parse(jsonstr);
-    document.getElementById('home-page-input').value = Data.url;
-    if(Data.on == 1) {
-      document.getElementById('home-page-checkbox').checked = true;
-    }
+    fs.readFile(ppath + "/json/home.json", function(err, data) {
+      let Data = JSON.parse(data);
+      document.getElementById('home-page-input').value = Data.url;
+      if(Data.on == 1) {
+        document.getElementById('home-page-checkbox').checked = true;
+      }
+    });    
   } catch (e) {
 
   }
@@ -123,9 +197,6 @@ function saveHomePage() {
       on = 0;
     }
   
-    if(!fs.existsSync(ppath + "/json")) {
-      fs.mkdirSync(ppath + "/json");
-    } 
     saveFileToJsonFolder('home', JSON.stringify({ url: url, on: on }));
 
     notif("Home page saved", "success");
@@ -136,15 +207,15 @@ function saveHomePage() {
 
 function loadSearchEngine() {
   try {
-    var searchEngine = fs.readFileSync(ppath + "/json/searchengine.json");
-
-    var radios = document.getElementsByName("search-engine");
-    for(var i = 0; i < radios.length; i++) {
-      if(radios[i].value == searchEngine) {
-        radios[i].checked = true;
-        break;
+    fs.readFile(ppath + "/json/searchengine.json", function(err, data) {
+      var radios = document.getElementsByName("search-engine");
+      for(var i = 0; i < radios.length; i++) {
+        if(radios[i].value == data) {
+          radios[i].checked = true;
+          break;
+        }
       }
-    }
+    });
   } catch (e) {
 
   }
@@ -297,17 +368,9 @@ ipcRenderer.on('action-set-cache-size', (event, arg) => {
 */
 
 function init() {
-  applyBgColor(loadBgColor());
+  updateTheme();
 
-  var borderRadius = loadBorderRadius();
-  applyBorderRadius(borderRadius);
-  var radios = document.getElementsByName("border-radius");
-  for(var i = 0; i < radios.length; i++) {
-    if(radios[i].value == borderRadius) {
-      radios[i].checked = true;
-      break;
-    }
-  }
+  loadThemesFromFolder();
   
   loadBookmarksBar();
   loadStartPage();
@@ -316,6 +379,11 @@ function init() {
   loadCache();
   loadLastTab();
   loadWelcome();
+
+  var winControls = loadWinControls();
+  document.getElementById('system-titlebar-checkbox').checked = winControls.frame;
+  document.getElementById('autohide-menubar-checkbox').checked = winControls.hideMenu;
+  document.getElementById('color-tabs-checkbox').checked = winControls.color;
 }
 
 document.onreadystatechange = () => {

@@ -25,13 +25,12 @@ const fileExtension = require('file-extension');
 .##.....##..#######..########...#######..########.########..######.
 */
 
-const applyBgColor = require("../modules/applyBgColor.js");
+const applyTheme = require("../modules/applyTheme.js");
 const epochToDate = require("../modules/epochToDate.js");
 const epochToTime = require("../modules/epochToTime.js");
-const applyBorderRadius = require("../modules/applyBorderRadius.js");
-const loadBgColor = require("../modules/loadBgColor.js");
-const loadBorderRadius = require("../modules/loadBorderRadius.js");
+const loadTheme = require("../modules/loadTheme.js");
 const extToImagePath = require("../modules/extToImagePath.js");
+const rgbToRgbaString = require("../modules/rgbToRgbaString.js");
 
 /*
 .########.##.....##.##....##..######..########.####..#######..##....##..######.
@@ -43,14 +42,20 @@ const extToImagePath = require("../modules/extToImagePath.js");
 .##........#######..##....##..######.....##....####..#######..##....##..######.
 */
 
+function updateTheme() {
+  loadTheme().then(function(theme) {
+    applyTheme(theme);
+  });
+}
+
 function loadDownloads() {
   try {
-    var jsonstr = fs.readFileSync(ppath + "/json/downloads.json");
-    var arr = JSON.parse(jsonstr);
-    var i;
-    for (i = 0; i < arr.length; i++) {
-      createStoppedDownload(arr[i].index, arr[i].name, arr[i].url, arr[i].path, arr[i].time);
-    }
+    fs.readFile(ppath + "/json/downloads.json", function(err, data) {
+      var arr = JSON.parse(data);
+      for (var i = 0; i < arr.length; i++) {
+        createStoppedDownload(arr[i].index, arr[i].name, arr[i].url, arr[i].path, arr[i].time);
+      }
+    });
   } catch (e) {
 
   }
@@ -74,7 +79,7 @@ function createDownload(index, name, url, time) {
 
   var color = new getAvColor(div.getElementsByTagName('img')[0]);
   color.mostUsed(result => {
-    div.style.borderLeft = "4px solid " + result[0];
+    div.style.backgroundColor = rgbToRgbaString(result[0]);
   });
 
   var container = document.getElementById('sidebar-downloads');
@@ -106,38 +111,40 @@ function createStoppedDownload(index, name, url, path, time) {
 
   var color = new getAvColor(div.getElementsByTagName('img')[0]);
   color.mostUsed(result => {
-    div.style.borderLeft = "4px solid " + result[0];
+    div.style.backgroundColor = rgbToRgbaString(result[0]);
   });
 
-  if (fs.existsSync(path.replace(/\\/g, "/"))) {
-    div.innerHTML += `
-      <center class="download-buttons">
-        <div class="nav-btn" onclick="showItemInFolder('` + path.replace(/\\/g, "/") + `')">
-          <img class="nav-btn-icon theme-icon" name="download-folder">
-          <label>Folder</label>
-        </div>
-        <div class="nav-btn" onclick="openItem('` + path.replace(/\\/g, "/") + `')">
-          <img class="nav-btn-icon theme-icon" name="file">
-          <label>Open</label>
-        </div>
-        <div class="nav-btn" onclick="removeDownload(` + index + `)">
-          <img class="nav-btn-icon theme-icon" name="delete">
-          <label>Remove</label>
-        </div>
-      </center>`;
-  } else {
-    div.innerHTML += `
-      <div class="download-buttons">
-        <div class="nav-btn" onclick="retryDownload(` + index + `, '` + url + `')">
-          <img class="nav-btn-icon theme-icon" name="refresh">
-          <label>Retry</label>
-        </div>
-        <div class="nav-btn" onclick="removeDownload(` + index + `)">
-          <img class="nav-btn-icon theme-icon" name="delete">
-          <label>Remove</label>
-        </div>
-      </div>`;
-  }
+  fs.exists(path.replace(/\\/g, "/"), function(exists) {
+    if (exists) {
+      div.innerHTML += `
+        <center class="download-buttons">
+          <button class="nav-btn" onclick="showItemInFolder('` + path.replace(/\\/g, "/") + `')" title="Show file in folder">
+            <img class="theme-icon" name="folder-16">
+            <label>Folder</label>
+          </button>
+          <button class="nav-btn" onclick="openItem('` + path.replace(/\\/g, "/") + `')" title="Open file">
+            <img class="theme-icon" name="file-16">
+            <label>Open</label>
+          </button>
+          <button class="nav-btn" onclick="removeDownload(` + index + `)" title="Remove download">
+            <img class="theme-icon" name="delete-16">
+            <label>Remove</label>
+          </button>
+        </center>`;
+    } else {
+      div.innerHTML += `
+        <div class="download-buttons">
+          <button class="nav-btn" onclick="retryDownload(` + index + `, '` + url + `')" title="Retry download">
+            <img class="theme-icon" name="reload-16">
+            <label>Retry</label>
+          </button>
+          <button class="nav-btn" onclick="removeDownload(` + index + `)" title="Remove download">
+            <img class="theme-icon" name="delete-16">
+            <label>Remove</label>
+          </button>
+        </div>`;
+    }
+  });
 
   var container = document.getElementById('sidebar-downloads');
   var dwndls = container.getElementsByClassName('download');
@@ -147,9 +154,7 @@ function createStoppedDownload(index, name, url, path, time) {
     container.appendChild(div);
   }
 
-  applyBgColor();
-
-  // console.log(div.name);
+  updateTheme();
 }
 
 function setDownloadProcess(index, bytes, total, name) {
@@ -162,19 +167,17 @@ function setDownloadProcess(index, bytes, total, name) {
     div.name = "process";
     var buttons = div.getElementsByClassName('download-buttons')[0];
     buttons.innerHTML = `
-      <div class="nav-btn" onclick="pauseDownload(` + index + `)">
-        <img class="nav-btn-icon theme-icon" name="pause">
+      <button class="nav-btn" onclick="pauseDownload(` + index + `)" title="Pause download">
+        <img class="theme-icon" name="pause-16">
         <label>Pause</label>
-      </div>
-      <div class="nav-btn" onclick="cancelDownload(` + index + `)">
-        <img class="nav-btn-icon theme-icon" name="cancel">
+      </button>
+      <button class="nav-btn" onclick="cancelDownload(` + index + `)" title="Cancel download">
+        <img class="theme-icon" name="cancel-16">
         <label>Cancel</label>
-      </div>`;
+      </button>`;
   }
 
-  applyBgColor();
-
-  // console.log(div.name);
+  updateTheme();
 }
 
 function setDownloadStatusPause(index, bytes, total, name) {
@@ -187,19 +190,17 @@ function setDownloadStatusPause(index, bytes, total, name) {
     div.name = "pause";
     var buttons = div.getElementsByClassName('download-buttons')[0];
     buttons.innerHTML = `
-      <div class="nav-btn" onclick="resumeDownload(` + index + `)">
-        <img class="nav-btn-icon theme-icon" name="download">
+      <button class="nav-btn" onclick="resumeDownload(` + index + `)" title="Resume download">
+        <img class="theme-icon" name="download-16">
         <label>Resume</label>
-      </div>
-      <div class="nav-btn" onclick="cancelDownload(` + index + `)">
-        <img class="nav-btn-icon theme-icon" name="cancel">
+      </button>
+      <button class="nav-btn" onclick="cancelDownload(` + index + `)" title="Cancel download">
+        <img class="theme-icon" name="cancel-16">
         <label>Cancel</label>
-      </div>`;
+      </button>`;
   } 
 
-  applyBgColor();
-
-  // console.log(div.name);
+  updateTheme();
 }
 
 function setDownloadStatusDone(index, name, path) {
@@ -212,22 +213,20 @@ function setDownloadStatusDone(index, name, path) {
 
   var buttons = div.getElementsByClassName('download-buttons')[0];
   buttons.innerHTML = `
-    <div class="nav-btn" onclick="shell.showItemInFolder('` + path.replace(/\\/g, "/") + `')">
-      <img class="nav-btn-icon theme-icon" name="download-folder">
+    <button class="nav-btn" onclick="shell.showItemInFolder('` + path.replace(/\\/g, "/") + `')" title="Show file in folder">
+      <img class="theme-icon" name="folder-16">
       <label>Folder</label>
-    </div>
-    <div class="nav-btn" onclick="shell.openItem('` + path.replace(/\\/g, "/") + `')">
-      <img class="nav-btn-icon theme-icon" name="file">
+    </button>
+    <button class="nav-btn" onclick="shell.openItem('` + path.replace(/\\/g, "/") + `')" title="Open file">
+      <img class="theme-icon" name="file-16">
       <label>Open</label>
-    </div>
-    <div class="nav-btn" onclick="removeDownload(` + index + `)">
-      <img class="nav-btn-icon theme-icon" name="delete">
+    </button>
+    <button class="nav-btn" onclick="removeDownload(` + index + `)" title="Remove download">
+      <img class="theme-icon" name="delete-16">
       <label>Remove</label>
-    </div>`;
+    </button>`;
 
-  applyBgColor();
-
-  // console.log(div.name);
+  updateTheme();
 }
 
 function setDownloadStatusFailed(index, state, name, link) {
@@ -240,18 +239,16 @@ function setDownloadStatusFailed(index, state, name, link) {
 
   var buttons = div.getElementsByClassName('download-buttons')[0];
   buttons.innerHTML = `
-    <div class="nav-btn" onclick="retryDownload(` + index + `, '` + link + `')">
-      <img class="nav-btn-icon theme-icon" name="refresh">
+    <button class="nav-btn" onclick="retryDownload(` + index + `, '` + link + `')" title="Retry download">
+      <img class="theme-icon" name="reload-16">
       <label>Retry</label>
-    </div>
-    <div class="nav-btn" onclick="removeDownload(` + index + `)">
-      <img class="nav-btn-icon theme-icon" name="delete">
+    </button>
+    <button class="nav-btn" onclick="removeDownload(` + index + `)" title="Remove download">
+      <img class="theme-icon" name="delete-16">
       <label>Remove</label>
-    </div>`;
+    </button>`;
 
-  applyBgColor();
-
-  // console.log(div.name);
+  updateTheme();
 }
 
 function setDownloadStatusInterrupted(index, name) {
@@ -264,18 +261,16 @@ function setDownloadStatusInterrupted(index, name) {
 
   var buttons = div.getElementsByClassName('download-buttons')[0];
   buttons.innerHTML = `
-    <div class="nav-btn" onclick="resumeDownload(` + index + `)">
-      <img class="nav-btn-icon theme-icon" name="download">
+    <button class="nav-btn" onclick="resumeDownload(` + index + `)" title="Resume download">
+      <img class="theme-icon" name="download-16">
       <label>Resume</label>
-    </div>
-    <div class="nav-btn" onclick="cancelDownload(` + index + `)">
-      <img class="nav-btn-icon theme-icon" name="cancel">
+    </button>
+    <button class="nav-btn" onclick="cancelDownload(` + index + `)" title="Cancel download">
+      <img class="theme-icon" name="cancel-16">
       <label>Cancel</label>
-    </div>`;
+    </button>`;
 
-  applyBgColor();
-
-  // console.log(div.name);
+  updateTheme();
 }
 
 function removeDownload(index) {
@@ -327,19 +322,23 @@ function clearArchive() {
 }
 
 function showItemInFolder(path) {
-  if (fs.existsSync(path)) {
-    shell.showItemInFolder(path);
-  } else {
-    notif("File or folder are missing", "error");
-  }
+  fs.exists(path, function(exists) {
+    if (exists) {
+      shell.showItemInFolder(path);
+    } else {
+      notif("File or folder are missing", "error");
+    }
+  });
 }
 
 function openItem(path) {
-  if (fs.existsSync(path)) {
-    shell.openItem(path);
-  } else {
-    notif("File or folder are missing", "error");
-  }
+  fs.exists(path, function(exists) {
+    if (exists) {
+      shell.openItem(path);
+    } else {
+      notif("File or folder are missing", "error");
+    }
+  });
 }
 
 function bytesToSize(bytes) {
@@ -462,8 +461,7 @@ ipcRenderer.on('action-set-download-process', (event, arg) => {
 */
 
 function init() {
-  applyBgColor(loadBgColor());
-  applyBorderRadius(loadBorderRadius());
+  updateTheme();
 
   loadDownloads();
 }

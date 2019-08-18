@@ -8,7 +8,7 @@
 .##.....##.##.....##.####.##....##
 */
 
-const { ipcRenderer } = require('electron');
+const { ipcRenderer, clipboard } = require('electron');
 const dragula = require("dragula");
 const ppath = require('persist-path')('Ferny');
 const fs = require("fs");
@@ -28,7 +28,7 @@ const bookmarkDrag = dragula([document.getElementById('all-bookmarks')], {
   moves: function(el, container, handle) {
     return !handle.classList.contains('bookmark-options') && !handle.classList.contains('bookmark-menu') && !handle.classList.contains('bookmark-menu-btn');
   },
-  direction: "mixed"
+  direction: "vertical"
 });
 bookmarkDrag.on('drag', function(el, target, source, sibling) {
   el.getElementsByClassName('bookmark-menu')[0].classList.remove('active');
@@ -48,10 +48,9 @@ bookmarkDrag.on('drop', function(el, target, source, sibling) {
 */
 
 const saveFileToJsonFolder = require("../modules/saveFileToJsonFolder.js");
-const applyBgColor = require("../modules/applyBgColor.js");
-const applyBorderRadius = require("../modules/applyBorderRadius.js");
-const loadBgColor = require("../modules/loadBgColor.js");
-const loadBorderRadius = require("../modules/loadBorderRadius.js");
+const loadTheme = require("../modules/loadTheme.js");
+const applyTheme = require("../modules/applyTheme.js");
+const rgbToRgbaString = require("../modules/rgbToRgbaString.js");
 
 /*
 .########.##.....##.##....##..######..########.####..#######..##....##..######.
@@ -149,12 +148,7 @@ function openBookmarkInNewTab(inNewTabBtn) {
 }
 
 function copyBookmark(copyBtn) {
-  var input = document.createElement('input');
-  input.value = copyBtn.parentNode.parentNode.name;
-  document.body.appendChild(input);
-  input.select();
-  document.execCommand('copy');
-  document.body.removeChild(input);
+  clipboard.writeText(copyBtn.parentNode.parentNode.name);
 }
 
 function editBookmark(bookmark) {
@@ -204,6 +198,7 @@ function showBookmarkCreator() {
   document.getElementById('bookmark-creator').style.display = "";
   document.getElementById('new-bookmark-btn').classList.add('active');
   document.getElementById('bookmark-name').select();
+  scrollToTop();
 }
 
 function newBookmark() {
@@ -230,7 +225,7 @@ function newBookmark() {
 }
 
 function appendBookmark(name, url, folderEl) {
-  let div = document.createElement('a');
+  let div = document.createElement('button');
   div.classList.add('bookmark');
   div.title = name + "\n" + url;
   div.name = url;
@@ -261,12 +256,21 @@ function appendBookmark(name, url, folderEl) {
   }, false);
 
   div.innerHTML = `
-      <img class="bookmark-icon" src="` + 'http://www.google.com/s2/favicons?domain=' + url + `">
+    <img class="bookmark-icon" src="` + 'http://www.google.com/s2/favicons?domain=' + url + `">
     <label>` + name + `</label>
     <center class="bookmark-menu">
-      <img class="bookmark-menu-btn theme-icon" name="tab" title="Open in new tab" onclick="openBookmarkInNewTab(this)">
-      <img class="bookmark-menu-btn theme-icon" name="copy" title="Copy URL" onclick="copyBookmark(this)">
-      <img class="bookmark-menu-btn theme-icon" name="edit" title="Edit" onclick="editBookmark(this.parentNode.parentNode)">
+      <button class='nav-btn' title="Open in new tab" onclick="openBookmarkInNewTab(this)">
+        <img class="theme-icon" name="tab-16">
+        <label>New tab</label>
+      </button>
+      <button class='nav-btn' title="Copy URL" onclick="copyBookmark(this)">
+        <img class="theme-icon" name="copy-16">
+        <label>Copy</label>
+      </button>
+      <button class='nav-btn' title="Edit" onclick="editBookmark(this.parentNode.parentNode)">
+        <img class="theme-icon" name="edit-16">
+        <label>Edit</label>
+      </button>
     </center>`;
 
   div.getElementsByClassName('bookmark-menu')[0].addEventListener("click", (e) => {
@@ -276,12 +280,12 @@ function appendBookmark(name, url, folderEl) {
 
   var color = new getAvColor(div.getElementsByTagName('img')[0]);
   color.mostUsed(result => {
-    div.style.borderLeft = "4px solid " + result[0];
+    div.style.backgroundColor = rgbToRgbaString(result[0]);
   });
 
-  var options = document.createElement('img');
-  options.classList.add('bookmark-options', 'theme-icon');
-  options.name = "options";
+  var options = document.createElement('button');
+  options.classList.add('bookmark-options');
+  options.innerHTML = "<img name='options-16' class='theme-icon'>"
   options.onclick = function(e) {
     e.stopPropagation();
 
@@ -295,13 +299,19 @@ function appendBookmark(name, url, folderEl) {
       div.getElementsByClassName('bookmark-menu')[0].classList.add('active');
     }
   };
-  options.title = "Options";
+  options.title = "Toggle options";
 
   div.appendChild(options);
 
   folderEl.getElementsByTagName('div')[0].appendChild(div);
 
-  applyBgColor();
+  updateTheme();
+}
+
+function updateTheme() {
+  loadTheme().then(function(theme) {
+    applyTheme(theme);
+  });
 }
 
 function createBookmark(name, url, folder) {
@@ -329,11 +339,12 @@ function loadBookmarks() {
     for(var i = 0; i < folders.length; i++) {
       folders[i].getElementsByTagName('div')[0].innerHTML = "";
     }
-    var jsonstr = fs.readFileSync(ppath + "/json/bookmarks.json");
-    var arr = JSON.parse(jsonstr);
-    for (var i = 0; i < arr.length; i++) {
-      createBookmark(arr[i].name, arr[i].url, arr[i].folder);
-    }
+    fs.readFile(ppath + "/json/bookmarks.json", function(err, data) {
+      var arr = JSON.parse(data);
+      for (var i = 0; i < arr.length; i++) {
+        createBookmark(arr[i].name, arr[i].url, arr[i].folder);
+      }
+    });
   } catch (e) {
 
   }
@@ -368,10 +379,11 @@ function saveBookmarks() {
 .##........#######..########.########..########.##.....##..######.
 */
 
-// function removeFolder(folder) {
-//   folder.parentNode.removeChild(folder);
-//   saveFolders();
-// }
+function newBookmarkInFolder(folder) {
+  showBookmarkCreator();
+
+  document.getElementById('bookmark-folder').value = folder.getElementsByClassName('name')[0].innerHTML;
+}
 
 function editFolder(folder) {
   showFolderEditor();
@@ -379,7 +391,6 @@ function editFolder(folder) {
   document.getElementById('edit-folder-name').value = folder.getElementsByClassName('name')[0].innerHTML;
 
   document.getElementById('remove-folder-btn').onclick = function() {
-    // removeFolder(folder);
     ipcRenderer.send('request-remove-folder', folder.getElementsByClassName('name')[0].innerHTML);
     closeAllEditors();
   }
@@ -398,11 +409,6 @@ function editFolder(folder) {
       notif("This folder name is already taken", "error");
     } else {
       folder.getElementsByClassName('name')[0].innerHTML = document.getElementById('edit-folder-name').value;
-
-
-      // removeFolder(folder);
-      // createFolder(document.getElementById('edit-folder-name').value);
-
 
       closeAllEditors();
       saveFolders();
@@ -457,22 +463,31 @@ function createFolder(name) {
   
   var div = document.createElement('div');
   div.classList.add('folder');
-  div.innerHTML = `<label class="name">` + name + `</label><img name="edit" class="theme-icon edit-btn" title="Edit folder" onclick="editFolder(this.parentNode)"><div class="bookmarks"></div>`;
+  div.innerHTML = `
+    <label class="name">` + name + `</label>
+    <button title="Create bookmark here" onclick="newBookmarkInFolder(this.parentNode)" class="nav-btn add-bookmark-btn">
+      <img name="add-bookmark-16" class="theme-icon">
+    </button>
+    <button title="Edit folder" onclick="editFolder(this.parentNode)" class="nav-btn edit-btn">
+      <img name="edit-folder-16" class="theme-icon">
+    </button>
+    <div class="bookmarks"></div>`;
 
   folders.appendChild(div);
 
   bookmarkDrag.containers.push(div.getElementsByTagName('div')[0]);
 
-  applyBgColor();
+  updateTheme();
 }
 
 function loadFolders() {
   try {
-    var jsonstr = fs.readFileSync(ppath + "/json/folders.json");
-    var arr = JSON.parse(jsonstr);
-    for (var i = 0; i < arr.length; i++) {
-      createFolder(arr[i].name);
-    }
+    fs.readFile(ppath + "/json/folders.json", function(err, data) {
+      var arr = JSON.parse(data);
+      for (var i = 0; i < arr.length; i++) {
+        createFolder(arr[i].name);
+      }
+    });
   } catch (e) {
 
   }
@@ -528,8 +543,7 @@ ipcRenderer.on('action-remove-folder', (event, arg) => {
 */
 
 function init() {
-  applyBgColor(loadBgColor());
-  applyBorderRadius(loadBorderRadius());
+  updateTheme();
 
   loadFolders();
   loadBookmarks();

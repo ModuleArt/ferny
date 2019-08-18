@@ -1,76 +1,67 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
-    <meta charset="utf-8">
-    <title>Settings</title>
-    <link rel="shortcut icon" type="image/png" href="../imgs/icons16/settings.png"/>
+    <link rel="stylesheet" href="../css/modules/webkit.css">
+    <link rel="stylesheet" href="../css/modules/nav-btn.css">
+    <link rel="stylesheet" href="../css/modules/input.css">
+    <link rel="stylesheet" href="../css/modules/checkbox.css">
+    <link rel="stylesheet" href="../css/modules/radio.css">
+    <link rel="stylesheet" href="../css/modules/link.css">
+    <link rel="stylesheet" href="../css/modules/block-title.css">
     <link rel="stylesheet" href="../css/settings.css">
   </head>
   <body>
-    <label class="subtitle">Settings</label>
+    <label class="sidebar-title">Settings</label>
       
     <hr>
     <div class="invis-container">
-      <label class="link" onclick="scrollToId('background-color')">Themes</label>
-      <label class="link" onclick="scrollToId('borders-rounding')">Borders rounding</label>
-      <label class="link" onclick="scrollToId('home-page')">Home page</label>
-      <label class="link" onclick="scrollToId('new-tab')">New tab</label>
-      <label class="link" onclick="scrollToId('search-engine')">Search engine</label>
-      <label class="link" onclick="scrollToId('last-tab')">Last tab</label>
-      <label class="link" onclick="scrollToId('bookmarks')">Bookmarks</label>
-      <label class="link" onclick="scrollToId('welcome-screen')">Welcome</label>
-      <label class="link" onclick="scrollToId('clear-browsing-data')">Clear browsing data</label>
+      <button class="link" onclick="scrollToId('background-color')">Themes</button>
+      <button class="link" onclick="scrollToId('tabs')">Tabs</button>
+      <button class="link" onclick="scrollToId('home-page')">Home page</button>
+      <button class="link" onclick="scrollToId('new-tab')">New tab</button>
+      <button class="link" onclick="scrollToId('search-engine')">Search engine</button>
+      <button class="link" onclick="scrollToId('last-tab')">Last tab</button>
+      <button class="link" onclick="scrollToId('bookmarks')">Bookmarks</button>
+      <button class="link" onclick="scrollToId('welcome-screen')">Welcome</button>
+      <button class="link" onclick="scrollToId('clear-browsing-data')">Clear browsing data</button>
+      <button class="link" onclick="scrollToId('win-controls')">Window</button>
     </div>
     <hr>
 
     <div class="block-title" id="background-color">
-      <img name="color" class="theme-icon">
+      <img name="theme-16" class="theme-icon">
       <label>Themes</label>
     </div>
-    <div class="container">
-      <div class="color" onclick="requestTheme('#ffffff')"><div style="background-color: #ffffff"></div>White</div>
-      <div class="color" onclick="requestTheme('#eeeeee')"><div style="background-color: #eeeeee"></div>Light</div>
-      <div class="color" onclick="requestTheme('#dee1e6')"><div style="background-color: #dee1e6"></div>Gray</div>
-      <div class="color" onclick="requestTheme('#485460')"><div style="background-color: #485460"></div>Modern</div>
-      <div class="color" onclick="requestTheme('#3D4248')"><div style="background-color: #3D4248"></div>Elementary</div>
-      <div class="color" onclick="requestTheme('#263238')"><div style="background-color: #263238"></div>Material</div>
+    <div class="container" id="theme-manager">
+      <!-- <div class="color" onclick="requestTheme('#ffffff')"><div style="background-color: #ffffff"></div>White</div>
       <div class="color" onclick="requestTheme('#1e272e')"><div style="background-color: #1e272e"></div>Night</div>
-      <div class="color" onclick="requestTheme('#292a2d')"><div style="background-color: #292a2d"></div>Dark</div>
-      <div class="color" onclick="requestTheme('#222222')"><div style="background-color: #222222"></div>Black</div>
+      <hr>
+      <div class="color" onclick="requestTheme('#292a2d')"><div style="background-color: #292a2d"></div>Chrome Dark</div>
+      <hr>
+      <div class="color" onclick="requestTheme('#222222')"><div style="background-color: #222222"></div>Windows Black</div>
+      <hr>
+      <div class="color" onclick="requestTheme('#D1D1D1')"><div style="background-color: #D1D1D1"></div>Elementary Light</div>
+      <div class="color" onclick="requestTheme('#34383C')"><div style="background-color: #34383C"></div>Elementary Dark</div>
+      <hr>
+      <div class="color" onclick="requestTheme('#EBE9EC')"><div style="background-color: #E5E3E5"></div>Coupertion Light</div>
+      <hr>
+      <div class="color" onclick="requestTheme('#485460')"><div style="background-color: #485460"></div>Modern</div>
+      <div class="color" onclick="requestTheme('#263238')"><div style="background-color: #263238"></div>Material</div> -->
     </div>
 
-    <div class="block-title" id="borders-rounding">
-      <img name="radius" class="theme-icon">
-      <label>Borders rounding</label>
+    <div class="block-title" id="tabs">
+      <img name="tab-16" class="theme-icon">
+      <label>Tabs</label>
     </div>
     <div class="container">
       <div class="nav-checkbox">
-        <label>None</label>
-        <input type="radio" onclick="requestBorderRadius(0)" class="checkbox" name="border-radius" value="0">
+        <label>Colored tabs</label>
+        <input type="checkbox" id="color-tabs-checkbox" onclick="changeWinControls()">
       </div>
-      <div class="nav-checkbox">
-        <label>Small</label>
-        <input type="radio" onclick="requestBorderRadius(4)" class="checkbox" checked name="border-radius" value="4">
-      </div>
-      <div class="nav-checkbox">
-        <label>Medium</label>
-        <input type="radio" onclick="requestBorderRadius(8)" class="checkbox" name="border-radius" value="8">
-      </div>
-      <div class="nav-checkbox">
-        <label>Large</label>
-        <input type="radio" onclick="requestBorderRadius(12)" class="checkbox" name="border-radius" value="12">
-      </div>
-      <div class="nav-checkbox">
-        <label>Circle</label>
-        <input type="radio" onclick="requestBorderRadius(16)" class="checkbox" name="border-radius" value="16">
-      </div>
-      <hr>
-      <img class="more-btn theme-icon" onclick="moreInfo(this)" title="More info" name="info">
-      <label class="more-label">The borders rounding of the interface elements.</label>
     </div>
 
     <div class="block-title" id="home-page">
-      <img name="home" class="theme-icon">
+      <img name="home-16" class="theme-icon">
       <label>Home page</label>
     </div>
     <div class="container">
@@ -79,36 +70,40 @@
         <label>Show button</label>
         <input type="checkbox" id="home-page-checkbox" class="checkbox">
       </div>
-      <div class="nav-btn" onclick="saveHomePage()">
-        <img class="theme-icon" name="save">
+      <button class="nav-btn" onclick="saveHomePage()">
+        <img class="theme-icon" name="save-16">
         <label>Save</label>
-      </div>
+      </button>
       <hr>
-      <img class="more-btn theme-icon" onclick="moreInfo(this)" title="More info" name="info">
+      <button class="more-btn" title="More info" onclick="moreInfo(this)">
+        <img class="theme-icon" name="info-16">
+      </button>
       <label class="more-label">The page that will open when you click home button.</label>
     </div>
 
     <div class="block-title" id="new-tab">
-      <img name="create" class="theme-icon">
+      <img name="add-tab-16" class="theme-icon">
       <label>New tab</label>
     </div>
     <div class="container">
       <input type="text" id="start-page-input" placeholder="New tab page URL">
-      <div class="nav-btn" onclick="setStartPageLikeHomePage()">
-        <img class="theme-icon" name="home">
+      <button class="nav-btn" onclick="setStartPageLikeHomePage()">
+        <img class="theme-icon" name="home-16">
         <label>Use home page</label>
-      </div>
-      <div class="nav-btn" onclick="saveStartPage()">
-        <img class="theme-icon" name="save">
+      </button>
+      <button class="nav-btn" onclick="saveStartPage()">
+        <img class="theme-icon" name="save-16">
         <label>Save</label>
-      </div>
+      </button>
       <hr>
-      <img class="more-btn theme-icon" onclick="moreInfo(this)" title="More info" name="info">
+      <button class="more-btn" title="More info" onclick="moreInfo(this)">
+        <img class="theme-icon" name="info-16">
+      </button>
       <label class="more-label">The page that will open when you create a new tab or when you start the browser.</label>
     </div>
 
     <div class="block-title" id="search-engine">
-      <img name="search" class="theme-icon">
+      <img name="search-16" class="theme-icon">
       <label>Search engine</label>
     </div>
     <div class="container">
@@ -168,34 +163,42 @@
         <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" name="search-engine" value="youtube">
       </div>
       <hr>
-      <img class="more-btn theme-icon" onclick="moreInfo(this)" title="More info" name="info">
+      <button class="more-btn" title="More info" onclick="moreInfo(this)">
+        <img class="theme-icon" name="info-16">
+      </button>
       <label class="more-label">Search engine used in the address bar.</label>
     </div>
 
     <div class="block-title" id="last-tab">
-      <img name="close-tab" class="theme-icon">
+      <img name="close-tab-16" class="theme-icon">
       <label>Last tab</label>
     </div>
     <div class="container">
+      <div class="nav-checkbox">
+        <label>Do nothing</label>
+        <input type="radio" onclick="requestLastTab(this.value)" class="checkbox" name="last-tab" value="nothing">
+      </div>
       <div class="nav-checkbox">
         <label>Open new tab</label>
         <input type="radio" onclick="requestLastTab(this.value)" class="checkbox" name="last-tab" value="new-tab">
       </div>
       <div class="nav-checkbox">
-        <label>Do nothing</label>
-        <input type="radio" onclick="requestLastTab(this.value)" class="checkbox" name="last-tab" value="nothing">
+        <label>Open home page</label>
+        <input type="radio" onclick="requestLastTab(this.value)" class="checkbox" name="last-tab" value="home-page">
       </div>
       <div class="nav-checkbox">
         <label>Quit app</label>
         <input type="radio" onclick="requestLastTab(this.value)" class="checkbox" name="last-tab" value="quit">
       </div>
       <hr>
-      <img class="more-btn theme-icon" onclick="moreInfo(this)" title="More info" name="info">
+      <button class="more-btn" title="More info" onclick="moreInfo(this)">
+        <img class="theme-icon" name="info-16">
+      </button>
       <label class="more-label">Action when the last tab is closed.</label>
     </div>
 
     <div class="block-title" id="bookmarks">
-      <img name="bookmarks" class="theme-icon">
+      <img name="bookmarks-16" class="theme-icon">
       <label>Bookmarks</label>
     </div>
     <div class="container">
@@ -219,7 +222,7 @@
     </div>
 
     <div class="block-title" id="welcome-screen">
-      <img name="box" class="theme-icon">
+      <img name="enter-16" class="theme-icon">
       <label>Welcome</label>
     </div>
     <div class="container">
@@ -227,14 +230,14 @@
         <label>Show welcome dialog at startup</label>
         <input type="checkbox" id="welcome-checkbox" onclick="changeWelcome(this.checked)">
       </div>
-      <div class="nav-btn" onclick="showWelcomeScreen()">
-        <img class="nav-btn-icon theme-icon" name="show">
+      <button class="nav-btn" onclick="showWelcomeScreen()">
+        <img class="nav-btn-icon theme-icon" name="show-16">
         <label class="nav-btn-label">Show welcome screen</label>
-      </div>
+      </button>
     </div>
 
     <div class="block-title" id="clear-browsing-data">
-      <img name="clear" class="theme-icon">
+      <img name="clear-16" class="theme-icon">
       <label>Clear browsing data</label>
     </div>
     <div class="container">
@@ -256,10 +259,30 @@
       </div> -->
       <hr>
       <label id="cache-size-label"></label><br>
-      <div class="nav-btn" onclick="clearBrowsingData()">
-        <img class="nav-btn-icon theme-icon" name="delete">
+      <button class="nav-btn" onclick="clearBrowsingData()">
+        <img class="nav-btn-icon theme-icon" name="delete-16">
         <label class="nav-btn-label">Clear data</label>
+      </button>
+    </div>
+
+    <div class="block-title" id="win-controls">
+      <img name="window-16" class="theme-icon">
+      <label>Window</label>
+    </div>
+    <div class="container">
+      <div class="nav-checkbox">
+        <label>System window titlebar</label>
+        <input type="checkbox" id="system-titlebar-checkbox" onclick="changeWinControls()">
       </div>
+      <div class="nav-checkbox">
+        <label>Autohide menubar</label>
+        <input type="checkbox" id="autohide-menubar-checkbox" onclick="changeWinControls()">
+      </div>
+      <hr>
+      <button class="more-btn" title="More info" onclick="moreInfo(this)">
+        <img class="theme-icon" name="info-16">
+      </button>
+      <label class="more-label">You can show the menu bar by the Alt key. This setting will be applied the next time the application starts.</label>
     </div>
     
     <script type="text/javascript" src="../js/settings.js"></script>

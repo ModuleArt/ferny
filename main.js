@@ -8,7 +8,7 @@
 .##.....##.##.....##.####.##....##
 */
 
-const { ipcMain, app, Menu, MenuItem, BrowserWindow, dialog, systemPreferences } = require('electron');
+const { ipcMain, app, Menu, MenuItem, BrowserWindow, dialog, systemPreferences, clipboard } = require('electron');
 const { autoUpdater } = require("electron-updater")
 const os = require('os');
 const prependFile = require('prepend-file');
@@ -26,7 +26,8 @@ const ppath = require('persist-path')('Ferny');
 */
 
 const saveFileToJsonFolder = require(app.getAppPath() + "/modules/saveFileToJsonFolder.js");
-const loadBgColor = require(app.getAppPath() + "/modules/loadBgColor.js");
+const loadTheme = require(app.getAppPath() + "/modules/loadTheme.js");
+const loadWinControls = require(app.getAppPath() + "/modules/loadWinControls.js");
 
 /*
 ..######..####.##....##..######...##.......########....####.##....##..######..########....###....##....##..######..########
@@ -65,8 +66,8 @@ const sideMenu = Menu.buildFromTemplate([
     { label: 'Duplicate', icon: app.getAppPath() + '/imgs/icons16/copy.png', accelerator: 'CmdOrCtrl+Shift+D', click: () => { mainWindow.webContents.send('action-tab-duplicatetab'); } },
     { label: 'Copy URL', icon: app.getAppPath() + '/imgs/icons16/copy-link.png', accelerator: 'CmdOrCtrl+Shift+C', click: () => { mainWindow.webContents.send('action-tab-copyurl'); } },
     { label: 'Go home', icon: app.getAppPath() + '/imgs/icons16/home.png', accelerator: 'CmdOrCtrl+Shift+H', click: () => { mainWindow.webContents.send('action-tab-gohome'); } },
-    { type: 'separator' },
-    { label: 'Picture in picture', icon: app.getAppPath() + '/imgs/icons16/picture-in.png', accelerator: 'CmdOrCtrl+Shift+P', click: () => { mainWindow.webContents.send('action-tab-picturein'); } },
+    // { type: 'separator' },
+    // { label: 'Picture in picture', icon: app.getAppPath() + '/imgs/icons16/picture-in.png', accelerator: 'CmdOrCtrl+Shift+P', click: () => { mainWindow.webContents.send('action-tab-picturein'); } },
     // { type: 'separator' },
     // { label: 'Mute site', accelerator: 'CmdOrCtrl+Shift+M', click: () => {  }, enabled: false },
     { type: 'separator' },
@@ -100,6 +101,8 @@ const sideMenu = Menu.buildFromTemplate([
     { label: 'Cut', icon: app.getAppPath() + '/imgs/icons16/cut.png', accelerator: 'CmdOrCtrl+X', click: () => { mainWindow.webContents.send('action-edit-cut'); } },
     { label: 'Copy', icon: app.getAppPath() + '/imgs/icons16/copy.png', accelerator: 'CmdOrCtrl+C', click: () => { mainWindow.webContents.send('action-edit-copy'); } },
     { label: 'Paste', icon: app.getAppPath() + '/imgs/icons16/paste.png', accelerator: 'CmdOrCtrl+V', click: () => { mainWindow.webContents.send('action-edit-paste'); } },
+    { type: 'separator' },
+    { label: 'Paste and match style', icon: app.getAppPath() + '/imgs/icons16/paste-special.png', accelerator: 'CmdOrCtrl+Shift+V', click: () => { mainWindow.webContents.send('action-edit-pastematchstyle'); } },
     { type: 'separator' },
     { label: 'Undo', icon: app.getAppPath() + '/imgs/icons16/undo.png', accelerator: 'CmdOrCtrl+Z', click: () => { mainWindow.webContents.send('action-edit-undo'); } },
     { label: 'Redo', icon: app.getAppPath() + '/imgs/icons16/redo.png', accelerator: 'CmdOrCtrl+Shift+Z', click: () => { mainWindow.webContents.send('action-edit-redo'); } },
@@ -163,25 +166,6 @@ const sideMenu = Menu.buildFromTemplate([
   { label: 'Quit Ferny', icon: app.getAppPath() + '/imgs/icons16/exit.png', accelerator: 'CmdOrCtrl+Shift+Q', click: () => { app.quit(); } }
 ]);
 
-const selectionMenu = Menu.buildFromTemplate([
-  { label: 'Copy', icon: app.getAppPath() + '/imgs/icons16/copy.png', accelerator: 'CmdOrCtrl+C', click: () => { mainWindow.webContents.copy(); } },
-  { type: 'separator' },
-  { label: 'Select all', icon: app.getAppPath() + '/imgs/icons16/select-all.png', accelerator: 'CmdOrCtrl+A', click: () => { mainWindow.webContents.selectAll(); } },
-]);
-
-const inputMenu = Menu.buildFromTemplate([
-  { label: 'Cut', icon: app.getAppPath() + '/imgs/icons16/cut.png', accelerator: 'CmdOrCtrl+X', click: () => { mainWindow.webContents.cut(); } },
-  { label: 'Copy', icon: app.getAppPath() + '/imgs/icons16/copy.png', accelerator: 'CmdOrCtrl+C', click: () => { mainWindow.webContents.copy(); } },
-  { label: 'Paste', icon: app.getAppPath() + '/imgs/icons16/paste.png', accelerator: 'CmdOrCtrl+V', click: () => { mainWindow.webContents.paste(); } },
-  { type: 'separator' },
-  { label: 'Undo', icon: app.getAppPath() + '/imgs/icons16/undo.png', accelerator: 'CmdOrCtrl+Z', click: () => { mainWindow.webContents.undo(); } },
-  { label: 'Redo', icon: app.getAppPath() + '/imgs/icons16/redo.png', accelerator: 'CmdOrCtrl+Shift+Z', click: () => { mainWindow.webContents.redo(); } },
-  { type: 'separator' },
-  { label: 'Select all', icon: app.getAppPath() + '/imgs/icons16/select-all.png', accelerator: 'CmdOrCtrl+A', click: () => { mainWindow.webContents.selectAll(); } },
-  { type: 'separator' },
-  { label: 'Delete', icon: app.getAppPath() + '/imgs/icons16/delete.png', accelerator: 'Backspace', click: () => { mainWindow.webContents.delete(); } },
-]);
-
 var mainWindow = null;
 var welcomeWindow = null;
 var keyBindsWindow = null;
@@ -189,6 +173,8 @@ var pageInfoWindow = null;
 
 var downloadsArray = [];
 var curDownloadNum = 0;
+
+var updateCancellationToken = null;
 
 /*
 ....###....########..########.
@@ -223,17 +209,27 @@ app.on('ready', function() {
   });
 
   autoUpdater.on('update-available', (info) => {
-    mainWindow.webContents.send('action-loader', { text: "Downloading update: v" + info.version, id: "update-0" });
+    mainWindow.webContents.send('action-notif', { type: "success", text: "Update is available. Download started..." });
+    mainWindow.webContents.send('action-loader', { 
+      text: "Downloading update: " + info.releaseName, 
+      id: "update-0", 
+      stopBtn: { icon: "cancel", click: 'cancelUpdate()', text: "Cancel update" } });
   });
 
   autoUpdater.on('update-downloaded', () => {
     mainWindow.webContents.send('action-quest', { text: "Update is downloaded!", ops: [{ text:'Install now', icon:'check', click:'installUpdate();' }] });
   });
 
-  autoUpdater.on('download-progress', (progress, bytesPerSecond, percent, total, transferred) => {
-    console.log(progress);
-    console.log(percent);
-    mainWindow.webContents.send('action-update-loader', { percent: percent, id: 'update-0' });
+  autoUpdater.on('download-progress', (progress) => {
+    if(progress != null) {
+      mainWindow.webContents.send('action-update-loader', { 
+        percent: progress.percent, 
+        speed: progress.bytesPerSecond, 
+        transferred: progress.transferred, 
+        total: progress.total, 
+        id: 'update-0' 
+      });
+    }
   });
 
   showMainWindow();
@@ -250,6 +246,62 @@ app.on('ready', function() {
 ..##..##........##....##....##.....##.##.....##..##..##...###
 .####.##.........######.....##.....##.##.....##.####.##....##
 */
+
+ipcMain.on('request-set-color-tabs', (event, arg) => {
+  setColorTabs(arg);
+});
+
+ipcMain.on('request-webview-contextmenu', (event, arg) => {
+  if(arg.params.isEditable) {
+    let webviewMenu = Menu.buildFromTemplate([
+      { label: 'Cut', icon: app.getAppPath() + '/imgs/icons16/cut.png', accelerator: 'CmdOrCtrl+X', enabled: arg.params.editFlags.canCut, click: () => { 
+        mainWindow.webContents.send('action-webview-contextmenu', { action: 'cut', id: arg.id }); } },
+      { label: 'Copy', icon: app.getAppPath() + '/imgs/icons16/copy.png', accelerator: 'CmdOrCtrl+C', enabled: arg.params.editFlags.canCopy, click: () => { 
+        mainWindow.webContents.send('action-webview-contextmenu', { action: 'copy', id: arg.id }); } },
+      { label: 'Paste', icon: app.getAppPath() + '/imgs/icons16/paste.png', accelerator: 'CmdOrCtrl+V', enabled: arg.params.editFlags.canPaste, click: () => { 
+        mainWindow.webContents.send('action-webview-contextmenu', { action: 'paste', id: arg.id }); } },
+      { type: 'separator' },
+      { label: 'Paste and match style', icon: app.getAppPath() + '/imgs/icons16/paste-special.png', accelerator: 'CmdOrCtrl+Shift+V', enabled: arg.params.editFlags.canPaste, click: () => { 
+        mainWindow.webContents.send('action-webview-contextmenu', { action: 'paste-match-style', id: arg.id }); } },
+      { type: 'separator' },
+      { label: 'Undo', icon: app.getAppPath() + '/imgs/icons16/undo.png', accelerator: 'CmdOrCtrl+Z', enabled: arg.params.editFlags.canUndo, click: () => { 
+        mainWindow.webContents.send('action-webview-contextmenu', { action: 'undo', id: arg.id }); } },
+      { label: 'Redo', icon: app.getAppPath() + '/imgs/icons16/redo.png', accelerator: 'CmdOrCtrl+Shift+Z', enabled: arg.params.editFlags.canRedo, click: () => {
+        mainWindow.webContents.send('action-webview-contextmenu', { action: 'redo', id: arg.id }); } },
+      { type: 'separator' },
+      { label: 'Select all', icon: app.getAppPath() + '/imgs/icons16/select-all.png', accelerator: 'CmdOrCtrl+A', enabled: arg.params.editFlags.canSelectAll, click: () => { 
+        mainWindow.webContents.send('action-webview-contextmenu', { action: 'select-all', id: arg.id }); } },
+      { type: 'separator' },
+      { label: 'Delete', icon: app.getAppPath() + '/imgs/icons16/delete.png', accelerator: 'Backspace', enabled: arg.params.editFlags.canDelete, click: () => { 
+        mainWindow.webContents.send('action-webview-contextmenu', { action: 'delete', id: arg.id }); } }
+    ]);
+    webviewMenu.popup(mainWindow);
+  } else {
+    if(arg.params.linkURL.length > 0) {
+      let webviewMenu = Menu.buildFromTemplate([
+        { label: 'Open link in new tab', icon: app.getAppPath() + '/imgs/icons16/tab.png', click: () => { 
+          mainWindow.webContents.send('action-open-url-in-new-tab', arg.params.linkURL); } },
+        { type: 'separator' },
+        { label: 'Copy link address', icon: app.getAppPath() + '/imgs/icons16/copy.png', click: () => { 
+          clipboard.writeText(arg.params.linkURL); } } 
+      ]);
+      webviewMenu.popup(mainWindow);
+    } else {
+      let webviewMenu = Menu.buildFromTemplate([
+        { label: 'Copy', icon: app.getAppPath() + '/imgs/icons16/copy.png', accelerator: 'CmdOrCtrl+C', enabled: arg.params.editFlags.canCopy, click: () => { 
+          mainWindow.webContents.send('action-webview-contextmenu', { action: 'copy', id: arg.id }); } },
+        { type: 'separator' },
+        { label: 'Select all', icon: app.getAppPath() + '/imgs/icons16/select-all.png', accelerator: 'CmdOrCtrl+A', enabled: arg.params.editFlags.canSelectAll, click: () => { 
+          mainWindow.webContents.send('action-webview-contextmenu', { action: 'select-all', id: arg.id }); } }
+      ]);
+      webviewMenu.popup(mainWindow);
+    }
+  }
+});
+
+ipcMain.on('request-cancel-update', (event, arg) => {
+  cancelUpdate();
+});
 
 ipcMain.on('request-set-start-page', (event, arg) => {
   mainWindow.webContents.send('action-set-start-page', arg);
@@ -331,21 +383,6 @@ ipcMain.on('request-webview-zoomout', (event, arg) => {
   mainWindow.webContents.send('action-zoom-zoomout');
 });
 
-ipcMain.on('request-webview-contextmenu', (event, arg) => {
-  console.log(arg);
-  let webviewMenu = Menu.buildFromTemplate([
-    { label: 'Type: ' + arg.type, enabled: false },
-    { type: 'separator' },
-    { label: 'Back', accelerator: 'Alt+Left', icon: app.getAppPath() + '/imgs/icons16/back.png', click: () => { mainWindow.webContents.send('action-tab-back'); } },
-    { label: 'Forward', accelerator: 'Alt+Right', icon: app.getAppPath() + '/imgs/icons16/forward.png', click: () => { mainWindow.webContents.send('action-tab-forward'); } },
-    { label: 'Reload', accelerator: 'F5', icon: app.getAppPath() + '/imgs/icons16/reload.png', click: () => { mainWindow.webContents.send('action-tab-reload'); } },
-    { type: 'separator' },
-    { label: 'View page source', icon: app.getAppPath() + '/imgs/icons16/code.png', accelerator: 'CmdOrCtrl+U', click: () => { mainWindow.webContents.send('action-page-viewsource'); } },
-    { label: 'Inspect element', icon: app.getAppPath() + '/imgs/icons16/inspect.png', click: () => { mainWindow.webContents.send('action-page-inspect', arg); } }
-  ]);
-  webviewMenu.popup(mainWindow);
-});
-
 ipcMain.on('request-info-contextmenu', (event, arg) => {
   let infoMenu = Menu.buildFromTemplate([
     { label: 'Certificate info', accelerator: 'CmdOrCtrl+I', icon: app.getAppPath() + '/imgs/icons16/certificate.png', click: () => { mainWindow.webContents.send('action-page-certificate'); } }
@@ -393,18 +430,19 @@ ipcMain.on('request-update-home-page', (event, arg) => {
 
 ipcMain.on('request-set-bookmarks-bar', (event, arg) => {
   try {
-    var jsonstr = fs.readFileSync(ppath + "/json/bookmarksbar.json");
-    let Data = JSON.parse(jsonstr);
+    fs.readFile(ppath + "/json/bookmarksbar.json", function(err, data) {
+      let Data = JSON.parse(data);
 
-    if(arg.on == null) {
-      arg.on = Data.on;
-    }
-    if(arg.layout == null) {
-      arg.layout = Data.layout;
-    }
+      if(arg.on == null) {
+        arg.on = Data.on;
+      }
+      if(arg.layout == null) {
+        arg.layout = Data.layout;
+      }
 
-    mainWindow.webContents.send('action-set-bookmarks-bar', arg);
-    saveFileToJsonFolder('bookmarksbar', JSON.stringify(arg));
+      mainWindow.webContents.send('action-set-bookmarks-bar', arg);
+      saveFileToJsonFolder('bookmarksbar', JSON.stringify(arg));
+    });
   } catch (e) {
 
   }
@@ -558,8 +596,8 @@ ipcMain.on('request-tab-menu', (event, arg) => {
     { label: 'Copy URL', icon: app.getAppPath() + '/imgs/icons16/copy-link.png', accelerator: 'CmdOrCtrl+Shift+C', click: () => { mainWindow.webContents.send('action-tabcontext-copyurl', arg); } },
     { label: 'Go home', icon: app.getAppPath() + '/imgs/icons16/home.png', accelerator: 'CmdOrCtrl+Shift+H', click: () => { mainWindow.webContents.send('action-tabcontext-gohome', arg); } },
     { type: 'separator' },
-    { label: 'Picture in picture', icon: app.getAppPath() + '/imgs/icons16/picture-in.png', accelerator: 'CmdOrCtrl+Shift+P', click: () => { mainWindow.webContents.send('action-tabcontext-picturein', arg); } },
-    { type: 'separator' },
+    // { label: 'Picture in picture', icon: app.getAppPath() + '/imgs/icons16/picture-in.png', accelerator: 'CmdOrCtrl+Shift+P', click: () => { mainWindow.webContents.send('action-tabcontext-picturein', arg); } },
+    // { type: 'separator' },
     { label: 'Reload ignoring cache', accelerator: 'CmdOrCtrl+F5', click: () => { mainWindow.webContents.send('action-tabcontext-ignorecache'); } },
     // { label: 'Mute site', accelerator: 'CmdOrCtrl+Shift+M', click: () => {  }, enabled: false },
     { type: 'separator' },
@@ -621,6 +659,10 @@ ipcMain.on('request-quit-app', (event, arg) => {
 });
 
 ipcMain.on('request-exit-app-anyway', (event, arg) => {
+  saveBounds();
+  if(updateCancellationToken != null) {
+    updateCancellationToken.cancel();
+  }
   app.exit();
 });
 
@@ -638,12 +680,6 @@ ipcMain.on('request-unmaximize-window', (event, arg) => {
 
 ipcMain.on('request-change-theme', (event, arg) => {
   mainWindow.webContents.send('action-change-theme', arg);
-  saveFileToJsonFolder('theme', arg);
-});
-
-ipcMain.on('request-change-border-radius', (event, arg) => {
-  mainWindow.webContents.send('action-change-border-radius', arg);
-  saveFileToJsonFolder('radius', arg);
 });
 
 ipcMain.on('request-toggle-fullscreen', (event, arg) => {
@@ -676,6 +712,10 @@ ipcMain.on('request-open-license-file', (event, arg) => {
 .##........#######..##....##..######.....##....####..#######..##....##..######.
 */
 
+function setColorTabs(bool) {
+  mainWindow.webContents.send('action-set-color-tabs', bool);
+}
+
 function showMainWindow() {
   let Data = {
     x: null,
@@ -695,167 +735,201 @@ function showMainWindow() {
     Data.x = null;
     Data.y = null;
     Data.width = 1000;
-    Data.height = 720;
+    Data.height = 600;
   }
 
-  mainWindow = new BrowserWindow({
-    x: Data.x, y: Data.y,
-    width: Data.width, height: Data.height,
-    minWidth: 480, minHeight: 240,
-    frame: false,
-    show: false,
-    icon: app.getAppPath() + '/imgs/icon.ico',
-    webPreferences: {
-      nodeIntegration: true,
-      webviewTag: true
-    },
-    backgroundColor: loadBgColor()
-  });
-  mainWindow.setMenu(sideMenu);
-
-  // mainWindow.webContents.openDevTools();
-  mainWindow.loadFile(app.getAppPath() + '/html/browser.html');
-
-  mainWindow.webContents.on('context-menu', (e, props) => {
-    const { selectionText, isEditable } = props;
-    if (isEditable) {
-      inputMenu.popup(mainWindow);
-    } else if (selectionText && selectionText.trim() !== '') {
-      selectionMenu.popup(mainWindow);
-    }
-  });
-
-  mainWindow.on('focus', () => {
-    mainWindow.webContents.send('action-focus-window');
-  });
-
-  mainWindow.on('blur', () => {
-    mainWindow.webContents.send('action-blur-window');
-  });
-
-  mainWindow.on('maximize', () => {
-    mainWindow.webContents.send('action-maximize-window');
-  });
-
-  mainWindow.on('unmaximize', () => {
-    mainWindow.webContents.send('action-unmaximize-window');
-  });
-
-  mainWindow.once('ready-to-show', () => {
-    mainWindow.show();
-    if(Data.maximize) {
-      mainWindow.maximize();
-    }
-  });
-
-  mainWindow.on('maximize', () => {
-    mainWindow.webContents.send('action-maximize-window');
-  });
-
-  mainWindow.on('unmaximize', () => {
-    mainWindow.webContents.send('action-unmaximize-window');
-  });
-
-  mainWindow.on('close', function(event) {
-    event.preventDefault();
-
-    var download = false;
-    for (var i = 0; i < downloadsArray.length; i++) {
-      try {
-        if(downloadsArray[i].item.getState() == "progressing") {
-          download = true;
-          break;
-        }
-      } catch (e) {
-
+  loadTheme().then(function(theme) {
+    mainWindow = new BrowserWindow({
+      x: Data.x, y: Data.y,
+      width: Data.width, height: Data.height,
+      minWidth: 520, minHeight: 300,
+      frame: loadWinControls().frame,
+      autoHideMenuBar: loadWinControls().hideMenu,
+      show: false,
+      icon: app.getAppPath() + '/imgs/icon.ico',
+      webPreferences: {
+        nodeIntegration: true,
+        webviewTag: true
+      },
+      backgroundColor: theme.colorBack
+    });
+    mainWindow.setMenu(sideMenu);
+  
+    // mainWindow.webContents.openDevTools();
+    mainWindow.loadFile(app.getAppPath() + '/html/browser.html');
+  
+    mainWindow.webContents.on('context-menu', (event, params) => {
+      if(params.isEditable) {
+        let searchMenu = Menu.buildFromTemplate([
+          { label: 'Cut', icon: app.getAppPath() + '/imgs/icons16/cut.png', accelerator: 'CmdOrCtrl+X', enabled: params.editFlags.canCut, click: () => { 
+            mainWindow.webContents.cut(); } },
+          { label: 'Copy', icon: app.getAppPath() + '/imgs/icons16/copy.png', accelerator: 'CmdOrCtrl+C', enabled: params.editFlags.canCopy, click: () => { 
+            mainWindow.webContents.copy(); } },
+          { label: 'Paste', icon: app.getAppPath() + '/imgs/icons16/paste.png', accelerator: 'CmdOrCtrl+V', enabled: params.editFlags.canPaste, click: () => { 
+            mainWindow.webContents.paste(); } },
+          { type: 'separator' },
+          { label: 'Paste and search', icon: app.getAppPath() + '/imgs/icons16/zoom.png', enabled: params.editFlags.canPaste, click: () => { 
+            mainWindow.webContents.send('action-navigate-suggest', clipboard.readText()); } },
+          { type: 'separator' },
+          { label: 'Undo', icon: app.getAppPath() + '/imgs/icons16/undo.png', accelerator: 'CmdOrCtrl+Z', enabled: params.editFlags.canUndo, click: () => { 
+            mainWindow.webContents.undo(); } },
+          { label: 'Redo', icon: app.getAppPath() + '/imgs/icons16/redo.png', accelerator: 'CmdOrCtrl+Shift+Z', enabled: params.editFlags.canRedo, click: () => {
+            mainWindow.webContents.redo(); } },
+          { type: 'separator' },
+          { label: 'Select all', icon: app.getAppPath() + '/imgs/icons16/select-all.png', accelerator: 'CmdOrCtrl+A', enabled: params.editFlags.canSelectAll, click: () => { 
+            mainWindow.webContents.selectAll(); } },
+          { type: 'separator' },
+          { label: 'Delete', icon: app.getAppPath() + '/imgs/icons16/delete.png', accelerator: 'Backspace', enabled: params.editFlags.canDelete, click: () => { 
+            mainWindow.webContents.delete(); } }
+        ]);
+        searchMenu.popup(mainWindow);
       }
-    }
-    if(download) {
-      mainWindow.webContents.send('action-quest', { text: "Download is in progress! Exit anyway?", ops: [{ text:'Continue', icon:'download', click:'removeNotif(this.parentNode.parentNode)' }, { text:'Exit', icon:'exit', click:'exitAppAnyway()' }] });
-    } else {
-      saveBounds();
-      app.exit();
-    }
-  });
-
-  mainWindow.webContents.session.on('will-download', (event, item, webContents) => {
-    curDownloadNum++;
-
-    let curnum = curDownloadNum;
-
-    let Item = {
-      index: curnum,
-      item: item,
-      url: item.getURL(),
-      name: item.getFilename(),
-      path: "",
-      time: item.getStartTime()
-    };
-
-    downloadsArray.push(Item);
-    saveDownloads();
-
-    let Data = {
-      index: curnum,
-      url: item.getURL(),
-      name: item.getFilename(),
-      time: item.getStartTime()
-    };
-
-    mainWindow.webContents.send('action-create-download', Data);
-
-    item.on('updated', (event, state) => {
-      if (state === 'interrupted') {
-        let Data = {
-          index: curnum,
-          name: item.getFilename()
-        };
-        mainWindow.webContents.send('action-set-download-status-interrupted', Data);
-      } else if (state === 'progressing') {
-        if (item.isPaused()) {
-          let Data = {
-            index: curnum,
-            bytes: item.getReceivedBytes(),
-            total: item.getTotalBytes(),
-            name: item.getFilename()
-          };
-          mainWindow.webContents.send('action-set-download-status-pause', Data);
+    });
+  
+    mainWindow.on('focus', () => {
+      mainWindow.webContents.send('action-focus-window');
+    });
+  
+    mainWindow.on('blur', () => {
+      mainWindow.webContents.send('action-blur-window');
+    });
+  
+    mainWindow.on('maximize', () => {
+      mainWindow.webContents.send('action-maximize-window');
+    });
+  
+    mainWindow.on('unmaximize', () => {
+      mainWindow.webContents.send('action-unmaximize-window');
+    });
+  
+    mainWindow.once('ready-to-show', () => {
+      mainWindow.show();
+      if(Data.maximize) {
+        mainWindow.maximize();
+      }
+    });
+  
+    mainWindow.on('maximize', () => {
+      mainWindow.webContents.send('action-maximize-window');
+    });
+  
+    mainWindow.on('unmaximize', () => {
+      mainWindow.webContents.send('action-unmaximize-window');
+    });
+  
+    mainWindow.on('close', function(event) {
+      event.preventDefault();
+  
+      var download = false;
+  
+      for (var i = 0; i < downloadsArray.length; i++) {
+        try {
+          if(downloadsArray[i].item.getState() == "progressing") {
+            download = true;
+            break;
+          }
+        } catch (e) {
+  
+        }
+      }
+  
+      var update = false;
+      
+      if(updateCancellationToken != null) {
+        update = true;
+      }
+  
+      if(update) {
+        mainWindow.webContents.send('action-quest', { text: "App update is in progress! Exit anyway?", ops: [{ text:'Continue', icon:'download', click:'removeNotif(this.parentNode.parentNode)' }, { text:'Exit', icon:'exit', click:'exitAppAnyway()' }] });
+      } else {
+        if(download) {
+          mainWindow.webContents.send('action-quest', { text: "Download is in progress! Exit anyway?", ops: [{ text:'Continue', icon:'download', click:'removeNotif(this.parentNode.parentNode)' }, { text:'Exit', icon:'exit', click:'exitAppAnyway()' }] });
         } else {
-          let Data = {
-            index: curnum,
-            bytes: item.getReceivedBytes(),
-            total: item.getTotalBytes(),
-            name: item.getFilename()
-          };
-          mainWindow.webContents.send('action-set-download-process', Data);
+          saveBounds();
+          app.exit();
         }
       }
     });
-
-    item.once('done', (event, state) => {
-      if (state === 'completed') {
-        let Data = {
-          index: curnum,
-          name: item.getFilename(),
-          path: item.getSavePath()
-        };
-        mainWindow.webContents.send('action-set-download-status-done', Data);
-        var i;
-        for(i = 0; i < downloadsArray.length; i++) {
-          if(downloadsArray[i].index == curnum) {
-            downloadsArray[i].path = item.getSavePath();
-            saveDownloads();
+  
+    mainWindow.webContents.session.on('will-download', (event, item, webContents) => {
+      curDownloadNum++;
+  
+      let curnum = curDownloadNum;
+  
+      let Item = {
+        index: curnum,
+        item: item,
+        url: item.getURL(),
+        name: item.getFilename(),
+        path: "",
+        time: item.getStartTime()
+      };
+  
+      downloadsArray.push(Item);
+      saveDownloads();
+  
+      let Data = {
+        index: curnum,
+        url: item.getURL(),
+        name: item.getFilename(),
+        time: item.getStartTime()
+      };
+  
+      mainWindow.webContents.send('action-create-download', Data);
+  
+      item.on('updated', (event, state) => {
+        if (state === 'interrupted') {
+          let Data = {
+            index: curnum,
+            name: item.getFilename()
+          };
+          mainWindow.webContents.send('action-set-download-status-interrupted', Data);
+        } else if (state === 'progressing') {
+          if (item.isPaused()) {
+            let Data = {
+              index: curnum,
+              bytes: item.getReceivedBytes(),
+              total: item.getTotalBytes(),
+              name: item.getFilename()
+            };
+            mainWindow.webContents.send('action-set-download-status-pause', Data);
+          } else {
+            let Data = {
+              index: curnum,
+              bytes: item.getReceivedBytes(),
+              total: item.getTotalBytes(),
+              name: item.getFilename()
+            };
+            mainWindow.webContents.send('action-set-download-process', Data);
           }
         }
-      } else {
-        let Data = {
-          index: curnum,
-          state: state,
-          name: item.getFilename(),
-          url: item.getURL()
-        };
-        mainWindow.webContents.send('action-set-download-status-failed', Data);
-      }
+      });
+  
+      item.once('done', (event, state) => {
+        if (state === 'completed') {
+          let Data = {
+            index: curnum,
+            name: item.getFilename(),
+            path: item.getSavePath()
+          };
+          mainWindow.webContents.send('action-set-download-status-done', Data);
+          var i;
+          for(i = 0; i < downloadsArray.length; i++) {
+            if(downloadsArray[i].index == curnum) {
+              downloadsArray[i].path = item.getSavePath();
+              saveDownloads();
+            }
+          }
+        } else {
+          let Data = {
+            index: curnum,
+            state: state,
+            name: item.getFilename(),
+            url: item.getURL()
+          };
+          mainWindow.webContents.send('action-set-download-status-failed', Data);
+        }
+      });
     });
   });
 }
@@ -870,112 +944,127 @@ function toggleFullscreen() {
 }
 
 function checkForUpdates() {
-  autoUpdater.checkForUpdates();
+  autoUpdater.checkForUpdates().then((downloadPromise) => {
+    updateCancellationToken = downloadPromise.cancellationToken;
+  });
+}
+
+function cancelUpdate() {
+  updateCancellationToken.cancel();
 }
 
 function showWelcomeWindow() {
   mainWindow.webContents.send('action-esc');
   
-  welcomeWindow = new BrowserWindow({
-    width: 480, height: 350,
-    frame: false,
-    show: false,
-    modal: true,
-    parent: mainWindow,
-    icon: app.getAppPath() + '/imgs/icon.ico',
-    minimizable: false,
-    resizable: false,
-    webPreferences: {
-      nodeIntegration: true
-    },
-    backgroundColor: loadBgColor()
-  }); 
-
-  welcomeWindow.setMenu(null);
-
-  welcomeWindow.on('focus', () => {
-    welcomeWindow.webContents.send('action-focus-window');
-  });
-
-  welcomeWindow.on('blur', () => {
-    welcomeWindow.webContents.send('action-blur-window');
-  });
-
-  welcomeWindow.loadFile(app.getAppPath() + '/html/welcome.html');
-
-  welcomeWindow.once('ready-to-show', () => {
-    // welcomeWindow.webContents.openDevTools();
-    welcomeWindow.show();
+  loadTheme().then(function(theme) {
+    welcomeWindow = new BrowserWindow({
+      width: 480, height: 350,
+      frame: loadWinControls().frame,
+      show: false,
+      modal: true,
+      parent: mainWindow,
+      icon: app.getAppPath() + '/imgs/icon.ico',
+      minimizable: false,
+      maximizable: false,
+      resizable: false,
+      webPreferences: {
+        nodeIntegration: true
+      },
+      backgroundColor: theme.colorBack
+    }); 
+  
+    welcomeWindow.setMenu(null);
+  
+    welcomeWindow.on('focus', () => {
+      welcomeWindow.webContents.send('action-focus-window');
+    });
+  
+    welcomeWindow.on('blur', () => {
+      welcomeWindow.webContents.send('action-blur-window');
+    });
+  
+    welcomeWindow.loadFile(app.getAppPath() + '/html/welcome.html');
+  
+    welcomeWindow.once('ready-to-show', () => {
+      // welcomeWindow.webContents.openDevTools();
+      welcomeWindow.show();
+    });
   });
 }
 
 function showKeyBindsWindow() {
-  keyBindsWindow = new BrowserWindow({
-    width: 480, height: 480,
-    minWidth: 480, minHeight: 180,
-    frame: false,
-    show: false,
-    modal: true,
-    parent: mainWindow,
-    icon: app.getAppPath() + '/imgs/icon.ico',
-    minimizable: false,
-    webPreferences: {
-      nodeIntegration: true
-    },
-    backgroundColor: loadBgColor()
-  }); 
-
-  keyBindsWindow.setMenu(null);
-
-  keyBindsWindow.on('focus', () => {
-    keyBindsWindow.webContents.send('action-focus-window');
-  });
-  keyBindsWindow.on('blur', () => {
-    keyBindsWindow.webContents.send('action-blur-window');
-  });
-
-  keyBindsWindow.loadFile(app.getAppPath() + '/html/keybinds.html');
-
-  keyBindsWindow.once('ready-to-show', () => {
-    // keyBindsWindow.webContents.openDevTools();
-    keyBindsWindow.show();
+  loadTheme().then(function(theme) {
+    keyBindsWindow = new BrowserWindow({
+      width: 480, height: 480,
+      minWidth: 480, minHeight: 180,
+      frame: loadWinControls().frame,
+      show: false,
+      modal: true,
+      parent: mainWindow,
+      icon: app.getAppPath() + '/imgs/icon.ico',
+      minimizable: false,
+      maximizable: false,
+      webPreferences: {
+        nodeIntegration: true
+      },
+      backgroundColor: theme.colorBack
+    }); 
+  
+    keyBindsWindow.setMenu(null);
+  
+    keyBindsWindow.on('focus', () => {
+      keyBindsWindow.webContents.send('action-focus-window');
+    });
+    keyBindsWindow.on('blur', () => {
+      keyBindsWindow.webContents.send('action-blur-window');
+    });
+  
+    keyBindsWindow.loadFile(app.getAppPath() + '/html/keybinds.html');
+  
+    keyBindsWindow.once('ready-to-show', () => {
+      // keyBindsWindow.webContents.openDevTools();
+      keyBindsWindow.show();
+    });
   });
 }
 
 function showPageInfoWindow(certificate) {
-  pageInfoWindow = new BrowserWindow({
-    width: 480, height: 480,
-    minWidth: 480, minHeight: 180,
-    frame: false,
-    show: false,
-    modal: true,
-    parent: mainWindow,
-    icon: app.getAppPath() + '/imgs/icon.ico',
-    minimizable: false,
-    webPreferences: {
-      nodeIntegration: true
-    },
-    backgroundColor: loadBgColor()
-  }); 
-
-  pageInfoWindow.setMenu(null);
-
-  pageInfoWindow.on('focus', () => {
-    pageInfoWindow.webContents.send('action-focus-window');
-  });
-  pageInfoWindow.on('blur', () => {
-    pageInfoWindow.webContents.send('action-blur-window');
-  });
-
-  pageInfoWindow.loadFile(app.getAppPath() + '/html/pageinfo.html');
-
-  pageInfoWindow.once('ready-to-show', () => {
-    // pageInfoWindow.webContents.openDevTools();
-    pageInfoWindow.show();
-  });
-
-  pageInfoWindow.webContents.once('did-finish-load', () => {
-    pageInfoWindow.webContents.send('action-load-certificate', certificate);
+  loadTheme().then(function(theme) {
+    pageInfoWindow = new BrowserWindow({
+      width: 480, height: 480,
+      minWidth: 480, minHeight: 180,
+      frame: loadWinControls().frame,
+      show: false,
+      modal: true,
+      parent: mainWindow,
+      icon: app.getAppPath() + '/imgs/icon.ico',
+      minimizable: false,
+      maximizable: false,
+      webPreferences: {
+        nodeIntegration: true
+      },
+      backgroundColor: theme.colorBack
+    }); 
+  
+    pageInfoWindow.setMenu(null);
+  
+    pageInfoWindow.on('focus', () => {
+      pageInfoWindow.webContents.send('action-focus-window');
+    });
+    pageInfoWindow.on('blur', () => {
+      pageInfoWindow.webContents.send('action-blur-window');
+    });
+  
+    pageInfoWindow.loadFile(app.getAppPath() + '/html/pageinfo.html');
+  
+    pageInfoWindow.once('ready-to-show', () => {
+      // pageInfoWindow.webContents.openDevTools();
+      pageInfoWindow.show();
+    });
+  
+    pageInfoWindow.webContents.once('did-finish-load', () => {
+      pageInfoWindow.webContents.send('action-load-certificate', certificate);
+    });
   });
 }
 

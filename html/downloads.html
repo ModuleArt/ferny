@@ -1,32 +1,42 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
-    <meta charset="utf-8">
-    <title>Downloads</title>
-    <link rel="shortcut icon" type="image/png" href="../imgs/icons16/download.png"/>
+    <link rel="stylesheet" href="../css/modules/webkit.css">
+    <link rel="stylesheet" href="../css/modules/nav-btn.css">
+    <link rel="stylesheet" href="../css/modules/input.css">
+    <link rel="stylesheet" href="../css/modules/checkbox.css">
+    <link rel="stylesheet" href="../css/modules/radio.css">
+    <link rel="stylesheet" href="../css/modules/link.css">
+    <link rel="stylesheet" href="../css/modules/block-title.css">
     <link rel="stylesheet" href="../css/downloads.css">
   </head>
   <body>
-    <label class="subtitle">Downloads</label>
-    <img name="delete" class="theme-icon title-btn" title="Clear downloads" onclick="clearArchive()">
-    <img name="search" class="theme-icon title-btn" title="Search downloads" id="search-btn" onclick="showSearchPanel()">
+    <label class="sidebar-title">Downloads</label>
+    <div class="title-buttons">
+      <button class="nav-btn" id="search-btn" title="Search downloads" onclick="showSearchPanel()">
+        <img name="search-16" class="theme-icon">
+      </button>
+      <button class="nav-btn" title="Clear downloads" onclick="clearArchive()">
+        <img name="clear-16" class="theme-icon">
+      </button>
+    </div>
 
     <div id="search-panel" style="display: none;">
       <div class="block-title">
-        <img name="search" class="theme-icon">
+        <img name="search-16" class="theme-icon">
         <label>Search</label>
       </div>
       <div class="container">
         <input type="text" id="search" placeholder="Search downloads" onkeyup="searchKeyUp()">
-        <div class="nav-btn" onclick="closeSearchPanel()">
-          <img class="theme-icon" name="stop">
+        <button class="nav-btn" onclick="closeSearchPanel()">
+          <img class="theme-icon" name="cancel-16">
           <label>Cancel</label>
-        </div>
+        </button>
       </div>
     </div> 
     
     <div class="block-title">
-      <img name="downloads" class="theme-icon">
+      <img name="download-16" class="theme-icon">
       <label>All downloads</label>
     </div>
     <div id="sidebar-downloads"></div>

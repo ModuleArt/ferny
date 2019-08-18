@@ -1,113 +1,122 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
-    <meta charset="utf-8">
-    <title>Bookmarks</title>
-    <link rel="shortcut icon" type="image/png" href="../imgs/icons16/bookmarks.png"/>
+    <link rel="stylesheet" href="../css/modules/webkit.css">
+    <link rel="stylesheet" href="../css/modules/input.css">
+    <link rel="stylesheet" href="../css/modules/nav-btn.css">
+    <link rel="stylesheet" href="../css/modules/block-title.css">
     <link rel="stylesheet" href="../css/bookmarks.css">
     <link rel="stylesheet" href="../node_modules/dragula/dist/dragula.css">
   </head>
   <body>
-    <label class="subtitle">Bookmarks</label>
-    <img name="add-folder" class="theme-icon title-btn" title="New folder" onclick="showFolderCreator()" id="new-folder-btn">
-    <img name="add-bookmark" class="theme-icon title-btn" title="New bookmark" onclick="showBookmarkCreator()" id="new-bookmark-btn">
-    <img name="search" class="theme-icon title-btn" title="Search bookmarks" onclick="showSearchPanel()" id="search-btn">
+    <label class="sidebar-title">Bookmarks</label>
+    <div class="title-buttons">
+      <button class="nav-btn" id="search-btn" title="Search bookmarks" onclick="showSearchPanel()">
+        <img name="search-16" class="theme-icon">
+      </button>
+      <button class="nav-btn" id="new-bookmark-btn" title="New bookmark" onclick="showBookmarkCreator()">
+        <img name="add-bookmark-16" class="theme-icon">
+      </button>
+      <button class="nav-btn" id="new-folder-btn" title="New folder" onclick="showFolderCreator()">
+        <img name="add-folder-16" class="theme-icon">
+      </button>
+    </div>
 
     <div id="search-panel" style="display: none;">
       <div class="block-title">
-        <img name="search" class="theme-icon">
+        <img name="search-16" class="theme-icon">
         <label>Search</label>
       </div>
       <div class="container">
         <input type="text" id="search" placeholder="Search bookmarks" onkeyup="searchKeyUp()">
-        <div class="nav-btn" onclick="closeAllEditors()">
-          <img class="theme-icon" name="stop">
+        <button class="nav-btn" onclick="closeAllEditors()">
+          <img class="theme-icon" name="cancel-16">
           <label>Cancel</label>
-        </div>
+        </button>
       </div>
     </div>
 
     <div id="bookmark-creator" style="display: none;">
       <div class="block-title">
-        <img name="add-bookmark" class="theme-icon">
+        <img name="add-bookmark-16" class="theme-icon">
         <label>Create bookmark</label>
       </div>
       <div class="container">
         <input type="text" id="bookmark-name" placeholder="Bookmark name">
         <input type="text" id="bookmark-url" placeholder="Bookmark URL">
         <input type="text" id="bookmark-folder" placeholder="Folder name" value="All bookmarks">
-        <div class="nav-btn" onclick="newBookmark()">
-          <img class="theme-icon" name="create">
+        <button class="nav-btn" onclick="newBookmark()">
+          <img class="theme-icon" name="create-16">
           <label>Create</label>
-        </div>
-        <div class="nav-btn" onclick="closeAllEditors()">
-          <img class="theme-icon" name="stop">
+        </button>
+        <button class="nav-btn" onclick="closeAllEditors()">
+          <img class="theme-icon" name="cancel-16">
           <label>Cancel</label>
-        </div>
+        </button>
       </div>
     </div>
 
     <div id="folder-creator" style="display: none;">
       <div class="block-title">
-        <img name="add-folder" class="theme-icon">
+        <img name="add-folder-16" class="theme-icon">
         <label>Create folder</label>
       </div>
       <div class="container">
         <input type="text" id="folder-name" placeholder="Folder name">
-        <div class="nav-btn" onclick="newFolder()">
-          <img class="theme-icon" name="create">
+        <button class="nav-btn" onclick="newFolder()">
+          <img class="theme-icon" name="create-16">
           <label>Create</label>
-        </div>
-        <div class="nav-btn" onclick="closeAllEditors()">
-          <img class="theme-icon" name="stop">
+        </button>
+        <button class="nav-btn" onclick="closeAllEditors()">
+          <img class="theme-icon" name="cancel-16">
           <label>Cancel</label>
-        </div>
+        </button>
       </div>
     </div>
     
     <div id="bookmark-editor" style="display: none;">
       <div class="block-title" id="edit-block-title">
-        <img name="edit" class="theme-icon">
+        <img name="edit-16" class="theme-icon">
         <label>Edit bookmark</label>
       </div>
       <div class="container">
         <input type="text" id="edit-bookmark-name" placeholder="Bookmark name">
         <input type="text" id="edit-bookmark-url" placeholder="Bookmark URL">
         <input type="text" id="edit-bookmark-folder" placeholder="Folder name">
-        <div class="nav-btn" id="save-bookmark-btn">
-          <img class="theme-icon" name="save">
+        <button class="nav-btn" id="save-bookmark-btn">
+          <img class="theme-icon" name="save-16">
           <label>Save</label>
-        </div>
-        <div class="nav-btn" id="remove-bookmark-btn">
-          <img class="theme-icon" name="delete">
+        </button>
+        <button class="nav-btn" id="remove-bookmark-btn">
+          <img class="theme-icon" name="delete-16">
           <label>Delete</label>
-        </div>
-        <div class="nav-btn" onclick="closeAllEditors()">
-          <img class="theme-icon" name="stop">
+        </button>
+        <button class="nav-btn" onclick="closeAllEditors()">
+          <img class="theme-icon" name="cancel-16">
           <label>Cancel</label>
-        </div>
+        </button>
       </div>
     </div>
 
     <div id="folder-editor" style="display: none;">
       <div class="block-title" id="edit-block-title">
-        <img name="edit" class="theme-icon">
+        <img name="edit-folder-16" class="theme-icon">
         <label>Edit folder</label>
       </div>
       <div class="container">
         <input type="text" id="edit-folder-name" placeholder="Folder name">
-        <div class="nav-btn" id="save-folder-btn">
-          <img class="theme-icon" name="save">
+        <button class="nav-btn" id="save-folder-btn">
+          <img class="theme-icon" name="save-16">
           <label>Save</label>
-        </div>
-        <div class="nav-btn" id="remove-folder-btn">
-          <img class="theme-icon" name="delete">
+        </button>
+        <button class="nav-btn" id="remove-folder-btn">
+          <img class="theme-icon" name="delete-16">
           <label>Delete</label>
-        </div>
-        <div class="nav-btn" onclick="closeAllEditors()">
-          <img class="theme-icon" name="stop">
+        </button>
+        <button class="nav-btn" onclick="closeAllEditors()">
+          <img class="theme-icon" name="cancel-16">
           <label>Cancel</label>
-        </div>
+        </button>
       </div>
     </div>
 
