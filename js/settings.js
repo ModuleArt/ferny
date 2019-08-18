@@ -230,7 +230,7 @@ function saveStartPage() {
 
   saveFileToJsonFolder('startpage', startPage);
 
-  notif("Start page saved: " + startPage, "success");
+  notif("New tab page saved: " + startPage, "success");
 
   ipcRenderer.send('request-set-start-page', startPage);
 }

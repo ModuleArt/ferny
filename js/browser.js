@@ -781,7 +781,15 @@ function notif(text, type) {
   var div = document.createElement('div');
   div.classList.add('notif');
   div.classList.add(type);
-  div.innerHTML = "<div class='notif-body'><label class='notif-text'>" + text + "</label><img class='notif-close theme-icon' onclick='removeNotif(this.parentNode.parentNode)' title='Close notification' name='cancel'></div>";
+  div.innerHTML = `
+    <div class="notif-container">
+      <button onclick='removeNotif(this.parentNode.parentNode)' title='Close notification' class="notif-close nav-btn">
+        <img class='theme-icon' name='cancel-16'>
+      </button>
+      <div class='notif-body'>
+        <label class='notif-text'>` + text + `</label>
+      </div>
+    </div>`;
 
   var notifPanel = document.getElementById('notif-panel');
 
@@ -798,19 +806,23 @@ function notif(text, type) {
   switch (type) {
     case "success":
       div.title = 'Success notification';
-      img.name = 'check';
+      img.name = 'check-16';
+      div.getElementsByClassName('notif-container')[0].style.backgroundColor = rgbToRgbaString("rgb(11, 232, 129)");
       break;
     case "info":
       div.title = 'Info notification';
-      img.name = 'info';
+      img.name = 'info-16';
+      div.getElementsByClassName('notif-container')[0].style.backgroundColor = rgbToRgbaString("rgb(15, 188, 249)");
       break;
     case "warning":
       div.title = 'Warning notification';
-      img.name = 'warning';
+      img.name = 'warning-16';
+      div.getElementsByClassName('notif-container')[0].style.backgroundColor = rgbToRgbaString("rgb(255, 168, 1)");
       break;
     case "error":
       div.title = 'Error notification';
-      img.name = 'fire';
+      img.name = 'fire-16';
+      div.getElementsByClassName('notif-container')[0].style.backgroundColor = rgbToRgbaString("rgb(255, 63, 52)");
   }
   div.insertBefore(img, div.children[0]);
 
@@ -833,17 +845,24 @@ function quest(text, ops) {
   var div = document.createElement('div');
   div.classList.add('notif');
   div.classList.add('quest');
-  div.innerHTML = ` <img name='question' class='notif-icon theme-icon'>
-                    <div class='notif-body'>
-                      <label class='notif-text'>` + text + `</label>
-                      <img class='notif-close theme-icon' onclick='removeNotif(this.parentNode.parentNode)' title='Close notification' name='cancel'>
-                      <hr>
-                    </div>`;
+  div.innerHTML = ` 
+    <div class="notif-container">
+      <img name='about-16' class='notif-icon theme-icon'>
+      <button onclick='removeNotif(this.parentNode.parentNode)' title='Close notification' class="notif-close nav-btn">
+        <img class='theme-icon' name='cancel-16'>
+      </button>
+      <div class='notif-body'>
+        <label class='notif-text'>` + text + `</label>
+        <hr>
+      </div>
+    </div>`;
+
+  div.getElementsByClassName('notif-container')[0].style.backgroundColor = rgbToRgbaString("rgb(255, 168, 1)");
 
   var notifPanel = document.getElementById('notif-panel');
 
   for (var i = 0; i < ops.length; i++) {
-    var btn = document.createElement('div');
+    var btn = document.createElement('button');
     btn.classList.add('nav-btn');
     btn.innerHTML = "<img name='" + ops[i].icon + "' class='theme-icon'><label>" + ops[i].text + "</label>";
     let j = i;
@@ -862,6 +881,11 @@ function quest(text, ops) {
       notifPanel.removeChild(notifPanel.lastChild);
     }
   }
+}
+
+function clearDownloads() {
+  ipcRenderer.send('action-clear-downloads');
+  document.getElementById('sidebar-webview').send('action-clear-downloads');
 }
 
 function updateLoader(percent, id, speed, transferred, total) {
@@ -899,7 +923,16 @@ function loader(text, id, stopBtn) {
   div.id = id;
   div.classList.add('notif');
   div.classList.add('loader');
-  div.innerHTML = "<img name='download' class='notif-icon theme-icon'><div class='notif-body'><label class='notif-text'>" + text + "</label><img class='notif-close theme-icon' onclick='removeNotif(this.parentNode.parentNode)' title='Close notification' name='cancel'></div>";
+  div.innerHTML = `
+    <div class="notif-container">
+      <img name='download-16' class='notif-icon theme-icon'>
+      <button onclick='removeNotif(this.parentNode.parentNode)' title='Close notification' class="notif-close nav-btn">
+        <img class='theme-icon' name='cancel-16'>
+      </button>
+      <div class='notif-body'>
+        <label class='notif-text'>` + text + `</label>
+      </div>
+    </div>`;
 
   var bar = document.createElement('div');
   bar.classList.add('notif-bar');

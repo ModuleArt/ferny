@@ -307,12 +307,7 @@ function clearArchive() {
       }
     }
     if(bool) {
-      for(var i = 0; i < dwnlds.length; i++) {
-        dwnlds[i].parentNode.removeChild(dwnlds[i]);
-        i--;
-      }
       ipcRenderer.send('request-clear-downloads');
-      notif("Downloads cleared", "success");
     } else {
       notif("First stop all downloads", "warning");
     }
@@ -448,6 +443,15 @@ ipcRenderer.on('action-set-download-status-interrupted', (event, arg) => {
 });
 ipcRenderer.on('action-set-download-process', (event, arg) => {
   setDownloadProcess(arg.index, arg.bytes, arg.total, arg.name);
+});
+
+ipcRenderer.on('action-clear-downloads', (event, args) => {
+  var dwnlds = document.getElementsByClassName('download');
+  for(var i = 0; i < dwnlds.length; i++) {
+    dwnlds[i].parentNode.removeChild(dwnlds[i]);
+    i--;
+  }
+  notif("Downloads cleared", "success");
 });
 
 /*

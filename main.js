@@ -82,7 +82,7 @@ const sideMenu = Menu.buildFromTemplate([
     { label: 'Bookmark manager', icon: app.getAppPath() + '/imgs/icons16/bookmarks.png', accelerator: 'CmdOrCtrl+B', click: () => { mainWindow.webContents.send('action-open-bookmarks'); } },
     { type: 'separator' },
     { label: 'Bookmark this page', icon: app.getAppPath() + '/imgs/icons16/star.png', accelerator: 'CmdOrCtrl+Shift+B', click: () => { mainWindow.webContents.send('action-bookmark-this-page'); } },
-    { label: 'Bookmark all tabs', click: () => { mainWindow.webContents.send('action-quest', { text: "Are you sure to bookmark all tabs?", ops: [{ text:'Bookmark', icon:'bookmark', click:'bookmarkAllTabs(); removeNotif(this.parentNode.parentNode);' }] }); } }
+    { label: 'Bookmark all tabs', click: () => { mainWindow.webContents.send('action-quest', { text: "Are you sure to bookmark all tabs?", ops: [{ text:'Bookmark', icon:'bookmark-16', click:'bookmarkAllTabs(); removeNotif(this.parentNode.parentNode.parentNode);' }] }); } }
   ] },
 // { label: 'Reading list', accelerator: 'CmdOrCtrl+R', click: () => {  }, enabled: false },
   { label: 'History', accelerator: 'CmdOrCtrl+H', icon: app.getAppPath() + '/imgs/icons16/history.png', click: () => { mainWindow.webContents.send('action-open-history'); } },
@@ -216,7 +216,7 @@ app.on('ready', function() {
   });
 
   autoUpdater.on('update-downloaded', () => {
-    mainWindow.webContents.send('action-quest', { text: "Update is downloaded!", ops: [{ text:'Install now', icon:'check', click:'installUpdate();' }] });
+    mainWindow.webContents.send('action-quest', { text: "Update is downloaded!", ops: [{ text:'Install now', icon:'check-16', click:'installUpdate();' }] });
   });
 
   autoUpdater.on('download-progress', (progress) => {
@@ -500,6 +500,17 @@ ipcMain.on('request-open-settings', (event, arg) => {
 });
 
 ipcMain.on('request-clear-downloads', (event, arg) => {
+  mainWindow.webContents.send('action-quest', { 
+    text: "Are you sure to clear all downloads?", 
+    ops: [{ 
+      text:'Delete', 
+      icon:'delete-16', 
+      click:'clearDownloads(); removeNotif(this.parentNode.parentNode.parentNode);' 
+    }] 
+  });
+});
+
+ipcMain.on('action-clear-downloads', (event, arg) => {
   downloadsArray = [];
   saveDownloads();
   mainWindow.webContents.send('action-clear-downloads');
@@ -510,8 +521,8 @@ ipcMain.on('request-remove-folder', (event, arg) => {
     text: "Are you sure to remove folder?", 
     ops: [{ 
       text:'Delete', 
-      icon:'delete', 
-      click:'removeFolder("' + arg + '"); removeNotif(this.parentNode.parentNode);' 
+      icon:'delete-16', 
+      click:'removeFolder("' + arg + '"); removeNotif(this.parentNode.parentNode.parentNode);' 
     }] 
   });
 });
@@ -835,10 +846,10 @@ function showMainWindow() {
       }
   
       if(update) {
-        mainWindow.webContents.send('action-quest', { text: "App update is in progress! Exit anyway?", ops: [{ text:'Continue', icon:'download', click:'removeNotif(this.parentNode.parentNode)' }, { text:'Exit', icon:'exit', click:'exitAppAnyway()' }] });
+        mainWindow.webContents.send('action-quest', { text: "App update is in progress! Exit anyway?", ops: [{ text:'Continue', icon:'download-16', click:'removeNotif(this.parentNode.parentNode.parentNode)' }, { text:'Exit', icon:'exit-16', click:'exitAppAnyway()' }] });
       } else {
         if(download) {
-          mainWindow.webContents.send('action-quest', { text: "Download is in progress! Exit anyway?", ops: [{ text:'Continue', icon:'download', click:'removeNotif(this.parentNode.parentNode)' }, { text:'Exit', icon:'exit', click:'exitAppAnyway()' }] });
+          mainWindow.webContents.send('action-quest', { text: "Download is in progress! Exit anyway?", ops: [{ text:'Continue', icon:'download-16', click:'removeNotif(this.parentNode.parentNode.parentNode)' }, { text:'Exit', icon:'exit-16', click:'exitAppAnyway()' }] });
         } else {
           saveBounds();
           app.exit();

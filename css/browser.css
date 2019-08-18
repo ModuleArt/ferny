@@ -21,10 +21,10 @@
 :root {
   /* --color-accent: #5F63FA; */
 
-  --color-red: rgb(255, 63, 52);
+  /* --color-red: rgb(255, 63, 52);
   --color-green: rgb(11, 232, 129);
   --color-blue: rgb(15, 188, 249);
-  --color-orange: rgb(255, 168, 1);
+  --color-orange: rgb(255, 168, 1); */
 
   --px-radius: 0;
   --px-font: 14px;
@@ -200,26 +200,12 @@
   transition: 0.25s;
   margin-bottom: 8px;
   border-radius: 0 calc(var(--px-radius) + 4px) calc(var(--px-radius) + 4px) 0;
-  border: 2px solid var(--color-over);
+  border: 1px solid var(--color-border);
   border-left: none;
   animation-name: anim-notif;
   animation-duration: 0.5s;
-}
-
-.notif.success {
-  background-color: var(--color-green);
-}
-
-.notif.warning, .notif.quest, .notif.loader {
-  background-color: var(--color-orange);
-}
-
-.notif.info, .notif.zoom {
-  background-color: var(--color-blue);
-}
-
-.notif.error {
-  background-color: var(--color-red);
+  position: relative;
+  background-color: var(--color-back);
 }
 
 .notif.closed {
@@ -231,10 +217,8 @@
   position: relative;
   top: 0;
   left: 32px;
-  width: calc(100% - 32px);
-  padding: 10px;
-  padding-right: 54px;
-  padding-left: 14px;
+  width: calc(100% - 64px);
+  padding: 11px;
 }
 
 .notif-text {
@@ -245,40 +229,25 @@
 
 .notif-icon {
   position: absolute;
-  padding: 8px;
+  left: 12px;
+  top: 12px;
 }
 
 .notif-close {
-  transition: 0.25s;
   position: absolute;
-  right: 4px;
-  padding: 4px;
-  top: 4px;
-  border-radius: var(--px-radius);
-  width: 0;
-  height: 0;
-  margin-top: 16px;
-  margin-right: 16px;
+  right: 3px;
+  top: 3px;
+  display: none;
+  animation: anim-show;
+  animation-duration: 0.25s;
 }
 
 .notif:hover .notif-close {
-  margin-top: 0;
-  margin-right: 0;
-  width: 32px;
-  height: 32px;
-}
-
-.notif-close:hover {
-  background-color: var(--color-over);
-}
-
-.notif .nav-btn {
   display: block;
-  margin: 2px 0;
 }
 
-.notif .nav-btn img {
-  margin-right: 4px;
+.notif-body .nav-btn {
+  width: calc(100% - 4px);
 }
 
 /*
@@ -1015,6 +984,20 @@ body.system-titlebar .etabs-tab {
   width: calc(100% - 4px);
   margin-bottom: 4px;
   text-align: left;
+  background-color: transparent;
+  border-color: transparent;
+}
+
+#sidebar-div .tab-btn:hover, #sidebar-div .tab-btn:active, #sidebar-div .tab-btn:focus, #sidebar-div .tab-btn.active {
+  border-color: var(--color-border);
+}
+
+#sidebar-div .tab-btn:hover {
+  background-color: var(--color-second);
+}
+
+#sidebar-div .tab-btn:active, #sidebar-div .tab-btn.active {
+  background-color: var(--color-border);
 }
 
 #sidebar-webview {
