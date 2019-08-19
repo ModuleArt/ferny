@@ -82,7 +82,7 @@ const sideMenu = Menu.buildFromTemplate([
     { label: 'Bookmark manager', icon: app.getAppPath() + '/imgs/icons16/bookmarks.png', accelerator: 'CmdOrCtrl+B', click: () => { mainWindow.webContents.send('action-open-bookmarks'); } },
     { type: 'separator' },
     { label: 'Bookmark this page', icon: app.getAppPath() + '/imgs/icons16/star.png', accelerator: 'CmdOrCtrl+Shift+B', click: () => { mainWindow.webContents.send('action-bookmark-this-page'); } },
-    { label: 'Bookmark all tabs', click: () => { mainWindow.webContents.send('action-quest', { text: "Are you sure to bookmark all tabs?", ops: [{ text:'Bookmark', icon:'bookmark-16', click:'bookmarkAllTabs()' }] }); } }
+    { label: 'Bookmark all tabs', click: () => { mainWindow.webContents.send('action-add-quest-notif', { text: "Are you sure to bookmark all tabs?", ops: [{ text:'Bookmark', icon:'add-bookmark-16', click:'bookmarkAllTabs()' }] }); } }
   ] },
 // { label: 'Reading list', accelerator: 'CmdOrCtrl+R', click: () => {  }, enabled: false },
   { label: 'History', accelerator: 'CmdOrCtrl+H', icon: app.getAppPath() + '/imgs/icons16/history.png', click: () => { mainWindow.webContents.send('action-open-history'); } },
@@ -196,24 +196,24 @@ app.on('ready', function() {
   autoUpdater.logger.transports.file.level = "info";
 
   autoUpdater.on('checking-for-update', () => {
-    mainWindow.webContents.send('action-notif', { type: "info", text: "Checking for updates..." });
+    mainWindow.webContents.send('action-add-status-notif', { type: "info", text: "Checking for updates..." });
   });
 
   autoUpdater.on('error', (error) => {
-    mainWindow.webContents.send('action-notif', { type: "error", text: "Update error: " + error });
+    mainWindow.webContents.send('action-add-status-notif', { type: "error", text: "Update error: " + error });
   });
 
   autoUpdater.on('update-not-available', () => {
-    mainWindow.webContents.send('action-notif', { type: "success", text: "App is up to date!" });
+    mainWindow.webContents.send('action-add-status-notif', { type: "success", text: "App is up to date!" });
   });
 
   autoUpdater.on('update-available', (info) => {
-    mainWindow.webContents.send('action-notif', { type: "success", text: "Update is available. Download started..." });
+    mainWindow.webContents.send('action-add-status-notif', { type: "success", text: "Update is available. Download started..." });
     mainWindow.webContents.send('action-add-update-notif', info.releaseName);
   });
 
   autoUpdater.on('update-downloaded', () => {
-    mainWindow.webContents.send('action-quest', { text: "Update is downloaded!", ops: [{ text:'Install now', icon:'check-16', click:'installUpdate();' }] });
+    mainWindow.webContents.send('action-add-quest-notif', { text: "Update is downloaded!", ops: [{ text:'Install now', icon:'check-16', click:'installUpdate();' }] });
   });
 
   autoUpdater.on('download-progress', (progress) => {
@@ -339,7 +339,7 @@ ipcMain.on('request-clear-browsing-data', (event, arg) => {
 
   if(arg.cache) {
     ses.clearCache().then(function() {
-      mainWindow.webContents.send('action-notif', { text: "Cache cleared", type: "success" });
+      mainWindow.webContents.send('action-add-status-notif', { text: "Cache cleared", type: "success" });
     });
 
     ses.getCacheSize().then(function(value) {
@@ -353,7 +353,7 @@ ipcMain.on('request-clear-browsing-data', (event, arg) => {
 
   if(arg.storage) {
     ses.clearStorageData().then(function() {
-      mainWindow.webContents.send('action-notif', { text: "Storage cleared", type: "success" });
+      mainWindow.webContents.send('action-add-status-notif', { text: "Storage cleared", type: "success" });
     });
   }
 });
@@ -474,7 +474,7 @@ ipcMain.on('request-show-welcome-screen', (event, arg) => {
 });
 
 ipcMain.on('request-notif', (event, arg) => {
-  mainWindow.webContents.send('action-notif', arg);
+  mainWindow.webContents.send('action-add-status-notif', arg);
 });
 
 ipcMain.on('request-load-certificate', (event, arg) => {
@@ -496,7 +496,7 @@ ipcMain.on('request-open-settings', (event, arg) => {
 });
 
 ipcMain.on('request-clear-downloads', (event, arg) => {
-  mainWindow.webContents.send('action-quest', { 
+  mainWindow.webContents.send('action-add-quest-notif', { 
     text: "Are you sure to clear all downloads?", 
     ops: [{ 
       text:'Delete', 
@@ -513,7 +513,7 @@ ipcMain.on('action-clear-downloads', (event, arg) => {
 });
 
 ipcMain.on('request-remove-folder', (event, arg) => {
-  mainWindow.webContents.send('action-quest', { 
+  mainWindow.webContents.send('action-add-quest-notif', { 
     text: "Are you sure to remove folder?", 
     ops: [{ 
       text:'Delete', 
@@ -842,10 +842,10 @@ function showMainWindow() {
       }
   
       if(update) {
-        mainWindow.webContents.send('action-quest', { text: "App update is in progress! Exit anyway?", ops: [{ text:'Exit', icon:'exit-16', click:'exitAppAnyway()' }] });
+        mainWindow.webContents.send('action-add-quest-notif', { text: "App update is in progress! Exit anyway?", ops: [{ text:'Exit', icon:'exit-16', click:'exitAppAnyway()' }] });
       } else {
         if(download) {
-          mainWindow.webContents.send('action-quest', { text: "Download is in progress! Exit anyway?", ops: [{ text:'Exit', icon:'exit-16', click:'exitAppAnyway()' }] });
+          mainWindow.webContents.send('action-add-quest-notif', { text: "Download is in progress! Exit anyway?", ops: [{ text:'Exit', icon:'exit-16', click:'exitAppAnyway()' }] });
         } else {
           saveBounds();
           app.exit();

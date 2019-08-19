@@ -1828,11 +1828,11 @@ ipcRenderer.on('action-navigate-suggest', (event, arg) => {
   navigateSuggest(arg);
 });
 
-ipcRenderer.on('action-notif', (event, arg) => {
+ipcRenderer.on('action-add-status-notif', (event, arg) => {
   notificationManager.addStatusNotif(arg.text, arg.type);
 });
 
-ipcRenderer.on('action-quest', (event, arg) => {
+ipcRenderer.on('action-add-quest-notif', (event, arg) => {
   notificationManager.addQuestNotif(arg.text, arg.ops);
 });
 
