@@ -311,13 +311,17 @@ input[type=text] {
 }
 
 .folder .bookmarks:empty::before {
-  content: "\2205  Empty folder... Try to bookmark something...";
+  content: "\2205  Empty folder... Try to create bookmark here...";
   color: var(--color-top);
   display: block;
+  margin: 4px;
+  margin-top: 2px;
   padding: 4px;
-  margin: 2px;
-  text-align: center;
   font-size: 12px;
+  text-align: center;
+  background-color: var(--color-element);
+  border-radius: var(--px-radius);
+  border: 1px solid var(--color-border);
 }
 
 /*

@@ -131,126 +131,6 @@
 }
 
 /*
-.##......##.########.########..##....##.####.########
-.##..##..##.##.......##.....##.##...##...##.....##...
-.##..##..##.##.......##.....##.##..##....##.....##...
-.##..##..##.######...########..#####.....##.....##...
-.##..##..##.##.......##.....##.##..##....##.....##...
-.##..##..##.##.......##.....##.##...##...##.....##...
-..###..###..########.########..##....##.####....##...
-*/
-
-::-webkit-scrollbar {
-  width: 14px;
-  background-color: var(--color-over);
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: var(--color-over);
-}
-
-::-webkit-input-placeholder {
-  color: var(--color-top);
-}
-
-/*
-.##....##..#######..########.####.########.####..######.....###....########.####..#######..##....##..######.
-.###...##.##.....##....##.....##..##........##..##....##...##.##......##.....##..##.....##.###...##.##....##
-.####..##.##.....##....##.....##..##........##..##........##...##.....##.....##..##.....##.####..##.##......
-.##.##.##.##.....##....##.....##..######....##..##.......##.....##....##.....##..##.....##.##.##.##..######.
-.##..####.##.....##....##.....##..##........##..##.......#########....##.....##..##.....##.##..####.......##
-.##...###.##.....##....##.....##..##........##..##....##.##.....##....##.....##..##.....##.##...###.##....##
-.##....##..#######.....##....####.##.......####..######..##.....##....##....####..#######..##....##..######.
-*/
-
-/* #notif-panel {
-  position: absolute;
-  left: 0;
-  top: 8px;
-  width: 256px;
-  z-index: 999;
-}
-
-.notif-bar {
-  position: relative;
-}
-
-.notif-bar div {
-  margin: 2px 0;
-  background-color: var(--color-over);
-  height: 16px;
-}
-
-.notif-bar::before {
-  content: " ";
-  background-color: var(--color-over);
-  height: 16px;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-}
-
-.notif-bar label {
-  display: block;
-  margin: 0 2px;
-}
-
-.notif {
-  transition: 0.25s;
-  margin-bottom: 8px;
-  border-radius: 0 calc(var(--px-radius) + 4px) calc(var(--px-radius) + 4px) 0;
-  border: 1px solid var(--color-border);
-  border-left: none;
-  animation-name: anim-notif;
-  animation-duration: 0.5s;
-  position: relative;
-  background-color: var(--color-back);
-}
-
-.notif.closed {
-  transform: translateX(-40px);
-  opacity: 0;
-}
-
-.notif-body {
-  position: relative;
-  top: 0;
-  left: 32px;
-  width: calc(100% - 64px);
-  padding: 11px;
-}
-
-.notif-text {
-  word-break: break-word;
-  word-wrap: break-word;
-  color: var(--color-top);
-}
-
-.notif-icon {
-  position: absolute;
-  left: 12px;
-  top: 12px;
-}
-
-.notif-close {
-  position: absolute;
-  right: 3px;
-  top: 3px;
-  display: none;
-  animation: anim-show;
-  animation-duration: 0.25s;
-}
-
-.notif:hover .notif-close {
-  display: block;
-}
-
-.notif-body .nav-btn {
-  width: calc(100% - 4px);
-} */
-
-/*
 .########..####..######..########.##.....##.########..########....####.##....##
 .##.....##..##..##....##....##....##.....##.##.....##.##...........##..###...##
 .##.....##..##..##..........##....##.....##.##.....##.##...........##..####..##
@@ -453,7 +333,7 @@
   opacity: 1 !important;
 }
 
-.etabs-tabgroup.blur #window-controls .button, .etabs-tabgroup.blur .theme-icon, #window-controls .button:active {
+.etabs-tabgroup.blur #window-controls .button, .etabs-tabgroup.blur .theme-icon, #window-controls .button:active, #window-controls #close-btn:active {
   opacity: 0.5 !important;
 }
 
@@ -847,7 +727,7 @@ body.system-titlebar .etabs-tab {
   white-space: nowrap;
   word-break: keep-all;
   text-overflow: ellipsis;
-  opacity: 0.5;
+  opacity: var(--opacity-over);
 }
 
 .etabs-tab:hover .etabs-tab-buttons, .etabs-tab.active .etabs-tab-buttons {
