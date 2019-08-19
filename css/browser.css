@@ -1162,7 +1162,8 @@ body.system-titlebar .etabs-tab {
   content: "\2205  Empty folder... ";
   color: var(--color-top);
   display: block;
-  margin: 4px;
+  padding: 4px;
+  margin: 2px;
   font-size: 12px;
   text-align: center;
 } 

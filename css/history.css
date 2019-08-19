@@ -112,12 +112,16 @@ input[type=text] {
 */
 
 #history:empty::before {
-  content: "\2205  No history... Try to visit something...";
+  content: "\2205  No history... Try to visit some links...";
   color: var(--color-top);
   display: block;
+  margin: 4px;
   padding: 4px;
-  margin: 2px;
+  font-size: 12px;
   text-align: center;
+  background-color: var(--color-element);
+  border-radius: var(--px-radius);
+  border: 1px solid var(--color-border);
 }
 
 .history-item {

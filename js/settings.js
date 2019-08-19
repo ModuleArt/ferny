@@ -240,7 +240,7 @@ function notif(text, type) {
     text: text,
     type: type
   };
-  ipcRenderer.send('request-notif', Data)
+  ipcRenderer.send('request-add-status-notif', Data)
 }
 
 function moreInfo(btn) {

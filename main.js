@@ -473,8 +473,12 @@ ipcMain.on('request-show-welcome-screen', (event, arg) => {
   showWelcomeWindow();
 });
 
-ipcMain.on('request-notif', (event, arg) => {
+ipcMain.on('request-add-status-notif', (event, arg) => {
   mainWindow.webContents.send('action-add-status-notif', arg);
+});
+
+ipcMain.on('request-add-quest-notif', (event, arg) => {
+  mainWindow.webContents.send('action-add-quest-notif', arg);
 });
 
 ipcMain.on('request-load-certificate', (event, arg) => {
@@ -493,17 +497,6 @@ ipcMain.on('request-open-settings', (event, arg) => {
   mainWindow.webContents.send('action-open-settings', arg);
   welcomeWindow.setClosable(true);
   welcomeWindow.close();
-});
-
-ipcMain.on('request-clear-downloads', (event, arg) => {
-  mainWindow.webContents.send('action-add-quest-notif', { 
-    text: "Are you sure to clear all downloads?", 
-    ops: [{ 
-      text:'Delete', 
-      icon:'delete-16', 
-      click:'clearDownloads()' 
-    }] 
-  });
 });
 
 ipcMain.on('action-clear-downloads', (event, arg) => {

@@ -307,7 +307,14 @@ function clearArchive() {
       }
     }
     if(bool) {
-      ipcRenderer.send('request-clear-downloads');
+      ipcRenderer.send('request-add-quest-notif', { 
+        text: "Are you sure to clear all downloads?", 
+        ops: [{ 
+          text:'Delete', 
+          icon:'delete-16', 
+          click:'clearDownloads()' 
+        }] 
+      });
     } else {
       notif("First stop all downloads", "warning");
     }
@@ -352,7 +359,7 @@ function notif(text, type) {
     text: text,
     type: type
   };
-  ipcRenderer.send('request-notif', Data)
+  ipcRenderer.send('request-add-status-notif', Data)
 }
 
 function numberToMonth(number) {

@@ -117,9 +117,13 @@ input[type=text] {
   content: "\2205  No downloads... Try to download something...";
   color: var(--color-top);
   display: block;
+  margin: 4px;
   padding: 4px;
-  margin: 2px;
+  font-size: 12px;
   text-align: center;
+  background-color: var(--color-element);
+  border-radius: var(--px-radius);
+  border: 1px solid var(--color-border);
 }
 
 .download {

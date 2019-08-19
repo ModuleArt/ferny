@@ -799,6 +799,10 @@ function clearDownloads() {
   document.getElementById('sidebar-webview').send('action-clear-downloads');
 }
 
+function clearHistory() {
+  document.getElementById('sidebar-webview').send('action-clear-history');
+}
+
 function cancelUpdate() {
   ipcRenderer.send('request-cancel-update');
   notificationManager.addStatusNotif('Update cancelled', 'error');

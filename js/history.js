@@ -68,17 +68,18 @@ function loadHistory() {
 }
 
 function clearHistory() {
-  try {
-    saveFileToJsonFolder('history', "");
-    var container = document.getElementById('history');
-    if(container.innerHTML == "") {
-      notif('History is already empty', 'info');
-    } else {
-      container.innerHTML = "";
-      notif('History cleared', 'success');
-    }
-  } catch (error) {
-    notif('Error: ' + error, 'error')
+  var container = document.getElementById('history');
+  if(container.innerHTML == "") {
+    notif('History is already empty', 'info');
+  } else {
+    ipcRenderer.send('request-add-quest-notif', { 
+      text: "Are you sure to clear history?", 
+      ops: [{ 
+        text:'Delete', 
+        icon:'delete-16', 
+        click:'clearHistory()' 
+      }] 
+    });
   }
 }
 
@@ -182,7 +183,7 @@ function notif(text, type) {
     text: text,
     type: type
   };
-  ipcRenderer.send('request-notif', Data)
+  ipcRenderer.send('request-add-status-notif', Data)
 }
 
 function numberToMonth(number) {
@@ -255,6 +256,18 @@ function cancelSearch() {
 
 ipcRenderer.on('action-add-history-item', (event, arg) => {
   createHistoryItem(arg.index, arg.url, arg.time, true);
+});
+
+
+ipcRenderer.on('action-clear-history', (event, arg) => {
+  try {
+    saveFileToJsonFolder('history', "");
+    var container = document.getElementById('history');
+    container.innerHTML = "";
+    notif('History cleared', 'success');
+  } catch (error) {
+    notif('Error: ' + error, 'error')
+  }
 });
 
 /*
