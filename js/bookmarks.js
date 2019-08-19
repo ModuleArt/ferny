@@ -391,7 +391,14 @@ function editFolder(folder) {
   document.getElementById('edit-folder-name').value = folder.getElementsByClassName('name')[0].innerHTML;
 
   document.getElementById('remove-folder-btn').onclick = function() {
-    ipcRenderer.send('request-remove-folder', folder.getElementsByClassName('name')[0].innerHTML);
+    ipcRenderer.send('request-add-quest-notif', { 
+      text: "Are you sure to remove this folder?", 
+      ops: [{ 
+        text:'Delete', 
+        icon:'delete-16', 
+        click:'removeFolder("' + folder.getElementsByClassName('name')[0].innerHTML + '")' 
+      }] 
+    });
     closeAllEditors();
   }
 

@@ -414,7 +414,7 @@
 .########...#######..########.....##...
 */
 
-body {
+body, html {
   margin: 0;
   padding: 0;
   background-color: var(--color-back);
@@ -815,9 +815,9 @@ body.system-titlebar .etabs-tab {
   opacity: var(--opacity-over);
   position: absolute;
   height: calc(100% - 32px);
-  max-height: 256px;
-  right: -32px;
-  bottom: -32px;
+  max-height: 200px;
+  right: 0;
+  bottom: 0;
   z-index: -100;
 }
 

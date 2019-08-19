@@ -505,17 +505,6 @@ ipcMain.on('action-clear-downloads', (event, arg) => {
   mainWindow.webContents.send('action-clear-downloads');
 });
 
-ipcMain.on('request-remove-folder', (event, arg) => {
-  mainWindow.webContents.send('action-add-quest-notif', { 
-    text: "Are you sure to remove folder?", 
-    ops: [{ 
-      text:'Delete', 
-      icon:'delete-16', 
-      click:'removeFolder("' + arg + '")' 
-    }] 
-  });
-});
-
 ipcMain.on('request-set-about', (event, arg) => {
   let Data = {
     version: app.getVersion(),

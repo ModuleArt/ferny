@@ -965,12 +965,12 @@ function removeFolder(folder) {
         arr.splice(i, 1);
       }
     }
-    saveFileToJsonFolder('folders', JSON.stringify(arr));
+    saveFileToJsonFolder('folders', JSON.stringify(arr)).then(function() {
+      document.getElementById('sidebar-webview').send('action-remove-folder', folder);
+      updateBookmarksBar();
 
-    document.getElementById('sidebar-webview').send('action-remove-folder', folder);
-    updateBookmarksBar();load
-
-    notificationManager.addStatusNotif("Folder removed: " + folder, "info");
+      notificationManager.addStatusNotif("Folder removed: " + folder, "info");
+    });
   } catch (e) {
 
   }
@@ -1267,28 +1267,28 @@ function saveBookmarksBar() {
     foldersArray.push(Data);
   }
 
-  saveFileToJsonFolder('folders', JSON.stringify(foldersArray));
+  saveFileToJsonFolder('folders', JSON.stringify(foldersArray)).then(function() {
+    var bookmarks = bbar.getElementsByClassName('bookmark');
+    var bookmarksArray = [];
 
-  var bookmarks = bbar.getElementsByClassName('bookmark');
-  var bookmarksArray = [];
+    for(var i = 0; i < bookmarks.length; i++) {
+      var folder = null;
+      if (bookmarks[i].parentNode != bbar) {
+        folder = bookmarks[i].parentNode.parentNode.getElementsByTagName('span')[0].innerHTML
+      } 
 
-  for(var i = 0; i < bookmarks.length; i++) {
-    var folder = null;
-    if (bookmarks[i].parentNode != bbar) {
-      folder = bookmarks[i].parentNode.parentNode.getElementsByTagName('span')[0].innerHTML
-    } 
+      let Data = {
+        url: bookmarks[i].name,
+        name: bookmarks[i].getElementsByTagName('span')[0].innerHTML,
+        folder: folder
+      };
+      bookmarksArray.push(Data);
+    }
 
-    let Data = {
-      url: bookmarks[i].name,
-      name: bookmarks[i].getElementsByTagName('span')[0].innerHTML,
-      folder: folder
-    };
-    bookmarksArray.push(Data);
-  }
-
-  saveFileToJsonFolder('bookmarks', JSON.stringify(bookmarksArray));
-
-  document.getElementById('sidebar-webview').send('action-update-bookmarks');
+    saveFileToJsonFolder('bookmarks', JSON.stringify(bookmarksArray)).then(function() {
+      document.getElementById('sidebar-webview').send('action-update-bookmarks');
+    });
+  });
 }
 
 async function pictureIn(url) {
@@ -1391,8 +1391,7 @@ ipcRenderer.on('action-edit-folder', (event, arg) => {
     deleteButton.onclick = () => {
       div.getElementsByClassName('edit-folder-div')[0].classList.add('hide');
       setTimeout(() => {
-        div.parentNode.removeChild(div);
-        saveBookmarksBar();
+        notificationManager.addQuestNotif("Are you sure to remove this folder?", [{ text: "Delete" , icon: "delete-16" , click: "removeFolder('" + nameLabel.innerHTML + "')" }]);
       }, 250);
     }
 
@@ -1418,9 +1417,9 @@ ipcRenderer.on('action-edit-folder', (event, arg) => {
     inputName.focus();
 
     var bounding = div.getElementsByClassName('edit-folder-div')[0].getBoundingClientRect();
-    if (bounding.left > (window.innerWidth / 2 || document.documentElement.clientWidth / 2)) {
+    if (bounding.left >= (window.innerWidth / 2 || document.documentElement.clientWidth / 2)) {
       div.getElementsByClassName('edit-folder-div')[0].style.left = "auto";
-      div.getElementsByClassName('edit-folder-div')[0].style.right = 0;
+      div.getElementsByClassName('edit-folder-div')[0].style.right = "-1px";
     }
 
     updateTheme();
@@ -1530,9 +1529,9 @@ ipcRenderer.on('action-edit-bookmark', (event, arg) => {
     inputName.focus();
 
     var bounding = div.getElementsByClassName('bookmark-div')[0].getBoundingClientRect();
-    if (bounding.left > (window.innerWidth / 2 || document.documentElement.clientWidth / 2)) {
+    if (bounding.left >= (window.innerWidth / 2 || document.documentElement.clientWidth / 2)) {
       div.getElementsByClassName('bookmark-div')[0].style.left = "auto";
-      div.getElementsByClassName('bookmark-div')[0].style.right = 0;
+      div.getElementsByClassName('bookmark-div')[0].style.right = "-1px";
     }
 
     updateTheme();
