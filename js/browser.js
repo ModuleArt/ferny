@@ -1357,6 +1357,8 @@ ipcRenderer.on('action-switch-tab', (event, arg) => {
 ipcRenderer.on('action-edit-folder', (event, arg) => {
   var div = document.getElementById(arg);
 
+  div.classList.remove('show');
+
   if(div.getElementsByClassName('edit-folder-div')[0] == null) {
     var nameLabel = div.getElementsByTagName('span')[0];
     div.title = "";
@@ -1375,13 +1377,25 @@ ipcRenderer.on('action-edit-folder', (event, arg) => {
     saveButton.innerHTML = "<img name='save-16' class='theme-icon'>"
     saveButton.title = "Save";
     saveButton.onclick = () => {
-      div.title = inputName.value;
-      nameLabel.innerHTML = inputName.value;
-      div.getElementsByClassName('edit-folder-div')[0].classList.add('hide');
-      setTimeout(() => {
-        div.removeChild(div.getElementsByClassName('edit-folder-div')[0]);
-        saveBookmarksBar();
-      }, 250);
+      let bool = false;
+      let folders = document.getElementById('bookmarks-bar').getElementsByClassName('folder');
+      for(let i = 0; i < folders.length; i++) {
+        if(folders[i].getElementsByTagName('span')[0].innerHTML == inputName.value) {
+          bool = true;
+          break
+        }
+      }
+      if(bool) {
+        notificationManager.addStatusNotif("This folder name is already taken", "error");
+      } else {
+        div.title = inputName.value;
+        nameLabel.innerHTML = inputName.value;
+        div.getElementsByClassName('edit-folder-div')[0].classList.add('hide');
+        setTimeout(() => {
+          div.removeChild(div.getElementsByClassName('edit-folder-div')[0]);
+          saveBookmarksBar();
+        }, 250);
+      }
     }
 
     var deleteButton = document.createElement('button');

@@ -22,7 +22,7 @@ function extToImagePath(ext) {
     if(ext == "txt" || ext == "yml" || ext == "yaml") {
         res = '../imgs/icons16/document.png';
     } else 
-    if(ext == "js") {
+    if(ext == "js" || ext == "ts") {
         res = '../imgs/icons16/js.png';
     } else 
     if(ext == "json") {
@@ -141,6 +141,9 @@ function extToImagePath(ext) {
     } else
     if(ext == "c") {
         res = '../imgs/icons16/c.png';
+    } else
+    if(ext == "gitignore") {
+        res = '../imgs/icons16/git-fork.png';
     } else
     if(ext == "mov") {
         res = '../imgs/icons16/mov.png';
