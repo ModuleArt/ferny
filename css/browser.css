@@ -847,7 +847,7 @@ body.system-titlebar .etabs-tab {
   white-space: nowrap;
   word-break: keep-all;
   text-overflow: ellipsis;
-  opacity: 0.75;
+  opacity: 0.5;
 }
 
 .etabs-tab:hover .etabs-tab-buttons, .etabs-tab.active .etabs-tab-buttons {
