@@ -40,6 +40,24 @@ const bytesToSize = require("../modules/bytesToSize.js");
 const loadWinControls = require("../modules/loadWinControls.js");
 const rgbToRgbaString = require("../modules/rgbToRgbaString.js");
 
+const NotificationManager = require("../modules/NotificationManager/NotificationManager.js");
+
+/*
+ #    #  ####  ##### # ###### #  ####    ##   ##### #  ####  #    #  ####
+ ##   # #    #   #   # #      # #    #  #  #    #   # #    # ##   # #
+ # #  # #    #   #   # #####  # #      #    #   #   # #    # # #  #  ####
+ #  # # #    #   #   # #      # #      ######   #   # #    # #  # #      #
+ #   ## #    #   #   # #      # #    # #    #   #   # #    # #   ## #    #
+ #    #  ####    #   # #      #  ####  #    #   #   #  ####  #    #  ####
+*/
+
+let notificationManager = new NotificationManager(document.getElementById('notif-panel'));
+
+
+notificationManager.on("notif-added", (notif) => {
+  updateTheme();
+});
+
 /*
 .########....###....########...######.
 ....##......##.##...##.....##.##....##
@@ -240,12 +258,12 @@ tabGroup.on("tab-added", (tab, tabGroup) => {
   });
 
   webview.addEventListener('certificate-error', (e) => {
-    notif("Certificate error", 'warning');
+    notificationManager.addStatusNotif("Certificate error", 'warning');
   });
 
   webview.addEventListener('enter-html-full-screen', (e) => {
     document.body.classList.add('fullscreen');
-    notif("Press F11 to exit full screen", 'info');
+    notificationManager.addStatusNotif("Press F11 to exit full screen", 'info');
   });
 
   webview.addEventListener('leave-html-full-screen', (e) => {
@@ -264,7 +282,7 @@ tabGroup.on("tab-added", (tab, tabGroup) => {
       document.getElementById('forward-btn').disabled = true;
     }
 
-    notif("Connection failed: " + e.errorDescription + " (" + e.errorCode + ")", "error");
+    notificationManager.addStatusNotif("Connection failed: " + e.errorDescription + " (" + e.errorCode + ")", "error");
   });
 
   document.getElementsByClassName('etabs-tab-buttons')[tab.getPosition(false) - 1].title = "Close tab";
@@ -552,7 +570,6 @@ function pinSidebar() {
 
 function installUpdate() {
   ipcRenderer.send('request-install-update');
-  removeNotifById('update-0');
 }
 
 function goToBookmarksTab() {
@@ -670,7 +687,7 @@ function createBookmark(url, name, folder) {
 
   document.getElementById('sidebar-webview').send('action-update-bookmarks');
 
-  notif("Bookmark added", "info");
+  notificationManager.addStatusNotif("Bookmark added", "info");
 
   updateBookmarksBar();
 }
@@ -777,206 +794,14 @@ function getSuggestions() {
   }
 }
 
-function notif(text, type) {
-  var div = document.createElement('div');
-  div.classList.add('notif');
-  div.classList.add(type);
-  div.innerHTML = `
-    <div class="notif-container">
-      <button onclick='removeNotif(this.parentNode.parentNode)' title='Close notification' class="notif-close nav-btn">
-        <img class='theme-icon' name='cancel-16'>
-      </button>
-      <div class='notif-body'>
-        <label class='notif-text'>` + text + `</label>
-      </div>
-    </div>`;
-
-  var notifPanel = document.getElementById('notif-panel');
-
-  div.addEventListener('auxclick', (e) => {
-    e.preventDefault();
-      if(e.which == 2) {
-        notifPanel.removeChild(div);
-      }
-  }, false);
-
-  var img = document.createElement('img');
-  img.classList.add('notif-icon', 'theme-icon');
-
-  switch (type) {
-    case "success":
-      div.title = 'Success notification';
-      img.name = 'check-16';
-      div.getElementsByClassName('notif-container')[0].style.backgroundColor = rgbToRgbaString("rgb(11, 232, 129)");
-      break;
-    case "info":
-      div.title = 'Info notification';
-      img.name = 'info-16';
-      div.getElementsByClassName('notif-container')[0].style.backgroundColor = rgbToRgbaString("rgb(15, 188, 249)");
-      break;
-    case "warning":
-      div.title = 'Warning notification';
-      img.name = 'warning-16';
-      div.getElementsByClassName('notif-container')[0].style.backgroundColor = rgbToRgbaString("rgb(255, 168, 1)");
-      break;
-    case "error":
-      div.title = 'Error notification';
-      img.name = 'fire-16';
-      div.getElementsByClassName('notif-container')[0].style.backgroundColor = rgbToRgbaString("rgb(255, 63, 52)");
-  }
-  div.insertBefore(img, div.children[0]);
-
-  notifPanel.insertBefore(div, notifPanel.firstChild);
-
-  updateTheme();
-
-  if (notifPanel.childNodes.length > 5) {
-    for(var i = notifPanel.childNodes.length; i > 5; i--) {
-      notifPanel.removeChild(notifPanel.lastChild);
-    }
-  }
-
-  setTimeout(function () {
-    removeNotif(div);
-  }, 5000);
-}
-
-function quest(text, ops) {
-  var div = document.createElement('div');
-  div.classList.add('notif');
-  div.classList.add('quest');
-  div.innerHTML = ` 
-    <div class="notif-container">
-      <img name='about-16' class='notif-icon theme-icon'>
-      <button onclick='removeNotif(this.parentNode.parentNode)' title='Close notification' class="notif-close nav-btn">
-        <img class='theme-icon' name='cancel-16'>
-      </button>
-      <div class='notif-body'>
-        <label class='notif-text'>` + text + `</label>
-        <hr>
-      </div>
-    </div>`;
-
-  div.getElementsByClassName('notif-container')[0].style.backgroundColor = rgbToRgbaString("rgb(255, 168, 1)");
-
-  var notifPanel = document.getElementById('notif-panel');
-
-  for (var i = 0; i < ops.length; i++) {
-    var btn = document.createElement('button');
-    btn.classList.add('nav-btn');
-    btn.innerHTML = "<img name='" + ops[i].icon + "' class='theme-icon'><label>" + ops[i].text + "</label>";
-    let j = i;
-    btn.onclick = function () {
-      eval(ops[j].click);
-    };
-    div.getElementsByClassName('notif-body')[0].appendChild(btn);
-  }
-
-  document.getElementById('notif-panel').appendChild(div);
-
-  updateTheme();
-
-  if (notifPanel.childNodes.length > 5) {
-    for(var i = notifPanel.childNodes.length; i > 5; i--) {
-      notifPanel.removeChild(notifPanel.lastChild);
-    }
-  }
-}
-
 function clearDownloads() {
   ipcRenderer.send('action-clear-downloads');
   document.getElementById('sidebar-webview').send('action-clear-downloads');
 }
 
-function updateLoader(percent, id, speed, transferred, total) {
-  var div = document.getElementById(id);
-  if(typeof(div) != "undefined") {
-    var bar = div.childNodes[1].getElementsByClassName('notif-bar')[0];
-
-    bar.innerHTML = "<div></div>"
-
-    var line = bar.getElementsByTagName('div')[0];
-    line.style.width = (percent / 100 * bar.clientWidth) + "px";
-
-    if(transferred != null && total != null) {
-      bar.innerHTML += "<label>" + percent + "% (" + bytesToSize(transferred) + "/" + bytesToSize(total) + ")</label>";
-    } else {
-      bar.innerHTML += "<label>" + percent + "%</label>";
-    } 
-
-    if(speed != null) {
-      bar.innerHTML += "<label>Speed: " + bytesToSize(speed) + "/s</label>";
-    }
-  }
-}
-
 function cancelUpdate() {
   ipcRenderer.send('request-cancel-update');
-  removeNotif(document.getElementById('update-0'));
-  notif('Update cancelled', 'error');
-}
-
-function loader(text, id, stopBtn) {
-  var notifPanel = document.getElementById('notif-panel');
-
-  var div = document.createElement('div');
-  div.id = id;
-  div.classList.add('notif');
-  div.classList.add('loader');
-  div.innerHTML = `
-    <div class="notif-container">
-      <img name='download-16' class='notif-icon theme-icon'>
-      <button onclick='removeNotif(this.parentNode.parentNode)' title='Close notification' class="notif-close nav-btn">
-        <img class='theme-icon' name='cancel-16'>
-      </button>
-      <div class='notif-body'>
-        <label class='notif-text'>` + text + `</label>
-      </div>
-    </div>`;
-
-  var bar = document.createElement('div');
-  bar.classList.add('notif-bar');
-  bar.innerHTML = "<div style='width: 0px;'></div>";
-  div.childNodes[1].appendChild(bar);
-
-  if(stopBtn != null) {
-    var btn = document.createElement('div');
-    btn.classList.add('nav-btn');
-    btn.innerHTML = "<img name='" + stopBtn.icon + "' class='theme-icon'><label>" + stopBtn.text + "</label>";
-    btn.onclick = function () {
-      eval(stopBtn.click);
-    };
-    div.getElementsByClassName('notif-body')[0].appendChild(btn);
-  }
-
-  notifPanel.appendChild(div);
-
-  updateTheme();
-
-  if (notifPanel.childNodes.length > 5) {
-    for(var i = notifPanel.childNodes.length; i > 5; i--) {
-      notifPanel.removeChild(notifPanel.lastChild);
-    }
-  }
-}
-
-function removeNotif(div) {
-  if(typeof(div) != "undefined") {
-    div.classList.add('closed');
-    setTimeout(function () {
-      div.parentNode.removeChild(div);
-    }, 250);
-  }
-}
-
-function removeNotifById(id) {
-  var div = document.getElementById(id);
-  if(typeof(div) != "undefined") {
-    div.classList.add('closed');
-    setTimeout(function () {
-      document.getElementById('notif-panel').removeChild(div);
-    }, 250);
-  }
+  notificationManager.addStatusNotif('Update cancelled', 'error');
 }
 
 function showSidebar() {
@@ -1139,57 +964,11 @@ function removeFolder(folder) {
     saveFileToJsonFolder('folders', JSON.stringify(arr));
 
     document.getElementById('sidebar-webview').send('action-remove-folder', folder);
-    updateBookmarksBar();
+    updateBookmarksBar();load
 
-    notif("Folder removed: " + folder, "info");
+    notificationManager.addStatusNotif("Folder removed: " + folder, "info");
   } catch (e) {
 
-  }
-}
-
-function zoomNotif(zoom) {
-  var div = document.createElement('div');
-  div.id="zoom-1";
-  div.classList.add('notif');
-  div.classList.add('zoom');
-  div.innerHTML = `<img name='search' class='notif-icon theme-icon'>
-                    <div class='notif-body'>
-                        <label class='notif-text'>Zoom factor changed to ` + zoom + `%</label>
-                        <img class='notif-close theme-icon' onclick='removeNotif(this.parentNode.parentNode)' title='Close notification' name='cancel'>
-                        <hr>
-                        <div class="nav-btn" onclick="zoomOut()">
-                            <img class="nav-btn-icon theme-icon" name="zoom-out">
-                            <label class="nav-btn-label">Zoom out</label>
-                        </div>
-                        <div class="nav-btn" onclick="zoomIn()">
-                            <img class="nav-btn-icon theme-icon" name="zoom-in">
-                            <label class="nav-btn-label">Zoom in</label>
-                        </div>
-                    </div>`;
-
-  var notifPanel = document.getElementById('notif-panel');
-
-  notifPanel.insertBefore(div, notifPanel.firstChild);
-
-  updateTheme();
-
-  if (notifPanel.childNodes.length > 5) {
-    for(var i = notifPanel.childNodes.length; i > 5; i--) {
-      notifPanel.removeChild(notifPanel.lastChild);
-    }
-  }
-
-  setTimeout(function () {
-    removeNotif(div);
-  }, 5000);
-}
-
-function updateZoomNotif(zoom) {
-  var div = document.getElementById('zoom-1');
-  if(div != null) {
-    div.getElementsByClassName('notif-text')[0].innerHTML = "Zoom factor changed to " + zoom + "%";
-  } else {
-    zoomNotif(zoom);
   }
 }
 
@@ -1197,7 +976,7 @@ function zoomIn() {
   var zoomFactor = tabGroup.getActiveTab().webview.getZoomFactor();
   if (zoomFactor < 2.5) {
     tabGroup.getActiveTab().webview.setZoomFactor(zoomFactor + 0.1);
-    updateZoomNotif(Math.round((zoomFactor + 0.1) * 100));
+    notificationManager.refreshZoomNotif(Math.round((zoomFactor + 0.1) * 100));
     tabGroup.getActiveTab().webview.focus();
   }
 }
@@ -1206,7 +985,7 @@ function zoomOut() {
   var zoomFactor = tabGroup.getActiveTab().webview.getZoomFactor();
   if (zoomFactor > 0.3) {
     tabGroup.getActiveTab().webview.setZoomFactor(zoomFactor - 0.1);
-    updateZoomNotif(Math.round((zoomFactor - 0.1) * 100));
+    notificationManager.refreshZoomNotif(Math.round((zoomFactor - 0.1) * 100));
     tabGroup.getActiveTab().webview.focus();
   }
 }
@@ -1895,7 +1674,7 @@ ipcRenderer.on('action-zoom-actualsize', (event, arg) => {
   var zoomFactor = tabGroup.getActiveTab().webview.getZoomFactor();
   if (zoomFactor != 1) {
     tabGroup.getActiveTab().webview.setZoomFactor(1);
-      notif("Zoom factor changed to the actual size (100%)", "info");
+      notificationManager.addStatusNotif("Zoom factor changed to the actual size (100%)", "info");
       tabGroup.getActiveTab().webview.focus();
   }
 });
@@ -2050,19 +1829,19 @@ ipcRenderer.on('action-navigate-suggest', (event, arg) => {
 });
 
 ipcRenderer.on('action-notif', (event, arg) => {
-  notif(arg.text, arg.type);
+  notificationManager.addStatusNotif(arg.text, arg.type);
 });
 
 ipcRenderer.on('action-quest', (event, arg) => {
-  quest(arg.text, arg.ops);
+  notificationManager.addQuestNotif(arg.text, arg.ops);
 });
 
-ipcRenderer.on('action-loader', (event, arg) => {
-  loader(arg.text, arg.id, arg.stopBtn);
+ipcRenderer.on('action-add-update-notif', (event, arg) => {
+  notificationManager.addUpdateNotif(arg);
 });
 
-ipcRenderer.on('action-update-loader', (event, arg) => {
-  updateLoader(Math.round(arg.percent), arg.id, arg.speed, arg.transferred, arg.total);
+ipcRenderer.on('action-refresh-update-notif', (event, arg) => {
+  notificationManager.refreshUpdateNotif(arg.percent, arg.transferred, arg.total, arg.speed);
 });
 
 ipcRenderer.on('action-change-theme', (event, arg) => {
@@ -2136,8 +1915,8 @@ ipcRenderer.on('action-add-history-item', (event, arg) => {
 
 ipcRenderer.on('action-create-download', (event, arg) => {
   document.getElementById('sidebar-webview').send('action-create-download', arg);
-  notif('Download started: ' + arg.name, 'info');
-  loader('Downloading file: ' + arg.name, "download-" + arg.index);
+  notificationManager.addStatusNotif('Download started: ' + arg.name, 'info');
+  notificationManager.addDownloadNotif(arg.name, arg.index);
 });
 
 ipcRenderer.on('action-create-stopped-download', (event, arg) => {
@@ -2150,25 +1929,25 @@ ipcRenderer.on('action-set-download-status-pause', (event, arg) => {
 
 ipcRenderer.on('action-set-download-status-done', (event, arg) => {
   document.getElementById('sidebar-webview').send('action-set-download-status-done', arg);
-  notif('Download complete: ' + arg.name, 'success');
-  removeNotifById('download-' + arg.index);
+  notificationManager.addStatusNotif('Download complete: ' + arg.name, 'success');
+  notificationManager.closeDownloadNotif(arg.index);
 });
 
 ipcRenderer.on('action-set-download-status-failed', (event, arg) => {
   document.getElementById('sidebar-webview').send('action-set-download-status-failed', arg);
-  notif('Download ' + arg.state + ": " + arg.name, 'error');
-  removeNotifById('download-' + arg.index);
+  notificationManager.addStatusNotif('Download ' + arg.state + ": " + arg.name, 'error');
+  notificationManager.closeDownloadNotif(arg.index);
 });
 
 ipcRenderer.on('action-set-download-status-interrupted', (event, arg) => {
   document.getElementById('sidebar-webview').send('action-set-download-status-interrupted', arg);
-  notif('Download interrupted: ' + arg.name, 'warning');
-  removeNotifById('download-' + arg.index);
+  notificationManager.addStatusNotif('Download interrupted: ' + arg.name, 'warning');
+  notificationManager.closeDownloadNotif(arg.index);
 });
 
 ipcRenderer.on('action-set-download-process', (event, arg) => {
   document.getElementById('sidebar-webview').send('action-set-download-process', arg);
-  updateLoader(Math.round(arg.bytes / arg.total * 100), "download-" + arg.index, null, arg.bytes, arg.total);
+  notificationManager.refreshDownloadNotif(Math.round(arg.bytes / arg.total * 100), arg.bytes, arg.total, arg.index);
 });
 
 /*
