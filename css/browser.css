@@ -218,7 +218,7 @@
   background-color: var(--color-back);
 }
 
-#pin-sidebar-btn, #unpin-sidebar-btn {
+#pin-sidebar-btn {
   position: absolute;
   left: 2px;
   bottom: 2px;
@@ -464,7 +464,7 @@ body.collapse-sidebar #pin-sidebar-btn, body.collapse-sidebar #unpin-sidebar-btn
 
 /* pinned sidebar */
 body.pinned-sidebar .etabs-views {
-  right: 463px;
+  right: 477px;
 }
 
 body.pinned-sidebar.collapse-sidebar .etabs-views {
@@ -730,7 +730,7 @@ body.system-titlebar .etabs-tab {
   opacity: var(--opacity-over);
 }
 
-.etabs-tab:hover .etabs-tab-buttons, .etabs-tab.active .etabs-tab-buttons {
+.etabs-tab:hover .etabs-tab-buttons button, .etabs-tab.active .etabs-tab-buttons button {
   transform: scale(1);
 }
 
@@ -738,8 +738,6 @@ body.system-titlebar .etabs-tab {
   position: absolute;
   right: 5px;
   top: 5px;
-  transition: 0.25s;
-  transform: scale(0);
 }
 
 .etabs-tab-buttons button {
@@ -753,8 +751,9 @@ body.system-titlebar .etabs-tab {
   border-radius: var(--px-radius);
   position: relative;
   border: 1px solid transparent;
+  transition: transform 0.25s;
+  transform: scale(0);
 }
-
 
 .etabs-tab-buttons button:after {
   content: '';
@@ -783,6 +782,7 @@ body.system-titlebar .etabs-tab {
 
 .etabs-tab-buttons button:focus {
   box-shadow: var(--shadow-focus);
+  transform: scale(1);
 }
 
 .etabs-tab-buttons button:active {
@@ -851,7 +851,7 @@ body.system-titlebar .etabs-tab {
 
 #sidebar-div {
   height: 100%;
-  width: 136px;
+  width: 150px;
   padding: 2px;
   float: left;
   position: relative;

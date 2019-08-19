@@ -257,7 +257,8 @@ function appendBookmark(name, url, folderEl) {
 
   div.innerHTML = `
     <img class="bookmark-icon" src="` + 'http://www.google.com/s2/favicons?domain=' + url + `">
-    <label>` + name + `</label>
+    <label class="bookmark-title">` + name + `</label>
+    <label class="bookmark-preview">` + url + `</label>
     <center class="bookmark-menu">
       <button class='nav-btn' title="Open in new tab" onclick="openBookmarkInNewTab(this)">
         <img class="theme-icon" name="tab-16">
@@ -285,7 +286,7 @@ function appendBookmark(name, url, folderEl) {
 
   var options = document.createElement('button');
   options.classList.add('bookmark-options');
-  options.innerHTML = "<img name='options-16' class='theme-icon'>"
+  options.innerHTML = "<img name='options-12' class='theme-icon'>"
   options.onclick = function(e) {
     e.stopPropagation();
 

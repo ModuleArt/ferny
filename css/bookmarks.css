@@ -127,7 +127,7 @@ label {
   border-left: 4px solid transparent;
   background-color: var(--color-element);
   border: 1px solid var(--color-border);
-  border-radius: var(--px-radius);
+  border-radius: calc(var(--px-radius) + 4px);
   outline: none;
   padding: 0;
 }
@@ -136,8 +136,12 @@ label {
   box-shadow: var(--shadow-focus);
 }
 
-.bookmark label:first {
-  margin: 10px 0;
+.bookmark-title {
+  margin: 6px 0;
+  transition: margin 0.25s;
+}
+
+.bookmark-title, .bookmark-preview {
   width: calc(100% - 44px);
   overflow: hidden;
   position: absolute;
@@ -146,7 +150,20 @@ label {
   text-overflow: ellipsis;
 }
 
-.bookmark:hover label {
+.bookmark-preview {
+  opacity: 0;
+  font-size: 12px;
+  margin-top: 14px;
+}
+
+.bookmark:hover .bookmark-title {
+  width: calc(100% - 64px);
+  font-size: 12px;
+  margin: 0;
+}
+
+.bookmark:hover .bookmark-preview {
+  opacity: var(--opacity-over);
   width: calc(100% - 64px);
 }
 
@@ -158,23 +175,27 @@ label {
 }
 
 .bookmark-options {
-  border-radius: calc(var(--px-radius) - 2px);
+  border-radius: var(--px-radius);
   position: absolute;
   right: 0;
   top: 0;
   margin: 0;
-  border: none;
+  border: 1px solid transparent;
   background: none;
-  display: none;
-  padding: 8px;
-  opacity: 0.5;
+  padding: 1px;
   outline: none;
-  padding-bottom: 4px;
-  border-radius: calc(var(--px-radius) - 2px);
+  /* padding-bottom: 4px; */
+  border-radius: var(--px-radius);
+  transform: scale(0);
+  transition: transform 0.25s;
+  width: 22px;
+  height: 22px;
+  margin: 5px;
 }
 
 .bookmark-options:hover {
-  opacity: 1;
+  background-color: var(--color-second);
+  border-color: var(--color-border);
 }
 
 .bookmark-options:focus {
@@ -182,11 +203,11 @@ label {
 }
 
 .bookmark-options:active {
-  opacity: 0.25;
+  background-color: var(--color-border);
 }
 
-.bookmark:hover .bookmark-options {
-  display: block;
+.bookmark:hover .bookmark-options, .bookmark-options:focus {
+  transform: scale(1);
 }
 
 .bookmark .bookmark-options:hover {
