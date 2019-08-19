@@ -17,9 +17,8 @@ function saveFileToJsonFolder(fileName, data) {
     
         fs.writeFile(ppath + "/json/" + fileName + ".json", data, function(err) {
             if(err) throw err;
+            resolve(true);
         });
-
-        resolve(true);
     });
 }
 

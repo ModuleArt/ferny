@@ -261,10 +261,11 @@ ipcRenderer.on('action-add-history-item', (event, arg) => {
 
 ipcRenderer.on('action-clear-history', (event, arg) => {
   try {
-    saveFileToJsonFolder('history', "");
-    var container = document.getElementById('history');
-    container.innerHTML = "";
-    notif('History cleared', 'success');
+    saveFileToJsonFolder('history', "").then(function() {
+      var container = document.getElementById('history');
+      container.innerHTML = "";
+      notif('History cleared', 'success');
+    });
   } catch (error) {
     notif('Error: ' + error, 'error')
   }

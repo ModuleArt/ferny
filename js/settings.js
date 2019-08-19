@@ -197,11 +197,11 @@ function saveHomePage() {
       on = 0;
     }
   
-    saveFileToJsonFolder('home', JSON.stringify({ url: url, on: on }));
+    saveFileToJsonFolder('home', JSON.stringify({ url: url, on: on })).then(function() {
+      notif("Home page saved", "success");
 
-    notif("Home page saved", "success");
-
-    ipcRenderer.send('request-update-home-page');
+      ipcRenderer.send('request-update-home-page');
+    });
   }
 }
 
@@ -228,11 +228,11 @@ function showWelcomeScreen() {
 function saveStartPage() {
   var startPage = document.getElementById('start-page-input').value;
 
-  saveFileToJsonFolder('startpage', startPage);
+  saveFileToJsonFolder('startpage', startPage).then(function() {
+    notif("New tab page saved: " + startPage, "success");
 
-  notif("New tab page saved: " + startPage, "success");
-
-  ipcRenderer.send('request-set-start-page', startPage);
+    ipcRenderer.send('request-set-start-page', startPage);
+  });
 }
 
 function notif(text, type) {
@@ -290,6 +290,7 @@ function loadLastTab() {
   } catch (e) {
     saveFileToJsonFolder("lasttab", lastTab);
   }
+  
   var radios = document.getElementsByName("last-tab");
   for(var i = 0; i < radios.length; i++) {
     if(radios[i].value == lastTab) {
@@ -311,26 +312,18 @@ function bytesToSize(bytes) {
 }
 
 function clearBrowsingData() {
-  // var clearHistory = document.getElementById('clear-history-checkbox').checked;
   var clearCache = document.getElementById('clear-cache-checkbox').checked;
   var clearStorage = document.getElementById('clear-storage-checkbox').checked;
-  // var clearAuth = document.getElementById('clear-auth-checkbox').checked;
-
-  // if(clearHistory) {
-  //   try {
-  //     fs.writeFileSync(ppath + "/json/history.json", "");
-  //   } catch (error) {
+  if(!clearCache && !clearStorage) {
+    notif("First check something", "warning")
+  } else {
+    let Data = {
+      cache: clearCache,
+      storage: clearStorage
+    };
   
-  //   }
-  // }
-
-  let Data = {
-    cache: clearCache,
-    storage: clearStorage
-    // auth: clearAuth
-  };
-
-  ipcRenderer.send('request-clear-browsing-data', Data);
+    ipcRenderer.send('request-clear-browsing-data', Data);
+  }
 }
 
 function setStartPageLikeHomePage() {

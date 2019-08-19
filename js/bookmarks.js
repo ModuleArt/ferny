@@ -364,9 +364,9 @@ function saveBookmarks() {
     bookmarksArray.push(Data);
   }
 
-  saveFileToJsonFolder('bookmarks', JSON.stringify(bookmarksArray));
-
-  ipcRenderer.send('request-update-bookmarks-bar');
+  saveFileToJsonFolder('bookmarks', JSON.stringify(bookmarksArray)).then(function() {
+    ipcRenderer.send('request-update-bookmarks-bar');
+  });
 }
 
 /*
@@ -504,9 +504,9 @@ function saveFolders() {
       folderArray.push(Data);
     }
   }
-  saveFileToJsonFolder('folders', JSON.stringify(folderArray));
-
-  ipcRenderer.send('request-update-bookmarks-bar');
+  saveFileToJsonFolder('folders', JSON.stringify(folderArray)).then(function() {
+    ipcRenderer.send('request-update-bookmarks-bar');
+  });
 }
 
 /*

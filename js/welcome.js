@@ -170,11 +170,11 @@ function setStartPageLikeHomePage() {
 function saveStartPage() {
   var startPage = document.getElementById('start-page-input').value;
 
-  saveFileToJsonFolder('startpage', startPage);
+  saveFileToJsonFolder('startpage', startPage).then(function() {
+    notif("Start page saved: " + startPage, "success");
 
-  notif("Start page saved: " + startPage, "success");
-
-  ipcRenderer.send('request-set-start-page', startPage);
+    ipcRenderer.send('request-set-start-page', startPage);
+  });
 }
 
 function loadBookmarksBar() {
@@ -267,11 +267,11 @@ function saveHomePage() {
     if(!fs.existsSync(ppath + "/json")) {
       fs.mkdirSync(ppath + "/json");
     } 
-    saveFileToJsonFolder('home', JSON.stringify({ url: url, on: on }));
+    saveFileToJsonFolder('home', JSON.stringify({ url: url, on: on })).then(function() {
+      notif("Home page saved: " + url, "success");
 
-    notif("Home page saved: " + url, "success");
-
-    ipcRenderer.send('request-update-home-page');
+      ipcRenderer.send('request-update-home-page');
+    });
   }
 }
 
