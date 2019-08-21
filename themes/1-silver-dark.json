@@ -1,0 +1,13 @@
+{
+  "name": "Silver",
+  "type": "Dark",
+  "icons": "white",
+  "colorBack": "#222222",
+  "colorElement": "#363636",
+  "colorBorder": "#111111",
+  "colorSecond": "#474747",
+  "colorTop": "#FFFFFF",
+  "shadowFocus": "inset 0 0 4px rgba(0, 0, 0, 1)",
+  "opacityOver": "0.5",
+  "pxRadius": "8px"
+}

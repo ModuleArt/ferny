@@ -105,7 +105,7 @@ function loadThemesFromFolder() {
         theme.style.borderRadius = 'calc(' + themeObj.pxRadius + ' + 4px);'
         theme.innerHTML = `
           <div>
-            <label>` + themeObj.name + `</label>
+            <label>` + themeObj.name + `</label><br>
             <span>` + themeObj.type + `</span>
             <img src='../imgs/theme-icons/` + themeObj.icons + `/theme-16.png'>
           </div>

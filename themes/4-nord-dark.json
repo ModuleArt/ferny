@@ -1,0 +1,13 @@
+{
+  "name": "Nord",
+  "type": "Dark",
+  "icons": "white",
+  "colorBack": "#3B4252",
+  "colorElement": "#434C5E",
+  "colorBorder": "#2E3440",
+  "colorSecond": "#566B80",
+  "colorTop": "#FFFFFF",
+  "shadowFocus": "inset 0 0 4px rgba(0, 0, 0, 1)",
+  "opacityOver": "0.5",
+  "pxRadius": "16px"
+}

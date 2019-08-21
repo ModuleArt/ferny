@@ -1,0 +1,13 @@
+{
+  "name": "Deep",
+  "type": "Dark",
+  "icons": "white",
+  "colorBack": "#000000",
+  "colorElement": "#202020",
+  "colorBorder": "#2B2B2B",
+  "colorSecond": "#434343",
+  "colorTop": "#FFFFFF",
+  "shadowFocus": "inset 0 0 4px rgba(255, 255, 255, 0.5)",
+  "opacityOver": "0.5",
+  "pxRadius": "8px"
+}

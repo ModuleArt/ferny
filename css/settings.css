@@ -127,13 +127,18 @@ label {
 }
 
 .theme div label, .theme div span {
-  padding: 4px 8px;
   display: inline-block;
   vertical-align: middle;
+  padding: 4px 8px;
+}
+
+.theme div span {
+  font-size: 12px;
 }
 
 .theme div label {
   margin-bottom: 4px;
+  width: 100%;
 }
 
 .theme div img {

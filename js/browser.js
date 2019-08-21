@@ -74,7 +74,7 @@ let tabGroup = new TabGroup({
     active: true,
     visible: true,
     webviewAttributes: {
-      enableBlinkFeatures: false
+      // enableBlinkFeatures: false
     }
   },
   newTabButtonText: `<img title='New tab' name='create-12' class='theme-icon' ondrop='newTabDrop(event)' ondragover='prevDef(event)'/>`,
@@ -329,7 +329,7 @@ function newTab(url, title, active) {
     active: active,
     visible: true,
     webviewAttributes: {
-      enableBlinkFeatures: false
+      // enableBlinkFeatures: false
     }
   });
 }
@@ -709,7 +709,7 @@ function searchWith(text, engine) {
       tabGroup.getActiveTab().webview.loadURL("https://google.com/search?q=" + text);
       break;
     case 'bing':
-      tabGroup.getActiveTab().webview.loadURL("https://bing.com/search?q=" + text);
+      tabGroup.getActiveTab().webview.src = "https://bing.com/search?q=" + text;
       break;
     case 'duckduckgo':
       tabGroup.getActiveTab().webview.loadURL("https://duckduckgo.com/?q=" + text);

@@ -8,7 +8,7 @@
 .##.....##.##.....##.####.##....##
 */
 
-const { ipcMain, app, Menu, MenuItem, BrowserWindow, dialog, systemPreferences, clipboard } = require('electron');
+const { ipcMain, app, Menu, MenuItem, BrowserWindow, dialog, systemPreferences, clipboard, BrowserView } = require('electron');
 const { autoUpdater } = require("electron-updater")
 const os = require('os');
 const prependFile = require('prepend-file');
@@ -741,6 +741,16 @@ function showMainWindow() {
   
     // mainWindow.webContents.openDevTools();
     mainWindow.loadFile(app.getAppPath() + '/html/browser.html');
+
+    // let view = new BrowserView()
+    // mainWindow.addBrowserView(view)
+    // view.setBounds({ x: 0, y: 0, width: 300, height: 300 })
+    // view.webContents.loadURL('https://electronjs.org')
+
+    // let view2 = new BrowserView()
+    // mainWindow.addBrowserView(view2)
+    // view2.setBounds({ x: 300, y: 300, width: 300, height: 300 })
+    // view2.webContents.loadURL('https://electronjs.org')
   
     mainWindow.webContents.on('context-menu', (event, params) => {
       if(params.isEditable) {
