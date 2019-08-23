@@ -4,6 +4,7 @@
     <link rel="stylesheet" href="../css/modules/webkit.css">
     <link rel="stylesheet" href="../css/modules/nav-btn.css">
     <link rel="stylesheet" href="../css/modules/input.css">
+    <link rel="stylesheet" href="../css/modules/tabs.css">
     <link rel="stylesheet" href="../css/modules/notifications.css">
     <link rel="stylesheet" href="../node_modules/dragula/dist/dragula.css">
     <link rel="stylesheet" href="../css/browser.css">
@@ -11,10 +12,11 @@
   <body>
     <div id="drag-zone"></div>
     
-    <div class="etabs-tabgroup" id="etabs-tabgroup">
-      <div class="etabs-tabs" id="etabs-tabs" onmousewheel="etabsTabsWheel(event)"></div>
-      <div class="etabs-buttons">
-        <button title="Tabs list" id="tabs-list-btn" onclick="requestTabsList()"><img name="down-12" class="theme-icon"></button>
+    <div class="tabman">
+      <div class="tabman-tabs" onmousewheel="etabsTabsWheel(event)"></div>
+      <div class="tabman-buttons">
+        <button class="tabman-buttons-newtab" title="New tab" onclick="newTab()"><img name="create-12" class="theme-icon"></button>
+        <button class="tabman-buttons-tablist" title="Tabs list" onclick="requestTabsList()"><img name="down-12" class="theme-icon"></button>
       </div>
       <div id="window-controls"></div>
     </div>
@@ -22,7 +24,7 @@
     <div id="titlebar">
       <button id="back-btn" class='nav-btn' title="Go back" onclick="goBack()"><img name="back-16" class="theme-icon"></button>
       <button id="forward-btn" class='nav-btn' title="Go forward" onclick="goForward()"><img name="forward-16" class="theme-icon"></button>
-      <button id="refresh-btn" class='nav-btn' title="Reload this page" onclick="goReload()"><img name="reload-16" class="theme-icon"></button>
+      <button id="reload-btn" class='nav-btn' title="Reload this page" onclick="goReload()"><img name="reload-16" class="theme-icon"></button>
       <button id="stop-btn" class='nav-btn' title="Stop loading this page" onclick="goStop()"><img name="cancel-16" class="theme-icon"></button>
       <div class="title-bar-vr"></div>
       <button id="info-btn" class='nav-btn' title="Website info" onclick="popupInfoContextMenu()" oncontextmenu="popupInfoContextMenu()"><img name="info-16" class="theme-icon"></button>

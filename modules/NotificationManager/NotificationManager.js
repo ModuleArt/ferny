@@ -29,7 +29,7 @@ class NotificationManager extends EventEmitter {
         this.notifArray.push(notif);
         this.notifPanel.insertBefore(notif.getNode(), this.notifPanel.firstChild);
         notif.on("close", (notification) => {
-            this.removeNotifById(notification.getId());
+            this.destroyNotifById(notification.getId());
         });
 
         if(this.notifArray.length > this.maxNotifCount) {
@@ -116,7 +116,7 @@ class NotificationManager extends EventEmitter {
         }
     }
 
-    removeNotifById(id) {
+    destroyNotifById(id) {
         for(let i = 0; i < this.notifArray.length; i++) {
             if(this.notifArray[i].getId() == id) {
                 this.notifPanel.removeChild(this.notifArray[i].getNode());

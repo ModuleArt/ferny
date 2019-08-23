@@ -1,0 +1,231 @@
+.tabman {
+    background-color: var(--color-back);
+    cursor: default;
+    font-size: var(--px-font);
+    border-bottom: 1px solid var(--color-border);
+}
+
+/*
+ #####   ##   #####   ####
+   #    #  #  #    # #
+   #   #    # #####   ####
+   #   ###### #    #      #
+   #   #    # #    # #    #
+   #   #    # #####   ####
+*/
+
+.tabman-tabs {
+    max-width: calc(100% - 256px);
+    float: left;
+    display: flex;
+    flex-direction: row;
+}
+
+/*
+ #####  #    # ##### #####  ####  #    #  ####
+ #    # #    #   #     #   #    # ##   # #
+ #####  #    #   #     #   #    # # #  #  ####
+ #    # #    #   #     #   #    # #  # #      #
+ #    # #    #   #     #   #    # #   ## #    #
+ #####   ####    #     #    ####  #    #  ####
+*/
+
+.tabman-buttons {
+    float: left;
+    height: 32px;
+}
+
+.tabman-buttons button {
+    -webkit-app-region: no-drag;
+    outline: none;
+    float: left;
+    color: var(--color-top);
+    background: none;
+    border: none;
+    font-size: var(--px-font);
+    padding: 10px;
+    height: 32px;
+}
+
+.tabman-buttons button img {
+    vertical-align: top;
+}
+
+.tabman-buttons button:hover {
+    background-color: var(--color-second);
+    border-color: var(--color-border) !important;
+}
+
+.tabman-buttons button:focus {
+    box-shadow: var(--shadow-focus);
+    border-color: var(--color-border) !important;
+}
+
+.tabman-buttons button:active {
+    background-color: var(--color-border);
+}
+
+.tabman-buttons-newtab {
+    border-right: 1px solid transparent !important;
+}
+
+.tabman-buttons-tablist {
+    border-right: 1px solid transparent !important;
+    border-left: 1px solid transparent !important;
+}
+
+/*
+ #####   ##   #####
+   #    #  #  #    #
+   #   #    # #####
+   #   ###### #    #
+   #   #    # #    #
+   #   #    # #####
+*/
+
+.tabman-tab {
+    -webkit-app-region: no-drag;
+    position: relative;
+    color: var(--color-top);
+    height: 34px;
+    padding: 8px;
+    cursor: default;
+    width: 256px;
+    min-width: 28px;
+    flex-grow: 1;
+    border: 1px solid var(--color-border);
+    margin: -1px;
+    margin-right: 0;
+    text-align: left;
+    background-color: transparent;
+    outline: none;
+    transition: opacity 0.25s, transform 0.25s;
+}
+
+.tabman-tab:hover {
+    background-color: var(--color-element);
+}
+
+.tabman-tab.active {
+    background-color: var(--color-element);
+}
+
+.tabman-tab:active {
+    background-color: var(--color-border);
+}
+
+.tabman-tab:focus {
+    box-shadow: var(--shadow-focus);
+}
+
+/*
+ #####   ##   #####     #  ####   ####  #    #
+   #    #  #  #    #    # #    # #    # ##   #
+   #   #    # #####     # #      #    # # #  #
+   #   ###### #    #    # #      #    # #  # #
+   #   #    # #    #    # #    # #    # #   ##
+   #   #    # #####     #  ####   ####  #    #
+*/
+
+.tabman-tab-icon {
+    display: inline-block;
+    height: 16px;
+}
+
+.tabman-tab-icon img {
+    max-width: 16px;
+    max-height: 16px;
+}
+
+/*
+ #####   ##   #####     ##### # ##### #      ######
+   #    #  #  #    #      #   #   #   #      #
+   #   #    # #####       #   #   #   #      #####
+   #   ###### #    #      #   #   #   #      #
+   #   #    # #    #      #   #   #   #      #
+   #   #    # #####       #   #   #   ###### ######
+*/
+
+.tabman-tab-title {
+    overflow: hidden;
+    position: absolute;
+    top: 6px;
+    left: 30px;
+    right: 28px;
+    white-space: nowrap;
+    word-break: keep-all;
+    text-overflow: ellipsis;
+    opacity: var(--opacity-over);
+}
+
+.tabman-tab.active .tabman-tab-title {
+    opacity: 1
+}
+
+/*
+ #####   ##   #####     #####  #    # ##### #####  ####  #    #  ####
+   #    #  #  #    #    #    # #    #   #     #   #    # ##   # #
+   #   #    # #####     #####  #    #   #     #   #    # # #  #  ####
+   #   ###### #    #    #    # #    #   #     #   #    # #  # #      #
+   #   #    # #    #    #    # #    #   #     #   #    # #   ## #    #
+   #   #    # #####     #####   ####    #     #    ####  #    #  ####
+*/
+
+.tabman-tab:hover .tabman-tab-buttons button, .tabman-tab.active .tabman-tab-buttons button {
+    transform: scale(1);
+}
+  
+.tabman-tab-buttons {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+}
+  
+.tabman-tab-buttons button {
+    outline: none;
+    display: inline-block;
+    color: var(--color-top);
+    background: none;
+    border: none;
+    width: 22px;
+    height: 22px;
+    border-radius: var(--px-radius);
+    position: relative;
+    border: 1px solid transparent;
+    transition: transform 0.25s;
+    transform: scale(0);
+}
+  
+.tabman-tab-buttons button:after {
+    content: '';
+    height: 12px;
+    border-left: 2px solid var(--color-top);
+    position: absolute;
+    transform: rotate(45deg);
+    left: 9px;
+    top: 4px;
+}
+  
+.tabman-tab-buttons button:before {
+    content: '';
+    height: 12px;
+    border-left: 2px solid var(--color-top);
+    position: absolute;
+    transform: rotate(-45deg);
+    top: 4px;
+    left: 9px;
+}
+  
+.tabman-tab-buttons button:hover {
+    background-color: var(--color-second);
+    border-color: var(--color-border);
+}
+  
+.tabman-tab-buttons button:focus {
+    box-shadow: var(--shadow-focus);
+    transform: scale(1);
+}
+  
+.tabman-tab-buttons button:active {
+    background-color: var(--color-border);
+}

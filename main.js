@@ -29,6 +29,8 @@ const saveFileToJsonFolder = require(app.getAppPath() + "/modules/saveFileToJson
 const loadTheme = require(app.getAppPath() + "/modules/loadTheme.js");
 const loadWinControls = require(app.getAppPath() + "/modules/loadWinControls.js");
 
+const TabManager = require(app.getAppPath() + "/modules/TabManager/TabManager.js");
+
 /*
 ..######..####.##....##..######...##.......########....####.##....##..######..########....###....##....##..######..########
 .##....##..##..###...##.##....##..##.......##...........##..###...##.##....##....##......##.##...###...##.##....##.##......
@@ -166,14 +168,16 @@ const sideMenu = Menu.buildFromTemplate([
   { label: 'Quit Ferny', icon: app.getAppPath() + '/imgs/icons16/exit.png', accelerator: 'CmdOrCtrl+Shift+Q', click: () => { app.quit(); } }
 ]);
 
-var mainWindow = null;
-var welcomeWindow = null;
-var keyBindsWindow = null;
+let mainWindow = null;
+let welcomeWindow = null;
+let keyBindsWindow = null;
 
-var downloadsArray = [];
-var curDownloadNum = 0;
+let downloadsArray = [];
+let curDownloadNum = 0;
 
-var updateCancellationToken = null;
+let updateCancellationToken = null;
+
+let tabManager = null;
 
 /*
 ....###....########..########.
@@ -687,6 +691,27 @@ ipcMain.on('request-open-license-file', (event, arg) => {
 });
 
 /*
+ # #####   ####              #####   ##   #####     #    #   ##   #    #   ##    ####  ###### #####
+ # #    # #    #               #    #  #  #    #    ##  ##  #  #  ##   #  #  #  #    # #      #    #
+ # #    # #         #####      #   #    # #####     # ## # #    # # #  # #    # #      #####  #    #
+ # #####  #                    #   ###### #    #    #    # ###### #  # # ###### #  ### #      #####
+ # #      #    #               #   #    # #    #    #    # #    # #   ## #    # #    # #      #   #
+ # #       ####                #   #    # #####     #    # #    # #    # #    #  ####  ###### #    #
+*/
+
+ipcMain.on('tabManager-newTab', (event, arg) => {
+  tabManager.newTab();
+});
+
+ipcMain.on('tabManager-activateTab', (event, id) => {
+  tabManager.getTabById(id).activate();
+});
+
+ipcMain.on('tabManager-closeTab', (event, id) => {
+  tabManager.getTabById(id).close();
+});
+
+/*
 .########.##.....##.##....##..######..########.####..#######..##....##..######.
 .##.......##.....##.###...##.##....##....##.....##..##.....##.###...##.##....##
 .##.......##.....##.####..##.##..........##.....##..##.....##.####..##.##......
@@ -741,11 +766,6 @@ function showMainWindow() {
   
     // mainWindow.webContents.openDevTools();
     mainWindow.loadFile(app.getAppPath() + '/html/browser.html');
-
-    // let view = new BrowserView()
-    // mainWindow.addBrowserView(view)
-    // view.setBounds({ x: 0, y: 0, width: 300, height: 300 })
-    // view.webContents.loadURL('https://electronjs.org')
 
     // let view2 = new BrowserView()
     // mainWindow.addBrowserView(view2)
@@ -925,6 +945,17 @@ function showMainWindow() {
         }
       });
     });
+
+    /*
+     #####   ##   #####   ####
+       #    #  #  #    # #
+       #   #    # #####   ####
+       #   ###### #    #      #
+       #   #    # #    # #    #
+       #   #    # #####   ####
+    */
+
+    tabManager = new TabManager(mainWindow);
   });
 }
 

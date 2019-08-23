@@ -8,7 +8,7 @@
 .##.....##.##.....##.####.##....##
 */
 
-const { ipcRenderer } = require('electron');
+const { ipcRenderer, BrowserView } = require('electron');
 const TabGroup = require("electron-tabs");
 const dragula = require("dragula");
 // const autoSuggest = require('google-autocomplete');
@@ -41,6 +41,7 @@ const loadWinControls = require("../modules/loadWinControls.js");
 const rgbToRgbaString = require("../modules/rgbToRgbaString.js");
 
 const NotificationManager = require("../modules/NotificationManager/NotificationManager.js");
+const TabRenderer = require("../modules/TabManager/TabRenderer.js");
 
 /*
  #    #  ####  ##### # ###### #  ####    ##   ##### #  ####  #    #  ####
@@ -52,7 +53,6 @@ const NotificationManager = require("../modules/NotificationManager/Notification
 */
 
 let notificationManager = new NotificationManager(document.getElementById('notif-panel'));
-
 
 notificationManager.on("notif-added", (notif) => {
   updateTheme();
@@ -68,242 +68,244 @@ notificationManager.on("notif-added", (notif) => {
 ....##....##.....##.########...######.
 */
 
-let tabGroup = new TabGroup({
-  newTab: {
-    title: 'New Tab',
-    active: true,
-    visible: true,
-    webviewAttributes: {
-      // enableBlinkFeatures: false
-    }
-  },
-  newTabButtonText: `<img title='New tab' name='create-12' class='theme-icon' ondrop='newTabDrop(event)' ondragover='prevDef(event)'/>`,
-  closeButtonText: "&nbsp;"
-});
-dragula([tabGroup.tabContainer], {
-  direction: "horizontal"
-});
+let tabRenderer = new TabRenderer();
 
-tabGroup.on("tab-added", (tab, tabGroup) => {
-  let webview = tab.webview;
-  let previewTimeout = null;
+// let tabGroup = new TabGroup({
+//   newTab: {
+//     title: 'New Tab',
+//     active: true,
+//     visible: true,
+//     webviewAttributes: {
+//       // enableBlinkFeatures: false
+//     }
+//   },
+//   newTabButtonText: `<img title='New tab' name='create-12' class='theme-icon' ondrop='newTabDrop(event)' ondragover='prevDef(event)'/>`,
+//   closeButtonText: "&nbsp;"
+// });
+// dragula([tabGroup.tabContainer], {
+//   direction: "horizontal"
+// });
 
-  webview.getWebContents().on('context-menu', (event, params) => {
-    let Data = {
-      id: tab.id,
-      params: params
-    }
+// tabGroup.on("tab-added", (tab, tabGroup) => {
+//   let webview = tab.webview;
+//   let previewTimeout = null;
 
-    ipcRenderer.send('request-webview-contextmenu', Data);
-  });
+//   webview.getWebContents().on('context-menu', (event, params) => {
+//     let Data = {
+//       id: tab.id,
+//       params: params
+//     }
+
+//     ipcRenderer.send('request-webview-contextmenu', Data);
+//   });
 
 
-  tab.tab.addEventListener('contextmenu', (e) => {
-    e.preventDefault();
-    ipcRenderer.send('request-tab-menu', tab.id);
-  }, false);
+//   tab.tab.addEventListener('contextmenu', (e) => {
+//     e.preventDefault();
+//     ipcRenderer.send('request-tab-menu', tab.id);
+//   }, false);
 
-  tab.tab.addEventListener('dragenter', (e) => {
-    e.preventDefault();
-    tab.activate();
-  });
+//   tab.tab.addEventListener('dragenter', (e) => {
+//     e.preventDefault();
+//     tab.activate();
+//   });
 
-  tab.tab.addEventListener('dragover', (e) => {
-    e.preventDefault();
-  });
+//   tab.tab.addEventListener('dragover', (e) => {
+//     e.preventDefault();
+//   });
 
-  // tab.tab.addEventListener('mouseenter', (e) => {
-  //   previewTimeout = showTabPreview(tab.tab, previewTimeout, webview.getWebContents().capturePage());
-  // });
+//   // tab.tab.addEventListener('mouseenter', (e) => {
+//   //   previewTimeout = showTabPreview(tab.tab, previewTimeout, webview.getWebContents().capturePage());
+//   // });
 
-  // tab.tab.addEventListener('mouseleave', (e) => {
-  //   hideTabPreview(tab.tab, previewTimeout);
-  // });
+//   // tab.tab.addEventListener('mouseleave', (e) => {
+//   //   hideTabPreview(tab.tab, previewTimeout);
+//   // });
 
-  tab.tab.addEventListener('drop', (e) => {
-    e.preventDefault();
-    var textData = e.dataTransfer.getData("Text");
-    if (textData) {
-      tab.webview.loadURL(textData);
-    } else if(e.dataTransfer.files.length > 0) {
-      tab.webview.loadURL(e.dataTransfer.files[0].path);
-    }
-  });
+//   tab.tab.addEventListener('drop', (e) => {
+//     e.preventDefault();
+//     var textData = e.dataTransfer.getData("Text");
+//     if (textData) {
+//       tab.webview.loadURL(textData);
+//     } else if(e.dataTransfer.files.length > 0) {
+//       tab.webview.loadURL(e.dataTransfer.files[0].path);
+//     }
+//   });
 
-  document.getElementById('search-input').value = "";
-  document.getElementById('back-btn').disabled = true;
-  document.getElementById('forward-btn').disabled = true;
-  applyFindPanel();
+//   document.getElementById('search-input').value = "";
+//   document.getElementById('back-btn').disabled = true;
+//   document.getElementById('forward-btn').disabled = true;
+//   applyFindPanel();
 
-  tab.on("active", (tab) => {
-    document.getElementById('search-input').value = webview.getURL();
-    applyFindPanel();
+//   tab.on("active", (tab) => {
+//     document.getElementById('search-input').value = webview.getURL();
+//     applyFindPanel();
     
-    if (webview.canGoBack()) {
-      document.getElementById('back-btn').disabled = false;
-    } else {
-      document.getElementById('back-btn').disabled = true;
-    }
-    if (webview.canGoForward()) {
-      document.getElementById('forward-btn').disabled = false;
-    } else {
-      document.getElementById('forward-btn').disabled = true;
-    }
-    if (webview.isLoading()) {
-      document.getElementById('stop-btn').style.display = "";
-      document.getElementById('refresh-btn').style.display = "none";
-    } else {
-      document.getElementById('stop-btn').style.display = "none";
-      document.getElementById('refresh-btn').style.display = "";
-    }
+//     if (webview.canGoBack()) {
+//       document.getElementById('back-btn').disabled = false;
+//     } else {
+//       document.getElementById('back-btn').disabled = true;
+//     }
+//     if (webview.canGoForward()) {
+//       document.getElementById('forward-btn').disabled = false;
+//     } else {
+//       document.getElementById('forward-btn').disabled = true;
+//     }
+//     if (webview.isLoading()) {
+//       document.getElementById('stop-btn').style.display = "";
+//       document.getElementById('refresh-btn').style.display = "none";
+//     } else {
+//       document.getElementById('stop-btn').style.display = "none";
+//       document.getElementById('refresh-btn').style.display = "";
+//     }
 
-    webview.blur();
-    webview.focus();
-  });
+//     webview.blur();
+//     webview.focus();
+//   });
 
-  webview.addEventListener('update-target-url', (e) => {
-    document.getElementById('target-url').innerHTML = e.url;
-  });
+//   webview.addEventListener('update-target-url', (e) => {
+//     document.getElementById('target-url').innerHTML = e.url;
+//   });
 
-  webview.addEventListener('new-window', (e) => {
-    if(e.disposition == "background-tab") {
-      newTab(e.url, 'New Background Tab', false);
-    } else {
-      newTab(e.url, null, null);
-    }
-  });
+//   webview.addEventListener('new-window', (e) => {
+//     if(e.disposition == "background-tab") {
+//       newTab(e.url, 'New Background Tab', false);
+//     } else {
+//       newTab(e.url, null, null);
+//     }
+//   });
 
-  webview.addEventListener('page-favicon-updated', (e) => {
-    tab.setIcon(e.favicons[0]);
-    var img = tab.tab.getElementsByTagName('img')[0];
-    var color = new getAvColor(img);
-    color.mostUsed(result => {
-      if(document.body.classList.contains('color-tabs')) {
-        tab.tab.style.backgroundColor = rgbToRgbaString(result[0]);
-      }
-    });
-  });
+//   webview.addEventListener('page-favicon-updated', (e) => {
+//     tab.setIcon(e.favicons[0]);
+//     var img = tab.tab.getElementsByTagName('img')[0];
+//     var color = new getAvColor(img);
+//     color.mostUsed(result => {
+//       if(document.body.classList.contains('color-tabs')) {
+//         tab.tab.style.backgroundColor = rgbToRgbaString(result[0]);
+//       }
+//     });
+//   });
 
-  webview.addEventListener('page-title-updated', (e) => {
-    tab.setTitle(e.title);
-    var index = tab.getPosition(false);
-    document.getElementsByClassName('etabs-tab')[index - 1].title = e.title;
-  });
+//   webview.addEventListener('page-title-updated', (e) => {
+//     tab.setTitle(e.title);
+//     var index = tab.getPosition(false);
+//     document.getElementsByClassName('etabs-tab')[index - 1].title = e.title;
+//   });
 
-  webview.addEventListener('dom-ready', () => {
-    webview.blur();
-    webview.focus();
-    applyFindPanel();
-  });
+//   webview.addEventListener('dom-ready', () => {
+//     webview.blur();
+//     webview.focus();
+//     applyFindPanel();
+//   });
 
-  webview.addEventListener('did-start-loading', () => {
-    document.getElementById("refresh-btn").style.display = "none";
-    document.getElementById("stop-btn").style.display = "";
-  });
+//   webview.addEventListener('did-start-loading', () => {
+//     document.getElementById("refresh-btn").style.display = "none";
+//     document.getElementById("stop-btn").style.display = "";
+//   });
 
-  webview.addEventListener('did-stop-loading', () => {
-    document.getElementById("refresh-btn").style.display = "";
-    document.getElementById("stop-btn").style.display = "none";
+//   webview.addEventListener('did-stop-loading', () => {
+//     document.getElementById("refresh-btn").style.display = "";
+//     document.getElementById("stop-btn").style.display = "none";
 
-    var url = webview.getURL();
-    if (parsePath(url).protocol == 'file') {
-      tab.setTitle(url);
-      tab.tab.title = url;
+//     var url = webview.getURL();
+//     if (parsePath(url).protocol == 'file') {
+//       tab.setTitle(url);
+//       tab.tab.title = url;
 
-      var ext = fileExtension(url);
-      tab.setIcon(extToImagePath(ext));
+//       var ext = fileExtension(url);
+//       tab.setIcon(extToImagePath(ext));
 
-      var img = tab.tab.getElementsByTagName('img')[0];
-      var color = new getAvColor(img);
-      color.mostUsed(result => {
-        if(document.body.classList.contains('color-tabs')) {
-          tab.tab.style.backgroundColor = rgbToRgbaString(result[0]);
-        }
-      });
-    }
-  });
+//       var img = tab.tab.getElementsByTagName('img')[0];
+//       var color = new getAvColor(img);
+//       color.mostUsed(result => {
+//         if(document.body.classList.contains('color-tabs')) {
+//           tab.tab.style.backgroundColor = rgbToRgbaString(result[0]);
+//         }
+//       });
+//     }
+//   });
 
-  webview.addEventListener('did-navigate', (e) => {
-    document.getElementById('search-input').value = e.url;
-    tab.setIcon("../imgs/gifs/page-loading.gif");
+//   webview.addEventListener('did-navigate', (e) => {
+//     document.getElementById('search-input').value = e.url;
+//     tab.setIcon("../imgs/gifs/page-loading.gif");
 
-    if (webview.canGoBack()) {
-      document.getElementById('back-btn').disabled = false;
-    } else {
-      document.getElementById('back-btn').disabled = true;
-    }
-    if (webview.canGoForward()) {
-      document.getElementById('forward-btn').disabled = false;
-    } else {
-      document.getElementById('forward-btn').disabled = true;
-    }
+//     if (webview.canGoBack()) {
+//       document.getElementById('back-btn').disabled = false;
+//     } else {
+//       document.getElementById('back-btn').disabled = true;
+//     }
+//     if (webview.canGoForward()) {
+//       document.getElementById('forward-btn').disabled = false;
+//     } else {
+//       document.getElementById('forward-btn').disabled = true;
+//     }
     
-    ipcRenderer.send('request-add-history-item', e.url);
-  });
+//     ipcRenderer.send('request-add-history-item', e.url);
+//   });
 
-  webview.addEventListener('did-navigate-in-page', (e) => {
-    if (e.isMainFrame) {
-      document.getElementById('search-input').value = e.url;
-      if (webview.canGoBack()) {
-        document.getElementById('back-btn').disabled = false;
-      } else {
-        document.getElementById('back-btn').disabled = true;
-      }
-      if (webview.canGoForward()) {
-        document.getElementById('forward-btn').disabled = false;
-      } else {
-        document.getElementById('forward-btn').disabled = true;
-      }
-    }
-  });
+//   webview.addEventListener('did-navigate-in-page', (e) => {
+//     if (e.isMainFrame) {
+//       document.getElementById('search-input').value = e.url;
+//       if (webview.canGoBack()) {
+//         document.getElementById('back-btn').disabled = false;
+//       } else {
+//         document.getElementById('back-btn').disabled = true;
+//       }
+//       if (webview.canGoForward()) {
+//         document.getElementById('forward-btn').disabled = false;
+//       } else {
+//         document.getElementById('forward-btn').disabled = true;
+//       }
+//     }
+//   });
 
-  webview.addEventListener('certificate-error', (e) => {
-    notificationManager.addStatusNotif("Certificate error", 'warning');
-  });
+//   webview.addEventListener('certificate-error', (e) => {
+//     notificationManager.addStatusNotif("Certificate error", 'warning');
+//   });
 
-  webview.addEventListener('enter-html-full-screen', (e) => {
-    document.body.classList.add('fullscreen');
-    notificationManager.addStatusNotif("Press F11 to exit full screen", 'info');
-  });
+//   webview.addEventListener('enter-html-full-screen', (e) => {
+//     document.body.classList.add('fullscreen');
+//     notificationManager.addStatusNotif("Press F11 to exit full screen", 'info');
+//   });
 
-  webview.addEventListener('leave-html-full-screen', (e) => {
-    document.body.classList.remove('fullscreen');
-  });
+//   webview.addEventListener('leave-html-full-screen', (e) => {
+//     document.body.classList.remove('fullscreen');
+//   });
 
-  webview.addEventListener('did-fail-load', (e) => {
-    if (webview.canGoBack()) {
-      document.getElementById('back-btn').disabled = false;
-    } else {
-      document.getElementById('back-btn').disabled = true;
-    }
-    if (webview.canGoForward()) {
-      document.getElementById('forward-btn').disabled = false;
-    } else {
-      document.getElementById('forward-btn').disabled = true;
-    }
+//   webview.addEventListener('did-fail-load', (e) => {
+//     if (webview.canGoBack()) {
+//       document.getElementById('back-btn').disabled = false;
+//     } else {
+//       document.getElementById('back-btn').disabled = true;
+//     }
+//     if (webview.canGoForward()) {
+//       document.getElementById('forward-btn').disabled = false;
+//     } else {
+//       document.getElementById('forward-btn').disabled = true;
+//     }
 
-    notificationManager.addStatusNotif("Connection failed: " + e.errorDescription + " (" + e.errorCode + ")", "error");
-  });
+//     notificationManager.addStatusNotif("Connection failed: " + e.errorDescription + " (" + e.errorCode + ")", "error");
+//   });
 
-  document.getElementsByClassName('etabs-tab-buttons')[tab.getPosition(false) - 1].title = "Close tab";
-});
+//   document.getElementsByClassName('etabs-tab-buttons')[tab.getPosition(false) - 1].title = "Close tab";
+// });
 
-tabGroup.on("tab-removed", (tab, tabGroup) => {
-  if (tabGroup.getTabs().length <= 0) {
-    try {
-      fs.readFile(ppath + "/json/lasttab.json", function(err, data) {
-        if(data == "new-tab") {
-          tabGroup.addTab();
-        } else if(data == "quit") {
-          closeWindow();
-        }
-      });
-    } catch (e) {
-      saveFileToJsonFolder("lasttab", "new-tab");
-      tabGroup.addTab();
-    }
-  }
-});
+// tabGroup.on("tab-removed", (tab, tabGroup) => {
+//   if (tabGroup.getTabs().length <= 0) {
+//     try {
+//       fs.readFile(ppath + "/json/lasttab.json", function(err, data) {
+//         if(data == "new-tab") {
+//           tabGroup.addTab();
+//         } else if(data == "quit") {
+//           closeWindow();
+//         }
+//       });
+//     } catch (e) {
+//       saveFileToJsonFolder("lasttab", "new-tab");
+//       tabGroup.addTab();
+//     }
+//   }
+// });
 
 /*
 .########.##.....##.##....##..######..########.####..#######..##....##..######.
@@ -315,24 +317,28 @@ tabGroup.on("tab-removed", (tab, tabGroup) => {
 .##........#######..##....##..######.....##....####..#######..##....##..######.
 */
 
-function newTab(url, title, active) {
-  if(title == null) {
-    title = 'New Tab'
-  }
-  if(active == null) {
-    active = true;
-  }
-
-  tabGroup.addTab({
-    src: url,
-    title: title, 
-    active: active,
-    visible: true,
-    webviewAttributes: {
-      // enableBlinkFeatures: false
-    }
-  });
+function newTab() {
+  ipcRenderer.send('tabManager-newTab');
 }
+
+// function newTab(url, title, active) {
+//   if(title == null) {
+//     title = 'New Tab'
+//   }
+//   if(active == null) {
+//     active = true;
+//   }
+
+//   tabGroup.addTab({
+//     src: url,
+//     title: title, 
+//     active: active,
+//     visible: true,
+//     webviewAttributes: {
+//       // enableBlinkFeatures: false
+//     }
+//   });
+// }
 
 function showTabPreview(tab, timeout, capturePage) {
   var div = tab.getElementsByTagName('div')[0];
@@ -454,7 +460,7 @@ function loadSearchEngine() {
 }
 
 function applyStartPage(startPage) {
-  tabGroup.options.newTab.src = startPage;
+  // tabGroup.options.newTab.src = startPage;
 }
 
 function applySearchEngine(arg) {
@@ -531,19 +537,19 @@ function toggleSidebar() {
 }
 
 function goBack() {
-  tabGroup.getActiveTab().webview.goBack();
+  // tabGroup.getActiveTab().webview.goBack();
 }
 
 function goForward() {
-  tabGroup.getActiveTab().webview.goForward();
+  // tabGroup.getActiveTab().webview.goForward();
 }
 
 function goReload() {
-  tabGroup.getActiveTab().webview.reload();
+  // tabGroup.getActiveTab().webview.reload();
 }
 
 function goStop() {
-  tabGroup.getActiveTab().webview.stop();
+  // tabGroup.getActiveTab().webview.stop();
 }
 
 function requestTabsList() {
@@ -704,46 +710,46 @@ function searchWith(text, engine) {
 
   removeSuggestions();
 
-  switch (engine) {
-    case 'google':
-      tabGroup.getActiveTab().webview.loadURL("https://google.com/search?q=" + text);
-      break;
-    case 'bing':
-      tabGroup.getActiveTab().webview.src = "https://bing.com/search?q=" + text;
-      break;
-    case 'duckduckgo':
-      tabGroup.getActiveTab().webview.loadURL("https://duckduckgo.com/?q=" + text);
-      break;
-    case 'yahoo':
-      tabGroup.getActiveTab().webview.loadURL("https://search.yahoo.com/search?p=" + text);
-      break;
-    case 'wikipedia':
-      tabGroup.getActiveTab().webview.loadURL("https://wikipedia.org/wiki/Special:Search?search=" + text);
-      break;
-    case 'yandex':
-      tabGroup.getActiveTab().webview.loadURL("https://yandex.com/search/?text=" + text);
-      break;
-    case 'mailru':
-      tabGroup.getActiveTab().webview.loadURL("https://go.mail.ru/search?q=" + text);
-      break;
-    case 'baidu':
-      tabGroup.getActiveTab().webview.loadURL("https://www.baidu.com/s?wd=" + text);
-      break;
-    case 'naver':
-      tabGroup.getActiveTab().webview.loadURL("https://search.naver.com/search.naver?query=" + text);
-      break;
-    case 'qwant':
-      tabGroup.getActiveTab().webview.loadURL("https://www.qwant.com/?q=" + text);
-      break;
-    case 'youtube':
-      tabGroup.getActiveTab().webview.loadURL("https://www.youtube.com/results?search_query=" + text);
-      break;
-  }
+  // switch (engine) {
+  //   case 'google':
+  //     tabGroup.getActiveTab().webview.loadURL("https://google.com/search?q=" + text);
+  //     break;
+  //   case 'bing':
+  //     tabGroup.getActiveTab().webview.src = "https://bing.com/search?q=" + text;
+  //     break;
+  //   case 'duckduckgo':
+  //     tabGroup.getActiveTab().webview.loadURL("https://duckduckgo.com/?q=" + text);
+  //     break;
+  //   case 'yahoo':
+  //     tabGroup.getActiveTab().webview.loadURL("https://search.yahoo.com/search?p=" + text);
+  //     break;
+  //   case 'wikipedia':
+  //     tabGroup.getActiveTab().webview.loadURL("https://wikipedia.org/wiki/Special:Search?search=" + text);
+  //     break;
+  //   case 'yandex':
+  //     tabGroup.getActiveTab().webview.loadURL("https://yandex.com/search/?text=" + text);
+  //     break;
+  //   case 'mailru':
+  //     tabGroup.getActiveTab().webview.loadURL("https://go.mail.ru/search?q=" + text);
+  //     break;
+  //   case 'baidu':
+  //     tabGroup.getActiveTab().webview.loadURL("https://www.baidu.com/s?wd=" + text);
+  //     break;
+  //   case 'naver':
+  //     tabGroup.getActiveTab().webview.loadURL("https://search.naver.com/search.naver?query=" + text);
+  //     break;
+  //   case 'qwant':
+  //     tabGroup.getActiveTab().webview.loadURL("https://www.qwant.com/?q=" + text);
+  //     break;
+  //   case 'youtube':
+  //     tabGroup.getActiveTab().webview.loadURL("https://www.youtube.com/results?search_query=" + text);
+  //     break;
+  // }
 }
 
 function navigateSuggest(text) {
   if(isUrl(text)) {
-    tabGroup.getActiveTab().webview.loadURL(text);
+    // tabGroup.getActiveTab().webview.loadURL(text);
   } else {
     var engines = document.getElementsByClassName('search-engine');
     for(var i = 0; i < engines.length; i++) {
@@ -855,28 +861,28 @@ function closeFindPanel() {
   setTimeout(function() {
     document.getElementById('find-panel').style.display = "none";
     document.body.classList.remove('find');
-    tabGroup.getActiveTab().webview.stopFindInPage("keepSelection");
+    // tabGroup.getActiveTab().webview.stopFindInPage("keepSelection");
   }, 250);
 }
 
 function nextFindInPage() {
-  var text = document.getElementById('find-input').value;
-  if (text.length > 0) {
-    tabGroup.getActiveTab().webview.findInPage(text);
-  } else {
-    tabGroup.getActiveTab().webview.stopFindInPage("keepSelection");
-  }
+  // var text = document.getElementById('find-input').value;
+  // if (text.length > 0) {
+  //   tabGroup.getActiveTab().webview.findInPage(text);
+  // } else {
+  //   tabGroup.getActiveTab().webview.stopFindInPage("keepSelection");
+  // }
 }
 
 function previousFindInPage() {
-  var text = document.getElementById('find-input').value;
-  if (text.length > 0) {
-    tabGroup.getActiveTab().webview.findInPage(text, {
-      forward: false
-    });
-  } else {
-    tabGroup.getActiveTab().webview.stopFindInPage("keepSelection");
-  }
+  // var text = document.getElementById('find-input').value;
+  // if (text.length > 0) {
+  //   tabGroup.getActiveTab().webview.findInPage(text, {
+  //     forward: false
+  //   });
+  // } else {
+  //   tabGroup.getActiveTab().webview.stopFindInPage("keepSelection");
+  // }
 }
 
 function applyFindPanel() {
@@ -977,21 +983,21 @@ function removeFolder(folder) {
 }
 
 function zoomIn() {
-  var zoomFactor = tabGroup.getActiveTab().webview.getZoomFactor();
-  if (zoomFactor < 2.5) {
-    tabGroup.getActiveTab().webview.setZoomFactor(zoomFactor + 0.1);
-    notificationManager.refreshZoomNotif(Math.round((zoomFactor + 0.1) * 100));
-    tabGroup.getActiveTab().webview.focus();
-  }
+  // var zoomFactor = tabGroup.getActiveTab().webview.getZoomFactor();
+  // if (zoomFactor < 2.5) {
+  //   tabGroup.getActiveTab().webview.setZoomFactor(zoomFactor + 0.1);
+  //   notificationManager.refreshZoomNotif(Math.round((zoomFactor + 0.1) * 100));
+  //   tabGroup.getActiveTab().webview.focus();
+  // }
 }
 
 function zoomOut() {
-  var zoomFactor = tabGroup.getActiveTab().webview.getZoomFactor();
-  if (zoomFactor > 0.3) {
-    tabGroup.getActiveTab().webview.setZoomFactor(zoomFactor - 0.1);
-    notificationManager.refreshZoomNotif(Math.round((zoomFactor - 0.1) * 100));
-    tabGroup.getActiveTab().webview.focus();
-  }
+  // var zoomFactor = tabGroup.getActiveTab().webview.getZoomFactor();
+  // if (zoomFactor > 0.3) {
+  //   tabGroup.getActiveTab().webview.setZoomFactor(zoomFactor - 0.1);
+  //   notificationManager.refreshZoomNotif(Math.round((zoomFactor - 0.1) * 100));
+  //   tabGroup.getActiveTab().webview.focus();
+  // }
 }
 
 function searchSuggestWheel(event) {
@@ -1169,7 +1175,7 @@ function addBookmarkToBookmarksBar(url, name, parent, index) {
   }
 
   div.onclick = () => {
-    tabGroup.getActiveTab().webview.loadURL(url);
+    // tabGroup.getActiveTab().webview.loadURL(url);
     return false;
   }
 
@@ -1234,7 +1240,7 @@ function loadHome() {
 }
 
 function goHome(url) {
-  tabGroup.getActiveTab().webview.loadURL(url);
+  // tabGroup.getActiveTab().webview.loadURL(url);
 }
 
 function copyText(arg) {
@@ -1309,9 +1315,9 @@ function collapseSidebar() {
 }
 
 function bookmarkAllTabs() {
-  tabGroup.eachTab((currentTab, index, tabs) => {
-    createBookmark(currentTab.webview.getURL(), currentTab.getTitle(), null);
-  });
+  // tabGroup.eachTab((currentTab, index, tabs) => {
+  //   createBookmark(currentTab.webview.getURL(), currentTab.getTitle(), null);
+  // });
 }
 
 function checkOpenWith() {
@@ -1329,29 +1335,29 @@ function checkOpenWith() {
 */
 
 ipcRenderer.on('action-set-color-tabs', (event, arg) => {
-  if(arg) {
-    document.body.classList.add('color-tabs');
-    tabGroup.eachTab((currentTab, index, tabs) => {
-      var img = currentTab.tab.getElementsByTagName('img')[0];
-      var color = new getAvColor(img);
-      color.mostUsed(result => {
-        if(document.body.classList.contains('color-tabs')) {
-          currentTab.tab.style.backgroundColor = rgbToRgbaString(result[0]);
-        }
-      });
-    });
-  } else {
-    document.body.classList.remove('color-tabs');
-    tabGroup.eachTab((currentTab, index, tabs) => {
-      currentTab.tab.style.backgroundColor = "";
-    });
-  }
+  // if(arg) {
+  //   document.body.classList.add('color-tabs');
+  //   tabGroup.eachTab((currentTab, index, tabs) => {
+  //     var img = currentTab.tab.getElementsByTagName('img')[0];
+  //     var color = new getAvColor(img);
+  //     color.mostUsed(result => {
+  //       if(document.body.classList.contains('color-tabs')) {
+  //         currentTab.tab.style.backgroundColor = rgbToRgbaString(result[0]);
+  //       }
+  //     });
+  //   });
+  // } else {
+  //   document.body.classList.remove('color-tabs');
+  //   tabGroup.eachTab((currentTab, index, tabs) => {
+  //     currentTab.tab.style.backgroundColor = "";
+  //   });
+  // }
 });
 
 ipcRenderer.on('action-switch-tab', (event, arg) => {
-  if(arg <= tabGroup.getTabs().length) {
-    tabGroup.getTabByPosition(arg).activate();
-  }
+  // if(arg <= tabGroup.getTabs().length) {
+  //   tabGroup.getTabByPosition(arg).activate();
+  // }
 });
 
 ipcRenderer.on('action-edit-folder', (event, arg) => {
@@ -1486,7 +1492,7 @@ ipcRenderer.on('action-edit-bookmark', (event, arg) => {
       div.getElementsByClassName('bookmark-div')[0].classList.add('hide');
       setTimeout(() => {
         div.onclick = () => {
-          tabGroup.getActiveTab().webview.loadURL(inputUrl.value);
+          // tabGroup.getActiveTab().webview.loadURL(inputUrl.value);
         }
         div.removeChild(div.getElementsByClassName('bookmark-div')[0]);
         div.style.webkitUserDrag = 'element';
@@ -1522,7 +1528,7 @@ ipcRenderer.on('action-edit-bookmark', (event, arg) => {
       div.getElementsByClassName('bookmark-div')[0].classList.add('hide');
       setTimeout(() => {
         div.onclick = () => {
-          tabGroup.getActiveTab().webview.loadURL(arg.url);
+          // tabGroup.getActiveTab().webview.loadURL(arg.url);
         }
         div.style.webkitUserDrag = 'element';
         div.removeChild(div.getElementsByClassName('bookmark-div')[0]);
@@ -1582,8 +1588,8 @@ ipcRenderer.on('action-update-home-page', (event, arg) => {
 });
 
 ipcRenderer.on('action-tab-copyurl', (event, arg) => {
-  var url = tabGroup.getActiveTab().webview.getURL();
-  copyText(url);
+  // var url = tabGroup.getActiveTab().webview.getURL();
+  // copyText(url);
 });
 
 ipcRenderer.on('action-tab-gohome', (event, arg) => {
@@ -1591,8 +1597,8 @@ ipcRenderer.on('action-tab-gohome', (event, arg) => {
 });
 
 ipcRenderer.on('action-tab-picturein', (event, arg) => {
-  var url = tabGroup.getActiveTab().webview.getURL();
-  pictureIn(url);
+  // var url = tabGroup.getActiveTab().webview.getURL();
+  // pictureIn(url);
 });
 
 ipcRenderer.on('action-update-bookmarks-bar', (event, arg) => {
@@ -1604,55 +1610,55 @@ ipcRenderer.on('action-open-history', (event, arg) => {
 });
 
 ipcRenderer.on('action-tab-newtab', (event, arg) => {
-  tabGroup.addTab();
+  // tabGroup.addTab();
 });
 
 ipcRenderer.on('action-tab-reload', (event, arg) => {
-  tabGroup.getActiveTab().webview.reload();
+  // tabGroup.getActiveTab().webview.reload();
 });
 
 ipcRenderer.on('action-tab-ignoringcache', (event, arg) => {
-  tabGroup.getActiveTab().webview.reloadIgnoringCache();
+  // tabGroup.getActiveTab().webview.reloadIgnoringCache();
 });
 
 ipcRenderer.on('action-tab-back', (event, arg) => {
-  tabGroup.getActiveTab().webview.goBack();
+  // tabGroup.getActiveTab().webview.goBack();
 });
 
 ipcRenderer.on('action-tab-forward', (event, arg) => {
-  tabGroup.getActiveTab().webview.goForward();
+  // tabGroup.getActiveTab().webview.goForward();
 });
 
 ipcRenderer.on('action-tab-duplicatetab', (event, arg) => {
-  var url = tabGroup.getActiveTab().webview.src;
-  tabGroup.addTab();
-  tabGroup.getActiveTab().webview.loadURL(url);
+  // var url = tabGroup.getActiveTab().webview.src;
+  // tabGroup.addTab();
+  // tabGroup.getActiveTab().webview.loadURL(url);
 });
 
 ipcRenderer.on('action-tab-closetab', (event, arg) => {
-  tabGroup.getActiveTab().close(false);
+  // tabGroup.getActiveTab().close(false);
 });
 
 ipcRenderer.on('action-tab-goback', (event, arg) => {
-  tabGroup.getActiveTab().webview.goBack();
+  // tabGroup.getActiveTab().webview.goBack();
 });
 
 ipcRenderer.on('action-tab-closeright', (event, arg) => {
-  var curPos = tabGroup.getActiveTab().getPosition(false);
-  tabGroup.eachTab((currentTab, index, tabs) => {
-    if(currentTab.getPosition(false) > curPos) {
-      currentTab.close(false);
-    }
-  });
+  // var curPos = tabGroup.getActiveTab().getPosition(false);
+  // tabGroup.eachTab((currentTab, index, tabs) => {
+  //   if(currentTab.getPosition(false) > curPos) {
+  //     currentTab.close(false);
+  //   }
+  // });
 });
 
 ipcRenderer.on('action-tab-closeothers', (event, arg) => {
-  var curPos = tabGroup.getActiveTab().getPosition(false);
-  tabGroup.eachTab((currentTab, index, tabs) => {
-    if(currentTab.getPosition(false) != curPos) {
-      currentTab.close(false);
-    }
-  });
+  // var curPos = tabGroup.getActiveTab().getPosition(false);
+  // tabGroup.eachTab((currentTab, index, tabs) => {
+  //   if(currentTab.getPosition(false) != curPos) {
+  //     currentTab.close(false);
+  //   }
+  // });
 });
 
 ipcRenderer.on('action-esc', (event, arg) => {
@@ -1668,7 +1674,7 @@ ipcRenderer.on('action-open-bookmarks', (event, arg) => {
 });
 
 ipcRenderer.on('action-bookmark-this-page', (event, arg) => {
-  createBookmark(tabGroup.getActiveTab().webview.getURL(), tabGroup.getActiveTab().webview.getTitle(), null);
+  // createBookmark(tabGroup.getActiveTab().webview.getURL(), tabGroup.getActiveTab().webview.getTitle(), null);
 });
 
 ipcRenderer.on('action-open-downloads', (event, arg) => {
@@ -1688,70 +1694,70 @@ ipcRenderer.on('action-zoom-zoomin', (event, arg) => {
 });
 
 ipcRenderer.on('action-zoom-actualsize', (event, arg) => {
-  var zoomFactor = tabGroup.getActiveTab().webview.getZoomFactor();
-  if (zoomFactor != 1) {
-    tabGroup.getActiveTab().webview.setZoomFactor(1);
-      notificationManager.addStatusNotif("Zoom factor changed to the actual size (100%)", "info");
-      tabGroup.getActiveTab().webview.focus();
-  }
+  // var zoomFactor = tabGroup.getActiveTab().webview.getZoomFactor();
+  // if (zoomFactor != 1) {
+  //   tabGroup.getActiveTab().webview.setZoomFactor(1);
+  //     notificationManager.addStatusNotif("Zoom factor changed to the actual size (100%)", "info");
+  //     tabGroup.getActiveTab().webview.focus();
+  // }
 });
 
 ipcRenderer.on('action-edit-cut', (event, arg) => {
-  tabGroup.getActiveTab().webview.cut();
-  tabGroup.getActiveTab().webview.focus();
+  // tabGroup.getActiveTab().webview.cut();
+  // tabGroup.getActiveTab().webview.focus();
 });
 
 ipcRenderer.on('action-edit-copy', (event, arg) => {
-  tabGroup.getActiveTab().webview.copy();
-  tabGroup.getActiveTab().webview.focus();
+  // tabGroup.getActiveTab().webview.copy();
+  // tabGroup.getActiveTab().webview.focus();
 });
 
 ipcRenderer.on('action-edit-paste', (event, arg) => {
-  tabGroup.getActiveTab().webview.paste();
-  tabGroup.getActiveTab().webview.focus();
+  // tabGroup.getActiveTab().webview.paste();
+  // tabGroup.getActiveTab().webview.focus();
 });
 
 ipcRenderer.on('action-edit-pastematchstyle', (event, arg) => {
-  tabGroup.getActiveTab().webview.pasteAndMatchStyle();
-  tabGroup.getActiveTab().webview.focus();
+  // tabGroup.getActiveTab().webview.pasteAndMatchStyle();
+  // tabGroup.getActiveTab().webview.focus();
 });
 
 ipcRenderer.on('action-edit-undo', (event, arg) => {
-  tabGroup.getActiveTab().webview.undo();
-  tabGroup.getActiveTab().webview.focus();
+  // tabGroup.getActiveTab().webview.undo();
+  // tabGroup.getActiveTab().webview.focus();
 });
 
 ipcRenderer.on('action-edit-redo', (event, arg) => {
-  tabGroup.getActiveTab().webview.redo();
-  tabGroup.getActiveTab().webview.focus();
+  // tabGroup.getActiveTab().webview.redo();
+  // tabGroup.getActiveTab().webview.focus();
 });
 
 ipcRenderer.on('action-edit-selectall', (event, arg) => {
-  tabGroup.getActiveTab().webview.selectAll();
-  tabGroup.getActiveTab().webview.focus();
+  // tabGroup.getActiveTab().webview.selectAll();
+  // tabGroup.getActiveTab().webview.focus();
 });
 
 ipcRenderer.on('action-edit-delete', (event, arg) => {
-  tabGroup.getActiveTab().webview.delete();
-  tabGroup.getActiveTab().webview.focus();
+  // tabGroup.getActiveTab().webview.delete();
+  // tabGroup.getActiveTab().webview.focus();
 });
 
 ipcRenderer.on('action-page-devtools', (event, arg) => {
-  if (tabGroup.getActiveTab().webview.isDevToolsOpened()) {
-    tabGroup.getActiveTab().webview.closeDevTools();
-  } else {
-    tabGroup.getActiveTab().webview.openDevTools();
-  }
+  // if (tabGroup.getActiveTab().webview.isDevToolsOpened()) {
+  //   tabGroup.getActiveTab().webview.closeDevTools();
+  // } else {
+  //   tabGroup.getActiveTab().webview.openDevTools();
+  // }
 });
 
 ipcRenderer.on('action-page-viewsource', (event, arg) => {
-  var sourceUrl = 'view-source:' + tabGroup.getActiveTab().webview.getURL();
-  newTab(sourceUrl, 'View Page Source', null);
+  // var sourceUrl = 'view-source:' + tabGroup.getActiveTab().webview.getURL();
+  // newTab(sourceUrl, 'View Page Source', null);
 });
 
 ipcRenderer.on('action-page-inspect', (event, arg) => {
-  arg.y += document.getElementById('etabs-views').getBoundingClientRect().top;
-  tabGroup.getActiveTab().webview.inspectElement(arg.x, arg.y);
+  // arg.y += document.getElementById('etabs-views').getBoundingClientRect().top;
+  // tabGroup.getActiveTab().webview.inspectElement(arg.x, arg.y);
 });
 
 ipcRenderer.on('action-page-findinpage', (event, arg) => {
@@ -1759,10 +1765,10 @@ ipcRenderer.on('action-page-findinpage', (event, arg) => {
 });
 
 ipcRenderer.on('action-load-certificate', (event, arg) => {
-  if(arg == null) {
-    arg = tabGroup.getActiveTab().webview.getURL();
-  }
-  document.getElementById('sidebar-webview').send('action-load-certificate', arg);
+  // if(arg == null) {
+  //   arg = tabGroup.getActiveTab().webview.getURL();
+  // }
+  // document.getElementById('sidebar-webview').send('action-load-certificate', arg);
 });
 
 ipcRenderer.on('action-page-certificate', (event, arg) => {
@@ -1779,66 +1785,66 @@ ipcRenderer.on('action-app-about', (event, arg) => {
 });
 
 ipcRenderer.on('action-tabcontext-closeright', (event, arg) => {
-  var curPos = tabGroup.getTab(arg).getPosition(false);
-  tabGroup.eachTab((currentTab, index, tabs) => {
-    if(currentTab.getPosition(false) > curPos) {
-      currentTab.close(false);
-    }
-  });
+  // var curPos = tabGroup.getTab(arg).getPosition(false);
+  // tabGroup.eachTab((currentTab, index, tabs) => {
+  //   if(currentTab.getPosition(false) > curPos) {
+  //     currentTab.close(false);
+  //   }
+  // });
 });
 
 ipcRenderer.on('action-tabcontext-closeothers', (event, arg) => {
-  var tab = tabGroup.getTab(arg);
-  tabGroup.eachTab((currentTab, index, tabs) => {
-    if(currentTab != tab) {
-      currentTab.close(false);
-    }
-  });
+  // var tab = tabGroup.getTab(arg);
+  // tabGroup.eachTab((currentTab, index, tabs) => {
+  //   if(currentTab != tab) {
+  //     currentTab.close(false);
+  //   }
+  // });
 });
 
 ipcRenderer.on('action-tabcontext-back', (event, arg) => {
-  tabGroup.getTab(arg).webview.goBack();
+  // tabGroup.getTab(arg).webview.goBack();
 });
 
 ipcRenderer.on('action-tabcontext-copyurl', (event, arg) => {
-  copyText(tabGroup.getTab(arg).webview.getURL());
+  // copyText(tabGroup.getTab(arg).webview.getURL());
 });
 
 ipcRenderer.on('action-tabcontext-forward', (event, arg) => {
-  tabGroup.getTab(arg).webview.goForward();
+  // tabGroup.getTab(arg).webview.goForward();
 });
 
 ipcRenderer.on('action-tabcontext-picturein', (event, arg) => {
-  var url = tabGroup.getTab(arg).webview.getURL();
-  pictureIn(url);
+  // var url = tabGroup.getTab(arg).webview.getURL();
+  // pictureIn(url);
 });
 
 ipcRenderer.on('action-tabcontext-gohome', (event, arg) => {
-  try {
-    var jsonstr = fs.readFileSync(ppath + "/json/home.json");
-    Data = JSON.parse(jsonstr);
-    tabGroup.getTab(arg).webview.loadURL(Data.url);
-  } catch (e) {
+  // try {
+  //   var jsonstr = fs.readFileSync(ppath + "/json/home.json");
+  //   Data = JSON.parse(jsonstr);
+  //   tabGroup.getTab(arg).webview.loadURL(Data.url);
+  // } catch (e) {
 
-  }
+  // }
 });
 
 ipcRenderer.on('action-tabcontext-reload', (event, arg) => {
-  tabGroup.getTab(arg).webview.reload();
+  // tabGroup.getTab(arg).webview.reload();
 });
 
 ipcRenderer.on('action-tabcontext-ignorecache', (event, arg) => {
-  tabGroup.getTab(arg).webview.reloadIgnoringCache();
+  // tabGroup.getTab(arg).webview.reloadIgnoringCache();
 });
 
 ipcRenderer.on('action-tabcontext-duplicatetab', (event, arg) => {
-  var url = tabGroup.getTab(arg).webview.src;
-  tabGroup.addTab();
-  tabGroup.getActiveTab().webview.loadURL(url);
+  // var url = tabGroup.getTab(arg).webview.src;
+  // tabGroup.addTab();
+  // tabGroup.getActiveTab().webview.loadURL(url);
 });
 
 ipcRenderer.on('action-tabcontext-closetab', (event, arg) => {
-  tabGroup.getTab(arg).close();
+  // tabGroup.getTab(arg).close();
 });
 
 ipcRenderer.on('action-navigate-suggest', (event, arg) => {
@@ -1870,45 +1876,45 @@ ipcRenderer.on('action-toggle-sidebar', (event, arg) => {
 });
 
 ipcRenderer.on('action-toggle-fullscreen', (event, arg) => {
-  if (arg) {
-    document.body.classList.add('fullscreen');
-  } else {
-    document.body.classList.remove('fullscreen');
-  }
-  tabGroup.getActiveTab().webview.focus();
+  // if (arg) {
+  //   document.body.classList.add('fullscreen');
+  // } else {
+  //   document.body.classList.remove('fullscreen');
+  // }
+  // tabGroup.getActiveTab().webview.focus();
 });
 
 ipcRenderer.on('action-activate-tab', (event, arg) => {
-  tabGroup.getTabByPosition(arg + 1).activate();
+  // tabGroup.getTabByPosition(arg + 1).activate();
 });
 
 ipcRenderer.on('action-next-tab', (event, arg) => {
-  let pos = tabGroup.getActiveTab().getPosition();
-  if(tabGroup.getTabByPosition(pos + 1) != null) {
-    tabGroup.getTabByPosition(pos + 1).activate();
-  }
+  // let pos = tabGroup.getActiveTab().getPosition();
+  // if(tabGroup.getTabByPosition(pos + 1) != null) {
+  //   tabGroup.getTabByPosition(pos + 1).activate();
+  // }
 });
 
 ipcRenderer.on('action-prev-tab', (event, arg) => {
-  let pos = tabGroup.getActiveTab().getPosition();
-  if(tabGroup.getTabByPosition(pos - 1) != null) {
-    tabGroup.getTabByPosition(pos - 1).activate();
-  }
+  // let pos = tabGroup.getActiveTab().getPosition();
+  // if(tabGroup.getTabByPosition(pos - 1) != null) {
+  //   tabGroup.getTabByPosition(pos - 1).activate();
+  // }
 });
 
 ipcRenderer.on('action-blur-window', (event, arg) => {
-  document.getElementById('etabs-tabgroup').classList.add('blur');
+  // document.getElementById('etabs-tabgroup').classList.add('blur');
 });
 
 ipcRenderer.on('action-focus-window', (event, arg) => {
-  document.getElementById('etabs-tabgroup').classList.remove('blur');
+  // document.getElementById('etabs-tabgroup').classList.remove('blur');
 });
 
 ipcRenderer.on('action-open-url', (event, arg) => {
-  tabGroup.getActiveTab().webview.loadURL(arg);
-  if(!document.body.classList.contains('pinned-sidebar')) {
-    hideSidebar();
-  }
+  // tabGroup.getActiveTab().webview.loadURL(arg);
+  // if(!document.body.classList.contains('pinned-sidebar')) {
+  //   hideSidebar();
+  // }
 });
 
 ipcRenderer.on('action-open-url-in-new-tab', (event, arg) => {
@@ -1978,23 +1984,52 @@ ipcRenderer.on('action-set-download-process', (event, arg) => {
 */
 
 ipcRenderer.on('action-webview-contextmenu', (event, arg) => {
-  if(arg.action == 'cut') {
-    tabGroup.getTab(arg.id).webview.cut();
-  } else if(arg.action == 'copy') {
-    tabGroup.getTab(arg.id).webview.copy();
-  } else if(arg.action == 'paste') {
-    tabGroup.getTab(arg.id).webview.paste();
-  } else if(arg.action == 'paste-match-style') {
-    tabGroup.getTab(arg.id).webview.pasteAndMatchStyle();
-  } else if(arg.action == 'undo') {
-    tabGroup.getTab(arg.id).webview.undo();
-  } else if(arg.action == 'redo') {
-    tabGroup.getTab(arg.id).webview.redo();
-  } else if(arg.action == 'select-all') {
-    tabGroup.getTab(arg.id).webview.selectAll();
-  } else if(arg.action == 'delete') {
-    tabGroup.getTab(arg.id).webview.delete();
-  } 
+  // if(arg.action == 'cut') {
+  //   tabGroup.getTab(arg.id).webview.cut();
+  // } else if(arg.action == 'copy') {
+  //   tabGroup.getTab(arg.id).webview.copy();
+  // } else if(arg.action == 'paste') {
+  //   tabGroup.getTab(arg.id).webview.paste();
+  // } else if(arg.action == 'paste-match-style') {
+  //   tabGroup.getTab(arg.id).webview.pasteAndMatchStyle();
+  // } else if(arg.action == 'undo') {
+  //   tabGroup.getTab(arg.id).webview.undo();
+  // } else if(arg.action == 'redo') {
+  //   tabGroup.getTab(arg.id).webview.redo();
+  // } else if(arg.action == 'select-all') {
+  //   tabGroup.getTab(arg.id).webview.selectAll();
+  // } else if(arg.action == 'delete') {
+  //   tabGroup.getTab(arg.id).webview.delete();
+  // } 
+});
+
+/*
+ # #####   ####              #####   ##   #####     #####  ###### #    # #####  ###### #####  ###### #####
+ # #    # #    #               #    #  #  #    #    #    # #      ##   # #    # #      #    # #      #    #
+ # #    # #         #####      #   #    # #####     #    # #####  # #  # #    # #####  #    # #####  #    #
+ # #####  #                    #   ###### #    #    #####  #      #  # # #    # #      #####  #      #####
+ # #      #    #               #   #    # #    #    #   #  #      #   ## #    # #      #   #  #      #   #
+ # #       ####                #   #    # #####     #    # ###### #    # #####  ###### #    # ###### #    #
+*/
+
+ipcRenderer.on('tabRenderer-addTab', (event, arg) => {
+  tabRenderer.addTab(arg.id, arg.url, arg.active)
+});
+
+ipcRenderer.on('tabRenderer-activateTab', (event, id) => {
+  tabRenderer.activateTab(id);
+});
+
+ipcRenderer.on('tabRenderer-closeTab', (event, id) => {
+  tabRenderer.closeTab(id);
+});
+
+ipcRenderer.on('tabRenderer-setTabTitle', (event, arg) => {
+  tabRenderer.setTabTitle(arg.id, arg.title);
+});
+
+ipcRenderer.on('tabRenderer-setTabIcon', (event, arg) => {
+  tabRenderer.setTabIcon(arg.id, arg.icon);
 });
 
 /*
@@ -2026,7 +2061,7 @@ function init() {
   
   var startPage = loadStartPage();
   applyStartPage(startPage);
-  newTab(startPage, null, null);
+  // newTab(startPage, null, null);
 
   loadHome();
   loadSidebar();

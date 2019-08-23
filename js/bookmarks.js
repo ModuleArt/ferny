@@ -25,9 +25,6 @@ folderDrag.on('drop', function(el, target, source, sibling) {
 });
 
 const bookmarkDrag = dragula([document.getElementById('all-bookmarks')], {
-  moves: function(el, container, handle) {
-    return !handle.classList.contains('bookmark-options') && !handle.classList.contains('bookmark-menu') && !handle.classList.contains('bookmark-menu-btn');
-  },
   direction: "vertical"
 });
 bookmarkDrag.on('drag', function(el, target, source, sibling) {

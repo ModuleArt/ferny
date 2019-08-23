@@ -136,13 +136,7 @@ label {
   box-shadow: var(--shadow-focus);
 }
 
-.bookmark-title {
-  margin: 6px 0;
-  transition: margin 0.25s;
-}
-
 .bookmark-title, .bookmark-preview {
-  width: calc(100% - 44px);
   overflow: hidden;
   position: absolute;
   white-space: nowrap;
@@ -150,10 +144,18 @@ label {
   text-overflow: ellipsis;
 }
 
+.bookmark-title {
+  margin: 6px 0;
+  transition: margin 0.25s, font-size 0.25s;
+  width: calc(100% - 44px);
+}
+
 .bookmark-preview {
   opacity: 0;
   font-size: 12px;
   margin-top: 14px;
+  transition: opacity 0.25s;
+  width: calc(100% - 64px);
 }
 
 .bookmark:hover .bookmark-title {
@@ -164,7 +166,6 @@ label {
 
 .bookmark:hover .bookmark-preview {
   opacity: var(--opacity-over);
-  width: calc(100% - 64px);
 }
 
 .bookmark-icon {
@@ -287,7 +288,7 @@ input[type=text] {
 }
 
 .folder:hover .name {
-  width: calc(100% - 40px);
+  width: calc(100% - 64px);
 }
 
 .folder.all-bookmarks:hover .name {
@@ -317,13 +318,8 @@ input[type=text] {
 }
 
 .folder .edit-btn img, .folder .add-bookmark-btn img {
-  padding: 7px 0;
+  padding: 7px 7px;
   transition: padding 0.25s;
-  margin: -8px;
-}
-
-.folder:hover .edit-btn img, .folder:hover .add-bookmark-btn img {
-  padding: 7px;
   margin: 0;
 }
 
