@@ -15,8 +15,8 @@
     <div class="tabman">
       <div class="tabman-tabs" onmousewheel="etabsTabsWheel(event)"></div>
       <div class="tabman-buttons">
-        <button class="tabman-buttons-newtab" title="New tab" onclick="newTab()"><img name="create-12" class="theme-icon"></button>
-        <button class="tabman-buttons-tablist" title="Tabs list" onclick="requestTabsList()"><img name="down-12" class="theme-icon"></button>
+        <button title="New tab" onclick="newTab()"><img name="create-12" class="theme-icon"></button>
+        <button title="Tabs list" onclick="requestTabsList()"><img name="down-12" class="theme-icon"></button>
       </div>
       <div id="window-controls"></div>
     </div>
@@ -59,14 +59,14 @@
     <main>
       <img src="../imgs/watermark.png" id="watermark">
       <div class="etabs-views" id="etabs-views"></div>
-      <div id="picture-in-panel" style="display: none;">
-        <div>
+      <!-- <div id="picture-in-panel" style="display: none;">
+        <div> -->
           <!-- <img name="back" class="title-bar-btn theme-icon" title="Go back" onclick="goBackPictureIn()">
           <img name="forward" class="title-bar-btn theme-icon" title="Go forward" onclick="goForwardPictureIn()">
           <img name="refresh" class="title-bar-btn theme-icon" title="Reload page" onclick="refreshPictureIn()"> -->
-          <img name="cancel-16" class="title-bar-btn theme-icon" title="Close" onclick="cancelPictureIn()" id="cancel-picture-in-btn">
+          <!-- <img name="cancel-16" class="title-bar-btn theme-icon" title="Close" onclick="cancelPictureIn()" id="cancel-picture-in-btn">
         </div>
-        <webview id="picture-in-webview" src="https://duckduckgo.com"></webview>
+        <webview id="picture-in-webview" src="https://duckduckgo.com"></webview> -->
       </div>
       <label id="target-url"></label>
       <div id="sidebar" style="display: none;" class="hide">

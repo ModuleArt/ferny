@@ -711,6 +711,22 @@ ipcMain.on('tabManager-closeTab', (event, id) => {
   tabManager.getTabById(id).close();
 });
 
+ipcMain.on('tabManager-goBack', (event) => {
+  tabManager.getActiveTab().goBack();
+});
+
+ipcMain.on('tabManager-goForward', (event) => {
+  tabManager.getActiveTab().goForward();
+});
+
+ipcMain.on('tabManager-goReload', (event) => {
+  tabManager.getActiveTab().goReload();
+});
+
+ipcMain.on('tabManager-goStop', (event) => {
+  tabManager.getActiveTab().goStop();
+});
+
 /*
 .########.##.....##.##....##..######..########.####..#######..##....##..######.
 .##.......##.....##.###...##.##....##....##.....##..##.....##.###...##.##....##
@@ -810,13 +826,25 @@ function showMainWindow() {
   
     mainWindow.on('maximize', () => {
       mainWindow.webContents.send('action-maximize-window');
+      tabManager.getActiveTab().activate();
     });
   
     mainWindow.on('unmaximize', () => {
       mainWindow.webContents.send('action-unmaximize-window');
+      tabManager.getActiveTab().activate();
     });
   
     mainWindow.once('ready-to-show', () => {
+      tabManager = new TabManager(mainWindow);
+
+      tabManager.on("last-tab-closed", () => {
+
+      });
+
+      tabManager.on("add-status-notif", (text, type) => {
+        notificationManager.addStatusNotif(text, type);
+      });
+
       mainWindow.show();
       if(Data.maximize) {
         mainWindow.maximize();
@@ -945,17 +973,6 @@ function showMainWindow() {
         }
       });
     });
-
-    /*
-     #####   ##   #####   ####
-       #    #  #  #    # #
-       #   #    # #####   ####
-       #   ###### #    #      #
-       #   #    # #    # #    #
-       #   #    # #####   ####
-    */
-
-    tabManager = new TabManager(mainWindow);
   });
 }
 

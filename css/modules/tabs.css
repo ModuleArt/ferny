@@ -41,10 +41,11 @@
     float: left;
     color: var(--color-top);
     background: none;
-    border: none;
+    border: 1px solid transparent;
+    margin: -1px;
     font-size: var(--px-font);
-    padding: 10px;
-    height: 32px;
+    padding: 10px 9px;
+    height: 34px;
 }
 
 .tabman-buttons button img {
@@ -63,15 +64,6 @@
 
 .tabman-buttons button:active {
     background-color: var(--color-border);
-}
-
-.tabman-buttons-newtab {
-    border-right: 1px solid transparent !important;
-}
-
-.tabman-buttons-tablist {
-    border-right: 1px solid transparent !important;
-    border-left: 1px solid transparent !important;
 }
 
 /*

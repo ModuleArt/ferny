@@ -167,14 +167,6 @@ let tabRenderer = new TabRenderer();
 //     document.getElementById('target-url').innerHTML = e.url;
 //   });
 
-//   webview.addEventListener('new-window', (e) => {
-//     if(e.disposition == "background-tab") {
-//       newTab(e.url, 'New Background Tab', false);
-//     } else {
-//       newTab(e.url, null, null);
-//     }
-//   });
-
 //   webview.addEventListener('page-favicon-updated', (e) => {
 //     tab.setIcon(e.favicons[0]);
 //     var img = tab.tab.getElementsByTagName('img')[0];
@@ -186,21 +178,10 @@ let tabRenderer = new TabRenderer();
 //     });
 //   });
 
-//   webview.addEventListener('page-title-updated', (e) => {
-//     tab.setTitle(e.title);
-//     var index = tab.getPosition(false);
-//     document.getElementsByClassName('etabs-tab')[index - 1].title = e.title;
-//   });
-
 //   webview.addEventListener('dom-ready', () => {
 //     webview.blur();
 //     webview.focus();
 //     applyFindPanel();
-//   });
-
-//   webview.addEventListener('did-start-loading', () => {
-//     document.getElementById("refresh-btn").style.display = "none";
-//     document.getElementById("stop-btn").style.display = "";
 //   });
 
 //   webview.addEventListener('did-stop-loading', () => {
@@ -243,26 +224,6 @@ let tabRenderer = new TabRenderer();
 //     ipcRenderer.send('request-add-history-item', e.url);
 //   });
 
-//   webview.addEventListener('did-navigate-in-page', (e) => {
-//     if (e.isMainFrame) {
-//       document.getElementById('search-input').value = e.url;
-//       if (webview.canGoBack()) {
-//         document.getElementById('back-btn').disabled = false;
-//       } else {
-//         document.getElementById('back-btn').disabled = true;
-//       }
-//       if (webview.canGoForward()) {
-//         document.getElementById('forward-btn').disabled = false;
-//       } else {
-//         document.getElementById('forward-btn').disabled = true;
-//       }
-//     }
-//   });
-
-//   webview.addEventListener('certificate-error', (e) => {
-//     notificationManager.addStatusNotif("Certificate error", 'warning');
-//   });
-
 //   webview.addEventListener('enter-html-full-screen', (e) => {
 //     document.body.classList.add('fullscreen');
 //     notificationManager.addStatusNotif("Press F11 to exit full screen", 'info');
@@ -270,21 +231,6 @@ let tabRenderer = new TabRenderer();
 
 //   webview.addEventListener('leave-html-full-screen', (e) => {
 //     document.body.classList.remove('fullscreen');
-//   });
-
-//   webview.addEventListener('did-fail-load', (e) => {
-//     if (webview.canGoBack()) {
-//       document.getElementById('back-btn').disabled = false;
-//     } else {
-//       document.getElementById('back-btn').disabled = true;
-//     }
-//     if (webview.canGoForward()) {
-//       document.getElementById('forward-btn').disabled = false;
-//     } else {
-//       document.getElementById('forward-btn').disabled = true;
-//     }
-
-//     notificationManager.addStatusNotif("Connection failed: " + e.errorDescription + " (" + e.errorCode + ")", "error");
 //   });
 
 //   document.getElementsByClassName('etabs-tab-buttons')[tab.getPosition(false) - 1].title = "Close tab";
@@ -317,8 +263,35 @@ let tabRenderer = new TabRenderer();
 .##........#######..##....##..######.....##....####..#######..##....##..######.
 */
 
+/*
+
+ ###### #    # #    #  ####              #####   ##   #####     #    #   ##   #    #   ##    ####  ###### #####
+ #      #    # ##   # #    #               #    #  #  #    #    ##  ##  #  #  ##   #  #  #  #    # #      #    #
+ #####  #    # # #  # #         #####      #   #    # #####     # ## # #    # # #  # #    # #      #####  #    #
+ #      #    # #  # # #                    #   ###### #    #    #    # ###### #  # # ###### #  ### #      #####
+ #      #    # #   ## #    #               #   #    # #    #    #    # #    # #   ## #    # #    # #      #   #
+ #       ####  #    #  ####                #   #    # #####     #    # #    # #    # #    #  ####  ###### #    #
+
+*/
+
 function newTab() {
   ipcRenderer.send('tabManager-newTab');
+}
+
+function goBack() {
+  ipcRenderer.send('tabManager-goBack');
+}
+
+function goForward() {
+  ipcRenderer.send('tabManager-goForward');
+}
+
+function goReload() {
+  ipcRenderer.send('tabManager-goReload');
+}
+
+function goStop() {
+  ipcRenderer.send('tabManager-goStop');
 }
 
 // function newTab(url, title, active) {
@@ -534,22 +507,6 @@ function toggleSidebar() {
   } else {
     hideSidebar();
   }
-}
-
-function goBack() {
-  // tabGroup.getActiveTab().webview.goBack();
-}
-
-function goForward() {
-  // tabGroup.getActiveTab().webview.goForward();
-}
-
-function goReload() {
-  // tabGroup.getActiveTab().webview.reload();
-}
-
-function goStop() {
-  // tabGroup.getActiveTab().webview.stop();
 }
 
 function requestTabsList() {
@@ -2030,6 +1987,14 @@ ipcRenderer.on('tabRenderer-setTabTitle', (event, arg) => {
 
 ipcRenderer.on('tabRenderer-setTabIcon', (event, arg) => {
   tabRenderer.setTabIcon(arg.id, arg.icon);
+});
+
+ipcRenderer.on('tabRenderer-updateNavigationButtons', (event, arg) => {
+  tabRenderer.updateNavigationButtons(arg.canGoBack, arg.canGoForward, arg.isLoading);
+});
+
+ipcRenderer.on('tabRenderer-updateAddressBar', (event, url) => {
+  tabRenderer.updateAddressBar(url);
 });
 
 /*

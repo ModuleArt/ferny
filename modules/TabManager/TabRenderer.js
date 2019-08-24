@@ -1,5 +1,5 @@
 const EventEmitter = require("events");
-const { ipcRencerer } = require("electron");
+const { ipcRenderer } = require("electron");
 
 class TabRenderer extends EventEmitter {
     tabContainer = null;
@@ -7,6 +7,7 @@ class TabRenderer extends EventEmitter {
     forwardButton = null;
     reloadButton = null;
     stopButton = null;
+    addressBar = null;
 
     constructor() {
         super();
@@ -16,6 +17,7 @@ class TabRenderer extends EventEmitter {
         this.forwardButton = document.getElementById("forward-btn");
         this.reloadButton = document.getElementById("reload-btn");
         this.stopButton = document.getElementById("stop-btn");
+        this.addressBar = document.getElementById("search-input");
     }
 
     addTab(id, url, active) {
@@ -38,9 +40,15 @@ class TabRenderer extends EventEmitter {
         tab.onclick = () => {
             ipcRenderer.send("tabManager-activateTab", id);
         }
+        tab.onauxclick = (event) => {
+            event.preventDefault();
+            if(event.which == 2) {
+                ipcRenderer.send("tabManager-closeTab", id);
+            }
+        }
 
         let closeButton = document.createElement('button');
-        tab.title = "Close tab";
+        closeButton.title = "Close tab";
         closeButton.onclick = (event) => {
             event.stopPropagation();
             ipcRenderer.send("tabManager-closeTab", id);
@@ -85,7 +93,9 @@ class TabRenderer extends EventEmitter {
     }
 
     setTabTitle(id, title) {
-        this.getTabById(id).getElementsByClassName("tabman-tab-title")[0].innerHTML = title;
+        let tab = this.getTabById(id);
+        tab.getElementsByClassName("tabman-tab-title")[0].innerHTML = title;
+        tab.title = title;
 
         return null;
     }
@@ -94,6 +104,22 @@ class TabRenderer extends EventEmitter {
         this.getTabById(id).getElementsByClassName("tabman-tab-icon")[0].src = icon;
 
         return null;
+    }
+
+    updateNavigationButtons(canGoBack, canGoForward, isLoading) {
+        this.backButton.disabled = !canGoBack;
+        this.forwardButton.disabled = !canGoForward;
+        if(isLoading) {
+            this.reloadButton.style.display = "none";
+            this.stopButton.style.display = "";
+        } else {
+            this.reloadButton.style.display = "";
+            this.stopButton.style.display = "none";
+        }
+    }
+
+    updateAddressBar(url) {
+        this.addressBar.value = url;
     }
 }
 
