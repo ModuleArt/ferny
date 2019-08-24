@@ -46,6 +46,22 @@ class TabRenderer extends EventEmitter {
                 ipcRenderer.send("tabManager-closeTab", id);
             }
         }
+        tab.ondragenter = (event) => {
+            event.preventDefault();
+            ipcRenderer.send("tabManager-activateTab", id);
+        }
+        tab.ondragover = (event) => {
+            event.preventDefault();
+        }
+        tab.ondrop = (event) => {
+            event.preventDefault();
+            var textData = event.dataTransfer.getData("Text");
+            if (textData) {
+                ipcRenderer.send("tabManager-navigate", textData);
+            } else if(event.dataTransfer.files.length > 0) {
+                ipcRenderer.send("tabManager-navigate", event.dataTransfer.files[0].path);
+            }
+        }
 
         let closeButton = document.createElement('button');
         closeButton.title = "Close tab";
@@ -120,6 +136,10 @@ class TabRenderer extends EventEmitter {
 
     updateAddressBar(url) {
         this.addressBar.value = url;
+    }
+
+    getTabContainer() {
+        return this.tabContainer;
     }
 }
 

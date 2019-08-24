@@ -727,6 +727,10 @@ ipcMain.on('tabManager-goStop', (event) => {
   tabManager.getActiveTab().goStop();
 });
 
+ipcMain.on('tabManager-navigate', (event, url) => {
+  tabManager.getActiveTab().navigate(url);
+});
+
 /*
 .########.##.....##.##....##..######..########.####..#######..##....##..######.
 .##.......##.....##.###...##.##....##....##.....##..##.....##.###...##.##....##
@@ -842,7 +846,7 @@ function showMainWindow() {
       });
 
       tabManager.on("add-status-notif", (text, type) => {
-        notificationManager.addStatusNotif(text, type);
+        mainWindow.webContents.send("add-status-notif", { text: text, type: type });
       });
 
       mainWindow.show();

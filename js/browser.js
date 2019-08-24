@@ -70,21 +70,9 @@ notificationManager.on("notif-added", (notif) => {
 
 let tabRenderer = new TabRenderer();
 
-// let tabGroup = new TabGroup({
-//   newTab: {
-//     title: 'New Tab',
-//     active: true,
-//     visible: true,
-//     webviewAttributes: {
-//       // enableBlinkFeatures: false
-//     }
-//   },
-//   newTabButtonText: `<img title='New tab' name='create-12' class='theme-icon' ondrop='newTabDrop(event)' ondragover='prevDef(event)'/>`,
-//   closeButtonText: "&nbsp;"
-// });
-// dragula([tabGroup.tabContainer], {
-//   direction: "horizontal"
-// });
+dragula([tabRenderer.getTabContainer()], {
+  direction: "horizontal"
+});
 
 // tabGroup.on("tab-added", (tab, tabGroup) => {
 //   let webview = tab.webview;
@@ -105,15 +93,6 @@ let tabRenderer = new TabRenderer();
 //     ipcRenderer.send('request-tab-menu', tab.id);
 //   }, false);
 
-//   tab.tab.addEventListener('dragenter', (e) => {
-//     e.preventDefault();
-//     tab.activate();
-//   });
-
-//   tab.tab.addEventListener('dragover', (e) => {
-//     e.preventDefault();
-//   });
-
 //   // tab.tab.addEventListener('mouseenter', (e) => {
 //   //   previewTimeout = showTabPreview(tab.tab, previewTimeout, webview.getWebContents().capturePage());
 //   // });
@@ -121,16 +100,6 @@ let tabRenderer = new TabRenderer();
 //   // tab.tab.addEventListener('mouseleave', (e) => {
 //   //   hideTabPreview(tab.tab, previewTimeout);
 //   // });
-
-//   tab.tab.addEventListener('drop', (e) => {
-//     e.preventDefault();
-//     var textData = e.dataTransfer.getData("Text");
-//     if (textData) {
-//       tab.webview.loadURL(textData);
-//     } else if(e.dataTransfer.files.length > 0) {
-//       tab.webview.loadURL(e.dataTransfer.files[0].path);
-//     }
-//   });
 
 //   document.getElementById('search-input').value = "";
 //   document.getElementById('back-btn').disabled = true;
