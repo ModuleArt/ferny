@@ -53,7 +53,7 @@
     border: 1px solid transparent;
     margin: -1px;
     font-size: var(--px-font);
-    padding: 10px 9px;
+    padding: 10px;
     height: 34px;
 }
 
@@ -255,6 +255,8 @@
     background-color: var(--color-element);
     text-align: center;
     border: 1px solid var(--color-border);
+    animation: slide-down;
+    animation-duration: 0.25s;
 }
 
 .tabman-tab-preview img {

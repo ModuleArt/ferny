@@ -2,9 +2,11 @@
 <html>
   <head>	
     <link rel="stylesheet" href="../css/modules/webkit.css">
+    <link rel="stylesheet" href="../css/modules/animations.css">
     <link rel="stylesheet" href="../css/modules/nav-btn.css">
     <link rel="stylesheet" href="../css/modules/input.css">
     <link rel="stylesheet" href="../css/modules/tabs.css">
+    <link rel="stylesheet" href="../css/modules/overlay-button.css">
     <link rel="stylesheet" href="../css/modules/notifications.css">
     <link rel="stylesheet" href="../node_modules/dragula/dist/dragula.css">
     <link rel="stylesheet" href="../css/browser.css">
@@ -13,10 +15,11 @@
     <div id="drag-zone"></div>
     
     <div class="tabman">
+      <button id="overlay-btn" class='overlay-button' onclick="showOverlay()" title="Home"><img name="blocks-12" class="theme-icon"></button>
       <div class="tabman-tabs" onmousewheel="etabsTabsWheel(event)"></div>
       <div class="tabman-buttons">
         <button title="New tab" onclick="newTab()" ondrop='newTabDrop(event)' ondragover='prevDef(event)'><img name="create-12" class="theme-icon"></button>
-        <button title="Tabs list" onclick="requestTabsList()"><img name="down-12" class="theme-icon"></button>
+        <button title="Tabs list" onclick="showTabList()"><img name="down-12" class="theme-icon"></button>
       </div>
       <div id="window-controls"></div>
     </div>

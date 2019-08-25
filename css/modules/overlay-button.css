@@ -1,0 +1,28 @@
+.overlay-button {
+    -webkit-app-region: no-drag;
+    outline: none;
+    float: left;
+    color: var(--color-top);
+    background: none;
+    border: 1px solid var(--color-border);
+    margin: -1px;
+    font-size: var(--px-font);
+    padding: 10px;
+    height: 34px;
+}
+
+.overlay-button img {
+    vertical-align: top;
+}
+
+.overlay-button:hover {
+    background-color: var(--color-second);
+}
+
+.overlay-button:focus, .overlay-button.active {
+    box-shadow: var(--shadow-focus);
+}
+
+.overlay-button:active, .overlay-button.active {
+    background-color: var(--color-border);
+}

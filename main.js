@@ -8,7 +8,7 @@
 .##.....##.##.....##.####.##....##
 */
 
-const { ipcMain, app, Menu, MenuItem, BrowserWindow, dialog, systemPreferences, clipboard, BrowserView } = require('electron');
+const { ipcMain, app, Menu, MenuItem, BrowserWindow, dialog, systemPreferences, clipboard } = require('electron');
 const { autoUpdater } = require("electron-updater")
 const os = require('os');
 const prependFile = require('prepend-file');
@@ -30,6 +30,7 @@ const loadTheme = require(app.getAppPath() + "/modules/loadTheme.js");
 const loadWinControls = require(app.getAppPath() + "/modules/loadWinControls.js");
 
 const TabManager = require(app.getAppPath() + "/modules/TabManager/TabManager.js");
+const Overlay = require(app.getAppPath() + "/modules/Overlay/Overlay.js");
 
 /*
 ..######..####.##....##..######...##.......########....####.##....##..######..########....###....##....##..######..########
@@ -178,6 +179,7 @@ let curDownloadNum = 0;
 let updateCancellationToken = null;
 
 let tabManager = null;
+let overlay = null;
 
 /*
 ....###....########..########.
@@ -691,6 +693,19 @@ ipcMain.on('request-open-license-file', (event, arg) => {
 });
 
 /*
+ # #####   ####               ####  #    # ###### #####  #        ##   #   #
+ # #    # #    #             #    # #    # #      #    # #       #  #   # #
+ # #    # #         #####    #    # #    # #####  #    # #      #    #   #
+ # #####  #                  #    # #    # #      #####  #      ######   #
+ # #      #    #             #    #  #  #  #      #   #  #      #    #   #
+ # #       ####               ####    ##   ###### #    # ###### #    #   #
+*/
+
+ipcMain.on('overlay-show', (event) => {
+  overlay.show();
+});
+
+/*
  # #####   ####              #####   ##   #####     #    #   ##   #    #   ##    ####  ###### #####
  # #    # #    #               #    #  #  #    #    ##  ##  #  #  ##   #  #  #  #    # #      #    #
  # #    # #         #####      #   #    # #####     # ## # #    # # #  # #    # #      #####  #    #
@@ -698,6 +713,26 @@ ipcMain.on('request-open-license-file', (event, arg) => {
  # #      #    #               #   #    # #    #    #    # #    # #   ## #    # #    # #      #   #
  # #       ####                #   #    # #####     #    # #    # #    # #    #  ####  ###### #    #
 */
+
+ipcMain.on('tabManager-init', (event) => {
+  tabManager = new TabManager(mainWindow);
+
+  tabManager.on("active-tab-closed", () => {
+    overlay.show();
+  });
+
+  tabManager.on("tab-activated", () => {
+    mainWindow.webContents.send("overlay-toggleButton", false);
+  });
+
+  tabManager.on("last-tab-closed", () => {
+    
+  });
+
+  tabManager.on("add-status-notif", (text, type) => {
+    mainWindow.webContents.send("add-status-notif", { text: text, type: type });
+  });
+});
 
 ipcMain.on('tabManager-newTab', (event) => {
   tabManager.newTab();
@@ -741,6 +776,10 @@ ipcMain.on('tabManager-showPreview', (event, id) => {
 
 ipcMain.on('tabManager-hidePreview', (event, id) => {
   tabManager.getTabById(id).hidePreview();
+});
+
+ipcMain.on('tabManager-showTabList', (event) => {
+  tabManager.showTabList();
 });
 
 /*
@@ -798,11 +837,6 @@ function showMainWindow() {
   
     // mainWindow.webContents.openDevTools();
     mainWindow.loadFile(app.getAppPath() + '/html/browser.html');
-
-    // let view2 = new BrowserView()
-    // mainWindow.addBrowserView(view2)
-    // view2.setBounds({ x: 300, y: 300, width: 300, height: 300 })
-    // view2.webContents.loadURL('https://electronjs.org')
   
     mainWindow.webContents.on('context-menu', (event, params) => {
       if(params.isEditable) {
@@ -851,16 +885,7 @@ function showMainWindow() {
     });
   
     mainWindow.once('ready-to-show', () => {
-      tabManager = new TabManager(mainWindow);
-
-      tabManager.on("last-tab-closed", () => {
-
-      });
-
-      tabManager.on("add-status-notif", (text, type) => {
-        mainWindow.webContents.send("add-status-notif", { text: text, type: type });
-      });
-
+      initOverlay();
       mainWindow.show();
       if(Data.maximize) {
         mainWindow.maximize();
@@ -1095,6 +1120,23 @@ function openFileDialog() {
         mainWindow.webContents.send('action-open-url-in-new-tab', filePaths[i]);
       }
     }
+  });
+}
+
+/*
+ ###### #    # #    #  ####               ####  #    # ###### #####  #        ##   #   #
+ #      #    # ##   # #    #             #    # #    # #      #    # #       #  #   # #
+ #####  #    # # #  # #         #####    #    # #    # #####  #    # #      #    #   #
+ #      #    # #  # # #                  #    # #    # #      #####  #      ######   #
+ #      #    # #   ## #    #             #    #  #  #  #      #   #  #      #    #   #
+ #       ####  #    #  ####               ####    ##   ###### #    # ###### #    #   #
+*/
+
+function initOverlay() {
+  overlay = new Overlay(mainWindow);
+
+  overlay.on("show", () => {
+    tabManager.unactivateAllTabs();
   });
 }
 

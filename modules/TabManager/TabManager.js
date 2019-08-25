@@ -40,10 +40,9 @@ class TabManager extends EventEmitter {
 
         tab.on("close", (closedTab) => {
             this.destroyTabById(id);
+
             if(closedTab.isActive()) {
-                if(this.tabs.length > 0) {
-                    this.tabs[0].activate();
-                }
+                this.emit("active-tab-closed");
             }
 
             if(this.tabs.length == 0) {
@@ -53,6 +52,7 @@ class TabManager extends EventEmitter {
 
         tab.on("activate", (activatedTab) => {
             activatedTab.setBounds(this.left, this.top, this.getWidth(), this.getHeight());
+            this.emit("tab-activated");
         });
 
         tab.on("add-tab", (url, active) => {
@@ -152,6 +152,14 @@ class TabManager extends EventEmitter {
 
     getNewTabPage() {
         return this.newTabPage;
+    }
+
+    unactivateAllTabs() {
+        this.window.send("tabRenderer-unactivateAllTabs");
+    }
+
+    showTabList() {
+        
     }
 }
 

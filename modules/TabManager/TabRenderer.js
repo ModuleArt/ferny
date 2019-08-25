@@ -25,6 +25,8 @@ class TabRenderer extends EventEmitter {
         this.reloadButton = document.getElementById("reload-btn");
         this.stopButton = document.getElementById("stop-btn");
         this.addressBar = document.getElementById("search-input");
+
+        ipcRenderer.send("tabManager-init");
     }
 
     addTab(id, url, active) {
@@ -88,6 +90,15 @@ class TabRenderer extends EventEmitter {
 
         if(active) {
             this.activateTab(id);
+        }
+
+        return null;
+    }
+
+    unactivateAllTabs() {
+        let tabs = this.tabContainer.childNodes;
+        for(let i = 0; i < tabs.length; i++) {
+            tabs[i].classList.remove("active");
         }
 
         return null;

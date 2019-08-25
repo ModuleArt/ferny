@@ -17,11 +17,7 @@ class Tab extends EventEmitter {
         this.id = id;
         this.window = window;
 
-        this.view = new BrowserView({
-            webPreferences: {
-                // offscreen: true
-            }
-        });
+        this.view = new BrowserView();
         this.view.setAutoResize({
             width: true,
             height: true

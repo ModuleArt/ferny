@@ -69,13 +69,16 @@ notificationManager.on("notif-added", (notif) => {
 
 let tabRenderer = new TabRenderer();
 
-dragula([tabRenderer.getTabContainer()], {
+let tabDrag = dragula([tabRenderer.getTabContainer()], {
   direction: "horizontal"
 });
 
-// tabGroup.on("tab-added", (tab, tabGroup) => {
-//   let webview = tab.webview;
-//   let previewTimeout = null;
+tabDrag.on('drag', function(el, source) {
+  let div = el.getElementsByClassName('tabman-tab-preview')[0];
+  if(div != null) {
+    div.parentNode.removeChild(div);
+  }
+});
 
 //   webview.getWebContents().on('context-menu', (event, params) => {
 //     let Data = {
@@ -101,12 +104,6 @@ dragula([tabRenderer.getTabContainer()], {
 //     document.getElementById('target-url').innerHTML = e.url;
 //   });
 
-//   webview.addEventListener('dom-ready', () => {
-//     webview.blur();
-//     webview.focus();
-//     applyFindPanel();
-//   });
-
 //   webview.addEventListener('did-navigate', (e) => {
 //     document.getElementById('search-input').value = e.url;
 //     tab.setIcon("../imgs/gifs/page-loading.gif");
@@ -124,18 +121,6 @@ dragula([tabRenderer.getTabContainer()], {
     
 //     ipcRenderer.send('request-add-history-item', e.url);
 //   });
-
-//   webview.addEventListener('enter-html-full-screen', (e) => {
-//     document.body.classList.add('fullscreen');
-//     notificationManager.addStatusNotif("Press F11 to exit full screen", 'info');
-//   });
-
-//   webview.addEventListener('leave-html-full-screen', (e) => {
-//     document.body.classList.remove('fullscreen');
-//   });
-
-//   document.getElementsByClassName('etabs-tab-buttons')[tab.getPosition(false) - 1].title = "Close tab";
-// });
 
 // tabGroup.on("tab-removed", (tab, tabGroup) => {
 //   if (tabGroup.getTabs().length <= 0) {
@@ -164,113 +149,6 @@ dragula([tabRenderer.getTabContainer()], {
 .##........#######..##....##..######.....##....####..#######..##....##..######.
 */
 
-function showTabPreview(tab, timeout, capturePage) {
-  var div = tab.getElementsByTagName('div')[0];
-  if(div == null) {
-    timeout = setTimeout(function() {
-      div = document.createElement('div');
-  
-      capturePage.then(function(natImg) {
-        var img = document.createElement('img');
-        img.src = natImg.toDataURL();
-    
-        div.appendChild(img);
-      });
-    
-      tab.appendChild(div);
-    }, 500);
-  } else {
-    capturePage.then(function(natImg) {
-      var img = div.getElementsByTagName('img')[0];
-      img.src = natImg.toDataURL();
-    });
-  }
-  
-  return timeout;
-}
-
-function hideTabPreview(tab, timeout) {
-  clearTimeout(timeout);
-
-  var div = tab.getElementsByTagName('div')[0];
-  if(div != null) {
-    var div = tab.getElementsByTagName('div')[0];
-    tab.removeChild(div);
-  }
-}
-
-function saveSidebar() {
-  var pin = document.body.classList.contains('pinned-sidebar');
-  if(pin) {
-    pin = 1;
-  } else {
-    pin = 0;
-  }
-  var collapse = document.body.classList.contains('collapse-sidebar');
-  if(collapse) {
-    collapse = 1;
-  } else {
-    collapse = 0;
-  }
-
-  let Data = {
-    pin: pin,
-    collapse: collapse
-  };
-
-  saveFileToJsonFolder('sidebar', JSON.stringify(Data));
-}
-
-function loadSidebar() {
-  let Data = {
-    pin: 0,
-    collapse: 0
-  };
-
-  try {
-    var jsonstr = fs.readFileSync(ppath + "/json/sidebar.json");
-    Data = JSON.parse(jsonstr);
-  } catch (e) {
-    saveFileToJsonFolder('sidebar', JSON.stringify(Data));
-  }
-
-  if(Data.pin == 1) {
-    showSidebar();
-    pinSidebar();
-  }
-  if(Data.collapse == 1) {
-    document.body.classList.add('collapse-sidebar');
-  }
-}
-
-function loadBookmarksBar() {
-  let Data = {
-    on: 0,
-    layout: "all"
-  };
-
-  try {
-    var jsonstr = fs.readFileSync(ppath + "/json/bookmarksbar.json");
-    Data = JSON.parse(jsonstr);
-  } catch (e) {
-    saveFileToJsonFolder('bookmarksbar', JSON.stringify(Data));
-  }
-
-  applyBookmarksBar(Data);
-}
-
-function loadStartPage() {
-  var startPage = 'https://duckduckgo.com';
-
-  try {
-    startPage = fs.readFileSync(ppath + "/json/startpage.json");
-  } catch (e) {
-    saveFileToJsonFolder('startpage', startPage);
-  }
-
-  return startPage;
-}
-
 function loadSearchEngine() {
   var searchEngine = 'duckduckgo';
 
@@ -295,30 +173,6 @@ function applySearchEngine(arg) {
     } else {
       engines[i].classList.remove('active');
     }
-  }
-}
-
-function applyBookmarksBar(arg) {
-  if(arg.on == 1) {
-    document.getElementById('bookmarks-bar').style.display = "";
-    document.body.classList.add('bookmarks-bar');
-
-    if(arg.layout == "only-icons") {
-      document.getElementById('bookmarks-bar').classList.add("only-icons");
-      document.getElementById('bookmarks-bar').classList.remove("only-labels");
-    } else if(arg.layout == "only-labels") {
-      document.getElementById('bookmarks-bar').classList.remove("only-icons");
-      document.getElementById('bookmarks-bar').classList.add("only-labels");
-    } else {
-      document.getElementById('bookmarks-bar').classList.remove("only-icons");
-      document.getElementById('bookmarks-bar').classList.remove("only-labels");
-    }
-
-    updateBookmarksBar();
-  } else {
-    document.getElementById('bookmarks-bar').style.display = "none";
-    document.getElementById('bookmarks-bar').innerHTML = "";
-    document.body.classList.remove('bookmarks-bar');
   }
 }
 
@@ -348,90 +202,12 @@ function toggleSidebar() {
   }
 }
 
-function requestTabsList() {
-  let arr = [];
-  let tabs = document.getElementsByClassName('etabs-tab');
-  for (var i = 0; i < tabs.length; i++) {
-    arr.push({
-      label: tabs[i].getElementsByClassName('etabs-tab-title')[0].innerHTML,
-      active: tabs[i].classList.contains('active')
-    });
-  }
-  ipcRenderer.send('request-tabs-list', arr);
-}
-
 function requestSideMenu() {
   ipcRenderer.send('request-side-menu');
 }
 
-function pinSidebar() {
-  document.body.classList.toggle('pinned-sidebar');
-  document.getElementById('pin-sidebar-btn').classList.toggle('active');
-  saveSidebar();
-}
-
 function installUpdate() {
   ipcRenderer.send('request-install-update');
-}
-
-function goToBookmarksTab() {
-  var sidebarWebview = document.getElementById('sidebar-webview');
-  sidebarWebview.stop();
-  showSidebar();
-
-  sidebarWebview.src = '../html/bookmarks.html';
-
-  document.getElementById('bookmarks-btn').classList.add('active');
-  document.getElementById('downloads-btn').classList.remove('active');
-  document.getElementById('settings-btn').classList.remove('active');
-  document.getElementById('about-btn').classList.remove('active');
-  document.getElementById('history-btn').classList.remove('active');
-  document.getElementById('certificate-btn').classList.remove('active');
-}
-
-function goToHistoryTab() {
-  var sidebarWebview = document.getElementById('sidebar-webview');
-  sidebarWebview.stop();
-  showSidebar();
-
-  sidebarWebview.src = '../html/history.html';
-
-  document.getElementById('bookmarks-btn').classList.remove('active');
-  document.getElementById('downloads-btn').classList.remove('active');
-  document.getElementById('settings-btn').classList.remove('active');
-  document.getElementById('about-btn').classList.remove('active');
-  document.getElementById('history-btn').classList.add('active');
-  document.getElementById('certificate-btn').classList.remove('active');
-}
-
-function goToAboutTab() {
-  var sidebarWebview = document.getElementById('sidebar-webview');
-  sidebarWebview.stop();
-  showSidebar();
-
-  sidebarWebview.src = '../html/about.html';
-
-  document.getElementById('bookmarks-btn').classList.remove('active');
-  document.getElementById('downloads-btn').classList.remove('active');
-  document.getElementById('settings-btn').classList.remove('active');
-  document.getElementById('about-btn').classList.add('active');
-  document.getElementById('history-btn').classList.remove('active');
-  document.getElementById('certificate-btn').classList.remove('active');
-}
-
-function goToCertificateTab() {
-  var sidebarWebview = document.getElementById('sidebar-webview');
-  sidebarWebview.stop();
-  showSidebar();
-
-  sidebarWebview.src = '../html/certificate.html';
-
-  document.getElementById('bookmarks-btn').classList.remove('active');
-  document.getElementById('downloads-btn').classList.remove('active');
-  document.getElementById('settings-btn').classList.remove('active');
-  document.getElementById('about-btn').classList.remove('active');
-  document.getElementById('history-btn').classList.remove('active');
-  document.getElementById('certificate-btn').classList.add('active');
 }
 
 function goToSettingsTab(shortcutId) {
@@ -448,21 +224,6 @@ function goToSettingsTab(shortcutId) {
   document.getElementById('bookmarks-btn').classList.remove('active');
   document.getElementById('downloads-btn').classList.remove('active');
   document.getElementById('settings-btn').classList.add('active');
-  document.getElementById('about-btn').classList.remove('active');
-  document.getElementById('history-btn').classList.remove('active');
-  document.getElementById('certificate-btn').classList.remove('active');
-}
-
-function goToDownloadsTab() {
-  var sidebarWebview = document.getElementById('sidebar-webview');
-  sidebarWebview.stop();
-  showSidebar();
-
-  sidebarWebview.src = '../html/downloads.html';
-
-  document.getElementById('bookmarks-btn').classList.remove('active');
-  document.getElementById('downloads-btn').classList.add('active');
-  document.getElementById('settings-btn').classList.remove('active');
   document.getElementById('about-btn').classList.remove('active');
   document.getElementById('history-btn').classList.remove('active');
   document.getElementById('certificate-btn').classList.remove('active');
@@ -610,23 +371,6 @@ function cancelUpdate() {
   notificationManager.addStatusNotif('Update cancelled', 'error');
 }
 
-function showSidebar() {
-  document.getElementById("sidebar-btn").classList.add('active');
-  document.getElementById('sidebar').style.display = "";
-  document.getElementById('sidebar').classList.remove('hide');
-}
-
-function hideSidebar() {
-  document.getElementById('sidebar').classList.add('hide');
-  setTimeout(function() {
-    document.getElementById('sidebar').style.display = "none";
-    document.getElementById("sidebar-btn").classList.remove('active');
-  }, 250);
-  if(document.body.classList.contains('pinned-sidebar')) {
-    pinSidebar();
-  }
-}
-
 function checkForUpdates() {
   ipcRenderer.send('request-check-for-updates');
 }
@@ -639,55 +383,6 @@ function esc() {
   removeSuggestions();
   closeFindPanel();
   hideSidebar();
-}
-
-function showFindPanel() {
-  document.getElementById("find-panel").style.display = "";
-  document.getElementById('find-panel').classList.remove('hide');
-  document.getElementById("find-input").select();
-
-  document.body.classList.add('find');
-
-  nextFindInPage();
-}
-
-function closeFindPanel() {
-  document.getElementById('find-panel').classList.add('hide');
-
-  setTimeout(function() {
-    document.getElementById('find-panel').style.display = "none";
-    document.body.classList.remove('find');
-    // tabGroup.getActiveTab().webview.stopFindInPage("keepSelection");
-  }, 250);
-}
-
-function nextFindInPage() {
-  // var text = document.getElementById('find-input').value;
-  // if (text.length > 0) {
-  //   tabGroup.getActiveTab().webview.findInPage(text);
-  // } else {
-  //   tabGroup.getActiveTab().webview.stopFindInPage("keepSelection");
-  // }
-}
-
-function previousFindInPage() {
-  // var text = document.getElementById('find-input').value;
-  // if (text.length > 0) {
-  //   tabGroup.getActiveTab().webview.findInPage(text, {
-  //     forward: false
-  //   });
-  // } else {
-  //   tabGroup.getActiveTab().webview.stopFindInPage("keepSelection");
-  // }
-}
-
-function applyFindPanel() {
-  var status = document.getElementById("find-panel").style.display;
-  if (status == "") {
-    showFindPanel();
-  } else {
-    closeFindPanel();
-  }
 }
 
 function maximizeWindow() {
@@ -1121,6 +816,19 @@ function checkOpenWith() {
 }
 
 /*
+ ###### #    # #    #  ####               ####  #    # ###### #####  #        ##   #   #
+ #      #    # ##   # #    #             #    # #    # #      #    # #       #  #   # #
+ #####  #    # # #  # #         #####    #    # #    # #####  #    # #      #    #   #
+ #      #    # #  # # #                  #    # #    # #      #####  #      ######   #
+ #      #    # #   ## #    #             #    #  #  #  #      #   #  #      #    #   #
+ #       ####  #    #  ####               ####    ##   ###### #    # ###### #    #   #
+*/
+
+function showOverlay() {
+  ipcRenderer.send('overlay-show');
+}
+
+/*
  ###### #    # #    #  ####              #####   ##   #####     #    #   ##   #    #   ##    ####  ###### #####
  #      #    # ##   # #    #               #    #  #  #    #    ##  ##  #  #  ##   #  #  #  #    # #      #    #
  #####  #    # # #  # #         #####      #   #    # #####     # ## # #    # # #  # #    # #      #####  #    #
@@ -1131,6 +839,10 @@ function checkOpenWith() {
 
 function newTab() {
   ipcRenderer.send('tabManager-newTab');
+}
+
+function showTabList() {
+  ipcRenderer.send('tabManager-showTabList');
 }
 
 function goBack() {
@@ -1841,6 +1553,23 @@ ipcRenderer.on('action-webview-contextmenu', (event, arg) => {
 });
 
 /*
+ # #####   ####               ####  #    # ###### #####  #        ##   #   #
+ # #    # #    #             #    # #    # #      #    # #       #  #   # #
+ # #    # #         #####    #    # #    # #####  #    # #      #    #   #
+ # #####  #                  #    # #    # #      #####  #      ######   #
+ # #      #    #             #    #  #  #  #      #   #  #      #    #   #
+ # #       ####               ####    ##   ###### #    # ###### #    #   #
+*/
+
+ipcRenderer.on('overlay-toggleButton', (event, bool) => {
+  if(bool) {
+    document.getElementById('overlay-btn').classList.add('active');
+  } else {
+    document.getElementById('overlay-btn').classList.remove('active');
+  }
+});
+
+/*
  # #####   ####              #####   ##   #####     #####  ###### #    # #####  ###### #####  ###### #####
  # #    # #    #               #    #  #  #    #    #    # #      ##   # #    # #      #    # #      #    #
  # #    # #         #####      #   #    # #####     #    # #####  # #  # #    # #####  #    # #####  #    #
@@ -1883,6 +1612,10 @@ ipcRenderer.on('tabRenderer-showPreview', (event, id, dataURL) => {
 
 ipcRenderer.on('tabRenderer-hidePreview', (event, id) => {
   tabRenderer.hidePreview(id);
+});
+
+ipcRenderer.on('tabRenderer-unactivateAllTabs', (event) => {
+  tabRenderer.unactivateAllTabs();
 });
 
 /*
