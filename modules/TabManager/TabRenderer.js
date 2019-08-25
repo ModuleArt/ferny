@@ -77,6 +77,10 @@ class TabRenderer extends EventEmitter {
         tab.onmouseleave = (event) => {
             ipcRenderer.send("tabManager-hidePreview", id);
         }
+        tab.oncontextmenu = (event) => {
+            ipcRenderer.send("tabManager-showTabMenu", id);
+            ipcRenderer.send("tabManager-hidePreview", id);
+        }
 
         let closeButton = document.createElement('button');
         closeButton.title = "Close tab";

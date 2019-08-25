@@ -75,10 +75,9 @@
 body {
   margin: 0;
   padding: 0;
-  /* animation-name: anim-slide;
-  animation-duration: 0.25s; */
+  background-color: var(--color-back);
   overflow-x: hidden;
-  padding-bottom: 48px;
+  padding: 64px;
 }
 
 label {

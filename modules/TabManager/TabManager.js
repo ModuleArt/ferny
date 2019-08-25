@@ -11,13 +11,15 @@ class TabManager extends EventEmitter {
     tabs = [];
     tabCounter = 0;
     window = null;
+    appPath = null;
 
-    newTabPage = "https://google.com"
+    homePage = "https://google.com"
 
-    constructor(window) {
+    constructor(window, appPath) {
         super();
 
         this.window = window;
+        this.appPath = appPath;
 
         this.left = 0; 
         this.right = 0; 
@@ -28,7 +30,7 @@ class TabManager extends EventEmitter {
     }
 
     newTab() {
-        this.addTab(this.newTabPage, true);
+        this.addTab(this.homePage, true);
 
         return null;
     }
@@ -36,7 +38,7 @@ class TabManager extends EventEmitter {
     addTab(url, active) {
         let id = this.tabCounter++;
 
-        let tab = new Tab(this.window, id);
+        let tab = new Tab(this.window, id, this.appPath);
 
         tab.on("close", (closedTab) => {
             this.destroyTabById(id);
@@ -70,6 +72,22 @@ class TabManager extends EventEmitter {
                 this.top = 74;
             }
             this.getActiveTab().activate();
+        });
+
+        tab.on("go-home", (tab) => {
+            tab.navigate(this.homePage);
+        });
+
+        tab.on("close-to-the-right", (id) => {
+            
+        });
+
+        tab.on("close-others", (id) => {
+            this.tabs.forEach((item, index) => {
+                if(item.getId() != id) {
+                    item.close();
+                }
+            });
         });
 
         this.tabs.push(tab);
@@ -144,14 +162,14 @@ class TabManager extends EventEmitter {
         return this.tabs;
     }
 
-    setNewTabPage(url) {
-        this.newTabPage = url;
+    setHomePage(url) {
+        this.homePage = url;
 
         return null;
     }
 
-    getNewTabPage() {
-        return this.newTabPage;
+    getHomePage() {
+        return this.homePage;
     }
 
     unactivateAllTabs() {

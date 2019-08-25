@@ -8,7 +8,7 @@
 .##.....##.##.....##.####.##....##
 */
 
-const { ipcMain, app, Menu, MenuItem, BrowserWindow, dialog, systemPreferences, clipboard } = require('electron');
+const { ipcMain, app, Menu, MenuItem, BrowserWindow, dialog, clipboard } = require('electron');
 const { autoUpdater } = require("electron-updater")
 const os = require('os');
 const prependFile = require('prepend-file');
@@ -580,28 +580,6 @@ ipcMain.on('request-tabs-list', (event, arg) => {
   m.popup(mainWindow);
 });
 
-ipcMain.on('request-tab-menu', (event, arg) => {
-  let tabMenu = Menu.buildFromTemplate([
-    { label: 'Back', icon: app.getAppPath() + '/imgs/icons16/back.png', accelerator: 'Alt+Left', click: () => { mainWindow.webContents.send('action-tabcontext-back', arg); } },
-    { label: 'Forward', icon: app.getAppPath() + '/imgs/icons16/forward.png', accelerator: 'Alt+Right', click: () => { mainWindow.webContents.send('action-tabcontext-forward', arg); } },
-    { label: 'Reload', icon: app.getAppPath() + '/imgs/icons16/reload.png', accelerator: 'F5', click: () => { mainWindow.webContents.send('action-tabcontext-reload', arg); } },
-    { type: 'separator' },
-    { label: 'Duplicate', icon: app.getAppPath() + '/imgs/icons16/copy.png', accelerator: 'CmdOrCtrl+Shift+D', click: () => { mainWindow.webContents.send('action-tabcontext-duplicatetab', arg); } },
-    { label: 'Copy URL', icon: app.getAppPath() + '/imgs/icons16/copy-link.png', accelerator: 'CmdOrCtrl+Shift+C', click: () => { mainWindow.webContents.send('action-tabcontext-copyurl', arg); } },
-    { label: 'Go home', icon: app.getAppPath() + '/imgs/icons16/home.png', accelerator: 'CmdOrCtrl+Shift+H', click: () => { mainWindow.webContents.send('action-tabcontext-gohome', arg); } },
-    { type: 'separator' },
-    // { label: 'Picture in picture', icon: app.getAppPath() + '/imgs/icons16/picture-in.png', accelerator: 'CmdOrCtrl+Shift+P', click: () => { mainWindow.webContents.send('action-tabcontext-picturein', arg); } },
-    // { type: 'separator' },
-    { label: 'Reload ignoring cache', accelerator: 'CmdOrCtrl+F5', click: () => { mainWindow.webContents.send('action-tabcontext-ignorecache'); } },
-    // { label: 'Mute site', accelerator: 'CmdOrCtrl+Shift+M', click: () => {  }, enabled: false },
-    { type: 'separator' },
-    { label: 'Close to the right', icon: app.getAppPath() + '/imgs/icons16/swipe-right.png', click: () => { mainWindow.webContents.send('action-tabcontext-closeright', arg); } },
-    { label: 'Close others', accelerator: 'CmdOrCtrl+Shift+W', click: () => { mainWindow.webContents.send('action-tabcontext-closeothers', arg); } },
-    { label: 'Close tab', icon: app.getAppPath() + '/imgs/icons16/close.png', accelerator: 'CmdOrCtrl+W', click: () => { mainWindow.webContents.send('action-tabcontext-closetab', arg); } }
-  ]);
-  tabMenu.popup(mainWindow);
-});
-
 ipcMain.on('request-side-menu', (event, arg) => {
   sideMenu.popup(mainWindow);
 });
@@ -705,6 +683,10 @@ ipcMain.on('overlay-show', (event) => {
   overlay.show();
 });
 
+ipcMain.on('overlay-showButtonMenu', (event) => {
+  overlay.showButtonMenu();
+});
+
 /*
  # #####   ####              #####   ##   #####     #    #   ##   #    #   ##    ####  ###### #####
  # #    # #    #               #    #  #  #    #    ##  ##  #  #  ##   #  #  #  #    # #      #    #
@@ -715,7 +697,7 @@ ipcMain.on('overlay-show', (event) => {
 */
 
 ipcMain.on('tabManager-init', (event) => {
-  tabManager = new TabManager(mainWindow);
+  tabManager = new TabManager(mainWindow, app.getAppPath());
 
   tabManager.on("active-tab-closed", () => {
     overlay.show();
@@ -780,6 +762,10 @@ ipcMain.on('tabManager-hidePreview', (event, id) => {
 
 ipcMain.on('tabManager-showTabList', (event) => {
   tabManager.showTabList();
+});
+
+ipcMain.on('tabManager-showTabMenu', (event, id) => {
+  tabManager.getTabById(id).showMenu();
 });
 
 /*
@@ -1133,7 +1119,7 @@ function openFileDialog() {
 */
 
 function initOverlay() {
-  overlay = new Overlay(mainWindow);
+  overlay = new Overlay(mainWindow, app.getAppPath());
 
   overlay.on("show", () => {
     tabManager.unactivateAllTabs();

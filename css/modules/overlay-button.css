@@ -15,14 +15,21 @@
     vertical-align: top;
 }
 
+.overlay-button.active {
+    border-bottom: 1px solid transparent;
+    background-color: var(--color-back);
+}
+
 .overlay-button:hover {
+    border-color: var(--color-border);
     background-color: var(--color-second);
 }
 
-.overlay-button:focus, .overlay-button.active {
+.overlay-button:focus {
+    border-color: var(--color-border);
     box-shadow: var(--shadow-focus);
 }
 
-.overlay-button:active, .overlay-button.active {
+.overlay-button:active {
     background-color: var(--color-border);
 }

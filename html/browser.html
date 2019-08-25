@@ -15,7 +15,7 @@
     <div id="drag-zone"></div>
     
     <div class="tabman">
-      <button id="overlay-btn" class='overlay-button' onclick="showOverlay()" title="Home"><img name="blocks-12" class="theme-icon"></button>
+      <button id="overlay-btn" class='overlay-button' onclick="showOverlay()" oncontextmenu="showOverlayButtonMenu()" title="Overlay"><img name="blocks-12" class="theme-icon"></button>
       <div class="tabman-tabs" onmousewheel="etabsTabsWheel(event)"></div>
       <div class="tabman-buttons">
         <button title="New tab" onclick="newTab()" ondrop='newTabDrop(event)' ondragover='prevDef(event)'><img name="create-12" class="theme-icon"></button>
@@ -53,26 +53,12 @@
       <button id="bookmark-btn" class='nav-btn' title="Bookmark this page" onclick="createBookmark()"><img name="add-bookmark-16" class="theme-icon"></button>
       <div class="title-bar-vr"></div>
       <button id="home-btn" class='nav-btn' title="Go home" onclick="goHome()" style="display: none;" oncontextmenu="popupHomeButtonContextMenu()"><img name="home-16" class="theme-icon"></button>
-      <button id="sidebar-btn" class='nav-btn' title="Toggle sidebar" onclick="toggleSidebar()"><img name="sidebar-16" class="theme-icon"></button>
       <button id="menu-btn" class='nav-btn' title="Menu" onclick="requestSideMenu()"><img name="menu-16" class="theme-icon"></button>
     </div>
 
-    <div id="bookmarks-bar" style="display: none;" ondrop='bookmarksBarDrop(event)' ondragover='prevDef(event)'></div>
-
     <main>
-      <img src="../imgs/watermark.png" id="watermark">
-      <div class="etabs-views" id="etabs-views"></div>
-      <!-- <div id="picture-in-panel" style="display: none;">
-        <div> -->
-          <!-- <img name="back" class="title-bar-btn theme-icon" title="Go back" onclick="goBackPictureIn()">
-          <img name="forward" class="title-bar-btn theme-icon" title="Go forward" onclick="goForwardPictureIn()">
-          <img name="refresh" class="title-bar-btn theme-icon" title="Reload page" onclick="refreshPictureIn()"> -->
-          <!-- <img name="cancel-16" class="title-bar-btn theme-icon" title="Close" onclick="cancelPictureIn()" id="cancel-picture-in-btn">
-        </div>
-        <webview id="picture-in-webview" src="https://duckduckgo.com"></webview> -->
-      </div>
       <label id="target-url"></label>
-      <div id="sidebar" style="display: none;" class="hide">
+      <!-- <div id="sidebar" style="display: none;" class="hide">
         <div id="sidebar-div">
           <button class="nav-btn" title="Hide sidebar" onclick="hideSidebar()"><img name='forward-16' class='theme-icon'></button>
           <hr>
@@ -106,11 +92,11 @@
           <button id="resize-sidebar-btn" class='nav-btn' title="Toggle collapse sidebar" onclick="collapseSidebar()"><img name='resize-horizontal-16' class='theme-icon'></button>
         </div>
         <webview id="sidebar-webview" nodeintegration src="../html/bookmarks.html"></webview>
-      </div>
+      </div> -->
       <div id="notif-panel"></div>
     </main>
 
-    <center id="find-panel" style="display: none;" class="hide">
+    <!-- <center id="find-panel" style="display: none;" class="hide">
       <img name="search-16" class="theme-icon find-panel-icon">
       <input type="text" id="find-input" placeholder="Text to find in page" onkeyup="nextFindInPage()">
       <button class="nav-btn" onclick="previousFindInPage()">
@@ -124,7 +110,7 @@
       <button class="nav-btn close-btn" onclick="closeFindPanel()" title="Close find panel">
         <img class="theme-icon" name="cancel-16">
       </button>
-    </center>
+    </center> -->
 
     <script type="text/javascript" src="../js/browser.js"></script>
   </body>

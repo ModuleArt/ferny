@@ -89,12 +89,6 @@ tabDrag.on('drag', function(el, source) {
 //     ipcRenderer.send('request-webview-contextmenu', Data);
 //   });
 
-
-//   tab.tab.addEventListener('contextmenu', (e) => {
-//     e.preventDefault();
-//     ipcRenderer.send('request-tab-menu', tab.id);
-//   }, false);
-
 //   document.getElementById('search-input').value = "";
 //   document.getElementById('back-btn').disabled = true;
 //   document.getElementById('forward-btn').disabled = true;
@@ -524,188 +518,6 @@ function focusSearch() {
   s.select();
 }
 
-function updateBookmarksBar() {
-  var bbar = document.getElementById('bookmarks-bar');
-  if(bbar.style.display != "none") {
-    try {
-      bbar.innerHTML = "";
-      fs.readFile(ppath + "/json/folders.json", function(err, foldersData) {
-        var folders = JSON.parse(foldersData);
-        for (var i = 0; i < folders.length; i++) {
-          addFolderToBookmarksBar(folders[i].name, i);
-        }
-
-        fs.readFile(ppath + "/json/bookmarks.json", function(err, bookmarksData) {
-          var arr = JSON.parse(bookmarksData);
-          for (var i = 0; i < arr.length; i++) {
-            checkIfHasFolder(arr[i].url, arr[i].name, arr[i].folder, folders, i);
-          }
-        });
-      });
-    } catch (e) {
-      console.log(e);
-    }
-  }
-}
-
-function addFolderToBookmarksBar(name, index) {
-  var bbar = document.getElementById('bookmarks-bar');
-
-  var div = document.createElement('button');
-  div.classList.add('folder');
-  div.innerHTML = "<img class='folder-icon' src='../imgs/icons16/folder.png'><span>" + name + "</span><div class='folder-div'></div>";
-  div.title = name;
-  div.id = "folder-" + index;
-
-  div.ondrop = (e) => {
-    e.preventDefault();
-
-    bbar.ondrop = (e) => {
-      return false;
-    }
-
-    var textData = e.dataTransfer.getData("Text");
-    if (textData) {
-      createBookmark(textData, textData, name);
-    }
-
-    setTimeout(() => {
-      bbar.ondrop = bookmarksBarDrop;
-    }, 150);
-  }
-
-  // div.onfocus = () => {
-  //   var folderDiv = div.getElementsByClassName('folder-div')[0];
-  //   folderDiv.style.display = "block";
-  // }
-
-  // div.addEventListener('focusout', () => {
-  //   if(div.getElementsByClassName('bookmark-div').length == 0) {
-  //     div.getElementsByClassName('folder-div')[0].style.display = "none"; 
-  //   }
-  // });
-
-  div.addEventListener('mouseenter', (e) => {
-    if(div.getElementsByClassName('edit-folder-div').length == 0) {
-      div.classList.add('show');
-    }
-  });
-
-  div.addEventListener('mouseleave', (e) => {
-    // var folderDiv = div.getElementsByClassName('folder-div')[0];
-    // var books = folderDiv.getElementsByClassName('bookmark');
-    // var flag = false;
-    // for(var i = 0; i < books.length; i++) {
-    //   if(books[i] == document.activeElement) {
-    //     flag = true;
-    //     break;
-    //   }
-    // }
-
-    if(div.getElementsByClassName('bookmark-div').length == 0) {
-      div.classList.remove('show');
-    }
-  });
-
-  div.getElementsByTagName('span')[0].addEventListener('contextmenu', (e) => {
-    ipcRenderer.send('request-folder-contextmenu', div.id);
-  }, false);
-
-  bbar.appendChild(div);
-}
-
-// function searchFocusOut() {
-//   var searchDiv = document.getElementById('search-div');
-
-//   var inputs = searchDiv.getElementsByTagName('input');
-
-//   var focus = false;
-//   for(var i = 0; i < inputs.length; i++) {
-//     console.log(inputs[i].id);
-//     console.log(document.activeElement.id);
-//     if(inputs[i].id == document.activeElement.id) {
-//       focus = true;
-//     }
-//   }
-
-//   if(!focus) {
-//     removeSuggestions();
-//   }
-// }
-
-function checkIfHasFolder(url, name, folder, folders, index) {
-  var bool = false;
-  var folderIndex = 0;
-
-  for(var i = 0; i < folders.length; i++) {
-    if(folders[i].name == folder) {
-      bool = true;
-      folderIndex = i;
-      break;
-    }
-  }
-
-  var bbar = document.getElementById('bookmarks-bar');
-  if(bool) {
-    var elFolders = bbar.getElementsByClassName('folder-div');
-    addBookmarkToBookmarksBar(url, name, elFolders[folderIndex], index);
-  } else {
-    addBookmarkToBookmarksBar(url, name, bbar, index);
-  }
-}
-
-function addBookmarkToBookmarksBar(url, name, parent, index) {
-  var div = document.createElement('button');
-  div.classList.add('bookmark');
-  div.title = name + "\n" + url;
-  div.id = "bookmark-" + index;
-  div.name = url;
-
-  div.ondragstart = (e) => {
-    e.dataTransfer.setData("text/plain", url);
-  }
-
-  div.onclick = () => {
-    // tabGroup.getActiveTab().webview.loadURL(url);
-    return false;
-  }
-
-  div.addEventListener('contextmenu', (e) => {
-    let contextData = {
-      url: div.name,
-      id: div.id
-    };
-    ipcRenderer.send('request-bookmark-contextmenu', contextData);
-  }, false);
-
-  div.addEventListener('auxclick', (e) => {
-    e.preventDefault();
-    if(e.which == 2) {
-      newTab(url, null, null);
-    }
-  }, false);
-
-  // div.addEventListener('focusout', () => {
-  //   var bookmarkDiv = div.getElementsByClassName('bookmark-div')[0];
-  //   if(bookmarkDiv != null) {
-  //     bookmarkDiv.parentNode.removeChild(bookmarkDiv);
-  //   }
-  // });
-
-  div.innerHTML = `<img class="bookmark-icon" src="` + 'http://www.google.com/s2/favicons?domain=' + url + `">
-                  <span>` + name + `</span>`;
-
-  parent.appendChild(div);
-}
-
-function bookmarksBarDrop(e) {
-  e.preventDefault();
-  var textData = e.dataTransfer.getData("Text");
-  if (textData) {
-    createBookmark(textData, textData, null);
-  }
-}
-
 function loadHome() {
   let Data = {
     url: "https://duckduckgo.com",
@@ -826,6 +638,10 @@ function checkOpenWith() {
 
 function showOverlay() {
   ipcRenderer.send('overlay-show');
+}
+
+function showOverlayButtonMenu() {
+  ipcRenderer.send('overlay-showButtonMenu');
 }
 
 /*
