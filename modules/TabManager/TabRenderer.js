@@ -3,7 +3,7 @@ if (!document) {
 }
 
 const EventEmitter = require("events");
-const { ipcRenderer } = require("electron");
+const { ipcRenderer, NativeImage } = require("electron");
 const getAvColor = require('color.js');
 
 const rgbToRgbaString = require("../rgbToRgbaString.js");
@@ -68,6 +68,12 @@ class TabRenderer extends EventEmitter {
             } else if(event.dataTransfer.files.length > 0) {
                 ipcRenderer.send("tabManager-navigate", event.dataTransfer.files[0].path);
             }
+        }
+        tab.onmouseenter = (event) => {
+            ipcRenderer.send("tabManager-showPreview", id);
+        }
+        tab.onmouseleave = (event) => {
+            ipcRenderer.send("tabManager-hidePreview", id);
         }
 
         let closeButton = document.createElement('button');
@@ -155,6 +161,32 @@ class TabRenderer extends EventEmitter {
 
     getTabContainer() {
         return this.tabContainer;
+    }
+
+    showPreview(id, dataURL) {
+        let tab = this.getTabById(id);
+        let div = tab.getElementsByClassName('tabman-tab-preview')[0];
+        if(div == null) {
+            div = document.createElement('div');
+            div.classList.add("tabman-tab-preview");
+  
+            let img = document.createElement('img');
+            img.src = dataURL;
+            div.appendChild(img);
+          
+            tab.appendChild(div);
+        } else {
+            let img = div.getElementsByTagName('img')[0];
+            img.src = dataURL;
+        }
+    }
+
+    hidePreview(id) {
+        let tab = this.getTabById(id);
+        let div = tab.getElementsByClassName('tabman-tab-preview')[0];
+        if(div != null) {
+            tab.removeChild(div);
+        }
     }
 }
 

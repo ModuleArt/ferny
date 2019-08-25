@@ -92,14 +92,6 @@ dragula([tabRenderer.getTabContainer()], {
 //     ipcRenderer.send('request-tab-menu', tab.id);
 //   }, false);
 
-//   // tab.tab.addEventListener('mouseenter', (e) => {
-//   //   previewTimeout = showTabPreview(tab.tab, previewTimeout, webview.getWebContents().capturePage());
-//   // });
-
-//   // tab.tab.addEventListener('mouseleave', (e) => {
-//   //   hideTabPreview(tab.tab, previewTimeout);
-//   // });
-
 //   document.getElementById('search-input').value = "";
 //   document.getElementById('back-btn').disabled = true;
 //   document.getElementById('forward-btn').disabled = true;
@@ -113,28 +105,6 @@ dragula([tabRenderer.getTabContainer()], {
 //     webview.blur();
 //     webview.focus();
 //     applyFindPanel();
-//   });
-
-//   webview.addEventListener('did-stop-loading', () => {
-//     document.getElementById("refresh-btn").style.display = "";
-//     document.getElementById("stop-btn").style.display = "none";
-
-//     var url = webview.getURL();
-//     if (parsePath(url).protocol == 'file') {
-//       tab.setTitle(url);
-//       tab.tab.title = url;
-
-//       var ext = fileExtension(url);
-//       tab.setIcon(extToImagePath(ext));
-
-//       var img = tab.tab.getElementsByTagName('img')[0];
-//       var color = new getAvColor(img);
-//       color.mostUsed(result => {
-//         if(document.body.classList.contains('color-tabs')) {
-//           tab.tab.style.backgroundColor = rgbToRgbaString(result[0]);
-//         }
-//       });
-//     }
 //   });
 
 //   webview.addEventListener('did-navigate', (e) => {
@@ -1905,6 +1875,14 @@ ipcRenderer.on('tabRenderer-updateNavigationButtons', (event, arg) => {
 
 ipcRenderer.on('tabRenderer-updateAddressBar', (event, url) => {
   tabRenderer.updateAddressBar(url);
+});
+
+ipcRenderer.on('tabRenderer-showPreview', (event, id, dataURL) => {
+  tabRenderer.showPreview(id, dataURL);
+});
+
+ipcRenderer.on('tabRenderer-hidePreview', (event, id) => {
+  tabRenderer.hidePreview(id);
 });
 
 /*

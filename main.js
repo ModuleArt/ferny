@@ -735,6 +735,14 @@ ipcMain.on('tabManager-navigate', (event, url) => {
   tabManager.getActiveTab().navigate(url);
 });
 
+ipcMain.on('tabManager-showPreview', (event, id) => {
+  tabManager.getTabById(id).showPreview();
+});
+
+ipcMain.on('tabManager-hidePreview', (event, id) => {
+  tabManager.getTabById(id).hidePreview();
+});
+
 /*
 .########.##.....##.##....##..######..########.####..#######..##....##..######.
 .##.......##.....##.###...##.##....##....##.....##..##.....##.###...##.##....##

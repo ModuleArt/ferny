@@ -9,6 +9,7 @@ class Tab extends EventEmitter {
     id = null;
     view = null;
     window = null;
+    previewTimeout = null;
 
     constructor(window, id) {
         super();
@@ -16,7 +17,11 @@ class Tab extends EventEmitter {
         this.id = id;
         this.window = window;
 
-        this.view = new BrowserView();
+        this.view = new BrowserView({
+            webPreferences: {
+                // offscreen: true
+            }
+        });
         this.view.setAutoResize({
             width: true,
             height: true
@@ -94,6 +99,15 @@ class Tab extends EventEmitter {
                 this.window.webContents.send("tabRenderer-setTabIcon", { id: this.id, icon: extToImagePath(fileExtension(url)) });
             }
         });
+
+        this.view.webContents.on("enter-html-full-screen", () => {
+            this.emit("add-status-notif", "Press F11 to exit full screen", "info");
+            this.emit("fullscreen", true);
+        });
+
+        this.view.webContents.on("leave-html-full-screen", () => {
+            this.emit("fullscreen", false);
+        });
     }
 
     getId() {
@@ -158,6 +172,20 @@ class Tab extends EventEmitter {
 
     getURL() {
         return this.view.webContents.getURL();
+    }
+
+    showPreview() {
+        let image = this.view.webContents.capturePage();
+        this.previewTimeout = setTimeout(() => {
+            image.then((nativeImage) => {
+                this.window.webContents.send("tabRenderer-showPreview", this.id, nativeImage.toDataURL());
+            });
+        }, 1000);
+    }
+
+    hidePreview() {
+        clearTimeout(this.previewTimeout);
+        this.window.webContents.send("tabRenderer-hidePreview", this.id);
     }
 }
 

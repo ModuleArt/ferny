@@ -63,6 +63,15 @@ class TabManager extends EventEmitter {
             this.emit("add-status-notif", text, type);
         });
 
+        tab.on("fullscreen", (bool) => {
+            if(bool) {
+                this.top = 0;
+            } else {
+                this.top = 74;
+            }
+            this.getActiveTab().activate();
+        });
+
         this.tabs.push(tab);
 
         tab.navigate(url);
