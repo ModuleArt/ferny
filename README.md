@@ -12,7 +12,7 @@
 </p>
 
 <p align="center">
-  Ferny is a privacy-focused, <strike>cross-platform</strike>, chromium-based web browser<br>
+  Ferny is a privacy-focused, cross-platform, chromium-based web browser<br>
   with a greatfull user experience, built on top of Electron, JS and styled-components.<br>
   It aims to be fast, private, beautiful and functional.
 </p>

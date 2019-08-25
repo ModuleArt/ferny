@@ -136,18 +136,18 @@ const sideMenu = Menu.buildFromTemplate([
     { enabled: false, label: 'Close active panel', icon: app.getAppPath() + '/imgs/icons16/close.png', accelerator: 'Esc', click: () => { mainWindow.webContents.send('action-esc'); } },
     { type: 'separator' },
     { label: 'Switch tab', icon: app.getAppPath() + '/imgs/icons16/numerical.png', submenu: [
-      { enabled: false, label: 'Next tab', icon: app.getAppPath() + '/imgs/icons16/next.png', accelerator: 'CmdOrCtrl+Tab', click: () => { mainWindow.webContents.send('action-next-tab'); } },
-      { enabled: false, label: 'Previous tab', icon: app.getAppPath() + '/imgs/icons16/prev.png', accelerator: 'CmdOrCtrl+Shift+Tab', click: () => { mainWindow.webContents.send('action-prev-tab'); } },
+      { label: 'Next tab', icon: app.getAppPath() + '/imgs/icons16/next.png', accelerator: 'CmdOrCtrl+Tab', click: () => { tabManager.getActiveTab().nextTab(); } },
+      { label: 'Previous tab', icon: app.getAppPath() + '/imgs/icons16/prev.png', accelerator: 'CmdOrCtrl+Shift+Tab', click: () => { tabManager.getActiveTab().prevTab(); } },
       { type: 'separator' },
-      { enabled: false, label: 'Tab 1', accelerator: 'CmdOrCtrl+1', click: () => { mainWindow.webContents.send('action-switch-tab', 1); } },
-      { enabled: false, label: 'Tab 2', accelerator: 'CmdOrCtrl+2', click: () => { mainWindow.webContents.send('action-switch-tab', 2); } },
-      { enabled: false, label: 'Tab 3', accelerator: 'CmdOrCtrl+3', click: () => { mainWindow.webContents.send('action-switch-tab', 3); } },
-      { enabled: false, label: 'Tab 4', accelerator: 'CmdOrCtrl+4', click: () => { mainWindow.webContents.send('action-switch-tab', 4); } },
-      { enabled: false, label: 'Tab 5', accelerator: 'CmdOrCtrl+5', click: () => { mainWindow.webContents.send('action-switch-tab', 5); } },
-      { enabled: false, label: 'Tab 6', accelerator: 'CmdOrCtrl+6', click: () => { mainWindow.webContents.send('action-switch-tab', 6); } },
-      { enabled: false, label: 'Tab 7', accelerator: 'CmdOrCtrl+7', click: () => { mainWindow.webContents.send('action-switch-tab', 7); } },
-      { enabled: false, label: 'Tab 8', accelerator: 'CmdOrCtrl+8', click: () => { mainWindow.webContents.send('action-switch-tab', 8); } },
-      { enabled: false, label: 'Tab 9', accelerator: 'CmdOrCtrl+9', click: () => { mainWindow.webContents.send('action-switch-tab', 9); } },
+      { label: 'Tab 1', accelerator: 'CmdOrCtrl+1', click: () => { tabManager.switchTab(1); } },
+      { label: 'Tab 2', accelerator: 'CmdOrCtrl+2', click: () => { tabManager.switchTab(2); } },
+      { label: 'Tab 3', accelerator: 'CmdOrCtrl+3', click: () => { tabManager.switchTab(3); } },
+      { label: 'Tab 4', accelerator: 'CmdOrCtrl+4', click: () => { tabManager.switchTab(4); } },
+      { label: 'Tab 5', accelerator: 'CmdOrCtrl+5', click: () => { tabManager.switchTab(5); } },
+      { label: 'Tab 6', accelerator: 'CmdOrCtrl+6', click: () => { tabManager.switchTab(6); } },
+      { label: 'Tab 7', accelerator: 'CmdOrCtrl+7', click: () => { tabManager.switchTab(7); } },
+      { label: 'Tab 8', accelerator: 'CmdOrCtrl+8', click: () => { tabManager.switchTab(8); } },
+      { label: 'Tab 9', accelerator: 'CmdOrCtrl+9', click: () => { tabManager.switchTab(9); } }
     ] },
     { type: 'separator' },
     { label: 'Developer [Danger]', icon: app.getAppPath() + '/imgs/icons16/developer.png', submenu: [
@@ -750,12 +750,16 @@ ipcMain.on('tabManager-hidePreview', (event, id) => {
   tabManager.getTabById(id).hidePreview();
 });
 
-ipcMain.on('tabManager-showTabList', (event) => {
-  tabManager.showTabList();
+ipcMain.on('tabManager-showTabList', (event, arr) => {
+  tabManager.showTabList(arr);
 });
 
 ipcMain.on('tabManager-showTabMenu', (event, id) => {
   tabManager.getTabById(id).showMenu();
+});
+
+ipcMain.on('tabManager-updateTabsPositions', (event, arr) => {
+  tabManager.updateTabsPositions(arr);
 });
 
 /*

@@ -260,6 +260,22 @@ class Tab extends EventEmitter {
     delete() {
         this.view.webContents.delete();
     }
+
+    getPosition() {
+        return this.position;
+    }
+
+    setPosition(position) {
+        this.position = position;
+    }
+
+    nextTab() {
+        this.emit("next-tab", this.position);
+    }
+
+    prevTab() {
+        this.emit("prev-tab", this.position);
+    }
 }
 
 module.exports = Tab;

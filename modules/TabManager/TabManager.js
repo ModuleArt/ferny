@@ -1,4 +1,5 @@
 const EventEmitter = require("events");
+const { Menu, MenuItem } = require('electron');
 
 const Tab = require(__dirname + '/Tab.js');
 
@@ -90,6 +91,22 @@ class TabManager extends EventEmitter {
             });
         });
 
+        tab.on("next-tab", (position) => {
+            this.tabs.forEach((item, index) => {
+                if(item.getPosition() == position + 1) {
+                    item.activate();
+                }
+            });
+        });
+
+        tab.on("prev-tab", (position) => {
+            this.tabs.forEach((item, index) => {
+                if(item.getPosition() == position - 1) {
+                    item.activate();
+                }
+            });
+        });
+
         this.tabs.push(tab);
 
         tab.navigate(url);
@@ -174,10 +191,83 @@ class TabManager extends EventEmitter {
 
     unactivateAllTabs() {
         this.window.send("tabRenderer-unactivateAllTabs");
+
+        return null;
     }
 
-    showTabList() {
+    showTabList(arr) {
+        let m = new Menu();
+
+        if(arr.length > 0) {
+            arr.forEach((item, index) => {
+                let num = index + 1;
+                if (index < 9) {
+                    let mi = new MenuItem({
+                        type: 'checkbox',
+                        label: item.title,
+                        checked: item.active,
+                        accelerator: "CmdOrCtrl+" + num,
+                        click: () => { this.getTabById(item.id).activate(); }
+                    });
+                    m.append(mi);
+                } else {
+                    let mi = new MenuItem({
+                        type: 'checkbox',
+                        label: item.title + " [" + num + "]",
+                        checked: item.active,
+                        click: () => { this.getTabById(item.id).activate(); }
+                    });
+                    m.append(mi);
+                }
+            });
+        } else {
+            let createItem = new MenuItem({ 
+                label: 'New Tab', 
+                icon: this.appPath + '/imgs/icons16/create.png', 
+                accelerator: 'CmdOrCtrl+T', 
+                click: () => { this.newTab(); } 
+            });
+            m.append(createItem);
+        }  
         
+        let sep = new MenuItem({ type: 'separator' });
+        m.append(sep);
+        let nextItem = new MenuItem({ 
+            label: 'Next tab', 
+            icon: this.appPath + '/imgs/icons16/next.png', 
+            accelerator: 'CmdOrCtrl+Tab', 
+            click: () => { this.getActiveTab().nextTab(); } 
+        });
+        m.append(nextItem);
+        let prevItem = new MenuItem({ 
+            label: 'Previous tab', 
+            icon: this.appPath + '/imgs/icons16/prev.png', 
+            accelerator: 'CmdOrCtrl+Shift+Tab', 
+            click: () => { this.getActiveTab().prevTab(); } 
+        });
+        m.append(prevItem);
+
+        m.popup(this.window);
+
+        return null;
+    }
+
+    updateTabsPositions(arr) {
+        arr.forEach((item, index) => {
+            this.getTabById(item).setPosition(index);
+        });
+
+        return null;
+    }
+
+    switchTab(number) {
+        this.tabs.forEach((item, index) => {
+            if(item.getPosition() == number - 1) {
+                item.activate();
+            }
+        });
+
+        return null;
     }
 }
 

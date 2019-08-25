@@ -40,6 +40,7 @@ class TabRenderer extends EventEmitter {
         let tab = document.createElement("button");
         tab.classList.add("tabman-tab");
         tab.id = "tab-" + id;
+        tab.name = id;
         tab.title = title + "\n" + url;
         tab.innerHTML = `
             <img class='tabman-tab-icon'>
@@ -96,6 +97,8 @@ class TabRenderer extends EventEmitter {
             this.activateTab(id);
         }
 
+        this.updateTabsPositions();
+
         return null;
     }
 
@@ -123,6 +126,8 @@ class TabRenderer extends EventEmitter {
 
     closeTab(id) {
         this.tabContainer.removeChild(this.getTabById(id));
+
+        this.updateTabsPositions();
 
         return null;
     }
@@ -210,6 +215,29 @@ class TabRenderer extends EventEmitter {
 
     scrollRight() {
         tabs.scrollLeft += 40;
+    }
+
+    updateTabsPositions() {
+        let tabs = this.tabContainer.childNodes;
+        let arr = [];
+        tabs.forEach((item, index) => {
+            arr.push(item.name);
+        });
+        ipcRenderer.send("tabManager-updateTabsPositions", arr);
+    }
+
+    showTabList() {
+        let tabs = this.tabContainer.childNodes;
+        let arr = [];
+        tabs.forEach((item, index) => {
+            arr.push({ 
+                id: item.name, 
+                title: item.getElementsByClassName('tabman-tab-title')[0].innerHTML, 
+                active: item.classList.contains('active') 
+            });
+        });
+        console.log(arr);
+        ipcRenderer.send('tabManager-showTabList', arr);
     }
 }
 

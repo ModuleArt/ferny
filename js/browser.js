@@ -80,6 +80,10 @@ tabDrag.on('drag', function(el, source) {
   }
 });
 
+tabDrag.on('drop', function(el, target, source, sibling) {
+  tabRenderer.updateTabsPositions();
+});
+
 //   webview.getWebContents().on('context-menu', (event, params) => {
 //     let Data = {
 //       id: tab.id,
@@ -540,7 +544,7 @@ function newTab() {
 }
 
 function showTabList() {
-  ipcRenderer.send('tabManager-showTabList');
+  tabRenderer.showTabList();
 }
 
 function goBack() {
@@ -868,7 +872,6 @@ function init() {
   updateTheme();
 
   loadHome();
-  loadBookmarksBar();
   loadSearchEngine();
   
   // checkOpenWith();
