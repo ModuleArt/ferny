@@ -1,1 +1,9 @@
 language: node_js
+node_js: '12'
+sudo: enabled
+dist: trusty
+os:
+  - linux
+  - windows
+script:
+  - npm run start
