@@ -10,6 +10,7 @@ class Tab extends EventEmitter {
     view = null;
     window = null;
     previewTimeout = null;
+    position = null;
 
     constructor(window, id, appPath) {
         super();
@@ -221,11 +222,43 @@ class Tab extends EventEmitter {
             { type: 'separator' },
             { label: 'Reload ignoring cache', accelerator: 'CmdOrCtrl+F5', click: () => { this.reloadIgnoringCache(); } },
             { type: 'separator' },
-            { label: 'Close to the right', icon: this.appPath + '/imgs/icons16/swipe-right.png', click: () => { this.closeToTheRight(); } },
+            { enabled: false, label: 'Close to the right', icon: this.appPath + '/imgs/icons16/swipe-right.png', click: () => { this.closeToTheRight(); } },
             { label: 'Close others', accelerator: 'CmdOrCtrl+Shift+W', click: () => { this.closeOthers(); } },
             { label: 'Close tab', icon: this.appPath + '/imgs/icons16/close.png', accelerator: 'CmdOrCtrl+W', click: () => { this.close(); } }
         ]);
         tabMenu.popup(this.window);
+    }
+
+    cut() {
+        this.view.webContents.cut();
+    }
+
+    copy() {
+        this.view.webContents.copy();
+    }
+
+    paste() {
+        this.view.webContents.paste();
+    }
+
+    pasteAndMatchStyle() {
+        this.view.webContents.pasteAndMatchStyle();
+    }
+
+    undo() {
+        this.view.webContents.undo();
+    }
+
+    redo() {
+        this.view.webContents.redo();
+    }
+
+    selectAll() {
+        this.view.webContents.selectAll();
+    }
+
+    delete() {
+        this.view.webContents.delete();
     }
 }
 

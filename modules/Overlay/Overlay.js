@@ -53,9 +53,14 @@ class Overlay extends EventEmitter {
         this.view.webContents.loadFile(this.appPath + "/html/downloads.html");
     }
 
-    openSettings() {
+    openSettings(shortcutId) {
         this.show();
-        this.view.webContents.loadFile(this.appPath + "/html/settings.html");
+
+        if(shortcutId == null) {
+            this.view.webContents.loadFile(this.appPath + "/html/settings.html");
+        } else {
+            this.view.webContents.loadFile(this.appPath + "/html/settings.html#" + shortcutId);
+        }
     }
 
     openAbout() {
@@ -80,6 +85,10 @@ class Overlay extends EventEmitter {
             { label: 'About', icon: this.appPath + '/imgs/icons16/about.png', accelerator: 'F2', click: () => { this.openAbout(); } },
           ]);
         buttonMenu.popup(this.window);
+    }
+
+    openDevTools() {
+        this.view.webContents.openDevTools();
     }
 }
 

@@ -203,6 +203,14 @@ class TabRenderer extends EventEmitter {
             tab.removeChild(div);
         }
     }
+
+    scrollLeft() {
+        tabs.scrollLeft -= 40;
+    }
+
+    scrollRight() {
+        tabs.scrollLeft += 40;
+    }
 }
 
 module.exports = TabRenderer;
