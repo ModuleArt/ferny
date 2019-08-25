@@ -9,7 +9,6 @@
 */
 
 const { ipcRenderer, BrowserView } = require('electron');
-const TabGroup = require("electron-tabs");
 const dragula = require("dragula");
 // const autoSuggest = require('google-autocomplete');
 const autoSuggest = require('suggestion');
@@ -106,45 +105,8 @@ dragula([tabRenderer.getTabContainer()], {
 //   document.getElementById('forward-btn').disabled = true;
 //   applyFindPanel();
 
-//   tab.on("active", (tab) => {
-//     document.getElementById('search-input').value = webview.getURL();
-//     applyFindPanel();
-    
-//     if (webview.canGoBack()) {
-//       document.getElementById('back-btn').disabled = false;
-//     } else {
-//       document.getElementById('back-btn').disabled = true;
-//     }
-//     if (webview.canGoForward()) {
-//       document.getElementById('forward-btn').disabled = false;
-//     } else {
-//       document.getElementById('forward-btn').disabled = true;
-//     }
-//     if (webview.isLoading()) {
-//       document.getElementById('stop-btn').style.display = "";
-//       document.getElementById('refresh-btn').style.display = "none";
-//     } else {
-//       document.getElementById('stop-btn').style.display = "none";
-//       document.getElementById('refresh-btn').style.display = "";
-//     }
-
-//     webview.blur();
-//     webview.focus();
-//   });
-
 //   webview.addEventListener('update-target-url', (e) => {
 //     document.getElementById('target-url').innerHTML = e.url;
-//   });
-
-//   webview.addEventListener('page-favicon-updated', (e) => {
-//     tab.setIcon(e.favicons[0]);
-//     var img = tab.tab.getElementsByTagName('img')[0];
-//     var color = new getAvColor(img);
-//     color.mostUsed(result => {
-//       if(document.body.classList.contains('color-tabs')) {
-//         tab.tab.style.backgroundColor = rgbToRgbaString(result[0]);
-//       }
-//     });
 //   });
 
 //   webview.addEventListener('dom-ready', () => {
@@ -231,56 +193,6 @@ dragula([tabRenderer.getTabContainer()], {
 .##.......##.....##.##...###.##....##....##.....##..##.....##.##...###.##....##
 .##........#######..##....##..######.....##....####..#######..##....##..######.
 */
-
-/*
-
- ###### #    # #    #  ####              #####   ##   #####     #    #   ##   #    #   ##    ####  ###### #####
- #      #    # ##   # #    #               #    #  #  #    #    ##  ##  #  #  ##   #  #  #  #    # #      #    #
- #####  #    # # #  # #         #####      #   #    # #####     # ## # #    # # #  # #    # #      #####  #    #
- #      #    # #  # # #                    #   ###### #    #    #    # ###### #  # # ###### #  ### #      #####
- #      #    # #   ## #    #               #   #    # #    #    #    # #    # #   ## #    # #    # #      #   #
- #       ####  #    #  ####                #   #    # #####     #    # #    # #    # #    #  ####  ###### #    #
-
-*/
-
-function newTab() {
-  ipcRenderer.send('tabManager-newTab');
-}
-
-function goBack() {
-  ipcRenderer.send('tabManager-goBack');
-}
-
-function goForward() {
-  ipcRenderer.send('tabManager-goForward');
-}
-
-function goReload() {
-  ipcRenderer.send('tabManager-goReload');
-}
-
-function goStop() {
-  ipcRenderer.send('tabManager-goStop');
-}
-
-// function newTab(url, title, active) {
-//   if(title == null) {
-//     title = 'New Tab'
-//   }
-//   if(active == null) {
-//     active = true;
-//   }
-
-//   tabGroup.addTab({
-//     src: url,
-//     title: title, 
-//     active: active,
-//     visible: true,
-//     webviewAttributes: {
-//       // enableBlinkFeatures: false
-//     }
-//   });
-// }
 
 function showTabPreview(tab, timeout, capturePage) {
   var div = tab.getElementsByTagName('div')[0];
@@ -437,18 +349,6 @@ function applyBookmarksBar(arg) {
     document.getElementById('bookmarks-bar').style.display = "none";
     document.getElementById('bookmarks-bar').innerHTML = "";
     document.body.classList.remove('bookmarks-bar');
-  }
-}
-
-function newTabDrop(e) {
-  e.preventDefault();
-  var textData = e.dataTransfer.getData("Text");
-  if (textData) {
-    newTab(textData, null, null);
-  } else if(e.dataTransfer.files.length > 0) {
-    for(var i = 0; i < e.dataTransfer.files.length; i++) {
-      newTab(e.dataTransfer.files[i].path, null, null)
-    }
   }
 }
 
@@ -1248,6 +1148,47 @@ function bookmarkAllTabs() {
 
 function checkOpenWith() {
   ipcRenderer.send('request-check-open-with');
+}
+
+/*
+ ###### #    # #    #  ####              #####   ##   #####     #    #   ##   #    #   ##    ####  ###### #####
+ #      #    # ##   # #    #               #    #  #  #    #    ##  ##  #  #  ##   #  #  #  #    # #      #    #
+ #####  #    # # #  # #         #####      #   #    # #####     # ## # #    # # #  # #    # #      #####  #    #
+ #      #    # #  # # #                    #   ###### #    #    #    # ###### #  # # ###### #  ### #      #####
+ #      #    # #   ## #    #               #   #    # #    #    #    # #    # #   ## #    # #    # #      #   #
+ #       ####  #    #  ####                #   #    # #####     #    # #    # #    # #    #  ####  ###### #    #
+*/
+
+function newTab() {
+  ipcRenderer.send('tabManager-newTab');
+}
+
+function goBack() {
+  ipcRenderer.send('tabManager-goBack');
+}
+
+function goForward() {
+  ipcRenderer.send('tabManager-goForward');
+}
+
+function reload() {
+  ipcRenderer.send('tabManager-reload');
+}
+
+function stop() {
+  ipcRenderer.send('tabManager-stop');
+}
+
+function newTabDrop(event) {
+  event.preventDefault();
+  let textData = event.dataTransfer.getData("Text");
+  if (textData) {
+    ipcRenderer.send('tabManager-addTab', textData, false);
+  } else if(event.dataTransfer.files.length > 0) {
+    for(let i = 0; i < event.dataTransfer.files.length; i++) {
+      ipcRenderer.send('tabManager-addTab', event.dataTransfer.files[i].path, false);
+    }
+  }
 }
 
 /*

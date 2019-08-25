@@ -1,5 +1,9 @@
 const EventEmitter = require("events");
 const { BrowserView } = require('electron');
+const fileExtension = require('file-extension');
+const parsePath = require("parse-path");
+
+const extToImagePath = require(__dirname + "/../extToImagePath.js");
 
 class Tab extends EventEmitter {
     id = null;
@@ -83,6 +87,12 @@ class Tab extends EventEmitter {
                 canGoForward: this.view.webContents.canGoForward(),
                 isLoading: this.view.webContents.isLoading()
             });
+
+            let url = this.getURL();
+            if(parsePath(url).protocol == 'file') {
+                this.window.webContents.send("tabRenderer-setTabTitle", { id: this.id, title: url });
+                this.window.webContents.send("tabRenderer-setTabIcon", { id: this.id, icon: extToImagePath(fileExtension(url)) });
+            }
         });
     }
 
@@ -108,13 +118,14 @@ class Tab extends EventEmitter {
 
     activate() {
         this.window.setBrowserView(this.view);
+        this.view.setBackgroundColor("#FFFFFF");
         this.window.webContents.send("tabRenderer-activateTab", this.id);
         this.window.webContents.send("tabRenderer-updateNavigationButtons", {
             canGoBack: this.view.webContents.canGoBack(),
             canGoForward: this.view.webContents.canGoForward(),
             isLoading: this.view.webContents.isLoading()
         });
-        this.window.webContents.send("tabRenderer-updateAddressBar", this.view.webContents.getURL());
+        this.window.webContents.send("tabRenderer-updateAddressBar", this.getURL());
 
         this.emit("activate", this);
 
@@ -137,12 +148,16 @@ class Tab extends EventEmitter {
         this.view.webContents.goForward();
     }
 
-    goReload() {
+    reload() {
         this.view.webContents.reload();
     }
 
-    goStop() {
+    stop() {
         this.view.webContents.stop();
+    }
+
+    getURL() {
+        return this.view.webContents.getURL();
     }
 }
 

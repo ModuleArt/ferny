@@ -15,7 +15,7 @@
     <div class="tabman">
       <div class="tabman-tabs" onmousewheel="etabsTabsWheel(event)"></div>
       <div class="tabman-buttons">
-        <button title="New tab" onclick="newTab()"><img name="create-12" class="theme-icon"></button>
+        <button title="New tab" onclick="newTab()" ondrop='newTabDrop(event)' ondragover='prevDef(event)'><img name="create-12" class="theme-icon"></button>
         <button title="Tabs list" onclick="requestTabsList()"><img name="down-12" class="theme-icon"></button>
       </div>
       <div id="window-controls"></div>
@@ -24,8 +24,8 @@
     <div id="titlebar">
       <button id="back-btn" class='nav-btn' title="Go back" onclick="goBack()"><img name="back-16" class="theme-icon"></button>
       <button id="forward-btn" class='nav-btn' title="Go forward" onclick="goForward()"><img name="forward-16" class="theme-icon"></button>
-      <button id="reload-btn" class='nav-btn' title="Reload this page" onclick="goReload()"><img name="reload-16" class="theme-icon"></button>
-      <button id="stop-btn" class='nav-btn' title="Stop loading this page" onclick="goStop()"><img name="cancel-16" class="theme-icon"></button>
+      <button id="reload-btn" class='nav-btn' title="Reload this page" onclick="reload()"><img name="reload-16" class="theme-icon"></button>
+      <button id="stop-btn" class='nav-btn' title="Stop loading this page" onclick="stop()"><img name="cancel-16" class="theme-icon"></button>
       <div class="title-bar-vr"></div>
       <button id="info-btn" class='nav-btn' title="Website info" onclick="popupInfoContextMenu()" oncontextmenu="popupInfoContextMenu()"><img name="info-16" class="theme-icon"></button>
       <div id="search-div">

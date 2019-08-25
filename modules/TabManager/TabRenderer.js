@@ -1,5 +1,12 @@
+if (!document) {
+    throw Error("TabRenderer module must be called in renderer process");
+}
+
 const EventEmitter = require("events");
 const { ipcRenderer } = require("electron");
+const getAvColor = require('color.js');
+
+const rgbToRgbaString = require("../rgbToRgbaString.js");
 
 class TabRenderer extends EventEmitter {
     tabContainer = null;
@@ -117,7 +124,15 @@ class TabRenderer extends EventEmitter {
     }
 
     setTabIcon(id, icon) {
-        this.getTabById(id).getElementsByClassName("tabman-tab-icon")[0].src = icon;
+        let img = this.getTabById(id).getElementsByClassName("tabman-tab-icon")[0];
+        img.src = icon;
+
+        var color = new getAvColor(img);
+        color.mostUsed(result => {
+            if(document.body.classList.contains('color-tabs')) {
+                img.parentNode.style.backgroundColor = rgbToRgbaString(result[0]);
+            }
+        });
 
         return null;
     }

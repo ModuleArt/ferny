@@ -699,8 +699,12 @@ ipcMain.on('request-open-license-file', (event, arg) => {
  # #       ####                #   #    # #####     #    # #    # #    # #    #  ####  ###### #    #
 */
 
-ipcMain.on('tabManager-newTab', (event, arg) => {
+ipcMain.on('tabManager-newTab', (event) => {
   tabManager.newTab();
+});
+
+ipcMain.on('tabManager-addTab', (event, url, active) => {
+  tabManager.addTab(url, active);
 });
 
 ipcMain.on('tabManager-activateTab', (event, id) => {
@@ -719,12 +723,12 @@ ipcMain.on('tabManager-goForward', (event) => {
   tabManager.getActiveTab().goForward();
 });
 
-ipcMain.on('tabManager-goReload', (event) => {
-  tabManager.getActiveTab().goReload();
+ipcMain.on('tabManager-reload', (event) => {
+  tabManager.getActiveTab().reload();
 });
 
-ipcMain.on('tabManager-goStop', (event) => {
-  tabManager.getActiveTab().goStop();
+ipcMain.on('tabManager-stop', (event) => {
+  tabManager.getActiveTab().stop();
 });
 
 ipcMain.on('tabManager-navigate', (event, url) => {
