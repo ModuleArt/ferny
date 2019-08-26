@@ -422,34 +422,6 @@ function focusSearch() {
   s.select();
 }
 
-function loadHome() {
-  let Data = {
-    url: "https://duckduckgo.com",
-    on: 0
-  };
-
-  try {
-    var jsonstr = fs.readFileSync(ppath + "/json/home.json");
-    Data = JSON.parse(jsonstr);
-  } catch (e) {
-    saveFileToJsonFolder('home', JSON.stringify(Data))
-  }
-
-  var btn = document.getElementById('home-btn');
-  if(Data.on == 1) {
-    btn.style.display = "";
-    btn.onclick = () => {
-      goHome(Data.url);
-    }
-  } else {
-    btn.style.display = "none";
-  }
-}
-
-function goHome(url) {
-  // tabGroup.getActiveTab().webview.loadURL(url);
-}
-
 function bookmarkAllTabs() {
   // tabGroup.eachTab((currentTab, index, tabs) => {
   //   createBookmark(currentTab.webview.getURL(), currentTab.getTitle(), null);
@@ -531,6 +503,10 @@ function tabsWheel(event) {
   }
 }
 
+function goHome() {
+  ipcRenderer.send("tabManager-goHome");
+}
+
 /*
 .####.########...######.....########..########.##....##.########..########.########..########.########.
 ..##..##.....##.##....##....##.....##.##.......###...##.##.....##.##.......##.....##.##.......##.....##
@@ -561,18 +537,6 @@ ipcRenderer.on('action-set-color-tabs', (event, arg) => {
   // }
 });
 
-ipcRenderer.on('action-maximize-window', (event, arg) => {
-  document.getElementById('drag-zone').classList.add('maximize');
-  document.getElementById('max-btn').style.display = "none";
-  document.getElementById('restore-btn').style.display = "";
-});
-
-ipcRenderer.on('action-unmaximize-window', (event, arg) => {
-  document.getElementById('drag-zone').classList.remove('maximize');
-  document.getElementById('max-btn').style.display = "";
-  document.getElementById('restore-btn').style.display = "none";
-});
-
 ipcRenderer.on('action-page-focussearch', (event, arg) => {
   focusSearch();
 });
@@ -595,67 +559,6 @@ ipcRenderer.on('action-refresh-update-notif', (event, arg) => {
 
 ipcRenderer.on('action-change-theme', (event, arg) => {
   applyTheme(arg);
-});
-
-ipcRenderer.on('action-toggle-sidebar', (event, arg) => {
-  toggleSidebar();
-});
-
-ipcRenderer.on('action-toggle-fullscreen', (event, arg) => {
-  // if (arg) {
-  //   document.body.classList.add('fullscreen');
-  // } else {
-  //   document.body.classList.remove('fullscreen');
-  // }
-  // tabGroup.getActiveTab().webview.focus();
-});
-
-ipcRenderer.on('action-activate-tab', (event, arg) => {
-  // tabGroup.getTabByPosition(arg + 1).activate();
-});
-
-ipcRenderer.on('action-next-tab', (event, arg) => {
-  // let pos = tabGroup.getActiveTab().getPosition();
-  // if(tabGroup.getTabByPosition(pos + 1) != null) {
-  //   tabGroup.getTabByPosition(pos + 1).activate();
-  // }
-});
-
-ipcRenderer.on('action-prev-tab', (event, arg) => {
-  // let pos = tabGroup.getActiveTab().getPosition();
-  // if(tabGroup.getTabByPosition(pos - 1) != null) {
-  //   tabGroup.getTabByPosition(pos - 1).activate();
-  // }
-});
-
-ipcRenderer.on('action-blur-window', (event, arg) => {
-  // document.getElementById('etabs-tabgroup').classList.add('blur');
-});
-
-ipcRenderer.on('action-focus-window', (event, arg) => {
-  // document.getElementById('etabs-tabgroup').classList.remove('blur');
-});
-
-ipcRenderer.on('action-open-url', (event, arg) => {
-  // tabGroup.getActiveTab().webview.loadURL(arg);
-  // if(!document.body.classList.contains('pinned-sidebar')) {
-  //   hideSidebar();
-  // }
-});
-
-ipcRenderer.on('action-open-url-in-new-tab', (event, arg) => {
-  newTab(arg, null, null);
-  if(!document.body.classList.contains('pinned-sidebar')) {
-    hideSidebar();
-  }
-});
-
-ipcRenderer.on('action-set-search-engine', (event, arg) => {
-  applySearchEngine(arg);
-});
-
-ipcRenderer.on('action-add-history-item', (event, arg) => {
-  document.getElementById('sidebar-webview').send('action-add-history-item', arg);
 });
 
 ipcRenderer.on('action-create-download', (event, arg) => {
@@ -696,33 +599,32 @@ ipcRenderer.on('action-set-download-process', (event, arg) => {
 });
 
 /*
-.####.########...######................##......##.##.....##.....######...#######..##....##.########.########.##.....##.########
-..##..##.....##.##....##...............##..##..##.##.....##....##....##.##.....##.###...##....##....##........##...##.....##...
-..##..##.....##.##.....................##..##..##.##.....##....##.......##.....##.####..##....##....##.........##.##......##...
-..##..########..##..........#######....##..##..##.##.....##....##.......##.....##.##.##.##....##....######......###.......##...
-..##..##........##.....................##..##..##..##...##.....##.......##.....##.##..####....##....##.........##.##......##...
-..##..##........##....##...............##..##..##...##.##......##....##.##.....##.##...###....##....##........##...##.....##...
-.####.##.........######.................###..###.....###........######...#######..##....##....##....########.##.....##....##...
+ # #####   ####              #    # # #    # #####   ####  #    #
+ # #    # #    #             #    # # ##   # #    # #    # #    #
+ # #    # #         #####    #    # # # #  # #    # #    # #    #
+ # #####  #                  # ## # # #  # # #    # #    # # ## #
+ # #      #    #             ##  ## # #   ## #    # #    # ##  ##
+ # #       ####              #    # # #    # #####   ####  #    #
 */
 
-ipcRenderer.on('action-webview-contextmenu', (event, arg) => {
-  // if(arg.action == 'cut') {
-  //   tabGroup.getTab(arg.id).webview.cut();
-  // } else if(arg.action == 'copy') {
-  //   tabGroup.getTab(arg.id).webview.copy();
-  // } else if(arg.action == 'paste') {
-  //   tabGroup.getTab(arg.id).webview.paste();
-  // } else if(arg.action == 'paste-match-style') {
-  //   tabGroup.getTab(arg.id).webview.pasteAndMatchStyle();
-  // } else if(arg.action == 'undo') {
-  //   tabGroup.getTab(arg.id).webview.undo();
-  // } else if(arg.action == 'redo') {
-  //   tabGroup.getTab(arg.id).webview.redo();
-  // } else if(arg.action == 'select-all') {
-  //   tabGroup.getTab(arg.id).webview.selectAll();
-  // } else if(arg.action == 'delete') {
-  //   tabGroup.getTab(arg.id).webview.delete();
-  // } 
+ipcRenderer.on('window-blur', (event) => {
+  document.getElementById('tabman').classList.add('blur');
+});
+
+ipcRenderer.on('window-focus', (event) => {
+  document.getElementById('tabman').classList.remove('blur');
+});
+
+ipcRenderer.on('window-maximize', (event) => {
+  document.getElementById('drag-zone').classList.add('maximize');
+  document.getElementById('max-btn').style.display = "none";
+  document.getElementById('restore-btn').style.display = "";
+});
+
+ipcRenderer.on('window-unmaximize', (event) => {
+  document.getElementById('drag-zone').classList.remove('maximize');
+  document.getElementById('max-btn').style.display = "";
+  document.getElementById('restore-btn').style.display = "none";
 });
 
 /*
@@ -793,6 +695,18 @@ ipcRenderer.on('tabRenderer-unactivateAllTabs', (event) => {
 
 ipcRenderer.on('tabRenderer-updateTargetURL', (event, url) => {
   tabRenderer.updateTargetURL(url);
+});
+
+ipcRenderer.on('tabRenderer-setHomePage', (event, bool) => {
+  var btn = document.getElementById('home-btn');
+  if(bool == 1) {
+    btn.style.display = "";
+    btn.onclick = () => {
+      goHome();
+    }
+  } else {
+    btn.style.display = "none";
+  }
 });
 
 /*

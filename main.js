@@ -857,6 +857,22 @@ ipcMain.on('tabManager-init', (event) => {
     }
   });
 
+  function loadHome() {
+    let Data = {
+      url: "https://duckduckgo.com",
+      on: 0
+    };
+  
+    try {
+      let jsonstr = fs.readFileSync(ppath + "/json/home.json");
+      Data = JSON.parse(jsonstr);
+    } catch (e) {
+      saveFileToJsonFolder('home', JSON.stringify(Data))
+    }
+
+    tabManager.setHomePage(Data.url);
+  }
+
   loadStartup().then((startup) => {
     if(startup == "overlay") {
       overlay.show();
@@ -1007,20 +1023,20 @@ function showMainWindow() {
     });
   
     mainWindow.on('focus', () => {
-      mainWindow.webContents.send('action-focus-window');
+      mainWindow.webContents.send('window-focus');
     });
   
     mainWindow.on('blur', () => {
-      mainWindow.webContents.send('action-blur-window');
+      mainWindow.webContents.send('window-blur');
     });
   
     mainWindow.on('maximize', () => {
-      mainWindow.webContents.send('action-maximize-window');
+      mainWindow.webContents.send('window-maximize');
       tabManager.getActiveTab().activate();
     });
   
     mainWindow.on('unmaximize', () => {
-      mainWindow.webContents.send('action-unmaximize-window');
+      mainWindow.webContents.send('window-unmaximize');
       tabManager.getActiveTab().activate();
     });
   

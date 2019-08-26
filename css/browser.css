@@ -165,6 +165,7 @@
   height: 30px;
   transition: font-size 0.25s, height 0.25s;
   padding: 8px;
+  color: var(--color-top);
 }
 
 #search-input.show-target {
@@ -295,7 +296,7 @@
   opacity: 1 !important;
 }
 
-.etabs-tabgroup.blur #window-controls .button, .etabs-tabgroup.blur .theme-icon, #window-controls .button:active, #window-controls #close-btn:active {
+.tabman.blur #window-controls .button, .tabman.blur .theme-icon, #window-controls .button:active, #window-controls #close-btn:active {
   opacity: 0.5 !important;
 }
 

@@ -20,7 +20,7 @@ class TabRenderer extends EventEmitter {
     constructor() {
         super();
 
-        this.tabContainer = document.getElementsByClassName("tabman-tabs")[0];
+        this.tabContainer = document.getElementById("tabman-tabs");
         this.backButton = document.getElementById("back-btn");
         this.forwardButton = document.getElementById("forward-btn");
         this.reloadButton = document.getElementById("reload-btn");

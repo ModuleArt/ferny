@@ -214,6 +214,7 @@ class TabManager extends EventEmitter {
 
     setHomePage(url) {
         this.homePage = url;
+        this.window.webContents.send("tabRenderer-setHomePage", Data.on);
 
         return null;
     }

@@ -13,9 +13,9 @@
   <body>
     <div id="drag-zone"></div>
     
-    <div class="tabman">
+    <div class="tabman" id="tabman">
       <button id="overlay-btn" class='overlay-button' onclick="showOverlay()" oncontextmenu="showOverlayButtonMenu()" title="Overlay"><img name="blocks-12" class="theme-icon"></button>
-      <div class="tabman-tabs" onmousewheel="tabsWheel(event)"></div>
+      <div class="tabman-tabs" id="tabman-tabs" onmousewheel="tabsWheel(event)"></div>
       <div class="tabman-buttons">
         <button title="New tab" onclick="newTab()" ondrop='newTabDrop(event)' ondragover='prevDef(event)'><img name="create-12" class="theme-icon"></button>
         <button title="Tabs list" onclick="showTabList()"><img name="down-12" class="theme-icon"></button>
