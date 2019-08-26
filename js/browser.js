@@ -84,24 +84,6 @@ tabDrag.on('drop', function(el, target, source, sibling) {
   tabRenderer.updateTabsPositions();
 });
 
-//   webview.getWebContents().on('context-menu', (event, params) => {
-//     let Data = {
-//       id: tab.id,
-//       params: params
-//     }
-
-//     ipcRenderer.send('request-webview-contextmenu', Data);
-//   });
-
-//   document.getElementById('search-input').value = "";
-//   document.getElementById('back-btn').disabled = true;
-//   document.getElementById('forward-btn').disabled = true;
-//   applyFindPanel();
-
-//   webview.addEventListener('update-target-url', (e) => {
-//     document.getElementById('target-url').innerHTML = e.url;
-//   });
-
 /*
 .########.##.....##.##....##..######..########.####..#######..##....##..######.
 .##.......##.....##.###...##.##....##....##.....##..##.....##.###...##.##....##

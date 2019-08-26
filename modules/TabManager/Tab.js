@@ -144,6 +144,7 @@ class Tab extends EventEmitter {
             isLoading: this.view.webContents.isLoading()
         });
         this.window.webContents.send("tabRenderer-updateAddressBar", this.getURL());
+        this.view.webContents.focus();
 
         this.emit("activate", this);
 
@@ -285,6 +286,27 @@ class Tab extends EventEmitter {
 
     openDevTools() {
         this.view.webContents.openDevTools();
+    }
+
+    zoomIn() {
+        let zoomFactor = this.view.webContents.getZoomFactor();
+        if(zoomFactor < 2.5) {
+          this.view.webContents.setZoomFactor(zoomFactor + 0.1);
+        }
+    }
+
+    zoomOut() {
+        let zoomFactor = this.view.webContents.getZoomFactor();
+        if(zoomFactor > 0.3) {
+          this.view.webContents.setZoomFactor(zoomFactor - 0.1);
+        }
+    }
+
+    zoomToActualSize() {
+        let zoomFactor = this.view.webContents.getZoomFactor();
+        if(zoomFactor != 1) {
+            this.view.webContents.setZoomFactor(1);
+        }
     }
 }
 

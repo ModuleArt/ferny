@@ -137,14 +137,20 @@ const sideMenu = Menu.buildFromTemplate([{
     overlay.openDownloads(); 
   } }, { type: 'separator' }, { 
   label: 'Zoom', icon: app.getAppPath() + '/imgs/icons16/zoom.png', submenu: [{ 
-    enabled: false, label: 'Zoom out', icon: app.getAppPath() + '/imgs/icons16/zoom-out.png', accelerator: 'CmdOrCtrl+-', click: () => { 
-      mainWindow.webContents.send('action-zoom-zoomout'); 
+    label: 'Zoom in', icon: app.getAppPath() + '/imgs/icons16/zoom-in.png', accelerator: 'CmdOrCtrl+=', click: () => { 
+      if(tabManager.hasActiveTab()) {
+        tabManager.getActiveTab().zoomIn(); 
+      }
     } }, { 
-    enabled: false, label: 'Zoom in', icon: app.getAppPath() + '/imgs/icons16/zoom-in.png', accelerator: 'CmdOrCtrl+=', click: () => { 
-      mainWindow.webContents.send('action-zoom-zoomin'); 
-    } }, { type: 'separator' }, { 
-    enabled: false, label: 'Actual size', icon: app.getAppPath() + '/imgs/icons16/actual-size.png', accelerator: 'CmdOrCtrl+0', click: () => { 
-      mainWindow.webContents.send('action-zoom-actualsize'); 
+    label: 'Zoom out', icon: app.getAppPath() + '/imgs/icons16/zoom-out.png', accelerator: 'CmdOrCtrl+-', click: () => { 
+      if(tabManager.hasActiveTab()) {
+        tabManager.getActiveTab().zoomOut(); 
+      }
+    } }, { type: 'separator' }, {
+    label: 'Actual size', icon: app.getAppPath() + '/imgs/icons16/actual-size.png', accelerator: 'CmdOrCtrl+0', click: () => { 
+      if(tabManager.hasActiveTab()) {
+        tabManager.getActiveTab().zoomToActualSize(); 
+      }
     } }, { type: 'separator' }, { 
     label: 'Fullscreen', icon: app.getAppPath() + '/imgs/icons16/fullscreen.png', accelerator: 'F11', click: () => { 
       toggleFullscreen(); 

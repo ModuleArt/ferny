@@ -34,6 +34,8 @@ class Overlay extends EventEmitter {
         this.window.setBrowserView(this.view);
         this.refreshBounds();
         this.window.webContents.send("overlay-toggleButton", true);
+        this.view.webContents.focus();
+
         this.emit("show");
         return null;
     }
