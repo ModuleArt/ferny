@@ -140,8 +140,8 @@ function cancelSearch() {
 .########...#######...#######..##....##.##.....##.##.....##.##.....##.##....##..######.
 */
 
-function openBookmarkInNewTab(inNewTabBtn) {
-  ipcRenderer.send('request-open-url-in-new-tab', inNewTabBtn.parentNode.parentNode.name);
+function openBookmarkInBackground(inBackBtn) {
+  ipcRenderer.send('tabManager-addTab', inNewTabBtn.parentNode.parentNode.name, false);
 }
 
 function copyBookmark(copyBtn) {
@@ -228,7 +228,7 @@ function appendBookmark(name, url, folderEl) {
   div.name = url;
 
   div.onclick = function(e) {
-    ipcRenderer.send('request-open-url', url);
+    ipcRenderer.send('tabManager-addTab', url, true);
   };
 
   div.addEventListener('contextmenu', (e) => {
@@ -245,21 +245,21 @@ function appendBookmark(name, url, folderEl) {
     }
   }, false);
 
-  div.addEventListener('auxclick', (e) => {
-    e.preventDefault();
-      if(e.which == 2) {
-        ipcRenderer.send('request-open-url-in-new-tab', name);
-      }
-  }, false);
+  div.onauxclick = (event) => {
+    event.preventDefault();
+    if(event.which == 2) {
+      ipcRenderer.send('tabManager-addTab', true, false);
+    }
+  }
 
   div.innerHTML = `
     <img class="bookmark-icon" src="` + 'http://www.google.com/s2/favicons?domain=' + url + `">
     <label class="bookmark-title">` + name + `</label>
     <label class="bookmark-preview">` + url + `</label>
     <center class="bookmark-menu">
-      <button class='nav-btn' title="Open in new tab" onclick="openBookmarkInNewTab(this)">
+      <button class='nav-btn' title="Open in background" onclick="openBookmarkInBackground(this)">
         <img class="theme-icon" name="tab-16">
-        <label>New tab</label>
+        <label>Background</label>
       </button>
       <button class='nav-btn' title="Copy URL" onclick="copyBookmark(this)">
         <img class="theme-icon" name="copy-16">
@@ -362,9 +362,7 @@ function saveBookmarks() {
     bookmarksArray.push(Data);
   }
 
-  saveFileToJsonFolder('bookmarks', JSON.stringify(bookmarksArray)).then(function() {
-    ipcRenderer.send('request-update-bookmarks-bar');
-  });
+  saveFileToJsonFolder('bookmarks', JSON.stringify(bookmarksArray));
 }
 
 /*
@@ -509,9 +507,7 @@ function saveFolders() {
       folderArray.push(Data);
     }
   }
-  saveFileToJsonFolder('folders', JSON.stringify(folderArray)).then(function() {
-    ipcRenderer.send('request-update-bookmarks-bar');
-  });
+  saveFileToJsonFolder('folders', JSON.stringify(folderArray));
 }
 
 /*
@@ -523,10 +519,6 @@ function saveFolders() {
 ..##..##........##....##....##....##..##.......##...###.##.....##.##.......##....##..##.......##....##.
 .####.##.........######.....##.....##.########.##....##.########..########.##.....##.########.##.....##
 */
-
-ipcRenderer.on('action-update-bookmarks', (event, arg) => {
-  loadBookmarks();
-});
 
 ipcRenderer.on('action-remove-folder', (event, arg) => {
   var arr = document.getElementsByClassName('folder');

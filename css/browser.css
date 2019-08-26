@@ -135,6 +135,10 @@
 }
 
 #titlebar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 33px;
   padding: 2px;
   display: flex;
   border-bottom: 1px solid var(--color-border);
@@ -142,6 +146,7 @@
 }
 
 #search-div {
+  width: 100%;
   flex: 1;
   position: relative;
   margin: 2px;
@@ -386,10 +391,8 @@ body, html {
   left: 0;
   right: 0;
   top: 0;
-  bottom: 0;
+  height: 74px;
   position: absolute;
-  display: flex;
-  flex-direction: column;
 }
 
 /* theme icon */

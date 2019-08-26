@@ -112,6 +112,105 @@ class Tab extends EventEmitter {
         this.view.webContents.on("update-target-url", (event, url) => {
             this.window.webContents.send("tabRenderer-updateTargetURL", url);
         });
+
+        this.view.webContents.on("context-menu", (event, params) => {
+            if(params.isEditable) {
+                let viewMenu = Menu.buildFromTemplate([{ 
+                    label: 'Cut', icon: this.appPath + '/imgs/icons16/cut.png', accelerator: 'CmdOrCtrl+X', enabled: params.editFlags.canCut, click: () => { 
+                        this.cut();
+                    } }, { 
+                    label: 'Copy', icon: this.appPath + '/imgs/icons16/copy.png', accelerator: 'CmdOrCtrl+C', enabled: params.editFlags.canCopy, click: () => { 
+                        this.copy();
+                    } }, { 
+                    label: 'Paste', icon: this.appPath + '/imgs/icons16/paste.png', accelerator: 'CmdOrCtrl+V', enabled: params.editFlags.canPaste, click: () => { 
+                        this.paste();
+                    } }, { type: 'separator' }, { 
+                    label: 'Paste and match style', icon: this.appPath + '/imgs/icons16/paste-special.png', accelerator: 'CmdOrCtrl+Shift+V', enabled: params.editFlags.canPaste, click: () => { 
+                        this.pasteAndMatchStyle();
+                    } }, { type: 'separator' }, { 
+                    label: 'Undo', icon: this.appPath + '/imgs/icons16/undo.png', accelerator: 'CmdOrCtrl+Z', enabled: params.editFlags.canUndo, click: () => { 
+                        this.undo();
+                    } }, { 
+                    label: 'Redo', icon: this.appPath + '/imgs/icons16/redo.png', accelerator: 'CmdOrCtrl+Shift+Z', enabled: params.editFlags.canRedo, click: () => {
+                        this.redo();
+                    } }, { type: 'separator' }, { 
+                    label: 'Select all', icon: this.appPath + '/imgs/icons16/select-all.png', accelerator: 'CmdOrCtrl+A', enabled: params.editFlags.canSelectAll, click: () => { 
+                        this.selectAll();
+                    } }, { type: 'separator' }, { 
+                    label: 'Delete', icon: this.appPath + '/imgs/icons16/delete.png', accelerator: 'Backspace', enabled: params.editFlags.canDelete, click: () => { 
+                        this.delete();
+                    } }
+                ]);
+                viewMenu.popup(this.window);
+              } else {
+                if(params.linkURL.length > 0) {
+                    let viewMenu = Menu.buildFromTemplate([{ 
+                        label: 'Open link in new tab', icon: this.appPath + '/imgs/icons16/tab.png', click: () => { 
+                            this.emit("add-tab", params.linkURL, true);
+                        } }, { type: 'separator' }, { 
+                        label: 'Copy link address', icon: this.appPath + '/imgs/icons16/copy.png', click: () => { 
+                            clipboard.writeText(params.linkURL); 
+                        } }, { type: 'separator' }, {
+                        label: 'Inspect element', icon: this.appPath + '/imgs/icons16/inspect.png', click: () => {
+                            this.inspectElement(params.x, params.y);
+                        } }
+                    ]);
+                    viewMenu.popup(this.window);
+                } else {
+                    if(params.hasImageContents) {
+                        let viewMenu = Menu.buildFromTemplate([{ 
+                            label: 'Open image in new tab', icon: this.appPath + '/imgs/icons16/tab.png', click: () => { 
+                                this.emit("add-tab", params.srcURL, true);
+                            } }, { 
+                            // label: 'Save image as', icon: this.appPath + '/imgs/icons16/save.png', click: () => { 
+                            
+                            // } }, { 
+                            // label: 'Copy image', icon: this.appPath + '/imgs/icons16/copy.png', click: () => { 
+                                
+                            // } }, { 
+                            label: 'Copy image address', icon: this.appPath + '/imgs/icons16/link.png', click: () => { 
+                                clipboard.writeText(params.srcURL);
+                            } }, { type: 'separator' }, { 
+                            label: 'Inspect element', icon: this.appPath + '/imgs/icons16/inspect.png', click: () => {
+                                this.inspectElement(params.x, params.y);
+                            } }
+                        ]);
+                        viewMenu.popup(this.window); 
+                    } else {
+                        if(params.selectionText.length > 0) {
+                            let viewMenu = Menu.buildFromTemplate([{ 
+                                label: 'Copy', icon: this.appPath + '/imgs/icons16/copy.png', accelerator: 'CmdOrCtrl+C', enabled: params.editFlags.canCopy, click: () => { 
+                                    this.copy();
+                                } }, { type: 'separator' }, {
+                                label: 'Inspect element', icon: this.appPath + '/imgs/icons16/inspect.png', click: () => {
+                                    this.inspectElement(params.x, params.y);
+                                } }
+                            ]);
+                            viewMenu.popup(this.window);
+                        } else {
+                            let viewMenu = Menu.buildFromTemplate([{ 
+                                label: 'Back', icon: this.appPath + '/imgs/icons16/back.png', accelerator: 'Alt+Left', enabled: this.view.webContents.canGoBack(), click: () => { 
+                                    this.goBack();
+                                } }, { 
+                                label: 'Forward', icon: this.appPath + '/imgs/icons16/forward.png', accelerator: 'Alt+Right', enabled: this.view.webContents.canGoForward(), click: () => { 
+                                    this.goForward();
+                                } }, { 
+                                label: 'Reload', icon: this.appPath + '/imgs/icons16/reload.png', accelerator: 'F5', click: () => { 
+                                    this.reload();
+                                } }, { type: 'separator' }, {
+                                label: 'View page source', icon: this.appPath + '/imgs/icons16/code.png', click: () => {
+                                    this.viewPageSource();
+                                } }, {
+                                label: 'Inspect element', icon: this.appPath + '/imgs/icons16/inspect.png', click: () => {
+                                    this.inspectElement(params.x, params.y);
+                                } }
+                            ]);
+                            viewMenu.popup(this.window);
+                        }
+                    }
+                }
+              }
+        });
     }
 
     getId() {
@@ -120,6 +219,14 @@ class Tab extends EventEmitter {
 
     setBounds(x, y, width, height) {
         this.view.setBounds({ x: x, y: y, width: width, height: height });
+    }
+
+    inspectElement(x, y) {
+        this.view.webContents.inspectElement(x, y);
+    }
+
+    viewPageSource() {
+        this.emit("add-tab", "view-source:" + this.getURL(), true);
     }
 
     navigate(url) {

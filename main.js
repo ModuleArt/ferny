@@ -293,7 +293,7 @@ const sideMenu = Menu.buildFromTemplate([{
       label: 'Developer mode (Main window)', icon: app.getAppPath() + '/imgs/icons16/web.png', accelerator: 'CmdOrCtrl+Shift+F12', click: () => { 
         mainWindow.webContents.openDevTools(); 
       } }, { 
-      label: 'Developer mode (Overlay)', icon: app.getAppPath() + '/imgs/icons16/sidebar.png', accelerator: 'CmdOrCtrl+Shift+F11', click: () => { 
+      label: 'Developer mode (Overlay)', icon: app.getAppPath() + '/imgs/icons16/details.png', accelerator: 'CmdOrCtrl+Shift+F11', click: () => { 
         overlay.openDevTools(); 
       } }    
     ] }
@@ -384,54 +384,6 @@ app.on('ready', function() {
 
 ipcMain.on('request-set-color-tabs', (event, arg) => {
   setColorTabs(arg);
-});
-
-ipcMain.on('request-webview-contextmenu', (event, arg) => {
-  if(arg.params.isEditable) {
-    let webviewMenu = Menu.buildFromTemplate([
-      { label: 'Cut', icon: app.getAppPath() + '/imgs/icons16/cut.png', accelerator: 'CmdOrCtrl+X', enabled: arg.params.editFlags.canCut, click: () => { 
-        mainWindow.webContents.send('action-webview-contextmenu', { action: 'cut', id: arg.id }); } },
-      { label: 'Copy', icon: app.getAppPath() + '/imgs/icons16/copy.png', accelerator: 'CmdOrCtrl+C', enabled: arg.params.editFlags.canCopy, click: () => { 
-        mainWindow.webContents.send('action-webview-contextmenu', { action: 'copy', id: arg.id }); } },
-      { label: 'Paste', icon: app.getAppPath() + '/imgs/icons16/paste.png', accelerator: 'CmdOrCtrl+V', enabled: arg.params.editFlags.canPaste, click: () => { 
-        mainWindow.webContents.send('action-webview-contextmenu', { action: 'paste', id: arg.id }); } },
-      { type: 'separator' },
-      { label: 'Paste and match style', icon: app.getAppPath() + '/imgs/icons16/paste-special.png', accelerator: 'CmdOrCtrl+Shift+V', enabled: arg.params.editFlags.canPaste, click: () => { 
-        mainWindow.webContents.send('action-webview-contextmenu', { action: 'paste-match-style', id: arg.id }); } },
-      { type: 'separator' },
-      { label: 'Undo', icon: app.getAppPath() + '/imgs/icons16/undo.png', accelerator: 'CmdOrCtrl+Z', enabled: arg.params.editFlags.canUndo, click: () => { 
-        mainWindow.webContents.send('action-webview-contextmenu', { action: 'undo', id: arg.id }); } },
-      { label: 'Redo', icon: app.getAppPath() + '/imgs/icons16/redo.png', accelerator: 'CmdOrCtrl+Shift+Z', enabled: arg.params.editFlags.canRedo, click: () => {
-        mainWindow.webContents.send('action-webview-contextmenu', { action: 'redo', id: arg.id }); } },
-      { type: 'separator' },
-      { label: 'Select all', icon: app.getAppPath() + '/imgs/icons16/select-all.png', accelerator: 'CmdOrCtrl+A', enabled: arg.params.editFlags.canSelectAll, click: () => { 
-        mainWindow.webContents.send('action-webview-contextmenu', { action: 'select-all', id: arg.id }); } },
-      { type: 'separator' },
-      { label: 'Delete', icon: app.getAppPath() + '/imgs/icons16/delete.png', accelerator: 'Backspace', enabled: arg.params.editFlags.canDelete, click: () => { 
-        mainWindow.webContents.send('action-webview-contextmenu', { action: 'delete', id: arg.id }); } }
-    ]);
-    webviewMenu.popup(mainWindow);
-  } else {
-    if(arg.params.linkURL.length > 0) {
-      let webviewMenu = Menu.buildFromTemplate([
-        { label: 'Open link in new tab', icon: app.getAppPath() + '/imgs/icons16/tab.png', click: () => { 
-          mainWindow.webContents.send('action-open-url-in-new-tab', arg.params.linkURL); } },
-        { type: 'separator' },
-        { label: 'Copy link address', icon: app.getAppPath() + '/imgs/icons16/copy.png', click: () => { 
-          clipboard.writeText(arg.params.linkURL); } } 
-      ]);
-      webviewMenu.popup(mainWindow);
-    } else {
-      let webviewMenu = Menu.buildFromTemplate([
-        { label: 'Copy', icon: app.getAppPath() + '/imgs/icons16/copy.png', accelerator: 'CmdOrCtrl+C', enabled: arg.params.editFlags.canCopy, click: () => { 
-          mainWindow.webContents.send('action-webview-contextmenu', { action: 'copy', id: arg.id }); } },
-        { type: 'separator' },
-        { label: 'Select all', icon: app.getAppPath() + '/imgs/icons16/select-all.png', accelerator: 'CmdOrCtrl+A', enabled: arg.params.editFlags.canSelectAll, click: () => { 
-          mainWindow.webContents.send('action-webview-contextmenu', { action: 'select-all', id: arg.id }); } }
-      ]);
-      webviewMenu.popup(mainWindow);
-    }
-  }
 });
 
 ipcMain.on('request-cancel-update', (event, arg) => {
