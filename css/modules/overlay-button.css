@@ -4,30 +4,35 @@
     float: left;
     color: var(--color-top);
     background: none;
-    border: 1px solid var(--color-border);
-    margin: -1px;
     font-size: var(--px-font);
     padding: 10px;
     height: 34px;
+    border: 1px solid var(--color-border);
+    margin: -1px;
+    margin-right: 0;
 }
 
 .overlay-button img {
     vertical-align: top;
+    opacity: var(--opacity-over) !important;
 }
 
 .overlay-button.active {
-    border-bottom: 1px solid transparent;
-    background-color: var(--color-back);
+    border-bottom: 1px solid var(--color-back);
+}
+
+.overlay-button.active img {
+    opacity: 1 !important;
 }
 
 .overlay-button:hover {
-    border-color: var(--color-border);
     background-color: var(--color-second);
+    border-color: var(--color-border);
 }
 
 .overlay-button:focus {
-    border-color: var(--color-border);
     box-shadow: var(--shadow-focus);
+    border-color: var(--color-border);
 }
 
 .overlay-button:active {

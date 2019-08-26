@@ -22,7 +22,7 @@ class Overlay extends EventEmitter {
             width: true,
             height: true
         });
-        this.openBookmarks();
+        this.view.webContents.loadFile(this.appPath + "/html/bookmarks.html");
     }
 
     refreshBounds() {

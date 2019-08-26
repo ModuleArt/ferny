@@ -18,10 +18,9 @@
       <button class="link" onclick="scrollToId('background-color')">Themes</button>
       <button class="link" onclick="scrollToId('tabs')">Tabs</button>
       <button class="link" onclick="scrollToId('home-page')">Home page</button>
-      <button class="link" onclick="scrollToId('new-tab')">New tab</button>
+      <button class="link" onclick="scrollToId('startup')">On startup</button>
       <button class="link" onclick="scrollToId('search-engine')">Search engine</button>
       <button class="link" onclick="scrollToId('last-tab')">Last tab</button>
-      <button class="link" onclick="scrollToId('bookmarks')">Bookmarks</button>
       <button class="link" onclick="scrollToId('welcome-screen')">Welcome</button>
       <button class="link" onclick="scrollToId('clear-browsing-data')">Clear browsing data</button>
       <button class="link" onclick="scrollToId('win-controls')">Window</button>
@@ -66,25 +65,19 @@
       <label class="more-label">The page that will open when you click home button.</label>
     </div>
 
-    <div class="block-title" id="new-tab">
-      <img name="add-tab-16" class="theme-icon">
-      <label>New tab</label>
+    <div class="block-title" id="startup">
+      <img name="startup-16" class="theme-icon">
+      <label>On startup</label>
     </div>
     <div class="container">
-      <input type="text" id="start-page-input" placeholder="New tab page URL">
-      <button class="nav-btn" onclick="setStartPageLikeHomePage()">
-        <img class="theme-icon" name="home-16">
-        <label>Use home page</label>
-      </button>
-      <button class="nav-btn" onclick="saveStartPage()">
-        <img class="theme-icon" name="save-16">
-        <label>Save</label>
-      </button>
-      <hr>
-      <button class="more-btn" title="More info" onclick="moreInfo(this)">
-        <img class="theme-icon" name="info-16">
-      </button>
-      <label class="more-label">The page that will open when you create a new tab or when you start the browser.</label>
+      <div class="nav-checkbox">
+        <label>Show overlay</label>
+        <input type="radio" onclick="requestStartup(this.value)" class="checkbox" name="startup" value="overlay">
+      </div>
+      <div class="nav-checkbox">
+        <label>Open new tab</label>
+        <input type="radio" onclick="requestStartup(this.value)" class="checkbox" name="startup" value="new-tab">
+      </div>
     </div>
 
     <div class="block-title" id="search-engine">
@@ -159,17 +152,17 @@
       <label>Last tab</label>
     </div>
     <div class="container">
-      <!-- <div class="nav-checkbox">
-        <label>Do nothing</label>
-        <input type="radio" onclick="requestLastTab(this.value)" class="checkbox" name="last-tab" value="nothing">
-      </div> -->
+      <div class="nav-checkbox">
+        <label>Show overlay</label>
+        <input type="radio" onclick="requestLastTab(this.value)" class="checkbox" name="last-tab" value="overlay">
+      </div>
       <div class="nav-checkbox">
         <label>Open new tab</label>
         <input type="radio" onclick="requestLastTab(this.value)" class="checkbox" name="last-tab" value="new-tab">
       </div>
       <div class="nav-checkbox">
-        <label>Open home page</label>
-        <input type="radio" onclick="requestLastTab(this.value)" class="checkbox" name="last-tab" value="home-page">
+        <label>Open new tab & Show overlay</label>
+        <input type="radio" onclick="requestLastTab(this.value)" class="checkbox" name="last-tab" value="new-tab-overlay">
       </div>
       <div class="nav-checkbox">
         <label>Quit app</label>
@@ -180,30 +173,6 @@
         <img class="theme-icon" name="info-16">
       </button>
       <label class="more-label">Action when the last tab is closed.</label>
-    </div>
-
-    <div class="block-title" id="bookmarks">
-      <img name="bookmarks-16" class="theme-icon">
-      <label>Bookmarks</label>
-    </div>
-    <div class="container">
-      <div class="nav-checkbox">
-        <label>Show bookmarks bar</label>
-        <input type="checkbox" id="bookmarks-bar-checkbox" onclick="requestBookmarksBar(this.checked, null)">
-      </div>
-      <hr>
-      <div class="nav-checkbox">
-        <label>All</label>
-        <input type="radio" onclick="requestBookmarksBar(null, 'all')" class="checkbox" name="bbar-layout" value="all">
-      </div>
-      <div class="nav-checkbox">
-        <label>Labels only</label>
-        <input type="radio" onclick="requestBookmarksBar(null, 'only-labels')" class="checkbox" name="bbar-layout" value="only-labels">
-      </div>
-      <div class="nav-checkbox">
-        <label>Icons only</label>
-        <input type="radio" onclick="requestBookmarksBar(null, 'only-icons')" class="checkbox" name="bbar-layout" value="only-icons">
-      </div>
     </div>
 
     <div class="block-title" id="welcome-screen">

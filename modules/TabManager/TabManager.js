@@ -26,8 +26,6 @@ class TabManager extends EventEmitter {
         this.right = 0; 
         this.top = 74; 
         this.bottom = 0;
-
-        this.newTab();
     }
 
     newTab() {
@@ -67,28 +65,29 @@ class TabManager extends EventEmitter {
         });
 
         tab.on("fullscreen", (bool) => {
-            if(bool) {
-                this.top = 0;
-            } else {
-                this.top = 74;
-            }
-            this.getActiveTab().activate();
+            this.setFullscreen(bool);
         });
 
         tab.on("go-home", (tab) => {
             tab.navigate(this.homePage);
         });
 
-        tab.on("close-to-the-right", (id) => {
-            
+        tab.on("close-to-the-right", (position) => {
+            for(let i = 0; i < this.tabs.length; i++) {
+                if(this.tabs[i].getPosition() > position) {
+                    this.tabs[i].close();
+                    i--;
+                }
+            }
         });
 
         tab.on("close-others", (id) => {
-            this.tabs.forEach((item, index) => {
-                if(item.getId() != id) {
-                    item.close();
+            for(let i = 0; i < this.tabs.length; i++) {
+                if(this.tabs[i].getId() != id) {
+                    this.tabs[i].close();
+                    i--;
                 }
-            });
+            }
         });
 
         tab.on("next-tab", (position) => {
@@ -107,6 +106,10 @@ class TabManager extends EventEmitter {
             });
         });
 
+        tab.on("add-history-item", (url) => {
+            this.emit("add-history-item", url);
+        });
+
         this.tabs.push(tab);
 
         tab.navigate(url);
@@ -123,6 +126,17 @@ class TabManager extends EventEmitter {
         }
 
         return null;
+    }
+
+    setFullscreen(bool) {
+        if(bool) {
+            this.top = 0;
+        } else {
+            this.top = 74;
+        }
+        if(this.hasActiveTab()) {
+            this.getActiveTab().activate();
+        }
     }
 
     getWidth() {
@@ -147,6 +161,25 @@ class TabManager extends EventEmitter {
 
     setBottom(bottom) {
         this.bottom = bottom;
+    }
+
+    hasTabs() {
+        if(this.tabs.length > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    hasActiveTab() {
+        let bool = false;
+        for(let i = 0; i < this.tabs.length; i++) {
+            if(this.tabs[i].isActive()) {
+                bool = true;
+                break;
+            }
+        }
+        return bool;
     }
 
     getActiveTab() {
@@ -253,9 +286,14 @@ class TabManager extends EventEmitter {
     }
 
     updateTabsPositions(arr) {
-        arr.forEach((item, index) => {
-            this.getTabById(item).setPosition(index);
-        });
+        for(let i = 0; i < this.tabs.length; i++) {
+            let tab = this.getTabById(arr[i]);
+            if(tab == null) {
+                i--;
+            } else {
+                tab.setPosition(i);
+            }
+        }
 
         return null;
     }

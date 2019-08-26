@@ -64,21 +64,8 @@ function requestLastTab(lastTab) {
   saveFileToJsonFolder('lasttab', lastTab);
 }
 
-function requestBookmarksBar(on, layout) {
-  if(on != null) {
-    if(on) {
-      on = 1;
-    } else {
-      on = 0;
-    }
-  }
-
-  let Data = {
-    on: on,
-    layout: layout
-  };
-
-  ipcRenderer.send('request-set-bookmarks-bar', Data);
+function requestStartup(startup) {
+  saveFileToJsonFolder('startup', startup);
 }
 
 function scrollToId(id) {
@@ -160,16 +147,6 @@ function changeWelcome(bool) {
   }
 }
 
-function loadStartPage() {
-  try {
-    fs.readFile(ppath + "/json/startpage.json", function(err, data) {
-      document.getElementById('start-page-input').value = data;
-    });
-  } catch (e) {
-
-  }
-}
-
 function loadHomePage() {
   try {
     fs.readFile(ppath + "/json/home.json", function(err, data) {
@@ -225,16 +202,6 @@ function showWelcomeScreen() {
   ipcRenderer.send("request-show-welcome-screen");
 }
 
-function saveStartPage() {
-  var startPage = document.getElementById('start-page-input').value;
-
-  saveFileToJsonFolder('startpage', startPage).then(function() {
-    notif("New tab page saved: " + startPage, "success");
-
-    ipcRenderer.send('request-set-start-page', startPage);
-  });
-}
-
 function notif(text, type) {
   let Data = {
     text: text,
@@ -261,29 +228,26 @@ function loadWelcome() {
   }
 }
 
-function loadBookmarksBar() {
+function loadStartup() {
+  var startup = "overlay";
+  
   try {
-    var jsonstr = fs.readFileSync(ppath + "/json/bookmarksbar.json");
-    let Data = JSON.parse(jsonstr);
-
-    if(Data.on) {
-      document.getElementById('bookmarks-bar-checkbox').checked = true;
-    }
-
-    var radios = document.getElementsByName("bbar-layout");
-    for(var i = 0; i < radios.length; i++) {
-      if(radios[i].value == Data.layout) {
-        radios[i].checked = true;
-        break;
-      }
-    }
+    startup = fs.readFileSync(ppath + "/json/startup.json");
   } catch (e) {
-
+    saveFileToJsonFolder("startup", startup);
+  }
+  
+  var radios = document.getElementsByName("startup");
+  for(var i = 0; i < radios.length; i++) {
+    if(radios[i].value == startup) {
+      radios[i].checked = true;
+      break;
+    }
   }
 }
 
 function loadLastTab() {
-  var lastTab = "new-tab";
+  var lastTab = "overlay";
   
   try {
     lastTab = fs.readFileSync(ppath + "/json/lasttab.json");
@@ -326,16 +290,6 @@ function clearBrowsingData() {
   }
 }
 
-function setStartPageLikeHomePage() {
-  try {
-    var jsonstr = fs.readFileSync(ppath + "/json/home.json");
-    Data = JSON.parse(jsonstr);
-    document.getElementById('start-page-input').value = Data.url;
-  } catch (e) {
-
-  }
-}
-
 /*
 .####.########...######.....########..########.##....##.########..########.########..########.########.
 ..##..##.....##.##....##....##.....##.##.......###...##.##.....##.##.......##.....##.##.......##.....##
@@ -365,9 +319,8 @@ function init() {
 
   loadThemesFromFolder();
   
-  loadBookmarksBar();
-  loadStartPage();
   loadHomePage();
+  loadStartup();
   loadSearchEngine();
   loadCache();
   loadLastTab();

@@ -49,6 +49,8 @@ class Tab extends EventEmitter {
                 isLoading: this.view.webContents.isLoading()
             });
             this.window.webContents.send("tabRenderer-updateAddressBar", url);
+
+            this.emit("add-history-item");
         });
 
         this.view.webContents.on("did-navigate-in-page", (event, url, isMainFrame, frameProcessId, frameRoutingId) => {
@@ -191,7 +193,7 @@ class Tab extends EventEmitter {
     }
 
     closeToTheRight() {
-        this.emit("close-to-the-right", this.id);
+        this.emit("close-to-the-right", this.position);
     }
 
     reloadIgnoringCache() {
@@ -222,7 +224,7 @@ class Tab extends EventEmitter {
             { type: 'separator' },
             { label: 'Reload ignoring cache', accelerator: 'CmdOrCtrl+F5', click: () => { this.reloadIgnoringCache(); } },
             { type: 'separator' },
-            { enabled: false, label: 'Close to the right', icon: this.appPath + '/imgs/icons16/swipe-right.png', click: () => { this.closeToTheRight(); } },
+            { label: 'Close to the right', icon: this.appPath + '/imgs/icons16/swipe-right.png', click: () => { this.closeToTheRight(); } },
             { label: 'Close others', accelerator: 'CmdOrCtrl+Shift+W', click: () => { this.closeOthers(); } },
             { label: 'Close tab', icon: this.appPath + '/imgs/icons16/close.png', accelerator: 'CmdOrCtrl+W', click: () => { this.close(); } }
         ]);
@@ -275,6 +277,10 @@ class Tab extends EventEmitter {
 
     prevTab() {
         this.emit("prev-tab", this.position);
+    }
+
+    openDevTools() {
+        this.view.webContents.openDevTools();
     }
 }
 

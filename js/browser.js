@@ -102,41 +102,6 @@ tabDrag.on('drop', function(el, target, source, sibling) {
 //     document.getElementById('target-url').innerHTML = e.url;
 //   });
 
-//   webview.addEventListener('did-navigate', (e) => {
-//     document.getElementById('search-input').value = e.url;
-//     tab.setIcon("../imgs/gifs/page-loading.gif");
-
-//     if (webview.canGoBack()) {
-//       document.getElementById('back-btn').disabled = false;
-//     } else {
-//       document.getElementById('back-btn').disabled = true;
-//     }
-//     if (webview.canGoForward()) {
-//       document.getElementById('forward-btn').disabled = false;
-//     } else {
-//       document.getElementById('forward-btn').disabled = true;
-//     }
-    
-//     ipcRenderer.send('request-add-history-item', e.url);
-//   });
-
-// tabGroup.on("tab-removed", (tab, tabGroup) => {
-//   if (tabGroup.getTabs().length <= 0) {
-//     try {
-//       fs.readFile(ppath + "/json/lasttab.json", function(err, data) {
-//         if(data == "new-tab") {
-//           tabGroup.addTab();
-//         } else if(data == "quit") {
-//           closeWindow();
-//         }
-//       });
-//     } catch (e) {
-//       saveFileToJsonFolder("lasttab", "new-tab");
-//       tabGroup.addTab();
-//     }
-//   }
-// });
-
 /*
 .########.##.....##.##....##..######..########.####..#######..##....##..######.
 .##.......##.....##.###...##.##....##....##.....##..##.....##.###...##.##....##
