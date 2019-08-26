@@ -61,7 +61,7 @@ class Overlay extends EventEmitter {
         if(shortcutId == null) {
             this.view.webContents.loadFile(this.appPath + "/html/settings.html");
         } else {
-            this.view.webContents.loadFile(this.appPath + "/html/settings.html#" + shortcutId);
+            this.view.webContents.loadURL(this.appPath + "/html/settings.html#" + shortcutId);
         }
     }
 

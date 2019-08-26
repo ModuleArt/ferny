@@ -220,7 +220,7 @@ class TabRenderer extends EventEmitter {
     }
 
     updateTabsPositions() {
-        let tabs = this.tabContainer.childNodes;
+        let tabs = this.tabContainer.getElementsByClassName('tabman-tab');
         let arr = [];
         tabs.forEach((item, index) => {
             arr.push(item.name);

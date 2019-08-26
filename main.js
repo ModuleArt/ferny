@@ -205,7 +205,7 @@ const sideMenu = Menu.buildFromTemplate([{
     enabled: false, label: 'Certificate info', icon: app.getAppPath() + '/imgs/icons16/certificate.png', accelerator: 'CmdOrCtrl+I', click: () => { 
       mainWindow.webContents.send('action-page-certificate'); 
     } }, { type: 'separator' }, { 
-    enabled: false, label: 'Open file', icon: app.getAppPath() + '/imgs/icons16/open.png', accelerator: 'CmdOrCtrl+O', click: () => { 
+    label: 'Open file', icon: app.getAppPath() + '/imgs/icons16/open.png', accelerator: 'CmdOrCtrl+O', click: () => { 
       openFileDialog(); 
     } }, { type: 'separator' }, { 
     enabled: false, label: 'View page source', icon: app.getAppPath() + '/imgs/icons16/code.png', accelerator: 'CmdOrCtrl+U', click: () => { 
@@ -1254,12 +1254,10 @@ function showKeyBindsWindow() {
 function openFileDialog() {
   dialog.showOpenDialog(mainWindow, { 
     properties: [ 'multiSelections' ]
-  }, (filePaths) => {
-    if(filePaths) {
-      for(var i = 0; i < filePaths.length; i++) {
-        mainWindow.webContents.send('action-open-url-in-new-tab', filePaths[i]);
-      }
-    }
+  }).then(({ canceled, filePaths, bookmarks }) => {
+    filePaths.forEach((item, index) => {
+      tabManager.addTab(item, true);
+    });
   });
 }
 
