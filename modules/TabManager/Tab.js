@@ -108,6 +108,10 @@ class Tab extends EventEmitter {
         this.view.webContents.on("leave-html-full-screen", () => {
             this.emit("fullscreen", false);
         });
+
+        this.view.webContents.on("update-target-url", (event, url) => {
+            this.window.webContents.send("tabRenderer-updateTargetURL", url);
+        });
     }
 
     getId() {

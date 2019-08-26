@@ -144,13 +144,33 @@
 #search-div {
   flex: 1;
   position: relative;
-  z-index: 200;
   margin: 2px;
+  height: 32px;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-element);
+  border-radius: var(--px-radius);
 }
 
 #search-input {
+  background: none;
+  position: absolute;
+  left: 0;
   width: 100%;
+  top: 0;
   margin: 0;
+  outline: none;
+  border: none;
+  text-align: center;
+  margin: 0;
+  height: 30px;
+  transition: font-size 0.25s, height 0.25s;
+  padding: 8px;
+}
+
+#search-input.show-target {
+  font-size: 12px;
+  border-bottom: none;
+  height: 16px;
 }
 
 .title-bar-vr {
@@ -160,6 +180,38 @@
   background-color: var(--color-border);
   margin: 10px 2px;
 }
+
+/*
+ #####   ##   #####   ####  ###### #####    #    # #####  #
+   #    #  #  #    # #    # #        #      #    # #    # #
+   #   #    # #    # #      #####    #      #    # #    # #
+   #   ###### #####  #  ### #        #      #    # #####  #
+   #   #    # #   #  #    # #        #      #    # #   #  #
+   #   #    # #    #  ####  ######   #       ####  #    # ######
+*/
+
+#target-url {
+  color: var(--color-top);
+  font-size: 10px;
+  overflow: hidden;
+  white-space: nowrap;
+  word-break: keep-all;
+  text-overflow: ellipsis;
+  border: 2px solid var(--color-over);
+  position: absolute;
+  bottom: 1px;
+  left: 8px;
+  right: 8px;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.25s;
+  text-align: center;
+}
+
+#target-url.show {
+  opacity: var(--opacity-over);
+}
+
 
 /*
 .##......##.####.##....##.....######...#######..##....##.########.########...#######..##........######.
@@ -353,29 +405,6 @@ body, html {
 .##.....##..##.....##.......##.......##.......##.....##.##.......##...###....##....##....##
 ..#######..####....########.########.########.##.....##.########.##....##....##.....######.
 */
-
-#target-url {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  background-color: var(--color-back);
-  color: var(--color-top);
-  padding: 2px 8px;
-  border-radius: 0 var(--px-radius) 0 0;
-  font-size: 12px;
-  overflow: hidden;
-  white-space: nowrap;
-  word-break: keep-all;
-  text-overflow: ellipsis;
-  max-width: calc(50%);
-  border: 2px solid var(--color-over);
-  border-left: none;
-  border-bottom: none;
-}
-
-#target-url:empty {
-  display: none;
-}
 
 label {
   color: var(--color-top);

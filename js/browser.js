@@ -809,6 +809,10 @@ ipcRenderer.on('tabRenderer-unactivateAllTabs', (event) => {
   tabRenderer.unactivateAllTabs();
 });
 
+ipcRenderer.on('tabRenderer-updateTargetURL', (event, url) => {
+  tabRenderer.updateTargetURL(url);
+});
+
 /*
 .####.##....##.####.########
 ..##..###...##..##.....##...

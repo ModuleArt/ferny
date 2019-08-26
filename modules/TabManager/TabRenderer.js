@@ -15,6 +15,7 @@ class TabRenderer extends EventEmitter {
     reloadButton = null;
     stopButton = null;
     addressBar = null;
+    targetURL = null;
 
     constructor() {
         super();
@@ -25,6 +26,7 @@ class TabRenderer extends EventEmitter {
         this.reloadButton = document.getElementById("reload-btn");
         this.stopButton = document.getElementById("stop-btn");
         this.addressBar = document.getElementById("search-input");
+        this.targetURL = document.getElementById("target-url");
 
         ipcRenderer.send("tabManager-init");
     }
@@ -236,8 +238,19 @@ class TabRenderer extends EventEmitter {
                 active: item.classList.contains('active') 
             });
         });
-        console.log(arr);
         ipcRenderer.send('tabManager-showTabList', arr);
+    }
+
+    updateTargetURL(url) {
+        if(url.length > 0) {
+            this.targetURL.innerHTML = url;
+            this.targetURL.classList.add('show');
+            this.addressBar.classList.add('show-target');
+        } else {
+            this.targetURL.innerHTML = "";
+            this.targetURL.classList.remove('show');
+            this.addressBar.classList.remove('show-target');
+        }
     }
 }
 

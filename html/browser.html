@@ -4,7 +4,6 @@
     <link rel="stylesheet" href="../css/modules/webkit.css">
     <link rel="stylesheet" href="../css/modules/animations.css">
     <link rel="stylesheet" href="../css/modules/nav-btn.css">
-    <link rel="stylesheet" href="../css/modules/input.css">
     <link rel="stylesheet" href="../css/modules/tabs.css">
     <link rel="stylesheet" href="../css/modules/overlay-button.css">
     <link rel="stylesheet" href="../css/modules/notifications.css">
@@ -32,6 +31,7 @@
       <div class="title-bar-vr"></div>
       <button id="info-btn" class='nav-btn' title="Website info" onclick="popupInfoContextMenu()" oncontextmenu="popupInfoContextMenu()"><img name="info-16" class="theme-icon"></button>
       <div id="search-div">
+        <label id="target-url"></label>
         <input type="text" placeholder="Search or type a URL" id="search-input" oninput="getSuggestions()" onfocusout="removeSuggestions()" onkeyup="searchKeyUp(event)" onfocus="focusSearch()">
         <div id="search-suggest" style="display: none;" class="hide">
           <div id="search-suggest-container" onmousewheel="searchSuggestWheel(event)"></div>
@@ -57,7 +57,6 @@
     </div>
 
     <main>
-      <label id="target-url"></label>
       <!-- <div id="sidebar" style="display: none;" class="hide">
         <div id="sidebar-div">
           <button class="nav-btn" title="Hide sidebar" onclick="hideSidebar()"><img name='forward-16' class='theme-icon'></button>
