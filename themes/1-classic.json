@@ -1,0 +1,13 @@
+{
+  "name": "Classic",
+  "type": "Light",
+  "icons": "black",
+  "colorBack": "#F7F7F7",
+  "colorElement": "#FFFFFF",
+  "colorBorder": "#D9D9D9",
+  "colorSecond": "#EEEEEE",
+  "colorTop": "#000000",
+  "shadowFocus": "inset 0 0 4px rgba(0, 0, 0, 0.5)",
+  "opacityOver": "0.25",
+  "pxRadius": "4px"
+}

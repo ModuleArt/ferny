@@ -168,15 +168,29 @@
   text-align: center;
   margin: 0;
   height: 30px;
-  transition: font-size 0.25s, height 0.25s;
+  transition: font-size 0.25s, height 0.25s, box-shadow 0.25s;
   padding: 8px;
   color: var(--color-top);
+  border-radius: calc(var(--px-radius) - 2px);
+}
+
+#search-input:hover {
+  background-color: var(--color-second);
+}
+
+#search-input:focus {
+  box-shadow: var(--shadow-focus);
+}
+
+#search-input:active {
+  background-color: var(--color-border);
 }
 
 #search-input.show-target {
   font-size: 12px;
   border-bottom: none;
   height: 16px;
+  box-shadow: none;
 }
 
 .title-bar-vr {

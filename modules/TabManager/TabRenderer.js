@@ -50,6 +50,7 @@ class TabRenderer extends EventEmitter {
             <div class='tabman-tab-buttons'></div>
         `;
         tab.onclick = () => {
+            tab.focus();
             ipcRenderer.send("tabManager-activateTab", id);
         }
         tab.onauxclick = (event) => {

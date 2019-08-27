@@ -3,7 +3,7 @@ input[type=text] {
     color: var(--color-top);
     font-size: var(--px-font);
     height: 32px;
-    padding: 3px;
+    padding: 8px;
     border-radius: var(--px-radius);
     background-color: var(--color-element);
     text-align: center;

@@ -765,64 +765,6 @@ ipcMain.on('overlay-showButtonMenu', (event) => {
  # #       ####                #   #    # #####     #    # #    # #    # #    #  ####  ###### #    #
 */
 
-ipcMain.on('tabManager-init', (event) => {
-  tabManager = new TabManager(mainWindow, app.getAppPath());
-
-  tabManager.on("active-tab-closed", () => {
-    overlay.show();
-  });
-
-  tabManager.on("tab-activated", () => {
-    mainWindow.webContents.send("overlay-toggleButton", false);
-  });
-
-  tabManager.on("last-tab-closed", () => {
-    loadLastTab().then((lastTab) => {
-      if(lastTab == "new-tab") {
-        tabManager.newTab();
-      } else if(lastTab == "quit") {
-        app.quit();
-      } else if(lastTab == "overlay") {
-        overlay.show();
-      } else if(lastTab == "new-tab-overlay") {
-        tabManager.newTab();
-        overlay.show();
-      }
-    });
-  });
-
-  tabManager.on("add-status-notif", (text, type) => {
-    mainWindow.webContents.send("add-status-notif", { text: text, type: type });
-  });
-
-  tabManager.on("add-history-item", (url) => {
-    let Data = {
-      url: url,
-      time: Math.floor(Date.now() / 1000)
-    };
-  
-    try {
-      prependFile(ppath + "/json/history.json", JSON.stringify(Data) + "\n", function (err) {
-        if (err) throw err;
-      });
-    } catch (error) {
-      saveFileToJsonFolder('history', JSON.stringify(Data));
-    }
-  });
-
-  loadHomePage().then((homePage) => {
-    tabManager.setHomePage(homePage);
-  });
-
-  loadStartup().then((startup) => {
-    if(startup == "overlay") {
-      overlay.show();
-    } else if(startup == "new-tab") {
-      tabManager.newTab();
-    }
-  });
-});
-
 ipcMain.on('tabManager-newTab', (event) => {
   tabManager.newTab();
 });
@@ -894,6 +836,78 @@ ipcMain.on('tabManager-goHome', (event) => {
     tabManager.getActiveTab().goHome();
   }
 });
+
+/*
+ ###### #    # #    #  ####               ####  #    # ###### #####  #        ##   #   #
+ #      #    # ##   # #    #             #    # #    # #      #    # #       #  #   # #
+ #####  #    # # #  # #         #####    #    # #    # #####  #    # #      #    #   #
+ #      #    # #  # # #                  #    # #    # #      #####  #      ######   #
+ #      #    # #   ## #    #             #    #  #  #  #      #   #  #      #    #   #
+ #       ####  #    #  ####               ####    ##   ###### #    # ###### #    #   #
+*/
+
+function initOverlay() {
+  overlay = new Overlay(mainWindow, app.getAppPath());
+
+  overlay.on("show", () => {
+    tabManager.unactivateAllTabs();
+  });
+}
+
+/*
+ ###### #    # #    #  ####              #####   ##   #####     #    #   ##   #    #   ##    ####  ###### #####
+ #      #    # ##   # #    #               #    #  #  #    #    ##  ##  #  #  ##   #  #  #  #    # #      #    #
+ #####  #    # # #  # #         #####      #   #    # #####     # ## # #    # # #  # #    # #      #####  #    #
+ #      #    # #  # # #                    #   ###### #    #    #    # ###### #  # # ###### #  ### #      #####
+ #      #    # #   ## #    #               #   #    # #    #    #    # #    # #   ## #    # #    # #      #   #
+ #       ####  #    #  ####                #   #    # #####     #    # #    # #    # #    #  ####  ###### #    #
+*/
+
+function initTabManager() {
+  tabManager = new TabManager(mainWindow, app.getAppPath());
+
+  tabManager.on("active-tab-closed", () => {
+    overlay.show();
+  });
+
+  tabManager.on("tab-activated", () => {
+    mainWindow.webContents.send("overlay-toggleButton", false);
+  });
+
+  tabManager.on("last-tab-closed", () => {
+    loadLastTab().then((lastTab) => {
+      if(lastTab == "new-tab") {
+        tabManager.newTab();
+      } else if(lastTab == "quit") {
+        app.quit();
+      } else if(lastTab == "overlay") {
+        overlay.show();
+      } else if(lastTab == "new-tab-overlay") {
+        tabManager.newTab();
+        overlay.show();
+      }
+    });
+  });
+
+  tabManager.on("add-status-notif", (text, type) => {
+    mainWindow.webContents.send("add-status-notif", { text: text, type: type });
+  });
+
+  tabManager.on("add-history-item", (url) => {
+    let Data = {
+      url: url,
+      time: Math.floor(Date.now() / 1000)
+    };
+  
+    try {
+      prependFile(ppath + "/json/history.json", JSON.stringify(Data) + "\n", function (err) {
+        if (err) throw err;
+      });
+    } catch (error) {
+      saveFileToJsonFolder('history', JSON.stringify(Data));
+    }
+  });
+}
 
 /*
 .########.##.....##.##....##..######..########.####..#######..##....##..######.
@@ -1005,6 +1019,21 @@ function showMainWindow() {
   
     mainWindow.once('ready-to-show', () => {
       initOverlay();
+
+      initTabManager();
+
+      loadHomePage().then((homePage) => {
+        tabManager.setHomePage(homePage);
+      });
+    
+      loadStartup().then((startup) => {
+        if(startup == "overlay") {
+          overlay.show();
+        } else if(startup == "new-tab") {
+          tabManager.newTab();
+        }
+      });
+
       mainWindow.show();
       if(Data.maximize) {
         mainWindow.maximize();
@@ -1017,6 +1046,34 @@ function showMainWindow() {
   
     mainWindow.on('unmaximize', () => {
       mainWindow.webContents.send('action-unmaximize-window');
+    });
+
+    mainWindow.on('app-command', (event, command) => {
+      if(command == 'browser-backward') {
+        if(tabManager.hasActiveTab()) {
+          tabManager.getActiveTab().goBack();
+        }
+      } else if(command == 'browser-forward') {
+        if(tabManager.hasActiveTab()) {
+          tabManager.getActiveTab().goForward();
+        }
+      } else if(command == 'browser-favorites') {
+        overlay.openBookmarks();
+      } else if(command == 'browser-home') {
+        if(tabManager.hasActiveTab()) {
+          tabManager.getActiveTab().goHome();
+        }
+      } else if(command == 'browser-refresh') {
+        if(tabManager.hasActiveTab()) {
+          tabManager.getActiveTab().reload();
+        }
+      } else if(command == 'browser-stop') {
+        if(tabManager.hasActiveTab()) {
+          tabManager.getActiveTab().stop();
+        }
+      } else if(command == 'browser-search') {
+        overlay.show();
+      } 
     });
   
     mainWindow.on('close', function(event) {
@@ -1237,23 +1294,6 @@ function openFileDialog() {
     filePaths.forEach((item, index) => {
       tabManager.addTab(item, true);
     });
-  });
-}
-
-/*
- ###### #    # #    #  ####               ####  #    # ###### #####  #        ##   #   #
- #      #    # ##   # #    #             #    # #    # #      #    # #       #  #   # #
- #####  #    # # #  # #         #####    #    # #    # #####  #    # #      #    #   #
- #      #    # #  # # #                  #    # #    # #      #####  #      ######   #
- #      #    # #   ## #    #             #    #  #  #  #      #   #  #      #    #   #
- #       ####  #    #  ####               ####    ##   ###### #    # ###### #    #   #
-*/
-
-function initOverlay() {
-  overlay = new Overlay(mainWindow, app.getAppPath());
-
-  overlay.on("show", () => {
-    tabManager.unactivateAllTabs();
   });
 }
 

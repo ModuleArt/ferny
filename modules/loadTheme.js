@@ -5,7 +5,7 @@ const path = require('path');
 
 function loadTheme(name) {
     return new Promise(function(resolve, reject) {
-        let theme = "coupertino";
+        let theme = "1-classic";
   
         if(name == null) {
             try {
