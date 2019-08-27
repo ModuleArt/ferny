@@ -187,27 +187,31 @@ class TabRenderer extends EventEmitter {
 
     showPreview(id, dataURL) {
         let tab = this.getTabById(id);
-        let div = tab.getElementsByClassName('tabman-tab-preview')[0];
-        if(div == null) {
-            div = document.createElement('div');
-            div.classList.add("tabman-tab-preview");
-  
-            let img = document.createElement('img');
-            img.src = dataURL;
-            div.appendChild(img);
-          
-            tab.appendChild(div);
-        } else {
-            let img = div.getElementsByTagName('img')[0];
-            img.src = dataURL;
+        if(tab != null) {
+            let div = tab.getElementsByClassName('tabman-tab-preview')[0];
+            if(div == null) {
+                div = document.createElement('div');
+                div.classList.add("tabman-tab-preview");
+    
+                let img = document.createElement('img');
+                img.src = dataURL;
+                div.appendChild(img);
+            
+                tab.appendChild(div);
+            } else {
+                let img = div.getElementsByTagName('img')[0];
+                img.src = dataURL;
+            }
         }
     }
 
     hidePreview(id) {
         let tab = this.getTabById(id);
-        let div = tab.getElementsByClassName('tabman-tab-preview')[0];
-        if(div != null) {
-            tab.removeChild(div);
+        if(tab != null) {
+            let div = tab.getElementsByClassName('tabman-tab-preview')[0];
+            if(div != null) {
+                tab.removeChild(div);
+            }
         }
     }
 
@@ -222,9 +226,9 @@ class TabRenderer extends EventEmitter {
     updateTabsPositions() {
         let tabs = this.tabContainer.getElementsByClassName('tabman-tab');
         let arr = [];
-        tabs.forEach((item, index) => {
-            arr.push(item.name);
-        });
+        for(let i = 0; i < tabs.length; i++) {
+            arr.push(tabs[i].name);
+        }
         ipcRenderer.send("tabManager-updateTabsPositions", arr);
     }
 

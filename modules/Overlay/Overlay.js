@@ -22,7 +22,7 @@ class Overlay extends EventEmitter {
             width: true,
             height: true
         });
-        this.view.webContents.loadFile(this.appPath + "/html/bookmarks.html");
+        this.view.webContents.loadFile(this.appPath + "/html/overlay.html");
     }
 
     refreshBounds() {
@@ -38,6 +38,11 @@ class Overlay extends EventEmitter {
 
         this.emit("show");
         return null;
+    }
+
+    openOverlay() {
+        this.show();
+        this.view.webContents.loadFile(this.appPath + "/html/overlay.html");
     }
 
     openBookmarks() {
@@ -76,15 +81,28 @@ class Overlay extends EventEmitter {
     }
 
     showButtonMenu() {
-        let buttonMenu = Menu.buildFromTemplate([
-            { label: 'Bookmarks', icon: this.appPath + '/imgs/icons16/bookmarks.png', accelerator: 'CmdOrCtrl+B', click: () => { this.openBookmarks(); } },
-            { label: 'History', icon: this.appPath + '/imgs/icons16/history.png', accelerator: 'CmdOrCtrl+H', click: () => { this.openHistory(); } },
-            { label: 'Downloads', icon: this.appPath + '/imgs/icons16/download.png', accelerator: 'CmdOrCtrl+H', click: () => { this.openDownloads(); } },
-            { type: 'separator' },
-            { label: 'Certificate info', icon: this.appPath + '/imgs/icons16/certificate.png', accelerator: 'CmdOrCtrl+I', click: () => { this.openCertificate(); } },
-            { type: 'separator' },
-            { label: 'Settings', icon: this.appPath + '/imgs/icons16/settings.png', accelerator: 'CmdOrCtrl+,', click: () => { this.openSettings(); } },
-            { label: 'About', icon: this.appPath + '/imgs/icons16/about.png', accelerator: 'F2', click: () => { this.openAbout(); } },
+        let buttonMenu = Menu.buildFromTemplate([{ 
+            label: 'Overlay', icon: this.appPath + '/imgs/icons16/details.png', click: () => { 
+                this.openOverlay(); 
+            } }, { type: 'separator' }, { 
+            label: 'Bookmarks', icon: this.appPath + '/imgs/icons16/bookmarks.png', accelerator: 'CmdOrCtrl+B', click: () => { 
+                this.openBookmarks(); 
+            } }, { 
+            label: 'History', icon: this.appPath + '/imgs/icons16/history.png', accelerator: 'CmdOrCtrl+H', click: () => { 
+                this.openHistory(); 
+            } }, { 
+            label: 'Downloads', icon: this.appPath + '/imgs/icons16/download.png', accelerator: 'CmdOrCtrl+H', click: () => { 
+                this.openDownloads(); 
+            } }, { type: 'separator' }, { 
+            label: 'Certificate info', icon: this.appPath + '/imgs/icons16/certificate.png', accelerator: 'CmdOrCtrl+I', click: () => { 
+                this.openCertificate(); 
+            } }, { type: 'separator' }, { 
+            label: 'Settings', icon: this.appPath + '/imgs/icons16/settings.png', accelerator: 'CmdOrCtrl+,', click: () => { 
+                this.openSettings(); 
+            } }, { 
+            label: 'About', icon: this.appPath + '/imgs/icons16/about.png', accelerator: 'F2', click: () => { 
+                this.openAbout(); 
+            } },
           ]);
         buttonMenu.popup(this.window);
     }

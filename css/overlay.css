@@ -1,0 +1,114 @@
+/*
+ #####   ####   ####  #####
+ #    # #    # #    #   #
+ #    # #    # #    #   #
+ #####  #    # #    #   #
+ #   #  #    # #    #   #
+ #    #  ####   ####    #
+*/
+
+@font-face {
+    font-family: OpenSans;
+    src: url(../fonts/OpenSans-Semibold.ttf);
+}
+  
+:root{
+    --color-red: rgb(255, 63, 52);
+    --color-green: rgb(11, 232, 129);
+    --color-blue: rgb(15, 188, 249);
+    --color-orange: rgb(255, 168, 1);
+  
+    --px-radius: 0;
+    --px-font: 14px;
+  
+    --opacity-over: 0;
+  
+    --shadow-focus: inset 0 0 0 rgba(0, 0, 0, 0);
+  
+    --color-back: transparent;
+    --color-element: transparent;
+    --color-border: transparent;
+    --color-second: transparent;
+    --color-top: transparent;
+}
+  
+* {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+      box-sizing: border-box;
+    -webkit-user-drag: none;
+  
+    font-family: OpenSans;
+    font-size: var(--px-font);
+}
+
+/*
+ #####   ####  #####  #   #
+ #    # #    # #    #  # #
+ #####  #    # #    #   #
+ #    # #    # #    #   #
+ #    # #    # #    #   #
+ #####   ####  #####    #
+*/
+
+body {
+    background-color: var(--color-back);
+    padding: 64px;
+    text-align: center;
+    margin: 0;
+}
+
+main {
+    max-width: 800px;
+    text-align: center;
+    margin: auto;
+    padding: 0;
+}
+
+/*
+ #####  #       ####   ####  #    #  ####
+ #    # #      #    # #    # #   #  #
+ #####  #      #    # #      ####    ####
+ #    # #      #    # #      #  #        #
+ #    # #      #    # #    # #   #  #    #
+ #####  ######  ####   ####  #    #  ####
+*/
+
+.block-container {
+    padding: 2px;
+}
+
+.block-title {
+    text-align: left;
+    margin: 8px;
+    margin-top: 32px;
+    padding: 0;
+}
+
+.block-title label {
+    vertical-align: middle;
+    margin-left: 8px;
+    font-size: 20px;
+    color: var(--color-top);
+}
+
+.block-title img {
+    vertical-align: middle;
+}
+
+/*
+  ####  ######   ##   #####   ####  #    #
+ #      #       #  #  #    # #    # #    #
+  ####  #####  #    # #    # #      ######
+      # #      ###### #####  #      #    #
+ #    # #      #    # #   #  #    # #    #
+  ####  ###### #    # #    #  ####  #    #
+*/
+
+#search-container input {
+    width: 100%;
+}

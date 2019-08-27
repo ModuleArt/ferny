@@ -30,6 +30,7 @@ const loadTheme = require(app.getAppPath() + "/modules/loadTheme.js");
 const loadWinControls = require(app.getAppPath() + "/modules/loadWinControls.js");
 const loadLastTab = require(app.getAppPath() + "/modules/loadLastTab.js");
 const loadStartup = require(app.getAppPath() + "/modules/loadStartup.js");
+const loadHomePage = require(app.getAppPath() + "/modules/loadHomePage.js");
 
 const TabManager = require(app.getAppPath() + "/modules/TabManager/TabManager.js");
 const Overlay = require(app.getAppPath() + "/modules/Overlay/Overlay.js");
@@ -120,7 +121,7 @@ const sideMenu = Menu.buildFromTemplate([{
     label: 'Bookmark manager', icon: app.getAppPath() + '/imgs/icons16/bookmarks.png', accelerator: 'CmdOrCtrl+B', click: () => { 
       overlay.openBookmarks(); 
     } }, { type: 'separator' }, { 
-      enabled: false, label: 'Bookmark this page', icon: app.getAppPath() + '/imgs/icons16/star.png', accelerator: 'CmdOrCtrl+Shift+B', click: () => { 
+    enabled: false, label: 'Bookmark this page', icon: app.getAppPath() + '/imgs/icons16/star.png', accelerator: 'CmdOrCtrl+Shift+B', click: () => { 
       mainWindow.webContents.send('action-bookmark-this-page'); 
     } }, { 
     enabled: false, label: 'Bookmark all tabs', click: () => { 
@@ -809,21 +810,9 @@ ipcMain.on('tabManager-init', (event) => {
     }
   });
 
-  function loadHome() {
-    let Data = {
-      url: "https://duckduckgo.com",
-      on: 0
-    };
-  
-    try {
-      let jsonstr = fs.readFileSync(ppath + "/json/home.json");
-      Data = JSON.parse(jsonstr);
-    } catch (e) {
-      saveFileToJsonFolder('home', JSON.stringify(Data))
-    }
-
-    tabManager.setHomePage(Data.url);
-  }
+  loadHomePage().then((homePage) => {
+    tabManager.setHomePage(homePage);
+  });
 
   loadStartup().then((startup) => {
     if(startup == "overlay") {
@@ -851,23 +840,33 @@ ipcMain.on('tabManager-closeTab', (event, id) => {
 });
 
 ipcMain.on('tabManager-goBack', (event) => {
-  tabManager.getActiveTab().goBack();
+  if(tabManager.hasActiveTab()) {
+    tabManager.getActiveTab().goBack();
+  }
 });
 
 ipcMain.on('tabManager-goForward', (event) => {
-  tabManager.getActiveTab().goForward();
+  if(tabManager.hasActiveTab()) {
+    tabManager.getActiveTab().goForward();
+  }
 });
 
 ipcMain.on('tabManager-reload', (event) => {
-  tabManager.getActiveTab().reload();
+  if(tabManager.hasActiveTab()) {
+    tabManager.getActiveTab().reload();
+  }
 });
 
 ipcMain.on('tabManager-stop', (event) => {
-  tabManager.getActiveTab().stop();
+  if(tabManager.hasActiveTab()) {
+    tabManager.getActiveTab().stop();
+  }
 });
 
 ipcMain.on('tabManager-navigate', (event, url) => {
-  tabManager.getActiveTab().navigate(url);
+  if(tabManager.hasActiveTab()) {
+    tabManager.getActiveTab().navigate(url);
+  }
 });
 
 ipcMain.on('tabManager-showPreview', (event, id) => {
@@ -888,6 +887,12 @@ ipcMain.on('tabManager-showTabMenu', (event, id) => {
 
 ipcMain.on('tabManager-updateTabsPositions', (event, arr) => {
   tabManager.updateTabsPositions(arr);
+});
+
+ipcMain.on('tabManager-goHome', (event) => {
+  if(tabManager.hasActiveTab()) {
+    tabManager.getActiveTab().goHome();
+  }
 });
 
 /*
@@ -984,12 +989,18 @@ function showMainWindow() {
   
     mainWindow.on('maximize', () => {
       mainWindow.webContents.send('window-maximize');
-      tabManager.getActiveTab().activate();
+      if(tabManager.hasActiveTab()) {
+        tabManager.getActiveTab().activate();
+      }
+      overlay.refreshBounds();
     });
   
     mainWindow.on('unmaximize', () => {
       mainWindow.webContents.send('window-unmaximize');
-      tabManager.getActiveTab().activate();
+      if(tabManager.hasActiveTab()) {
+        tabManager.getActiveTab().activate();
+      }
+      overlay.refreshBounds();
     });
   
     mainWindow.once('ready-to-show', () => {

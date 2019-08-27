@@ -697,13 +697,14 @@ ipcRenderer.on('tabRenderer-updateTargetURL', (event, url) => {
   tabRenderer.updateTargetURL(url);
 });
 
-ipcRenderer.on('tabRenderer-setHomePage', (event, bool) => {
+ipcRenderer.on('tabRenderer-setHomePage', (event, homePage) => {
   var btn = document.getElementById('home-btn');
-  if(bool == 1) {
+  if(homePage.on == 1) {
     btn.style.display = "";
     btn.onclick = () => {
       goHome();
     }
+    btn.title = "Go home\n(" + homePage.url + ")";
   } else {
     btn.style.display = "none";
   }
@@ -736,9 +737,6 @@ function init() {
 
   updateTheme();
 
-  loadHome();
-  loadSearchEngine();
-  
   // checkOpenWith();
 }
 
