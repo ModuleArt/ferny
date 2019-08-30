@@ -94,29 +94,6 @@ tabDrag.on('drop', function(el, target, source, sibling) {
 .##........#######..##....##..######.....##....####..#######..##....##..######.
 */
 
-function loadSearchEngine() {
-  var searchEngine = 'duckduckgo';
-
-  try {
-    searchEngine = fs.readFileSync(ppath + "/json/searchengine.json");
-  } catch (e) {
-    saveFileToJsonFolder('searchengine', searchEngine);
-  }
-
-  applySearchEngine(searchEngine);
-}
-
-function applySearchEngine(arg) {
-  var engines = document.getElementsByClassName('search-engine');
-  for(var i = 0; i < engines.length; i++) {
-    if(engines[i].name == arg) {
-      engines[i].classList.add('active');
-    } else {
-      engines[i].classList.remove('active');
-    }
-  }
-}
-
 function updateTheme() {
   loadTheme().then(function(theme) {
     applyTheme(theme);
@@ -169,108 +146,6 @@ function createBookmark(url, name, folder) {
   updateBookmarksBar();
 }
 
-function searchWith(text, engine) {
-  if(text == null) {
-    var suggestions = document.getElementById('search-suggest-container').childNodes;
-    var i = 0;
-    while (i < suggestions.length && !suggestions[i].classList.contains('active')) {
-      i++;
-    }
-    text = suggestions[i].value;
-  }
-
-  removeSuggestions();
-
-  // switch (engine) {
-  //   case 'google':
-  //     tabGroup.getActiveTab().webview.loadURL("https://google.com/search?q=" + text);
-  //     break;
-  //   case 'bing':
-  //     tabGroup.getActiveTab().webview.src = "https://bing.com/search?q=" + text;
-  //     break;
-  //   case 'duckduckgo':
-  //     tabGroup.getActiveTab().webview.loadURL("https://duckduckgo.com/?q=" + text);
-  //     break;
-  //   case 'yahoo':
-  //     tabGroup.getActiveTab().webview.loadURL("https://search.yahoo.com/search?p=" + text);
-  //     break;
-  //   case 'wikipedia':
-  //     tabGroup.getActiveTab().webview.loadURL("https://wikipedia.org/wiki/Special:Search?search=" + text);
-  //     break;
-  //   case 'yandex':
-  //     tabGroup.getActiveTab().webview.loadURL("https://yandex.com/search/?text=" + text);
-  //     break;
-  //   case 'mailru':
-  //     tabGroup.getActiveTab().webview.loadURL("https://go.mail.ru/search?q=" + text);
-  //     break;
-  //   case 'baidu':
-  //     tabGroup.getActiveTab().webview.loadURL("https://www.baidu.com/s?wd=" + text);
-  //     break;
-  //   case 'naver':
-  //     tabGroup.getActiveTab().webview.loadURL("https://search.naver.com/search.naver?query=" + text);
-  //     break;
-  //   case 'qwant':
-  //     tabGroup.getActiveTab().webview.loadURL("https://www.qwant.com/?q=" + text);
-  //     break;
-  //   case 'youtube':
-  //     tabGroup.getActiveTab().webview.loadURL("https://www.youtube.com/results?search_query=" + text);
-  //     break;
-  // }
-}
-
-function navigateSuggest(text) {
-  if(isUrl(text)) {
-    // tabGroup.getActiveTab().webview.loadURL(text);
-  } else {
-    var engines = document.getElementsByClassName('search-engine');
-    for(var i = 0; i < engines.length; i++) {
-      if(engines[i].classList.contains('active')) {
-        searchWith(text, engines[i].name);
-        break;
-      }
-    }
-  }
-}
-
-function removeSuggestions() {
-  setTimeout(function () {
-    var suggest = document.getElementById('search-suggest');
-    suggest.classList.add("hide");
-    setTimeout(function () {
-      suggest.style.display = "none";
-      // document.getElementById('search-suggest-container').innerHTML = "";
-    }, 250);
-  }, 150);
-}
-
-function getSuggestions() {
-  var input = document.getElementById('search-input');
-  var suggest = document.getElementById('search-suggest');
-  var container = document.getElementById('search-suggest-container');
-
-  suggest.style.display = "";
-  suggest.classList.remove("hide");
-
-  container.innerHTML = "<input tabIndex='-1' class='active' type='button' value='" + input.value + "' onclick='navigateSuggest(this.value)' />";
-
-  if (input.value.length > 0) {
-    autoSuggest(input.value, function (err, suggestions) {
-      if (suggestions != null && suggestions.length > 0) {
-        if (container.childNodes.length < 5) {
-          for (var i = 0; i < 5; i++) {
-            if (suggestions[i] != null) {
-              var button = "<input tabIndex='-1' type='button' value='" + suggestions[i] + "' onclick='navigateSuggest(this.value)' />";
-              container.innerHTML += button;
-            }
-          }
-        }
-      }
-    });
-  } else {
-    removeSuggestions();
-  }
-}
-
 function clearDownloads() {
   ipcRenderer.send('action-clear-downloads');
   document.getElementById('sidebar-webview').send('action-clear-downloads');
@@ -307,48 +182,6 @@ function restoreWindow() {
 
 function closeWindow() {
   ipcRenderer.send('request-quit-app');
-}
-
-function searchKeyUp(event) {
-  event.preventDefault();
-  if (document.getElementById("search-input").value.length > 0) {
-    if (event.keyCode === 13) {
-      var suggestions = document.getElementById('search-suggest-container').childNodes;
-      if(suggestions.length > 0) {
-        var i = 0;
-        while (i < suggestions.length && !suggestions[i].classList.contains('active')) {
-          i++;
-        }
-        navigateSuggest(suggestions[i].value);
-      } else {
-        navigateSuggest(document.getElementById('search-input').value);
-      }
-    }
-    if (event.keyCode === 40) {
-      var suggestions = document.getElementById('search-suggest-container').childNodes;
-      var i = 0;
-      while (i < suggestions.length && !suggestions[i].classList.contains('active')) {
-        i++;
-      }
-      if (i < suggestions.length - 1) {
-        document.getElementById('search-input').value = suggestions[i].nextSibling.value;
-        suggestions[i].classList.remove('active');
-        suggestions[i].nextSibling.classList.add('active');
-      }
-    }
-    if (event.keyCode === 38) {
-      var suggestions = document.getElementById('search-suggest-container').childNodes;
-      var i = 0;
-      while (i < suggestions.length && !suggestions[i].classList.contains('active')) {
-        i++;
-      }
-      if (i > 0) {
-        document.getElementById('search-input').value = suggestions[i].previousSibling.value;
-        suggestions[i].classList.remove('active');
-        suggestions[i].previousSibling.classList.add('active');
-      }
-    }
-  }
 }
 
 function removeFolder(folder) {
@@ -389,33 +222,6 @@ function zoomOut() {
   // }
 }
 
-function searchSuggestWheel(event) {
-  if (event.deltaY < 0) {
-    var suggestions = document.getElementById('search-suggest-container').childNodes;
-    var i = 0;
-    while (i < suggestions.length && !suggestions[i].classList.contains('active')) {
-      i++;
-    }
-    if (i > 0) {
-      document.getElementById('search-input').value = suggestions[i].previousSibling.value;
-      suggestions[i].classList.remove('active');
-      suggestions[i].previousSibling.classList.add('active');
-    }
-  }
-  if (event.deltaY > 0) {
-    var suggestions = document.getElementById('search-suggest-container').childNodes;
-    var i = 0;
-    while (i < suggestions.length && !suggestions[i].classList.contains('active')) {
-      i++;
-    }
-    if (i < suggestions.length - 1) {
-      document.getElementById('search-input').value = suggestions[i].nextSibling.value;
-      suggestions[i].classList.remove('active');
-      suggestions[i].nextSibling.classList.add('active');
-    }
-  }
-}
-
 function focusSearch() {
   let s = document.getElementById('search-input');
   s.focus();
@@ -447,6 +253,10 @@ function showOverlay() {
 
 function showOverlayButtonMenu() {
   ipcRenderer.send('overlay-showButtonMenu');
+}
+
+function goToSearch(text) {
+  ipcRenderer.send('overlay-goToSearch', text);
 }
 
 /*

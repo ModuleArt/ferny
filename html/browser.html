@@ -32,23 +32,7 @@
       <button id="info-btn" class='nav-btn' title="Website info" onclick="popupInfoContextMenu()" oncontextmenu="popupInfoContextMenu()"><img name="info-16" class="theme-icon"></button>
       <div id="search-div">
         <label id="target-url"></label>
-        <input type="text" placeholder="Search or type a URL" id="search-input" oninput="getSuggestions()" onfocusout="removeSuggestions()" onkeyup="searchKeyUp(event)" onfocus="focusSearch()">
-        <div id="search-suggest" style="display: none;" class="hide">
-          <div id="search-suggest-container" onmousewheel="searchSuggestWheel(event)"></div>
-          <div id="search-engines">
-            <button tabIndex='-1' name="google" class="nav-btn search-engine" title="Search with Google" onclick="searchWith(null, this.name)"><img src="../imgs/engines/google.png"></button>
-            <button tabIndex='-1' name="bing" class="nav-btn search-engine" title="Search with Bing" onclick="searchWith(null, this.name)"><img src="../imgs/engines/bing.png"></button>
-            <button tabIndex='-1' name="duckduckgo" class="nav-btn search-engine" title="Search with DuckDuckGo" onclick="searchWith(null, this.name)"><img src="../imgs/engines/duckduckgo.png"></button>
-            <button tabIndex='-1' name="wikipedia" class="nav-btn search-engine" title="Search with Wikipedia" onclick="searchWith(null, this.name)"><img src="../imgs/engines/wikipedia.png"></button>
-            <button tabIndex='-1' name="yahoo" class="nav-btn search-engine" title="Search with Yahoo" onclick="searchWith(null, this.name)"><img src="../imgs/engines/yahoo.png"></button>
-            <button tabIndex='-1' name="yandex" class="nav-btn search-engine" title="Search with Yandex" onclick="searchWith(null, this.name)"><img src="../imgs/engines/yandex.png"></button>
-            <button tabIndex='-1' name="mailru" class="nav-btn search-engine" title="Search with Mail.ru" onclick="searchWith(null, this.name)"><img src="../imgs/engines/mailru.png"></button>
-            <button tabIndex='-1' name="baidu" class="nav-btn search-engine" title="Search with Baidu" onclick="searchWith(null, this.name)"><img src="../imgs/engines/baidu.png"></button>
-            <button tabIndex='-1' name="naver" class="nav-btn search-engine" title="Search with Naver" onclick="searchWith(null, this.name)"><img src="../imgs/engines/naver.png"></button>
-            <button tabIndex='-1' name="qwant" class="nav-btn search-engine" title="Search with Qwant" onclick="searchWith(null, this.name)"><img src="../imgs/engines/qwant.png"></button>
-            <button tabIndex='-1' name="youtube" class="nav-btn search-engine" title="Search with YouTube" onclick="searchWith(null, this.name)"><img src="../imgs/engines/youtube.png"></button>
-          </div>
-        </div>
+        <input type="text" placeholder="Search or type a URL" id="search-input" oninput="goToSearch(this.value)" onfocus="focusSearch()">
       </div>
       <button id="bookmark-btn" class='nav-btn' title="Bookmark this page" onclick="createBookmark()"><img name="add-bookmark-16" class="theme-icon"></button>
       <div class="title-bar-vr"></div>

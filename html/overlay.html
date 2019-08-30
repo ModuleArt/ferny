@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
     <head>
-        <link rel="stylesheet" href="../css/modules/input.css">
         <link rel="stylesheet" href="../css/modules/webkit.css">
+        <link rel="stylesheet" href="../css/modules/animations.css">
         <link rel="stylesheet" href="../css/modules/nav-btn.css">
+        <link rel="stylesheet" href="../css/modules/input.css">
         <link rel="stylesheet" href="../css/overlay.css">
     </head>
     <body>
@@ -13,16 +14,50 @@
                 <label>Search</label>
             </div>
             <div class="block-container" id="search-container">
-                <input type="text" placeholder="Search or type a URL" id="search-input">
+                <div class="search-div">
+                    <img id="search-icon">
+                    <input type="text" placeholder="Search or type a URL" id="search-input">
+                    <button title="Clear" onclick="clearSearch()" style="display: none">
+                        <img class="theme-icon" name="cancel-16">
+                    </button>
+                    <button class="nav-btn" title="Search" onclick="goSearch()">
+                        <img class="theme-icon" name="search-16">
+                    </button>
+                </div>
+                <div id="search-suggest" style="display: none;" class="hide">
+                    <div id="search-suggest-container"></div>
+                    <div id="search-engines">
+                        <button name="google" class="nav-btn search-engine" title="Search with Google"><img src="../imgs/engines/google.png"></button>
+                        <button name="bing" class="nav-btn search-engine" title="Search with Bing"><img src="../imgs/engines/bing.png"></button>
+                        <button name="duckduckgo" class="nav-btn search-engine" title="Search with DuckDuckGo"><img src="../imgs/engines/duckduckgo.png"></button>
+                        <button name="wikipedia" class="nav-btn search-engine" title="Search with Wikipedia"><img src="../imgs/engines/wikipedia.png"></button>
+                        <button name="yahoo" class="nav-btn search-engine" title="Search with Yahoo"><img src="../imgs/engines/yahoo.png"></button>
+                        <button name="yandex" class="nav-btn search-engine" title="Search with Yandex"><img src="../imgs/engines/yandex.png"></button>
+                        <button name="mailru" class="nav-btn search-engine" title="Search with Mail.ru"><img src="../imgs/engines/mailru.png"></button>
+                        <button name="baidu" class="nav-btn search-engine" title="Search with Baidu"><img src="../imgs/engines/baidu.png"></button>
+                        <button name="naver" class="nav-btn search-engine" title="Search with Naver"><img src="../imgs/engines/naver.png"></button>
+                        <button name="qwant" class="nav-btn search-engine" title="Search with Qwant"><img src="../imgs/engines/qwant.png"></button>
+                        <button name="youtube" class="nav-btn search-engine" title="Search with YouTube"><img src="../imgs/engines/youtube.png"></button>
+                    </div>
+                </div>
             </div>
 
             <div class="block-title" id="bookmarks-title">
                 <img class="theme-icon" name="bookmarks-16">
                 <label>Bookmarks</label>
+                <div class="block-buttons">
+                    <button class="nav-btn" title="Toggle arranging / dragging" onclick="toggleArrange()">
+                        <img class="theme-icon" name="arrange-16">
+                    </button>
+                    <button class="nav-btn" title="New bookmark" onclick="newBookmark()">
+                        <img class="theme-icon" name="add-bookmark-16">
+                    </button>
+                    <button class="nav-btn" title="New folder" onclick="newFolder()">
+                        <img class="theme-icon" name="add-folder-16">
+                    </button>
+                </div>
             </div>
-            <div class="block-container" id="bookmarks-container">
-                
-            </div>
+            <div class="block-container" id="bookmarks-container"></div>
 
             <div class="block-title" id="history-title">
                 <img class="theme-icon" name="history-16">

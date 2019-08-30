@@ -756,6 +756,10 @@ ipcMain.on('overlay-showButtonMenu', (event) => {
   overlay.showButtonMenu();
 });
 
+ipcMain.on('overlay-goToSearch', (event, text) => {
+  overlay.goToSearch(text);
+});
+
 /*
  # #####   ####              #####   ##   #####     #    #   ##   #    #   ##    ####  ###### #####
  # #    # #    #               #    #  #  #    #    ##  ##  #  #  ##   #  #  #  #    # #      #    #
@@ -1019,7 +1023,6 @@ function showMainWindow() {
   
     mainWindow.once('ready-to-show', () => {
       initOverlay();
-
       initTabManager();
 
       loadHomePage().then((homePage) => {

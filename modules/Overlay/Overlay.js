@@ -110,6 +110,11 @@ class Overlay extends EventEmitter {
     openDevTools() {
         this.view.webContents.openDevTools();
     }
+
+    goToSearch(text) {
+        this.show();
+        this.view.webContents.send("searchManager-goToSearch", text);
+    }
 }
 
 module.exports = Overlay;

@@ -14,6 +14,7 @@
 .nav-btn label {
     padding-right: 8px;
     vertical-align: middle;
+    color: var(--color-top);
 }
 
 .nav-btn img {
