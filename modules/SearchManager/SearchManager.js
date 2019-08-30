@@ -19,9 +19,12 @@ class SearchManager extends EventEmitter {
     searchSuggest = null;
     searchSuggestContainer = null;
     searchEngines = null;
+    clearSearchButton = null;
 
-    constructor(searchInput, searchSuggest, searchSuggestContainer, searchEngines) {
+    constructor(searchInput, searchSuggest, searchSuggestContainer, searchEngines, clearSearchButton) {
         super();
+
+        this.clearSearchButton = clearSearchButton;
 
         this.searchSuggest = searchSuggest;
 
@@ -69,6 +72,8 @@ class SearchManager extends EventEmitter {
         this.searchInput.onkeyup = (event) => {
             event.preventDefault();
 
+            this.updateClearSearchButton();
+
             if (this.searchInput.value.length > 0) {
                 if (event.keyCode === 13) {
                     var suggestions = this.searchSuggestContainer.childNodes;
@@ -113,6 +118,14 @@ class SearchManager extends EventEmitter {
         loadSearchEngine().then((searchEngine) => {
             this.setSearchEngine(searchEngine);
         });
+    }
+
+    updateClearSearchButton() {
+        if(this.searchInput.value.length > 0) {
+            this.clearSearchButton.classList.add('show');
+        } else {
+            this.clearSearchButton.classList.remove('show');
+        }
     }
 
     getSuggestions() {
@@ -201,14 +214,16 @@ class SearchManager extends EventEmitter {
     }
       
     navigateSuggest(text) {
-        if(isUrl(text)) {
-            this.newTab(text);
-        } else {
-            let engines = this.searchEngines.getElementsByClassName('search-engine');
-            for(let i = 0; i < engines.length; i++) {
-                if(engines[i].classList.contains('active')) {
-                    this.searchWith(text, engines[i].name);
-                    break;
+        if(text != "" && text != null) {
+            if(isUrl(text)) {
+                this.newTab(text);
+            } else {
+                let engines = this.searchEngines.getElementsByClassName('search-engine');
+                for(let i = 0; i < engines.length; i++) {
+                    if(engines[i].classList.contains('active')) {
+                        this.searchWith(text, engines[i].name);
+                        break;
+                    }
                 }
             }
         }

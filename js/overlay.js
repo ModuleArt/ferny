@@ -28,7 +28,8 @@ let searchManager = new SearchManager(
   document.getElementById('search-input'), 
   document.getElementById('search-suggest'), 
   document.getElementById('search-suggest-container'),
-  document.getElementById('search-engines')
+  document.getElementById('search-engines'),
+  document.getElementById('clear-search-btn')
 );
 
 /*

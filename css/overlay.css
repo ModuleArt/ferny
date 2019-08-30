@@ -119,6 +119,61 @@ main {
   ####  ###### #    # #    #  ####  #    #
 */
 
+#clear-search-btn.show {
+    transform: scale(1);
+}
+  
+#clear-search-btn {
+    right: 43px;
+    top: 7px;
+    outline: none;
+    display: inline-block;
+    color: var(--color-top);
+    background: none;
+    border: none;
+    width: 22px;
+    height: 22px;
+    border-radius: var(--px-radius);
+    position: absolute;
+    border: 1px solid transparent;
+    transition: transform 0.25s;
+    transform: scale(0);
+}
+  
+#clear-search-btn:after {
+    content: '';
+    height: 12px;
+    border-left: 2px solid var(--color-top);
+    position: absolute;
+    transform: rotate(45deg);
+    left: 9px;
+    top: 4px;
+}
+  
+#clear-search-btn:before {
+    content: '';
+    height: 12px;
+    border-left: 2px solid var(--color-top);
+    position: absolute;
+    transform: rotate(-45deg);
+    top: 4px;
+    left: 9px;
+}
+  
+#clear-search-btn:hover {
+    background-color: var(--color-second);
+    border-color: var(--color-border);
+}
+  
+#clear-search-btn:focus {
+    box-shadow: var(--shadow-focus);
+    transform: scale(1);
+}
+  
+#clear-search-btn:active {
+    background-color: var(--color-border);
+}
+
 #search-icon {
     padding: 7px;
     height: 32px;
@@ -131,6 +186,7 @@ main {
 
 .search-div {
     display: flex;
+    position: relative;
 }
 
 .search-div input {
@@ -179,10 +235,19 @@ main {
 #search-suggest-container input:last-child {
     border-bottom: none;
 }
+
+#search-suggest-container input:hover {
+    text-decoration: underline;
+}
+
+#search-suggest-container input:active {
+    opacity: var(--opacity-over);
+}
   
-#search-suggest-container input.active, #search-suggest-container input:hover {
+#search-suggest-container input.active {
     border-color: var(--color-border);
     background-color: var(--color-element);
+    opacity: 1;
 }
   
 #search-engines {
