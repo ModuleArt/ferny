@@ -136,7 +136,7 @@ function extToImagePath(ext) {
     if(ext == "pdf") {
         res = '../imgs/icons16/pdf.png';
     } else
-    if(ext == "flv") {
+    if(ext == "flv" || ext == "swf") {
         res = '../imgs/icons16/flv.png';
     } else
     if(ext == "c") {
@@ -144,6 +144,9 @@ function extToImagePath(ext) {
     } else
     if(ext == "gitignore") {
         res = '../imgs/icons16/git-fork.png';
+    } else
+    if(ext == "shtml" || ext == "stm" || ext == "shtm") {
+        res = '../imgs/icons16/server.png';
     } else
     if(ext == "mov") {
         res = '../imgs/icons16/mov.png';

@@ -279,6 +279,7 @@ main {
     margin: 4px;
     display: inline-block;
     vertical-align: top;
+    position: relative;
 }
 
 .folder-header {
@@ -299,12 +300,17 @@ main {
 }
 
 .folder-header .add-bookmark-btn {
+    right: 28px;
+    border-radius: 0;
+}
+
+.folder-header .open-all-btn {
     right: -3px;
     border-radius: 0 calc(var(--px-radius) + 4px) 0 0;
 }
 
 .folder-header .edit-folder-btn {
-    right: 28px;
+    right: 59px;
     border-radius: 0;
 }
 
@@ -319,10 +325,14 @@ main {
     position: absolute;
     left: 0;
     right: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    word-break: keep-all;
+    text-overflow: ellipsis;
 }
 
 .folder-header:hover .folder-name {
-    right: 64px;
+    right: 94px;
 }
 
 .folder-container:empty::before {
@@ -335,6 +345,17 @@ main {
     text-align: center;
     border-radius: 0 0 calc(var(--px-radius) + 4px) calc(var(--px-radius) + 4px);
     border: 1px solid var(--color-border);
+}
+
+.folder-editor {
+    margin-bottom: 4px;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-back);
+    padding: 2px;
+    border-radius: calc(var(--px-radius) + 4px);
+    text-align: center;
+    animation: slide-up;
+    animation-duration: 0.25s;
 }
 
 .bookmark {
@@ -370,6 +391,12 @@ main {
     top: 5px;
     transition: font-size 0.25s, top 0.25s;
     position: absolute;
+    overflow: hidden;
+    white-space: nowrap;
+    word-break: keep-all;
+    text-overflow: ellipsis;
+    right: 28px;
+    left: 28px;
 }
 
 .bookmark:hover .bookmark-name {
@@ -384,6 +411,12 @@ main {
     position: absolute;
     top: 14px;
     color: var(--color-top);
+    left: 28px;
+    right: 28px;
+    overflow: hidden;
+    white-space: nowrap;
+    word-break: keep-all;
+    text-overflow: ellipsis;
 }
 
 .bookmark:hover .bookmark-preview {
@@ -450,10 +483,10 @@ main {
     text-align: center;
 }
 
-.bookmark-editor input {
+.bookmark-editor input, .folder-editor input {
     width: calc(100% - 4px);
 }
 
-.bookmark-editor button {
+.bookmark-editor button, .folder-editor button {
     width: calc(50% - 4px);
 }

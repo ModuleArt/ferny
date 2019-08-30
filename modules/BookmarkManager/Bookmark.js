@@ -24,7 +24,7 @@ class Bookmark extends EventEmitter {
             <label class='bookmark-preview'>` + url + `</label>
         `;
         this.node.onclick = () => {
-            ipcRenderer.send("tabManager-addTab", url, true);
+            this.open();
         }
         this.node.onauxclick = (event) => {
             event.preventDefault();
@@ -34,6 +34,9 @@ class Bookmark extends EventEmitter {
         }
         this.node.oncontextmenu = () => {
             this.toggleOptions();
+        }
+        this.node.onkeyup = (event) => {
+            event.preventDefault();
         }
 
         let optionsBtn = document.createElement('button');
@@ -79,6 +82,10 @@ class Bookmark extends EventEmitter {
             this.delete();
         }
         bookmarkMenu.appendChild(deleteBtn);
+    }
+
+    open() {
+        ipcRenderer.send("tabManager-addTab", this.url, true);
     }
 
     getId() {
@@ -152,6 +159,7 @@ class Bookmark extends EventEmitter {
             nameInput.placeholder = "Bookmark name";
             nameInput.value = this.name;
             bookmarkEditor.appendChild(nameInput);
+            nameInput.focus();
 
             let urlInput = document.createElement('input');
             urlInput.type = "text";

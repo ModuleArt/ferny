@@ -21,7 +21,7 @@ class BookmarkManager extends EventEmitter {
 
         this.toggleArrange();
 
-        this.defaultFolder = new Folder(0, "All bookmarks", false);
+        this.defaultFolder = new Folder(-1, "All bookmarks", false);
         this.appendFolder(this.defaultFolder);
     }
 
@@ -58,6 +58,23 @@ class BookmarkManager extends EventEmitter {
             }
             this.emit("bookmark-editor-toggled");
         });
+        folder.on("delete", (id) => {
+            this.removeFolder(id);
+            if(this.isotope != null) {
+                this.isotope.arrange();
+            }
+        });
+        folder.on("bookmark-deleted", () => {
+            if(this.isotope != null) {
+                this.isotope.arrange();
+            }
+        });
+        folder.on("toggle-editor", () => {
+            if(this.isotope != null) {
+                this.isotope.arrange();
+            }
+            this.emit("folder-editor-toggled");
+        });
 
         this.folders.push(folder);
         this.folderContainer.appendChild(folder.getNode());
@@ -72,7 +89,13 @@ class BookmarkManager extends EventEmitter {
     }
 
     removeFolder(id) {
-
+        for(let i = 0; i < this.folders.length; i++) {
+            if(this.folders[i].getId() == id) {
+                this.folderContainer.removeChild(this.folders[i].getNode());
+                this.folders.splice(i, 1);
+                break;
+            }
+        }
     }
 
     getDefaultFolder() {

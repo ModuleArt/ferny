@@ -198,6 +198,9 @@ class Tab extends EventEmitter {
                                 label: 'Reload', icon: this.appPath + '/imgs/icons16/reload.png', accelerator: 'F5', click: () => { 
                                     this.reload();
                                 } }, { type: 'separator' }, {
+                                label: 'Select all', icon: this.appPath + '/imgs/icons16/select-all.png', accelerator: 'CmdOrCtrl+A', click: () => { 
+                                    this.selectAll();
+                                } }, { type: 'separator' }, {
                                 label: 'View page source', icon: this.appPath + '/imgs/icons16/code.png', click: () => {
                                     this.viewPageSource();
                                 } }, {
@@ -325,20 +328,37 @@ class Tab extends EventEmitter {
     }
 
     showMenu() {
-        let tabMenu = Menu.buildFromTemplate([
-            { label: 'Back', icon: this.appPath + '/imgs/icons16/back.png', accelerator: 'Alt+Left', click: () => { this.goBack(); } },
-            { label: 'Forward', icon: this.appPath + '/imgs/icons16/forward.png', accelerator: 'Alt+Right', click: () => { this.goForward(); } },
-            { label: 'Reload', icon: this.appPath + '/imgs/icons16/reload.png', accelerator: 'F5', click: () => { this.reload(); } },
-            { type: 'separator' },
-            { label: 'Duplicate', icon: this.appPath + '/imgs/icons16/copy.png', accelerator: 'CmdOrCtrl+Shift+D', click: () => { this.duplicate(); } },
-            { label: 'Copy URL', icon: this.appPath + '/imgs/icons16/copy-link.png', accelerator: 'CmdOrCtrl+Shift+C', click: () => { this.copyURL(); } },
-            { label: 'Go home', icon: this.appPath + '/imgs/icons16/home.png', accelerator: 'CmdOrCtrl+Shift+H', click: () => { this.goHome(); } },
-            { type: 'separator' },
-            { label: 'Reload ignoring cache', accelerator: 'CmdOrCtrl+F5', click: () => { this.reloadIgnoringCache(); } },
-            { type: 'separator' },
-            { label: 'Close to the right', icon: this.appPath + '/imgs/icons16/swipe-right.png', click: () => { this.closeToTheRight(); } },
-            { label: 'Close others', accelerator: 'CmdOrCtrl+Shift+W', click: () => { this.closeOthers(); } },
-            { label: 'Close tab', icon: this.appPath + '/imgs/icons16/close.png', accelerator: 'CmdOrCtrl+W', click: () => { this.close(); } }
+        let tabMenu = Menu.buildFromTemplate([{ 
+            label: 'Back', icon: this.appPath + '/imgs/icons16/back.png', accelerator: 'Alt+Left', enabled: this.view.webContents.canGoBack(), click: () => { 
+                this.goBack(); 
+            } }, { 
+            label: 'Forward', icon: this.appPath + '/imgs/icons16/forward.png', accelerator: 'Alt+Right', enabled: this.view.webContents.canGoForward(), click: () => { 
+                this.goForward(); 
+            } }, { 
+            label: 'Reload', icon: this.appPath + '/imgs/icons16/reload.png', accelerator: 'F5', click: () => { 
+                this.reload(); 
+            } }, { type: 'separator' }, { 
+            label: 'Duplicate', icon: this.appPath + '/imgs/icons16/copy.png', accelerator: 'CmdOrCtrl+Shift+D', click: () => { 
+                this.duplicate(); 
+            } }, { 
+            label: 'Copy URL', icon: this.appPath + '/imgs/icons16/copy-link.png', accelerator: 'CmdOrCtrl+Shift+C', click: () => { 
+                this.copyURL(); 
+            } }, { 
+            label: 'Go home', icon: this.appPath + '/imgs/icons16/home.png', accelerator: 'CmdOrCtrl+Shift+H', click: () => { 
+                this.goHome(); 
+            } }, { type: 'separator' }, { 
+            label: 'Reload ignoring cache', accelerator: 'CmdOrCtrl+F5', click: () => { 
+                this.reloadIgnoringCache(); 
+            } }, { type: 'separator' }, { 
+            label: 'Close to the right', icon: this.appPath + '/imgs/icons16/swipe-right.png', click: () => { 
+                this.closeToTheRight(); 
+            } }, { 
+            label: 'Close others', accelerator: 'CmdOrCtrl+Shift+W', click: () => { 
+                this.closeOthers(); 
+            } }, { 
+            label: 'Close tab', icon: this.appPath + '/imgs/icons16/close.png', accelerator: 'CmdOrCtrl+W', click: () => { 
+                this.close(); 
+            } }
         ]);
         tabMenu.popup(this.window);
     }

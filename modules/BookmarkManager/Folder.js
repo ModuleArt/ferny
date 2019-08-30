@@ -24,6 +24,26 @@ class Folder extends EventEmitter {
             <div class='folder-container'></div>
         `;
 
+        if(editable) {
+            let editFolderBtn = document.createElement("button");
+            editFolderBtn.classList.add('nav-btn', 'edit-folder-btn');
+            editFolderBtn.title = "Edit folder";
+            editFolderBtn.innerHTML = `<img class='theme-icon' name='edit-folder-16'>`;
+            editFolderBtn.onclick = () => {
+                this.toggleEditor();
+            }
+            this.node.getElementsByClassName('folder-header')[0].appendChild(editFolderBtn);
+        }
+
+        let openAllBtn = document.createElement("button");
+        openAllBtn.classList.add('nav-btn', 'open-all-btn');
+        openAllBtn.title = "Open all bookmarks";
+        openAllBtn.innerHTML = `<img class='theme-icon' name='link-16'>`;
+        openAllBtn.onclick = () => {
+            this.openAllBookmarks();
+        }
+        this.node.getElementsByClassName('folder-header')[0].appendChild(openAllBtn);
+
         let addBookmarkBtn = document.createElement("button");
         addBookmarkBtn.classList.add('nav-btn', 'add-bookmark-btn');
         addBookmarkBtn.title = "Create bookmark here";
@@ -32,14 +52,10 @@ class Folder extends EventEmitter {
             this.newBookmark();
         }
         this.node.getElementsByClassName('folder-header')[0].appendChild(addBookmarkBtn);
+    }
 
-        if(editable) {
-            let editFolderBtn = document.createElement("button");
-            editFolderBtn.classList.add('nav-btn', 'edit-folder-btn');
-            editFolderBtn.title = "Edit folder";
-            editFolderBtn.innerHTML = `<img class='theme-icon' name='edit-folder-16'>`;
-            this.node.getElementsByClassName('folder-header')[0].appendChild(editFolderBtn);
-        }
+    getId() {
+        return this.id;
     }
 
     newBookmark() {
@@ -59,6 +75,7 @@ class Folder extends EventEmitter {
         });
         bookmark.on("delete", (id) => {
             this.removeBookmark(id);
+            this.emit("bookmark-deleted");
         });
         this.bookmarks.push(bookmark);
         this.node.getElementsByClassName('folder-container')[0].appendChild(bookmark.getNode());
@@ -97,6 +114,72 @@ class Folder extends EventEmitter {
 
     updateBookmarksPositions(arr) {
 
+    }
+
+    openAllBookmarks() {
+        for(let i = 0; i < this.bookmarks.length; i++) {
+            this.bookmarks[i].open();
+        }
+    }
+
+    edit(name) {
+        this.name = name;
+
+        this.node.getElementsByClassName('folder-name')[0].innerHTML = name;
+        this.node.getElementsByClassName('folder-header')[0].title = name;
+
+        return null;
+    }
+
+    toggleEditor() {
+        let folderEditor = this.node.getElementsByClassName('folder-editor')[0];
+        if(folderEditor == null) {
+            folderEditor = document.createElement('div');
+            folderEditor.classList.add('folder-editor');
+            this.node.insertBefore(folderEditor, this.node.firstChild);
+
+            let nameInput = document.createElement('input');
+            nameInput.type = "text";
+            nameInput.placeholder = "Folder name";
+            nameInput.value = this.name;
+            folderEditor.appendChild(nameInput);
+            nameInput.focus();
+
+            let saveBtn = document.createElement('button');
+            saveBtn.classList.add('nav-btn');
+            saveBtn.innerHTML = `<img class="theme-icon" name="save-16"><label>Save</label>`;
+            saveBtn.onclick = () => {
+                this.edit(nameInput.value);
+                this.toggleEditor();
+            }
+            folderEditor.appendChild(saveBtn);
+
+            let cancelBtn = document.createElement('button');
+            cancelBtn.classList.add('nav-btn');
+            cancelBtn.innerHTML = `<img class="theme-icon" name="cancel-16"><label>Cancel</label>`;
+            cancelBtn.onclick = () => {
+                this.toggleEditor();
+            }
+            folderEditor.appendChild(cancelBtn);
+
+            let deleteBtn = document.createElement('button');
+            deleteBtn.classList.add('nav-btn');
+            deleteBtn.innerHTML = `<img class="theme-icon" name="delete-16"><label>Delete</label>`;
+            deleteBtn.onclick = () => {
+                this.delete();
+            }
+            folderEditor.appendChild(deleteBtn);
+        } else {
+            this.node.removeChild(folderEditor);
+        }
+
+        this.emit("toggle-editor");
+        return null;
+    }
+
+    delete() {
+        this.emit("delete", this.id);
+        return null;
     }
 }
 

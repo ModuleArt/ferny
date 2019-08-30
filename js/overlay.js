@@ -55,6 +55,10 @@ bookmarkManager.on("bookmark-editor-toggled", () => {
   updateTheme();
 });
 
+bookmarkManager.on("folder-editor-toggled", () => {
+  updateTheme();
+});
+
 /*
  ###### #    # #    #  ####               ####  ######   ##   #####   ####  #    #
  #      #    # ##   # #    #             #      #       #  #  #    # #    # #    #
