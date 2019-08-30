@@ -209,8 +209,10 @@ const sideMenu = Menu.buildFromTemplate([{
     label: 'Open file', icon: app.getAppPath() + '/imgs/icons16/open.png', accelerator: 'CmdOrCtrl+O', click: () => { 
       openFileDialog(); 
     } }, { type: 'separator' }, { 
-    enabled: false, label: 'View page source', icon: app.getAppPath() + '/imgs/icons16/code.png', accelerator: 'CmdOrCtrl+U', click: () => { 
-      mainWindow.webContents.send('action-page-viewsource'); 
+    label: 'View page source', icon: app.getAppPath() + '/imgs/icons16/code.png', accelerator: 'CmdOrCtrl+U', click: () => { 
+      if(tabManager.hasActiveTab()) {
+        tabManager.getActiveTab().viewPageSource();
+      }
     } }, { 
     label: 'Developer tools', icon: app.getAppPath() + '/imgs/icons16/tools.png', accelerator: 'F12', click: () => { 
       if(tabManager.hasActiveTab()) {
