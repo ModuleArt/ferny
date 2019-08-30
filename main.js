@@ -245,8 +245,12 @@ const sideMenu = Menu.buildFromTemplate([{
     label: 'Show overlay', icon: app.getAppPath() + '/imgs/icons16/details.png', accelerator: 'F3', click: () => { 
       overlay.show(); 
     } }, { 
-    enabled: false, label: 'Focus address bar', icon: app.getAppPath() + '/imgs/icons16/zoom.png', accelerator: 'F6', click: () => { 
-      mainWindow.webContents.send('action-page-focussearch'); 
+    label: 'Open search', icon: app.getAppPath() + '/imgs/icons16/zoom.png', accelerator: 'F6', click: () => { 
+      if(tabManager.hasActiveTab()) {
+        overlay.goToSearch(tabManager.getActiveTab().getURL());
+      } else {
+        overlay.goToSearch();
+      }
     } }, { 
     enabled: false, label: 'Close active panel', icon: app.getAppPath() + '/imgs/icons16/close.png', accelerator: 'Esc', click: () => { 
       mainWindow.webContents.send('action-esc'); 

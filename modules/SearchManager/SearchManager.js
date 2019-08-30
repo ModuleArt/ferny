@@ -230,7 +230,11 @@ class SearchManager extends EventEmitter {
     }
 
     goToSearch(text) {
-        this.searchInput.value = text;
+        if(text == null) {
+            this.searchInput.value = "";
+        } else {
+            this.searchInput.value = text;
+        }
         this.searchInput.focus();
     }
 
