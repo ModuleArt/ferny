@@ -19,7 +19,7 @@ function loadTheme(name) {
                     });
                 });
             } catch (e) {
-                saveFileToJsonFolder("theme", theme);
+                saveFileToJsonFolder(null, "theme", theme);
                 
                 let file = name.toString().replace("\n", "") + ".json";
                 fs.readFile(path.join(__dirname, "..", "/themes/" + file), function(err, data) {

@@ -16,10 +16,10 @@ function loadWinControls() {
         var platform = process.platform;
 
         if(platform == "win32") {
-            saveFileToJsonFolder('wincontrols', JSON.stringify(winControls));
+            saveFileToJsonFolder(null, 'wincontrols', JSON.stringify(winControls));
         } else if(platform == "linux") {
             winControls.frame = true;
-            saveFileToJsonFolder('wincontrols', JSON.stringify(winControls));
+            saveFileToJsonFolder(null, 'wincontrols', JSON.stringify(winControls));
         }
     }
 

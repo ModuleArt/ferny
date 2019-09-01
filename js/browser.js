@@ -30,14 +30,10 @@ const parsePath = require("parse-path");
 .##.....##..#######..########...#######..########.########..######.
 */
 
-const extToImagePath = require("../modules/extToImagePath.js");
-const saveFileToJsonFolder = require("../modules/saveFileToJsonFolder.js");
 const applyTheme = require("../modules/applyTheme.js");
 const loadTheme = require("../modules/loadTheme.js");
 const applyWinControls = require("../modules/applyWinControls.js");
-const bytesToSize = require("../modules/bytesToSize.js");
 const loadWinControls = require("../modules/loadWinControls.js");
-const rgbToRgbaString = require("../modules/rgbToRgbaString.js");
 
 const NotificationManager = require("../modules/NotificationManager/NotificationManager.js");
 const TabRenderer = require("../modules/TabManager/TabRenderer.js");
@@ -120,32 +116,6 @@ function installUpdate() {
   ipcRenderer.send('request-install-update');
 }
 
-function createBookmark(url, name, folder) {
-  let Data = {
-    name: name,
-    url: url,
-    folder: folder
-  };
-
-  var arr = [];
-  try {
-    var jsonstr = fs.readFileSync(ppath + "/json/bookmarks.json");
-    arr = JSON.parse(jsonstr);
-  } catch (e) {
-
-  }
-
-  arr.push(Data);
-
-  saveFileToJsonFolder('bookmarks', JSON.stringify(arr));
-
-  document.getElementById('sidebar-webview').send('action-update-bookmarks');
-
-  notificationManager.addStatusNotif("Bookmark added", "info");
-
-  updateBookmarksBar();
-}
-
 function clearDownloads() {
   ipcRenderer.send('action-clear-downloads');
   document.getElementById('sidebar-webview').send('action-clear-downloads');
@@ -182,26 +152,6 @@ function restoreWindow() {
 
 function closeWindow() {
   ipcRenderer.send('request-quit-app');
-}
-
-function removeFolder(folder) {
-  try {
-    var jsonstr = fs.readFileSync(ppath + "/json/folders.json");
-    var arr = JSON.parse(jsonstr);
-    for (var i = 0; i < arr.length; i++) {
-      if(arr[i].name == folder) {
-        arr.splice(i, 1);
-      }
-    }
-    saveFileToJsonFolder('folders', JSON.stringify(arr)).then(function() {
-      document.getElementById('sidebar-webview').send('action-remove-folder', folder);
-      updateBookmarksBar();
-
-      notificationManager.addStatusNotif("Folder removed: " + folder, "info");
-    });
-  } catch (e) {
-
-  }
 }
 
 function zoomIn() {

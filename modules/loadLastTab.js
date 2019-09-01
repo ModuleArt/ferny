@@ -9,7 +9,7 @@ function loadLastTab() {
                 resolve(data);
             });
         } catch (e) {
-            saveFileToJsonFolder("lasttab", "overlay").then((bool) => {
+            saveFileToJsonFolder(null, "lasttab", "overlay").then((bool) => {
                 resolve("overlay");
             })
         }

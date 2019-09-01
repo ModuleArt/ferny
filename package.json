@@ -46,6 +46,7 @@
     "persist-path": "^1.0.2",
     "prepend-file": "^1.3.1",
     "readl-async": "0.0.4",
+    "readline-promise": "^1.0.4",
     "suggestion": "^2.1.2",
     "validate.io-uri": "^1.0.0"
   },

@@ -13,7 +13,7 @@ function loadHomePage() {
             let jsonstr = fs.readFileSync(ppath + "/json/home.json");
             Data = JSON.parse(jsonstr);
         } catch (e) {
-            saveFileToJsonFolder('home', JSON.stringify(Data))
+            saveFileToJsonFolder(null, 'home', JSON.stringify(Data))
         }
       
         resolve(Data);

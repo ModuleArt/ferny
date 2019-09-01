@@ -9,7 +9,7 @@ function loadSearchEngine() {
                 resolve(data);
             });
         } catch (e) {
-            saveFileToJsonFolder("searchengine", "duckduckgo").then((bool) => {
+            saveFileToJsonFolder(null, "searchengine", "duckduckgo").then((bool) => {
                 resolve("duckduckgo");
             })
         }

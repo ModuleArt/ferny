@@ -9,7 +9,7 @@ function loadStartup() {
                 resolve(data);
             });
         } catch (e) {
-            saveFileToJsonFolder("startup", "overlay").then((bool) => {
+            saveFileToJsonFolder(null, "startup", "overlay").then((bool) => {
                 resolve("overlay");
             })
         }

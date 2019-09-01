@@ -522,26 +522,6 @@ ipcMain.on('request-update-home-page', (event, arg) => {
   mainWindow.webContents.send('action-update-home-page');
 });
 
-ipcMain.on('request-set-bookmarks-bar', (event, arg) => {
-  try {
-    fs.readFile(ppath + "/json/bookmarksbar.json", function(err, data) {
-      let Data = JSON.parse(data);
-
-      if(arg.on == null) {
-        arg.on = Data.on;
-      }
-      if(arg.layout == null) {
-        arg.layout = Data.layout;
-      }
-
-      mainWindow.webContents.send('action-set-bookmarks-bar', arg);
-      saveFileToJsonFolder('bookmarksbar', JSON.stringify(arg));
-    });
-  } catch (e) {
-
-  }
-});
-
 ipcMain.on('request-install-update', (event, arg) => {
   autoUpdater.quitAndInstall();
 });
@@ -914,7 +894,7 @@ function initTabManager() {
         if (err) throw err;
       });
     } catch (error) {
-      saveFileToJsonFolder('history', JSON.stringify(Data));
+      saveFileToJsonFolder(null, 'history', JSON.stringify(Data));
     }
   });
 }
@@ -945,7 +925,7 @@ function showMainWindow() {
   try {
     Data = JSON.parse(fs.readFileSync(ppath + "/json/bounds.json"));
   } catch (e) {
-    saveFileToJsonFolder('bounds', JSON.stringify(Data));
+    saveFileToJsonFolder(null, 'bounds', JSON.stringify(Data));
   }
 
   if(Data.maximize) {
@@ -1317,8 +1297,8 @@ function openFileDialog() {
 */
 
 function saveDownloads() {
-  saveFileToJsonFolder('curdownloadnum', curDownloadNum);
-  saveFileToJsonFolder('downloads', JSON.stringify(downloadsArray));
+  saveFileToJsonFolder(null, 'curdownloadnum', curDownloadNum);
+  saveFileToJsonFolder(null, 'downloads', JSON.stringify(downloadsArray));
   console.log("saved DOWNLOADS: " + downloadsArray.length);
 }
 
@@ -1330,7 +1310,7 @@ function saveBounds() {
     height: mainWindow.getBounds().height,
     maximize: mainWindow.isMaximized()
   }
-  saveFileToJsonFolder('bounds', JSON.stringify(Data));
+  saveFileToJsonFolder(null, 'bounds', JSON.stringify(Data));
 }
 
 /*
@@ -1372,7 +1352,7 @@ function loadWelcome() {
       showWelcomeWindow();
     }
   } catch (e) {
-    saveFileToJsonFolder('welcome', 1);
+    saveFileToJsonFolder(null, 'welcome', 1);
     showWelcomeWindow();
   }
 }

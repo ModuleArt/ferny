@@ -1,6 +1,12 @@
 const EventEmitter = require("events");
 const Isotope = require('isotope-layout');
 const Dragula = require('dragula');
+const fs = require("fs");
+const ppath = require('persist-path')('Ferny');
+const readlPromise = require('readline-promise').default;
+
+const saveFileToJsonFolder = require("../saveFileToJsonFolder.js");
+const loadFileFromJsonFolder = require("../loadFileFromJsonFolder.js");
 
 const Folder = require(__dirname + "/Folder.js");
 const Bookmark = require(__dirname + "/Bookmark.js");
@@ -23,16 +29,19 @@ class BookmarkManager extends EventEmitter {
 
         this.defaultFolder = new Folder(-1, "All bookmarks", false);
         this.appendFolder(this.defaultFolder);
+
+        this.loadFromStorage();
     }
 
     newFolder() {
-        this.addFolder("New folder " + (this.folderCounter + 1));
+        this.addFolder("New folder " + this.folderCounter);
 
         return null;
     }
 
     addFolder(name) {
         this.appendFolder(new Folder(this.folderCounter++, name, true));
+        this.saveFolders();
 
         return null;
     }
@@ -40,6 +49,7 @@ class BookmarkManager extends EventEmitter {
     appendFolder(folder) {
         folder.on("add-bookmark", (folder, bookmarkName, bookmarkURL) => {
             this.addBookmarkToFolder(folder, bookmarkName, bookmarkURL);
+            this.saveBookmarks();
         });
         folder.on("append-bookmark", () => {
             if(this.isotope != null) {
@@ -63,11 +73,19 @@ class BookmarkManager extends EventEmitter {
             if(this.isotope != null) {
                 this.isotope.arrange();
             }
+            this.saveFolders();
+        });
+        folder.on("edit", (id) => {
+            this.saveFolders();
         });
         folder.on("bookmark-deleted", () => {
             if(this.isotope != null) {
                 this.isotope.arrange();
             }
+            this.saveBookmarks();
+        });
+        folder.on("bookmark-edited", () => {
+            this.saveBookmarks();
         });
         folder.on("toggle-editor", () => {
             if(this.isotope != null) {
@@ -103,7 +121,11 @@ class BookmarkManager extends EventEmitter {
     }
 
     getFolderById(id) {
-
+        for(let i = 0; i < this.folders.length; i++) {
+            if(id == this.folders[i].getId()) {
+                return this.folders[i];
+            }
+        }
     }
 
     addBookmarkToFolder(folder, bookmarkName, bookmarkURL) {
@@ -127,16 +149,88 @@ class BookmarkManager extends EventEmitter {
                 this.folderDrag.destroy();
                 this.folderDrag = null;
             }
+
+            this.folderContainer.classList.remove('movable');
+
+            document.getElementById("bookmarks-arrange-btn").style.display = "none";
+            document.getElementById("bookmarks-move-btn").style.display = "";
         } else {
             this.isotope.destroy();
             this.isotope = null;
 
             this.folderDrag = Dragula([this.folderContainer], {
-                direction: "horizontal"
+                direction: "horizontal",
+                moves: (el, container, handle, sibling) => {
+                    return handle.classList.contains('folder-move');
+                }
             });
+
+            this.folderContainer.classList.add('movable');
+
+            document.getElementById("bookmarks-arrange-btn").style.display = "";
+            document.getElementById("bookmarks-move-btn").style.display = "none";
         }
 
         return null;
+    }
+
+    loadFromStorage() {
+        loadFileFromJsonFolder("bookmarks", "folder-counter").then((folderCounter) => {
+            this.folderCounter = folderCounter;
+        });
+        loadFileFromJsonFolder("bookmarks", "bookmark-counter").then((bookmarkCounter) => {
+            this.bookmarkCounter = bookmarkCounter;
+        });
+
+        let foldersReadline = readlPromise.createInterface({
+            terminal: false, 
+            input: fs.createReadStream(ppath + "/json/bookmarks/folders.json")
+        });
+        foldersReadline.forEach((line, index) => {
+            let obj = JSON.parse(line);
+            if(obj.id != -1) {
+                this.appendFolder(new Folder(obj.id, obj.name, true));
+            }
+        });
+
+        let bookmarksReadline = readlPromise.createInterface({
+            terminal: false, 
+            input: fs.createReadStream(ppath + "/json/bookmarks/bookmarks.json")
+        });
+        bookmarksReadline.forEach((line, index) => {
+            let obj = JSON.parse(line);
+            this.getFolderById(obj.folder).appendBookmark(new Bookmark(obj.id, obj.name, obj.url));
+        });
+    }
+
+    saveFolders() {
+        saveFileToJsonFolder("bookmarks", "folder-counter", this.folderCounter);
+        saveFileToJsonFolder("bookmarks", "folders", "").then(() => {
+            for(let i = 0; i < this.folders.length; i++) {
+                fs.appendFile(ppath + "/json/bookmarks/folders.json", this.folders[i].toString() + "\n", (err) => {
+                    if(err) {
+                        throw err;
+                    }
+                });
+            }
+        });
+    }
+
+    saveBookmarks() {
+        saveFileToJsonFolder("bookmarks", "bookmark-counter", this.bookmarkCounter);
+        saveFileToJsonFolder("bookmarks", "bookmarks", "").then(() => {
+            for(let i = 0; i < this.folders.length; i++) {
+                for(let j = 0; j < this.folders[i].getBookmarks().length; j++) {
+                    let bookmark = this.folders[i].getBookmarks()[j].getData();
+                    bookmark.folder = this.folders[i].getId();
+                    fs.appendFile(ppath + "/json/bookmarks/bookmarks.json", JSON.stringify(bookmark) + "\n", (err) => {
+                        if(err) {
+                            throw err;
+                        }
+                    });
+                }
+            }
+        });
     }
 }
 

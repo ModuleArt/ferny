@@ -84,6 +84,14 @@ class Bookmark extends EventEmitter {
         bookmarkMenu.appendChild(deleteBtn);
     }
 
+    getData() {
+        return {
+            id: this.id,
+            name: this.name,
+            url: this.url
+        }
+    }
+
     open() {
         ipcRenderer.send("tabManager-addTab", this.url, true);
     }
@@ -101,6 +109,7 @@ class Bookmark extends EventEmitter {
         this.node.title = name + "\n" + url;
         this.node.getElementsByClassName('bookmark-icon')[0].src = "http://www.google.com/s2/favicons?domain=" + url;
 
+        this.emit("edit");
         return null;
     }
 

@@ -128,12 +128,12 @@ class SearchManager extends EventEmitter {
         }
     }
 
-    getSuggestions() {
-        this.searchSuggest.style.display = "";
-        this.searchSuggest.classList.remove("hide");
-            
+    getSuggestions() {    
         if (this.searchInput.value.length > 0) {
             autoSuggest(this.searchInput.value, (err, suggestions) => {
+                this.searchSuggest.style.display = "";
+                this.searchSuggest.classList.remove("hide");
+
                 this.searchSuggestContainer.innerHTML = "";
 
                 let firstInput = document.createElement('input');

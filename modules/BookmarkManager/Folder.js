@@ -19,12 +19,15 @@ class Folder extends EventEmitter {
         this.node.name = id;
         this.node.innerHTML = `
             <div class='folder-header' title='` + name + `'>
+                <img title="Drag here" class="theme-icon folder-move" name="move-16">
                 <label class='folder-name'>` + name + `</label>
             </div>
             <div class='folder-container'></div>
         `;
 
         if(editable) {
+            this.node.classList.add('editable');
+
             let editFolderBtn = document.createElement("button");
             editFolderBtn.classList.add('nav-btn', 'edit-folder-btn');
             editFolderBtn.title = "Edit folder";
@@ -35,15 +38,6 @@ class Folder extends EventEmitter {
             this.node.getElementsByClassName('folder-header')[0].appendChild(editFolderBtn);
         }
 
-        let openAllBtn = document.createElement("button");
-        openAllBtn.classList.add('nav-btn', 'open-all-btn');
-        openAllBtn.title = "Open all bookmarks";
-        openAllBtn.innerHTML = `<img class='theme-icon' name='link-16'>`;
-        openAllBtn.onclick = () => {
-            this.openAllBookmarks();
-        }
-        this.node.getElementsByClassName('folder-header')[0].appendChild(openAllBtn);
-
         let addBookmarkBtn = document.createElement("button");
         addBookmarkBtn.classList.add('nav-btn', 'add-bookmark-btn');
         addBookmarkBtn.title = "Create bookmark here";
@@ -52,6 +46,22 @@ class Folder extends EventEmitter {
             this.newBookmark();
         }
         this.node.getElementsByClassName('folder-header')[0].appendChild(addBookmarkBtn);
+
+        let openAllBtn = document.createElement("button");
+        openAllBtn.classList.add('nav-btn', 'open-all-btn');
+        openAllBtn.title = "Open all bookmarks";
+        openAllBtn.innerHTML = `<img class='theme-icon' name='link-16'>`;
+        openAllBtn.onclick = () => {
+            this.openAllBookmarks();
+        }
+        this.node.getElementsByClassName('folder-header')[0].appendChild(openAllBtn);
+    }
+
+    toString() {
+        return JSON.stringify({
+            id: this.id,
+            name: this.name
+        });
     }
 
     getId() {
@@ -76,6 +86,9 @@ class Folder extends EventEmitter {
         bookmark.on("delete", (id) => {
             this.removeBookmark(id);
             this.emit("bookmark-deleted");
+        });
+        bookmark.on("edit", () => {
+            this.emit("bookmark-edited");
         });
         this.bookmarks.push(bookmark);
         this.node.getElementsByClassName('folder-container')[0].appendChild(bookmark.getNode());
@@ -128,6 +141,7 @@ class Folder extends EventEmitter {
         this.node.getElementsByClassName('folder-name')[0].innerHTML = name;
         this.node.getElementsByClassName('folder-header')[0].title = name;
 
+        this.emit("edit")
         return null;
     }
 
@@ -180,6 +194,10 @@ class Folder extends EventEmitter {
     delete() {
         this.emit("delete", this.id);
         return null;
+    }
+
+    getBookmarks() {
+        return this.bookmarks;
     }
 }
 

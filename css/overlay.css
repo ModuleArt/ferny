@@ -268,18 +268,38 @@ main {
 #bookmarks-container {
     margin: -2px;
     text-align: left;
+    position: relative;
 }
 
 #bookmarks-container:empty {
     padding-bottom: 36px;
 }
 
+#bookmarks-container.movable {
+
+}
+
+.folder-move {
+    position: absolute;
+    left: 7px;
+    top: 7px;
+    display: none;
+}
+
+#bookmarks-container.movable .folder-move {
+    display: block;
+}
+
+#bookmarks-container.movable .folder-name {
+    left: 24px;
+}
+
 .folder {
     width: 192px;
     margin: 4px;
     display: inline-block;
-    vertical-align: top;
     position: relative;
+    vertical-align: top;
 }
 
 .folder-header {
@@ -332,6 +352,10 @@ main {
 }
 
 .folder-header:hover .folder-name {
+    right: 63px;
+}
+
+.folder.editable .folder-header:hover .folder-name {
     right: 94px;
 }
 

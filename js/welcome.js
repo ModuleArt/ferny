@@ -45,7 +45,7 @@ function updateTheme() {
 }
 
 function requestTheme(theme) {
-  saveFileToJsonFolder('theme', theme).then(function(bool) {
+  saveFileToJsonFolder(null, 'theme', theme).then(function(bool) {
     loadTheme(theme).then(function(themeObj) {
       ipcRenderer.send('request-change-theme', themeObj);
       applyTheme(themeObj);

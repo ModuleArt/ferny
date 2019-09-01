@@ -6,6 +6,7 @@
         <link rel="stylesheet" href="../css/modules/nav-btn.css">
         <link rel="stylesheet" href="../css/modules/input.css">
         <link rel="stylesheet" href="../css/overlay.css">
+        <link rel="stylesheet" href="../node_modules/dragula/dist/dragula.css">
     </head>
     <body>
         <main>
@@ -44,8 +45,11 @@
                 <img class="theme-icon" name="bookmarks-16">
                 <label>Bookmarks</label>
                 <div class="block-buttons">
-                    <button class="nav-btn" title="Toggle arranging / dragging" onclick="toggleArrange()">
+                    <button id="bookmarks-arrange-btn" class="nav-btn" title="Turn off dragging" onclick="toggleArrange()" style="display: none">
                         <img class="theme-icon" name="arrange-16">
+                    </button>
+                    <button id="bookmarks-move-btn" class="nav-btn" title="Turn on dragging" onclick="toggleArrange()">
+                        <img class="theme-icon" name="move-16">
                     </button>
                     <button class="nav-btn" title="New bookmark" onclick="newBookmark()">
                         <img class="theme-icon" name="add-bookmark-16">
