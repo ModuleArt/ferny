@@ -41,7 +41,9 @@ class BookmarkManager extends EventEmitter {
 
     addFolder(name) {
         this.appendFolder(new Folder(this.folderCounter++, name, true));
-        this.saveFolders();
+        this.updateFoldersPositions().then(() => {
+            this.saveFolders();
+        });
 
         return null;
     }
@@ -95,10 +97,25 @@ class BookmarkManager extends EventEmitter {
         });
 
         this.folders.push(folder);
-        this.folderContainer.appendChild(folder.getNode());
+        
+        let nodes = this.folderContainer.childNodes;
+        if(folder.getPosition() != null) {
+            for(let i = 0; i < nodes.length; i++) {
+                if(folder.getPosition() < nodes[i].position) {
+                    this.folderContainer.insertBefore(folder.getNode(), nodes[i]);
+                    break;
+                } else {
+                    if(nodes[i] == this.folderContainer.lastChild){
+                        this.folderContainer.appendChild(folder.getNode());
+                    } 
+                }
+            }
+        } else {
+            this.folderContainer.appendChild(folder.getNode());
+        }
         
         if(this.isotope != null) {
-            this.isotope.addItems(folder.getNode());
+            this.isotope.reloadItems();
             this.isotope.arrange();
         }
 
@@ -132,8 +149,15 @@ class BookmarkManager extends EventEmitter {
         folder.appendBookmark(new Bookmark(this.bookmarkCounter++, bookmarkName, bookmarkURL));
     }
 
-    updateFoldersPositions(arr) {
-
+    updateFoldersPositions() {
+        return new Promise((resolve, reject) => {
+            let divs = this.folderContainer.getElementsByClassName('folder');
+            for(let i = 0; i < divs.length; i++) {
+                console.log(divs[i].name)
+                this.getFolderById(divs[i].name).setPosition(i);
+            }
+            resolve();
+        });
     }
 
     toggleArrange() {
@@ -164,6 +188,11 @@ class BookmarkManager extends EventEmitter {
                     return handle.classList.contains('folder-move');
                 }
             });
+            this.folderDrag.on("drop", (el, target, source, sibling) => {
+                this.updateFoldersPositions().then(() => {
+                    this.saveFolders();
+                });
+            });
 
             this.folderContainer.classList.add('movable');
 
@@ -189,7 +218,9 @@ class BookmarkManager extends EventEmitter {
         foldersReadline.forEach((line, index) => {
             let obj = JSON.parse(line);
             if(obj.id != -1) {
-                this.appendFolder(new Folder(obj.id, obj.name, true));
+                this.appendFolder(new Folder(obj.id, obj.name, false, obj.position));
+            } else {
+                this.defaultFolder.setPosition(obj.position);
             }
         });
 

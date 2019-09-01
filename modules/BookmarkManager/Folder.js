@@ -7,16 +7,18 @@ class Folder extends EventEmitter {
     node = null;
     position = null;
 
-    constructor(id, name, editable) {
+    constructor(id, name, editable, position) {
         super();
 
         this.id = id;
         this.name = name;
+        this.position = position;
 
         this.node = document.createElement("div");
         this.node.classList.add("folder");
         this.node.id = "folder-" + id;
         this.node.name = id;
+        this.node.position = position;
         this.node.innerHTML = `
             <div class='folder-header' title='` + name + `'>
                 <img title="Drag here" class="theme-icon folder-move" name="move-16">
@@ -60,7 +62,8 @@ class Folder extends EventEmitter {
     toString() {
         return JSON.stringify({
             id: this.id,
-            name: this.name
+            name: this.name,
+            position: this.position
         });
     }
 
@@ -123,6 +126,15 @@ class Folder extends EventEmitter {
 
     getNode() {
         return this.node;
+    }
+
+    setPosition(position) {
+        this.position = position;
+        this.node.position = position;
+    }
+
+    getPosition() {
+        return this.position;
     }
 
     updateBookmarksPositions(arr) {
