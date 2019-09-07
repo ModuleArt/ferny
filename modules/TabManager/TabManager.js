@@ -24,7 +24,7 @@ class TabManager extends EventEmitter {
 
         this.left = 0; 
         this.right = 0; 
-        this.top = 74; 
+        this.top = 75; 
         this.bottom = 0;
     }
 

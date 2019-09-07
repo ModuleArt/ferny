@@ -8,17 +8,8 @@
 .##.....##.##.....##.####.##....##
 */
 
-const { ipcRenderer, BrowserView } = require('electron');
+const { ipcRenderer } = require('electron');
 const dragula = require("dragula");
-// const autoSuggest = require('google-autocomplete');
-const autoSuggest = require('suggestion');
-const isUrl = require('validate.io-uri');
-const getAvColor = require('color.js');
-const fs = require("fs");
-const ppath = require('persist-path')('Ferny');
-// const checkFile = require('check-file');
-const fileExtension = require('file-extension');
-const parsePath = require("parse-path");
 
 /*
 .##.....##..#######..########..##.....##.##.......########..######.

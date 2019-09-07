@@ -375,7 +375,7 @@ app.on('ready', function() {
   });
 
   showMainWindow();
-  loadWelcome();
+  // loadWelcome();
   loadDownloads();
 });
 

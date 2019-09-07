@@ -1,0 +1,13 @@
+{
+  "name": "Maia",
+  "type": "Dark",
+  "icons": "white",
+  "colorBack": "#222D32",
+  "colorElement": "#29353B",
+  "colorBorder": "#1A2226",
+  "colorSecond": "#364144",
+  "colorTop": "#FFFFFF",
+  "shadowFocus": "inset 0 0 4px rgba(0, 0, 0, 1)",
+  "opacityOver": "0.5",
+  "pxRadius": "4px"
+}

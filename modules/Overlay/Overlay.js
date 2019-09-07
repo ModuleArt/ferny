@@ -4,7 +4,7 @@ const { BrowserView, Menu } = require('electron');
 class Overlay extends EventEmitter {
     window = null;
     view = null;
-    top = 33;
+    top = 34;
     appPath = null;
 
     constructor(window, appPath) {

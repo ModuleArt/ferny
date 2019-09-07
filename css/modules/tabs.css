@@ -16,6 +16,11 @@
     cursor: default;
     font-size: var(--px-font);
     border-bottom: 1px solid var(--color-border);
+    border-top: 1px solid transparent;
+}
+
+body.system-titlebar .tabman {
+    border-color: var(--color-border);
 }
 
 /*
