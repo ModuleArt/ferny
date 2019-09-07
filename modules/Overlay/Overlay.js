@@ -23,6 +23,8 @@ class Overlay extends EventEmitter {
             height: true
         });
         this.view.webContents.loadFile(this.appPath + "/html/overlay.html");
+
+        this.show();
     }
 
     refreshBounds() {

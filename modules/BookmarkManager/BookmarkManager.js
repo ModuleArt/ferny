@@ -7,6 +7,7 @@ const readlPromise = require('readline-promise').default;
 
 const saveFileToJsonFolder = require("../saveFileToJsonFolder.js");
 const loadFileFromJsonFolder = require("../loadFileFromJsonFolder.js");
+const checkFileExists = require("../checkFileExists.js");
 
 const Folder = require(__dirname + "/Folder.js");
 const Bookmark = require(__dirname + "/Bookmark.js");
@@ -211,26 +212,30 @@ class BookmarkManager extends EventEmitter {
             this.bookmarkCounter = bookmarkCounter;
         });
 
-        let foldersReadline = readlPromise.createInterface({
-            terminal: false, 
-            input: fs.createReadStream(ppath + "/json/bookmarks/folders.json")
-        });
-        foldersReadline.forEach((line, index) => {
-            let obj = JSON.parse(line);
-            if(obj.id != -1) {
-                this.appendFolder(new Folder(obj.id, obj.name, false, obj.position));
-            } else {
-                this.defaultFolder.setPosition(obj.position);
-            }
+        checkFileExists(ppath + "/json/bookmarks/folders.json").then(() => {
+            let foldersReadline = readlPromise.createInterface({
+                terminal: false, 
+                input: fs.createReadStream(ppath + "/json/bookmarks/folders.json")
+            });
+            foldersReadline.forEach((line, index) => {
+                let obj = JSON.parse(line);
+                if(obj.id != -1) {
+                    this.appendFolder(new Folder(obj.id, obj.name, false, obj.position));
+                } else {
+                    this.defaultFolder.setPosition(obj.position);
+                }
+            });
         });
 
-        let bookmarksReadline = readlPromise.createInterface({
-            terminal: false, 
-            input: fs.createReadStream(ppath + "/json/bookmarks/bookmarks.json")
-        });
-        bookmarksReadline.forEach((line, index) => {
-            let obj = JSON.parse(line);
-            this.getFolderById(obj.folder).appendBookmark(new Bookmark(obj.id, obj.name, obj.url));
+        checkFileExists(ppath + "/json/bookmarks/bookmarks.json").then(() => {
+            let bookmarksReadline = readlPromise.createInterface({
+                terminal: false, 
+                input: fs.createReadStream(ppath + "/json/bookmarks/bookmarks.json")
+            });
+            bookmarksReadline.forEach((line, index) => {
+                let obj = JSON.parse(line);
+                this.getFolderById(obj.folder).appendBookmark(new Bookmark(obj.id, obj.name, obj.url));
+            });
         });
     }
 

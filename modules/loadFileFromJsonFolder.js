@@ -1,6 +1,8 @@
 const fs = require("fs");
 const ppath = require('persist-path')('Ferny');
 
+const checkFileExists = require(__dirname + "/checkFileExists.js");
+
 function loadFileFromJsonFolder(subfolder, fileName) {
     return new Promise((resolve, reject) => {
         checkDirExists(ppath).then(() => {
@@ -26,22 +28,10 @@ function checkDirExists(path) {
                 resolve();
             } else {
                 fs.mkdir(path, (err) => {
-                    if(err) {
-                        throw err;
-                    } else {
+                    if(!err) {
                         resolve();
                     }
                 });
-            }
-        });
-    });
-}
-
-function checkFileExists(path) {
-    return new Promise((resolve, reject) => {
-        fs.exists(path, (exists) => {
-            if(exists) {
-                resolve();
             }
         });
     });
