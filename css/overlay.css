@@ -294,6 +294,14 @@ main {
     left: 24px;
 }
 
+#bookmarks-container.movable .bookmark-icon {
+    opacity: 0;
+}
+
+#bookmarks-container.movable .bookmark-move {
+    display: block;
+}
+
 .folder {
     width: 192px;
     margin: 4px;
@@ -428,6 +436,13 @@ main {
     top: 0;
 }
 
+.bookmark-move {
+    position: absolute;
+    left: 6px;
+    top: 7px;
+    display: none;
+}
+
 .bookmark-preview {
     opacity: 0;
     font-size: 10px;
@@ -481,8 +496,6 @@ main {
 
 .bookmark-menu {
     display: none;
-    animation: slide-down;
-    animation-duration: 0.25s;
     padding: 2px;
     text-align: center;
 }
@@ -501,8 +514,6 @@ main {
 
 .bookmark-editor {
     display: block;
-    animation: slide-down;
-    animation-duration: 0.25s;
     padding: 2px;
     text-align: center;
 }

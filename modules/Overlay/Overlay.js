@@ -42,14 +42,13 @@ class Overlay extends EventEmitter {
         return null;
     }
 
-    openOverlay() {
+    openOverlay(scrollId) {
         this.show();
-        this.view.webContents.loadFile(this.appPath + "/html/overlay.html");
-    }
-
-    openBookmarks() {
-        this.show();
-        this.view.webContents.loadFile(this.appPath + "/html/bookmarks.html");
+        if(scrollId == null) {
+            this.view.webContents.loadFile(this.appPath + "/html/overlay.html");
+        } else {
+            this.view.webContents.loadURL(this.appPath + "/html/overlay.html#" + scrollId);
+        }
     }
 
     openHistory() {
@@ -87,9 +86,6 @@ class Overlay extends EventEmitter {
             label: 'Overlay', icon: this.appPath + '/imgs/icons16/details.png', click: () => { 
                 this.openOverlay(); 
             } }, { type: 'separator' }, { 
-            label: 'Bookmarks', icon: this.appPath + '/imgs/icons16/bookmarks.png', accelerator: 'CmdOrCtrl+B', click: () => { 
-                this.openBookmarks(); 
-            } }, { 
             label: 'History', icon: this.appPath + '/imgs/icons16/history.png', accelerator: 'CmdOrCtrl+H', click: () => { 
                 this.openHistory(); 
             } }, { 

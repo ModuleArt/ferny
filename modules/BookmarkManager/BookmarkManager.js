@@ -30,15 +30,8 @@ class BookmarkManager extends EventEmitter {
         this.bookmarkDrag = Dragula([], {
             direction: "vertical",
             moves: (el, container, handle, sibling) => {
-                return handle.classList.contains('bookmark-icon');
+                return handle.classList.contains('bookmark-move');
             }
-        });
-        this.bookmarkDrag.on('drag', (el, target, source, sibling) => {
-            let bookmarkEditor = el.getElementsByClassName("bookmark-editor")[0];
-            if(bookmarkEditor != null) {
-                el.removeChild(bookmarkEditor);
-            }
-            el.classList.remove('show-menu', 'show-editor');
         });
         this.bookmarkDrag.on('drop', (el, target, source, sibling) => {
             this.moveBookmark(source.parentNode.name, target.parentNode.name, el.name).then(() => {

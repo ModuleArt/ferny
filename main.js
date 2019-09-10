@@ -119,7 +119,7 @@ const sideMenu = Menu.buildFromTemplate([{
   ] }, { type: 'separator' }, { 
   label: 'Bookmarks', icon: app.getAppPath() + '/imgs/icons16/bookmarks.png', submenu: [{ 
     label: 'Bookmark manager', icon: app.getAppPath() + '/imgs/icons16/bookmarks.png', accelerator: 'CmdOrCtrl+B', click: () => { 
-      overlay.openBookmarks(); 
+      overlay.openOverlay("bookmarks-title"); 
     } }, { type: 'separator' }, { 
     enabled: false, label: 'Bookmark this page', icon: app.getAppPath() + '/imgs/icons16/star.png', accelerator: 'CmdOrCtrl+Shift+B', click: () => { 
       mainWindow.webContents.send('action-bookmark-this-page'); 

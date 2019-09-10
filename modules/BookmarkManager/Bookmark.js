@@ -26,6 +26,7 @@ class Bookmark extends EventEmitter {
         this.node.position = position;
         this.node.innerHTML = `
             <img class='bookmark-icon' src="http://www.google.com/s2/favicons?domain=` + url + `">
+            <img title="Drag here" class="theme-icon bookmark-move" name="move-16">
             <label class='bookmark-name'>` + name + `</label>
             <label class='bookmark-preview'>` + url + `</label>
         `;
