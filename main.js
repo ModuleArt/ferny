@@ -27,7 +27,6 @@ const ppath = require('persist-path')('Ferny');
 
 const saveFileToJsonFolder = require(app.getAppPath() + "/modules/saveFileToJsonFolder.js");
 const loadTheme = require(app.getAppPath() + "/modules/loadTheme.js");
-const loadWinControls = require(app.getAppPath() + "/modules/loadWinControls.js");
 const loadLastTab = require(app.getAppPath() + "/modules/loadLastTab.js");
 const loadStartup = require(app.getAppPath() + "/modules/loadStartup.js");
 const loadHomePage = require(app.getAppPath() + "/modules/loadHomePage.js");
@@ -119,10 +118,15 @@ const sideMenu = Menu.buildFromTemplate([{
   ] }, { type: 'separator' }, { 
   label: 'Bookmarks', icon: app.getAppPath() + '/imgs/icons16/bookmarks.png', submenu: [{ 
     label: 'Bookmark manager', icon: app.getAppPath() + '/imgs/icons16/bookmarks.png', accelerator: 'CmdOrCtrl+B', click: () => { 
-      overlay.openOverlay("bookmarks-title"); 
+      overlay.scrollToId("bookmarks-title"); 
     } }, { type: 'separator' }, { 
-    enabled: false, label: 'Bookmark this page', icon: app.getAppPath() + '/imgs/icons16/star.png', accelerator: 'CmdOrCtrl+Shift+B', click: () => { 
-      mainWindow.webContents.send('action-bookmark-this-page'); 
+    label: 'Bookmark this page', icon: app.getAppPath() + '/imgs/icons16/star.png', accelerator: 'CmdOrCtrl+Shift+B', click: () => { 
+      if(tabManager.hasActiveTab()) {
+        
+        let at = tabManager.getActiveTab();
+        overlay.addBookmark(at.getTitle(), at.getURL());
+        overlay.scrollToId("bookmarks-title"); 
+      }
     } }, { 
     enabled: false, label: 'Bookmark all tabs', click: () => { 
       mainWindow.webContents.send('action-add-quest-notif', { 
@@ -940,8 +944,7 @@ function showMainWindow() {
       x: Data.x, y: Data.y,
       width: Data.width, height: Data.height,
       minWidth: 520, minHeight: 300,
-      frame: loadWinControls().frame,
-      autoHideMenuBar: loadWinControls().hideMenu,
+      frame: false,
       show: false,
       icon: app.getAppPath() + '/imgs/icon.ico',
       webPreferences: {
@@ -952,7 +955,6 @@ function showMainWindow() {
     });
     mainWindow.setMenu(sideMenu);
   
-    // mainWindow.webContents.openDevTools();
     mainWindow.loadFile(app.getAppPath() + '/html/browser.html');
   
     mainWindow.webContents.on('context-menu', (event, params) => {
@@ -1207,7 +1209,7 @@ function showWelcomeWindow() {
   loadTheme().then(function(theme) {
     welcomeWindow = new BrowserWindow({
       width: 480, height: 350,
-      frame: loadWinControls().frame,
+      frame: false,
       show: false,
       modal: true,
       parent: mainWindow,
@@ -1245,7 +1247,7 @@ function showKeyBindsWindow() {
     keyBindsWindow = new BrowserWindow({
       width: 480, height: 480,
       minWidth: 480, minHeight: 180,
-      frame: loadWinControls().frame,
+      frame: false,
       show: false,
       modal: true,
       parent: mainWindow,

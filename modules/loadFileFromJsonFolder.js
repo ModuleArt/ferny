@@ -7,15 +7,25 @@ function loadFileFromJsonFolder(subfolder, fileName) {
     return new Promise((resolve, reject) => {
         checkDirExists(ppath).then(() => {
             checkDirExists(ppath + "/json").then(() => {
-                checkDirExists(ppath + "/json/" + subfolder).then(() => {
-                    checkFileExists(ppath + "/json/" + subfolder + "/" + fileName + ".json").then(() => {
-                        fs.readFile(ppath + "/json/" + subfolder + "/" + fileName + ".json", (err, data) => {
+                if(subfolder == null) {
+                    checkFileExists(ppath + "/json/" + fileName + ".json").then(() => {
+                        fs.readFile(ppath + "/json/" + fileName + ".json", (err, data) => {
                             if(!err) {
                                 resolve(data);
                             }
                         });
                     });
-                });
+                } else {
+                    checkDirExists(ppath + "/json/" + subfolder).then(() => {
+                        checkFileExists(ppath + "/json/" + subfolder + "/" + fileName + ".json").then(() => {
+                            fs.readFile(ppath + "/json/" + subfolder + "/" + fileName + ".json", (err, data) => {
+                                if(!err) {
+                                    resolve(data);
+                                }
+                            });
+                        });
+                    });
+                }
             });
         });
     });

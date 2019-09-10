@@ -126,6 +126,19 @@ ipcRenderer.on("searchManager-goToSearch", (event, text) => {
 });
 
 /*
+ # #####   ####              #####   ####   ####  #    # #    #   ##   #####  #    #  ####
+ # #    # #    #             #    # #    # #    # #   #  ##  ##  #  #  #    # #   #  #
+ # #    # #         #####    #####  #    # #    # ####   # ## # #    # #    # ####    ####
+ # #####  #                  #    # #    # #    # #  #   #    # ###### #####  #  #        #
+ # #      #    #             #    # #    # #    # #   #  #    # #    # #   #  #   #  #    #
+ # #       ####              #####   ####   ####  #    # #    # #    # #    # #    #  ####
+*/
+
+ipcRenderer.on("bookmarkManager-addBookmark", (event, name, url) => {
+  bookmarkManager.getDefaultFolder().addBookmark(name, url);
+});
+
+/*
  # #    # # #####
  # ##   # #   #
  # # #  # #   #

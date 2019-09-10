@@ -289,6 +289,10 @@ class Tab extends EventEmitter {
         return this.view.webContents.getURL();
     }
 
+    getTitle() {
+        return this.view.webContents.getTitle();
+    }
+
     showPreview() {
         let image = this.view.webContents.capturePage();
         this.previewTimeout = setTimeout(() => {

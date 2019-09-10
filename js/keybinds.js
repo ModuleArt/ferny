@@ -23,7 +23,6 @@ const { ipcRenderer } = require('electron');
 const loadTheme = require("../modules/loadTheme.js");
 const applyTheme = require("../modules/applyTheme.js");
 const applyWinControls = require("../modules/applyWinControls.js");
-const loadWinControls = require("../modules/loadWinControls.js");
 
 /*
 .########.##.....##.##....##..######..########.####..#######..##....##..######.
@@ -122,13 +121,7 @@ ipcRenderer.on('action-focus-window', (event, arg) => {
 */
 
 function init() {
-  var winControls = loadWinControls();
-  if(winControls.frame) {
-    document.body.classList.add('no-titlebar');
-    document.getElementById('titlebar').parentNode.removeChild(document.getElementById('titlebar'));
-  } else {
-    applyWinControls('only-close');
-  }
+  applyWinControls('only-close');
   
   updateTheme();
 }

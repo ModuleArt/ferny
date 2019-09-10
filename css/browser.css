@@ -171,7 +171,7 @@
   transition: font-size 0.25s, height 0.25s, box-shadow 0.25s;
   padding: 8px;
   color: var(--color-top);
-  border-radius: calc(var(--px-radius) - 2px);
+  border-radius: var(--px-radius);
 }
 
 #search-input:hover {
@@ -263,23 +263,25 @@
 #window-controls .nav-btn {
   grid-row: 1 / span 1;
   border-radius: 0;
-  width: 32px;
-  height: 32px;
-  margin: 0;
+  width: 34px;
+  height: 34px;
+  margin: -1px;
   border: none;
   background-color: transparent;
+  border: 1px solid transparent;
 }
 
 #window-controls .nav-btn:hover {
   background-color: var(--color-second);
+  border-color: var(--color-border);
+}
+
+#window-controls .nav-btn:focus {
+  border-color: var(--color-border);
 }
 
 #window-controls .nav-btn:active {
   background-color: var(--color-border);
-}
-
-#window-controls .nav-btn img {
-  margin-top: -4px;
 }
 
 #window-controls .button {

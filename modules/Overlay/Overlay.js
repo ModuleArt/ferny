@@ -4,7 +4,7 @@ const { BrowserView, Menu } = require('electron');
 class Overlay extends EventEmitter {
     window = null;
     view = null;
-    top = 34;
+    top = 33;
     appPath = null;
 
     constructor(window, appPath) {
@@ -42,13 +42,8 @@ class Overlay extends EventEmitter {
         return null;
     }
 
-    openOverlay(scrollId) {
+    scrollToId(id) {
         this.show();
-        if(scrollId == null) {
-            this.view.webContents.loadFile(this.appPath + "/html/overlay.html");
-        } else {
-            this.view.webContents.loadURL(this.appPath + "/html/overlay.html#" + scrollId);
-        }
     }
 
     openHistory() {
@@ -83,8 +78,8 @@ class Overlay extends EventEmitter {
 
     showButtonMenu() {
         let buttonMenu = Menu.buildFromTemplate([{ 
-            label: 'Overlay', icon: this.appPath + '/imgs/icons16/details.png', click: () => { 
-                this.openOverlay(); 
+            label: 'Show overlay', icon: this.appPath + '/imgs/icons16/details.png', click: () => { 
+                this.show(); 
             } }, { type: 'separator' }, { 
             label: 'History', icon: this.appPath + '/imgs/icons16/history.png', accelerator: 'CmdOrCtrl+H', click: () => { 
                 this.openHistory(); 
@@ -112,6 +107,10 @@ class Overlay extends EventEmitter {
     goToSearch(text) {
         this.show();
         this.view.webContents.send("searchManager-goToSearch", text);
+    }
+
+    addBookmark(name, url) {
+        this.view.webContents.send("bookmarkManager-addBookmark", name, url);
     }
 }
 

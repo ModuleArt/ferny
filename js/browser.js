@@ -24,7 +24,6 @@ const dragula = require("dragula");
 const applyTheme = require("../modules/applyTheme.js");
 const loadTheme = require("../modules/loadTheme.js");
 const applyWinControls = require("../modules/applyWinControls.js");
-const loadWinControls = require("../modules/loadWinControls.js");
 
 const NotificationManager = require("../modules/NotificationManager/NotificationManager.js");
 const TabRenderer = require("../modules/TabManager/TabRenderer.js");
@@ -472,19 +471,7 @@ ipcRenderer.on('tabRenderer-setHomePage', (event, homePage) => {
 */
 
 function init() {
-  var winControls = loadWinControls();
-  if(winControls.frame) {
-    document.body.classList.add('system-titlebar');
-
-    if(!winControls.hideMenu) {
-      document.body.classList.add('show-menubar');
-    }
-  } else {
-    applyWinControls();
-  }
-  if(winControls.color) {
-    document.body.classList.add('color-tabs');
-  }
+  applyWinControls();
 
   updateTheme();
 

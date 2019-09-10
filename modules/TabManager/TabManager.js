@@ -24,7 +24,7 @@ class TabManager extends EventEmitter {
 
         this.left = 0; 
         this.right = 0; 
-        this.top = 75; 
+        this.top = 74; 
         this.bottom = 0;
     }
 
@@ -270,14 +270,20 @@ class TabManager extends EventEmitter {
             label: 'Next tab', 
             icon: this.appPath + '/imgs/icons16/next.png', 
             accelerator: 'CmdOrCtrl+Tab', 
-            click: () => { this.getActiveTab().nextTab(); } 
+            enabled: this.hasActiveTab(),
+            click: () => { 
+                this.getActiveTab().nextTab(); 
+            } 
         });
         m.append(nextItem);
         let prevItem = new MenuItem({ 
             label: 'Previous tab', 
             icon: this.appPath + '/imgs/icons16/prev.png', 
             accelerator: 'CmdOrCtrl+Shift+Tab', 
-            click: () => { this.getActiveTab().prevTab(); } 
+            enabled: this.hasActiveTab(),
+            click: () => { 
+                this.getActiveTab().prevTab(); 
+            } 
         });
         m.append(prevItem);
 
