@@ -30,6 +30,8 @@ const loadTheme = require(app.getAppPath() + "/modules/loadTheme.js");
 const loadLastTab = require(app.getAppPath() + "/modules/loadLastTab.js");
 const loadStartup = require(app.getAppPath() + "/modules/loadStartup.js");
 const loadHomePage = require(app.getAppPath() + "/modules/loadHomePage.js");
+const loadBounds = require(app.getAppPath() + "/modules/loadBounds.js");
+const saveBounds = require(app.getAppPath() + "/modules/saveBounds.js");
 
 const TabManager = require(app.getAppPath() + "/modules/TabManager/TabManager.js");
 const Overlay = require(app.getAppPath() + "/modules/Overlay/Overlay.js");
@@ -918,267 +920,255 @@ function setColorTabs(bool) {
 }
 
 function showMainWindow() {
-  let Data = {
-    x: null,
-    y: null,
-    width: 1000,
-    height: 720,
-    maximize: false
-  };
-
-  try {
-    Data = JSON.parse(fs.readFileSync(ppath + "/json/bounds.json"));
-  } catch (e) {
-    saveFileToJsonFolder(null, 'bounds', JSON.stringify(Data));
-  }
-
-  if(Data.maximize) {
-    Data.x = null;
-    Data.y = null;
-    Data.width = 1000;
-    Data.height = 600;
-  }
-
-  loadTheme().then(function(theme) {
-    mainWindow = new BrowserWindow({
-      x: Data.x, y: Data.y,
-      width: Data.width, height: Data.height,
-      minWidth: 520, minHeight: 300,
-      frame: false,
-      show: false,
-      icon: app.getAppPath() + '/imgs/icon.ico',
-      webPreferences: {
-        nodeIntegration: true,
-        webviewTag: true
-      },
-      backgroundColor: theme.colorBack
-    });
-    mainWindow.setMenu(sideMenu);
+  loadBounds().then((Data) => {
+    if(Data.maximize) {
+      Data.x = null;
+      Data.y = null;
+      Data.width = 1000;
+      Data.height = 600;
+    }
   
-    mainWindow.loadFile(app.getAppPath() + '/html/browser.html');
-  
-    mainWindow.webContents.on('context-menu', (event, params) => {
-      if(params.isEditable) {
-        let searchMenu = Menu.buildFromTemplate([
-          { label: 'Cut', icon: app.getAppPath() + '/imgs/icons16/cut.png', accelerator: 'CmdOrCtrl+X', enabled: params.editFlags.canCut, click: () => { 
-            mainWindow.webContents.cut(); } },
-          { label: 'Copy', icon: app.getAppPath() + '/imgs/icons16/copy.png', accelerator: 'CmdOrCtrl+C', enabled: params.editFlags.canCopy, click: () => { 
-            mainWindow.webContents.copy(); } },
-          { label: 'Paste', icon: app.getAppPath() + '/imgs/icons16/paste.png', accelerator: 'CmdOrCtrl+V', enabled: params.editFlags.canPaste, click: () => { 
-            mainWindow.webContents.paste(); } },
-          { type: 'separator' },
-          { label: 'Paste and search', icon: app.getAppPath() + '/imgs/icons16/zoom.png', enabled: params.editFlags.canPaste, click: () => { 
-            mainWindow.webContents.send('action-navigate-suggest', clipboard.readText()); } },
-          { type: 'separator' },
-          { label: 'Undo', icon: app.getAppPath() + '/imgs/icons16/undo.png', accelerator: 'CmdOrCtrl+Z', enabled: params.editFlags.canUndo, click: () => { 
-            mainWindow.webContents.undo(); } },
-          { label: 'Redo', icon: app.getAppPath() + '/imgs/icons16/redo.png', accelerator: 'CmdOrCtrl+Shift+Z', enabled: params.editFlags.canRedo, click: () => {
-            mainWindow.webContents.redo(); } },
-          { type: 'separator' },
-          { label: 'Select all', icon: app.getAppPath() + '/imgs/icons16/select-all.png', accelerator: 'CmdOrCtrl+A', enabled: params.editFlags.canSelectAll, click: () => { 
-            mainWindow.webContents.selectAll(); } },
-          { type: 'separator' },
-          { label: 'Delete', icon: app.getAppPath() + '/imgs/icons16/delete.png', accelerator: 'Backspace', enabled: params.editFlags.canDelete, click: () => { 
-            mainWindow.webContents.delete(); } }
-        ]);
-        searchMenu.popup(mainWindow);
-      }
-    });
-  
-    mainWindow.on('focus', () => {
-      mainWindow.webContents.send('window-focus');
-    });
-  
-    mainWindow.on('blur', () => {
-      mainWindow.webContents.send('window-blur');
-    });
-  
-    mainWindow.on('maximize', () => {
-      mainWindow.webContents.send('window-maximize');
-      if(tabManager.hasActiveTab()) {
-        tabManager.getActiveTab().activate();
-      }
-      overlay.refreshBounds();
-    });
-  
-    mainWindow.on('unmaximize', () => {
-      mainWindow.webContents.send('window-unmaximize');
-      if(tabManager.hasActiveTab()) {
-        tabManager.getActiveTab().activate();
-      }
-      overlay.refreshBounds();
-    });
-  
-    mainWindow.once('ready-to-show', () => {
-      initOverlay();
-      initTabManager();
-
-      loadHomePage().then((homePage) => {
-        tabManager.setHomePage(homePage);
+    loadTheme().then(function(theme) {
+      mainWindow = new BrowserWindow({
+        x: Data.x, y: Data.y,
+        width: Data.width, height: Data.height,
+        minWidth: 520, minHeight: 300,
+        frame: false,
+        show: false,
+        icon: app.getAppPath() + '/imgs/icon.ico',
+        webPreferences: {
+          nodeIntegration: true,
+          webviewTag: true
+        },
+        backgroundColor: theme.colorBack
+      });
+      mainWindow.setMenu(sideMenu);
+    
+      mainWindow.loadFile(app.getAppPath() + '/html/browser.html');
+    
+      mainWindow.webContents.on('context-menu', (event, params) => {
+        if(params.isEditable) {
+          let searchMenu = Menu.buildFromTemplate([
+            { label: 'Cut', icon: app.getAppPath() + '/imgs/icons16/cut.png', accelerator: 'CmdOrCtrl+X', enabled: params.editFlags.canCut, click: () => { 
+              mainWindow.webContents.cut(); } },
+            { label: 'Copy', icon: app.getAppPath() + '/imgs/icons16/copy.png', accelerator: 'CmdOrCtrl+C', enabled: params.editFlags.canCopy, click: () => { 
+              mainWindow.webContents.copy(); } },
+            { label: 'Paste', icon: app.getAppPath() + '/imgs/icons16/paste.png', accelerator: 'CmdOrCtrl+V', enabled: params.editFlags.canPaste, click: () => { 
+              mainWindow.webContents.paste(); } },
+            { type: 'separator' },
+            { label: 'Paste and search', icon: app.getAppPath() + '/imgs/icons16/zoom.png', enabled: params.editFlags.canPaste, click: () => { 
+              mainWindow.webContents.send('action-navigate-suggest', clipboard.readText()); } },
+            { type: 'separator' },
+            { label: 'Undo', icon: app.getAppPath() + '/imgs/icons16/undo.png', accelerator: 'CmdOrCtrl+Z', enabled: params.editFlags.canUndo, click: () => { 
+              mainWindow.webContents.undo(); } },
+            { label: 'Redo', icon: app.getAppPath() + '/imgs/icons16/redo.png', accelerator: 'CmdOrCtrl+Shift+Z', enabled: params.editFlags.canRedo, click: () => {
+              mainWindow.webContents.redo(); } },
+            { type: 'separator' },
+            { label: 'Select all', icon: app.getAppPath() + '/imgs/icons16/select-all.png', accelerator: 'CmdOrCtrl+A', enabled: params.editFlags.canSelectAll, click: () => { 
+              mainWindow.webContents.selectAll(); } },
+            { type: 'separator' },
+            { label: 'Delete', icon: app.getAppPath() + '/imgs/icons16/delete.png', accelerator: 'Backspace', enabled: params.editFlags.canDelete, click: () => { 
+              mainWindow.webContents.delete(); } }
+          ]);
+          searchMenu.popup(mainWindow);
+        }
       });
     
-      loadStartup().then((startup) => {
-        if(startup == "overlay") {
-          overlay.show();
-        } else if(startup == "new-tab") {
-          tabManager.newTab();
+      mainWindow.on('focus', () => {
+        mainWindow.webContents.send('window-focus');
+      });
+    
+      mainWindow.on('blur', () => {
+        mainWindow.webContents.send('window-blur');
+      });
+    
+      mainWindow.on('maximize', () => {
+        mainWindow.webContents.send('window-maximize');
+        if(tabManager.hasActiveTab()) {
+          tabManager.getActiveTab().activate();
+        }
+        overlay.refreshBounds();
+      });
+    
+      mainWindow.on('unmaximize', () => {
+        mainWindow.webContents.send('window-unmaximize');
+        if(tabManager.hasActiveTab()) {
+          tabManager.getActiveTab().activate();
+        }
+        overlay.refreshBounds();
+      });
+    
+      mainWindow.once('ready-to-show', () => {
+        initOverlay();
+        initTabManager();
+  
+        loadHomePage().then((homePage) => {
+          tabManager.setHomePage(homePage);
+        });
+      
+        loadStartup().then((startup) => {
+          if(startup == "overlay") {
+            overlay.show();
+          } else if(startup == "new-tab") {
+            tabManager.newTab();
+          }
+        });
+  
+        mainWindow.show();
+        if(Data.maximize) {
+          mainWindow.maximize();
         }
       });
-
-      mainWindow.show();
-      if(Data.maximize) {
-        mainWindow.maximize();
-      }
-    });
+    
+      mainWindow.on('maximize', () => {
+        mainWindow.webContents.send('action-maximize-window');
+      });
+    
+      mainWindow.on('unmaximize', () => {
+        mainWindow.webContents.send('action-unmaximize-window');
+      });
   
-    mainWindow.on('maximize', () => {
-      mainWindow.webContents.send('action-maximize-window');
-    });
-  
-    mainWindow.on('unmaximize', () => {
-      mainWindow.webContents.send('action-unmaximize-window');
-    });
-
-    mainWindow.on('app-command', (event, command) => {
-      if(command == 'browser-backward') {
-        if(tabManager.hasActiveTab()) {
-          tabManager.getActiveTab().goBack();
-        }
-      } else if(command == 'browser-forward') {
-        if(tabManager.hasActiveTab()) {
-          tabManager.getActiveTab().goForward();
-        }
-      } else if(command == 'browser-favorites') {
-        overlay.openBookmarks();
-      } else if(command == 'browser-home') {
-        if(tabManager.hasActiveTab()) {
-          tabManager.getActiveTab().goHome();
-        }
-      } else if(command == 'browser-refresh') {
-        if(tabManager.hasActiveTab()) {
-          tabManager.getActiveTab().reload();
-        }
-      } else if(command == 'browser-stop') {
-        if(tabManager.hasActiveTab()) {
-          tabManager.getActiveTab().stop();
-        }
-      } else if(command == 'browser-search') {
-        overlay.show();
-      } 
-    });
-  
-    mainWindow.on('close', function(event) {
-      event.preventDefault();
-  
-      var download = false;
-  
-      for (var i = 0; i < downloadsArray.length; i++) {
-        try {
-          if(downloadsArray[i].item.getState() == "progressing") {
-            download = true;
-            break;
+      mainWindow.on('app-command', (event, command) => {
+        if(command == 'browser-backward') {
+          if(tabManager.hasActiveTab()) {
+            tabManager.getActiveTab().goBack();
           }
-        } catch (e) {
-  
+        } else if(command == 'browser-forward') {
+          if(tabManager.hasActiveTab()) {
+            tabManager.getActiveTab().goForward();
+          }
+        } else if(command == 'browser-favorites') {
+          overlay.openBookmarks();
+        } else if(command == 'browser-home') {
+          if(tabManager.hasActiveTab()) {
+            tabManager.getActiveTab().goHome();
+          }
+        } else if(command == 'browser-refresh') {
+          if(tabManager.hasActiveTab()) {
+            tabManager.getActiveTab().reload();
+          }
+        } else if(command == 'browser-stop') {
+          if(tabManager.hasActiveTab()) {
+            tabManager.getActiveTab().stop();
+          }
+        } else if(command == 'browser-search') {
+          overlay.show();
+        } 
+      });
+    
+      mainWindow.on('close', function(event) {
+        event.preventDefault();
+    
+        var download = false;
+    
+        for (var i = 0; i < downloadsArray.length; i++) {
+          try {
+            if(downloadsArray[i].item.getState() == "progressing") {
+              download = true;
+              break;
+            }
+          } catch (e) {
+    
+          }
         }
-      }
-  
-      var update = false;
-      
-      if(updateCancellationToken != null) {
-        update = true;
-      }
-  
-      if(update) {
-        mainWindow.webContents.send('action-add-quest-notif', { text: "App update is in progress! Exit anyway?", ops: [{ text:'Exit', icon:'exit-16', click:'exitAppAnyway()' }] });
-      } else {
-        if(download) {
-          mainWindow.webContents.send('action-add-quest-notif', { text: "Download is in progress! Exit anyway?", ops: [{ text:'Exit', icon:'exit-16', click:'exitAppAnyway()' }] });
+    
+        var update = false;
+        
+        if(updateCancellationToken != null) {
+          update = true;
+        }
+    
+        if(update) {
+          mainWindow.webContents.send('action-add-quest-notif', { text: "App update is in progress! Exit anyway?", ops: [{ text:'Exit', icon:'exit-16', click:'exitAppAnyway()' }] });
         } else {
-          saveBounds();
-          app.exit();
+          if(download) {
+            mainWindow.webContents.send('action-add-quest-notif', { text: "Download is in progress! Exit anyway?", ops: [{ text:'Exit', icon:'exit-16', click:'exitAppAnyway()' }] });
+          } else {
+            saveBounds();
+            app.exit();
+          }
         }
-      }
-    });
-  
-    mainWindow.webContents.session.on('will-download', (event, item, webContents) => {
-      curDownloadNum++;
-  
-      let curnum = curDownloadNum;
-  
-      let Item = {
-        index: curnum,
-        item: item,
-        url: item.getURL(),
-        name: item.getFilename(),
-        path: "",
-        time: item.getStartTime()
-      };
-  
-      downloadsArray.push(Item);
-      saveDownloads();
-  
-      let Data = {
-        index: curnum,
-        url: item.getURL(),
-        name: item.getFilename(),
-        time: item.getStartTime()
-      };
-  
-      mainWindow.webContents.send('action-create-download', Data);
-  
-      item.on('updated', (event, state) => {
-        if (state === 'interrupted') {
-          let Data = {
-            index: curnum,
-            name: item.getFilename()
-          };
-          mainWindow.webContents.send('action-set-download-status-interrupted', Data);
-        } else if (state === 'progressing') {
-          if (item.isPaused()) {
+      });
+    
+      mainWindow.webContents.session.on('will-download', (event, item, webContents) => {
+        curDownloadNum++;
+    
+        let curnum = curDownloadNum;
+    
+        let Item = {
+          index: curnum,
+          item: item,
+          url: item.getURL(),
+          name: item.getFilename(),
+          path: "",
+          time: item.getStartTime()
+        };
+    
+        downloadsArray.push(Item);
+        saveDownloads();
+    
+        let Data = {
+          index: curnum,
+          url: item.getURL(),
+          name: item.getFilename(),
+          time: item.getStartTime()
+        };
+    
+        mainWindow.webContents.send('action-create-download', Data);
+    
+        item.on('updated', (event, state) => {
+          if (state === 'interrupted') {
             let Data = {
               index: curnum,
-              bytes: item.getReceivedBytes(),
-              total: item.getTotalBytes(),
               name: item.getFilename()
             };
-            mainWindow.webContents.send('action-set-download-status-pause', Data);
+            mainWindow.webContents.send('action-set-download-status-interrupted', Data);
+          } else if (state === 'progressing') {
+            if (item.isPaused()) {
+              let Data = {
+                index: curnum,
+                bytes: item.getReceivedBytes(),
+                total: item.getTotalBytes(),
+                name: item.getFilename()
+              };
+              mainWindow.webContents.send('action-set-download-status-pause', Data);
+            } else {
+              let Data = {
+                index: curnum,
+                bytes: item.getReceivedBytes(),
+                total: item.getTotalBytes(),
+                name: item.getFilename()
+              };
+              mainWindow.webContents.send('action-set-download-process', Data);
+            }
+          }
+        });
+    
+        item.once('done', (event, state) => {
+          if (state === 'completed') {
+            let Data = {
+              index: curnum,
+              name: item.getFilename(),
+              path: item.getSavePath()
+            };
+            mainWindow.webContents.send('action-set-download-status-done', Data);
+            var i;
+            for(i = 0; i < downloadsArray.length; i++) {
+              if(downloadsArray[i].index == curnum) {
+                downloadsArray[i].path = item.getSavePath();
+                saveDownloads();
+              }
+            }
           } else {
             let Data = {
               index: curnum,
-              bytes: item.getReceivedBytes(),
-              total: item.getTotalBytes(),
-              name: item.getFilename()
+              state: state,
+              name: item.getFilename(),
+              url: item.getURL()
             };
-            mainWindow.webContents.send('action-set-download-process', Data);
+            mainWindow.webContents.send('action-set-download-status-failed', Data);
           }
-        }
-      });
-  
-      item.once('done', (event, state) => {
-        if (state === 'completed') {
-          let Data = {
-            index: curnum,
-            name: item.getFilename(),
-            path: item.getSavePath()
-          };
-          mainWindow.webContents.send('action-set-download-status-done', Data);
-          var i;
-          for(i = 0; i < downloadsArray.length; i++) {
-            if(downloadsArray[i].index == curnum) {
-              downloadsArray[i].path = item.getSavePath();
-              saveDownloads();
-            }
-          }
-        } else {
-          let Data = {
-            index: curnum,
-            state: state,
-            name: item.getFilename(),
-            url: item.getURL()
-          };
-          mainWindow.webContents.send('action-set-download-status-failed', Data);
-        }
+        });
       });
     });
   });
@@ -1302,17 +1292,6 @@ function saveDownloads() {
   saveFileToJsonFolder(null, 'curdownloadnum', curDownloadNum);
   saveFileToJsonFolder(null, 'downloads', JSON.stringify(downloadsArray));
   console.log("saved DOWNLOADS: " + downloadsArray.length);
-}
-
-function saveBounds() {
-  let Data = {
-    x: mainWindow.getBounds().x,
-    y: mainWindow.getBounds().y,
-    width: mainWindow.getBounds().width,
-    height: mainWindow.getBounds().height,
-    maximize: mainWindow.isMaximized()
-  }
-  saveFileToJsonFolder(null, 'bounds', JSON.stringify(Data));
 }
 
 /*

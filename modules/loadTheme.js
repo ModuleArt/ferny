@@ -1,8 +1,6 @@
-const saveFileToJsonFolder = require("../modules/saveFileToJsonFolder.js");
 const loadFileFromJsonFolder = require("../modules/loadFileFromJsonFolder.js");
 
 const fs = require("fs");
-const ppath = require('persist-path')('Ferny');
 const path = require('path');
 
 function loadTheme(name) {
