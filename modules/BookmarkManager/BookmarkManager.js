@@ -20,11 +20,33 @@ class BookmarkManager extends EventEmitter {
     isotope = null;
     folderDrag = null;
     defaultFolder = null;
+    bookmarkDrag = null;
 
     constructor(folderContainer) {
         super();
 
-        this.folderContainer = folderContainer; 
+        this.folderContainer = folderContainer;
+        
+        this.bookmarkDrag = Dragula([], {
+            direction: "vertical",
+            moves: (el, container, handle, sibling) => {
+                return handle.classList.contains('bookmark-icon');
+            }
+        });
+        this.bookmarkDrag.on('drag', (el, target, source, sibling) => {
+            let bookmarkEditor = el.getElementsByClassName("bookmark-editor")[0];
+            if(bookmarkEditor != null) {
+                el.removeChild(bookmarkEditor);
+            }
+            el.classList.remove('show-menu', 'show-editor');
+        });
+        this.bookmarkDrag.on('drop', (el, target, source, sibling) => {
+            this.moveBookmark(source.parentNode.name, target.parentNode.name, el.name).then(() => {
+                this.updateBookmarksPositions().then(() => {
+                    this.saveBookmarks();
+                });
+            });
+        });
 
         this.toggleArrange();
 
@@ -52,7 +74,9 @@ class BookmarkManager extends EventEmitter {
     appendFolder(folder) {
         folder.on("add-bookmark", (folder, bookmarkName, bookmarkURL) => {
             this.addBookmarkToFolder(folder, bookmarkName, bookmarkURL);
-            this.saveBookmarks();
+            folder.updateBookmarksPositions().then(() => {
+                this.saveBookmarks();
+            });
         });
         folder.on("append-bookmark", () => {
             if(this.isotope != null) {
@@ -85,7 +109,9 @@ class BookmarkManager extends EventEmitter {
             if(this.isotope != null) {
                 this.isotope.arrange();
             }
-            this.saveBookmarks();
+            folder.updateBookmarksPositions().then(() => {
+                this.saveBookmarks();
+            });
         });
         folder.on("bookmark-edited", () => {
             this.saveBookmarks();
@@ -114,6 +140,8 @@ class BookmarkManager extends EventEmitter {
         } else {
             this.folderContainer.appendChild(folder.getNode());
         }
+
+        this.bookmarkDrag.containers.push(folder.getNode().getElementsByClassName('folder-container')[0]);
         
         if(this.isotope != null) {
             this.isotope.reloadItems();
@@ -150,12 +178,32 @@ class BookmarkManager extends EventEmitter {
         folder.appendBookmark(new Bookmark(this.bookmarkCounter++, bookmarkName, bookmarkURL));
     }
 
+    moveBookmark(fromFolderId, toFolderId, bookmarkId) {
+        return new Promise((resolve, reject) => {
+            let fromFolder = this.getFolderById(fromFolderId);
+            let toFolder = this.getFolderById(toFolderId);
+    
+            toFolder.pushBookmark(fromFolder.getBookmarkById(bookmarkId));
+            fromFolder.spliceBookmark(bookmarkId);
+
+            resolve();
+        });
+    }
+
     updateFoldersPositions() {
         return new Promise((resolve, reject) => {
             let divs = this.folderContainer.getElementsByClassName('folder');
             for(let i = 0; i < divs.length; i++) {
-                console.log(divs[i].name)
                 this.getFolderById(divs[i].name).setPosition(i);
+            }
+            resolve();
+        });
+    }
+
+    updateBookmarksPositions(folArr) {
+        return new Promise((resolve, reject) => {
+            for(let i = 0; i < this.folders.length; i++) {
+                this.folders[i].updateBookmarksPositions();
             }
             resolve();
         });
@@ -220,7 +268,7 @@ class BookmarkManager extends EventEmitter {
             foldersReadline.forEach((line, index) => {
                 let obj = JSON.parse(line);
                 if(obj.id != -1) {
-                    this.appendFolder(new Folder(obj.id, obj.name, false, obj.position));
+                    this.appendFolder(new Folder(obj.id, obj.name, true, obj.position));
                 } else {
                     this.defaultFolder.setPosition(obj.position);
                 }
@@ -234,7 +282,7 @@ class BookmarkManager extends EventEmitter {
             });
             bookmarksReadline.forEach((line, index) => {
                 let obj = JSON.parse(line);
-                this.getFolderById(obj.folder).appendBookmark(new Bookmark(obj.id, obj.name, obj.url));
+                this.getFolderById(obj.folder).appendBookmark(new Bookmark(obj.id, obj.name, obj.url, obj.position));
             });
         });
     }

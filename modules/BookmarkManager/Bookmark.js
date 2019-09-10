@@ -11,16 +11,19 @@ class Bookmark extends EventEmitter {
     node = null;
     position = null;
 
-    constructor(id, name, url) {
+    constructor(id, name, url, position) {
         super();
 
         this.id = id;
         this.name = name;
         this.url = url;
+        this.position = position;
 
         this.node = document.createElement('button');
         this.node.classList.add('bookmark');
         this.node.title = name + "\n" + url;
+        this.node.name = id;
+        this.node.position = position;
         this.node.innerHTML = `
             <img class='bookmark-icon' src="http://www.google.com/s2/favicons?domain=` + url + `">
             <label class='bookmark-name'>` + name + `</label>
@@ -95,8 +98,18 @@ class Bookmark extends EventEmitter {
         return {
             id: this.id,
             name: this.name,
-            url: this.url
+            url: this.url,
+            position: this.position
         }
+    }
+
+    setPosition(position) {
+        this.position = position;
+        this.node.position = position;
+    }
+
+    getPosition() {
+        return this.position;
     }
 
     open() {

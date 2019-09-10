@@ -115,6 +115,7 @@ class SearchManager extends EventEmitter {
             }
         }
 
+        this.setSearchEngine("duckduckgo");
         loadSearchEngine().then((searchEngine) => {
             this.setSearchEngine(searchEngine);
         });

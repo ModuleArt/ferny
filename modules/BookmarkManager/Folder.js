@@ -93,8 +93,31 @@ class Folder extends EventEmitter {
         bookmark.on("edit", () => {
             this.emit("bookmark-edited");
         });
+
         this.bookmarks.push(bookmark);
-        this.node.getElementsByClassName('folder-container')[0].appendChild(bookmark.getNode());
+
+        let cont = this.node.getElementsByClassName('folder-container')[0];
+        let nodes = cont.childNodes;
+        if(nodes.length > 0) {
+            if(bookmark.getPosition() != null) {
+                for(let i = 0; i < nodes.length; i++) {
+                    if(bookmark.getPosition() < nodes[i].position) {
+                        cont.insertBefore(bookmark.getNode(), nodes[i]);
+                        break;
+                    } else {
+                        if(nodes[i] == cont.lastChild){
+                            cont.appendChild(bookmark.getNode());
+                        } 
+                    }
+                }
+            } else {
+                cont.appendChild(bookmark.getNode());
+            }
+        } else {
+            cont.appendChild(bookmark.getNode());
+        }
+        
+        // this.node.getElementsByClassName('folder-container')[0].appendChild(bookmark.getNode());
 
         this.emit("append-bookmark");
         return null;
@@ -110,6 +133,19 @@ class Folder extends EventEmitter {
         }
     }
 
+    spliceBookmark(id) {
+        for(let i = 0; i < this.bookmarks.length; i++) {
+            if(this.bookmarks[i].getId() == id) {
+                this.bookmarks.splice(i, 1);
+                break;
+            }
+        }
+    }
+
+    pushBookmark(bookmark) {
+        this.bookmarks.push(bookmark);
+    } 
+
     setName(name) {
         this.name = name;
 
@@ -121,7 +157,11 @@ class Folder extends EventEmitter {
     }
 
     getBookmarkById(id) {
-
+        for(let i = 0; i < this.bookmarks.length; i++) {
+            if(id == this.bookmarks[i].getId()) {
+                return this.bookmarks[i];
+            }
+        }
     }
 
     getNode() {
@@ -137,8 +177,14 @@ class Folder extends EventEmitter {
         return this.position;
     }
 
-    updateBookmarksPositions(arr) {
-
+    updateBookmarksPositions() {
+        return new Promise((resolve, reject) => {
+            let divs = this.node.getElementsByClassName('bookmark');
+            for(let i = 0; i < divs.length; i++) {
+                this.getBookmarkById(divs[i].name).setPosition(i);
+            }
+            resolve();
+        });
     }
 
     openAllBookmarks() {
