@@ -50,7 +50,7 @@ class Tab extends EventEmitter {
             });
             this.window.webContents.send("tabRenderer-updateAddressBar", url);
 
-            this.emit("add-history-item");
+            this.emit("add-history-item", url);
         });
 
         this.view.webContents.on("did-navigate-in-page", (event, url, isMainFrame, frameProcessId, frameRoutingId) => {

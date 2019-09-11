@@ -112,6 +112,10 @@ class Overlay extends EventEmitter {
     addBookmark(name, url) {
         this.view.webContents.send("bookmarkManager-addBookmark", name, url);
     }
+
+    addHistoryItem(url) {
+        this.view.webContents.send("historyManager-insertBeforeHistoryItem", url);
+    }
 }
 
 module.exports = Overlay;

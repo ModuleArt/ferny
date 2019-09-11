@@ -11,7 +11,6 @@
 const { ipcMain, app, Menu, MenuItem, BrowserWindow, dialog, clipboard } = require('electron');
 const { autoUpdater } = require("electron-updater")
 const os = require('os');
-const prependFile = require('prepend-file');
 const fs = require("fs");
 const ppath = require('persist-path')('Ferny');
 
@@ -31,7 +30,6 @@ const loadLastTab = require(app.getAppPath() + "/modules/loadLastTab.js");
 const loadStartup = require(app.getAppPath() + "/modules/loadStartup.js");
 const loadHomePage = require(app.getAppPath() + "/modules/loadHomePage.js");
 const loadBounds = require(app.getAppPath() + "/modules/loadBounds.js");
-const saveBounds = require(app.getAppPath() + "/modules/saveBounds.js");
 
 const TabManager = require(app.getAppPath() + "/modules/TabManager/TabManager.js");
 const Overlay = require(app.getAppPath() + "/modules/Overlay/Overlay.js");
@@ -890,18 +888,7 @@ function initTabManager() {
   });
 
   tabManager.on("add-history-item", (url) => {
-    let Data = {
-      url: url,
-      time: Math.floor(Date.now() / 1000)
-    };
-  
-    try {
-      prependFile(ppath + "/json/history.json", JSON.stringify(Data) + "\n", function (err) {
-        if (err) throw err;
-      });
-    } catch (error) {
-      saveFileToJsonFolder(null, 'history', JSON.stringify(Data));
-    }
+    overlay.addHistoryItem(url);
   });
 }
 
@@ -914,6 +901,17 @@ function initTabManager() {
 .##.......##.....##.##...###.##....##....##.....##..##.....##.##...###.##....##
 .##........#######..##....##..######.....##....####..#######..##....##..######.
 */
+
+function saveBounds() {
+  let Data = {
+    x: mainWindow.getBounds().x,
+    y: mainWindow.getBounds().y,
+    width: mainWindow.getBounds().width,
+    height: mainWindow.getBounds().height,
+    maximize: mainWindow.isMaximized()
+  }
+  saveFileToJsonFolder(null, 'bounds', JSON.stringify(Data));
+}
 
 function setColorTabs(bool) {
   mainWindow.webContents.send('action-set-color-tabs', bool);
@@ -987,7 +985,7 @@ function showMainWindow() {
         if(tabManager.hasActiveTab()) {
           tabManager.getActiveTab().activate();
         }
-        overlay.refreshBounds();
+        // overlay.refreshBounds();
       });
     
       mainWindow.on('unmaximize', () => {
@@ -995,7 +993,7 @@ function showMainWindow() {
         if(tabManager.hasActiveTab()) {
           tabManager.getActiveTab().activate();
         }
-        overlay.refreshBounds();
+        // overlay.refreshBounds();
       });
     
       mainWindow.once('ready-to-show', () => {

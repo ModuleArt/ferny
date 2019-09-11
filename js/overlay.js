@@ -14,6 +14,7 @@ const applyTheme = require("../modules/applyTheme.js");
 
 const BookmarkManager = require("../modules/BookmarkManager/BookmarkManager.js");
 const SearchManager = require("../modules/SearchManager/SearchManager.js");
+const HistoryManager = require("../modules/HistoryManager/HistoryManager.js");
 
 /*
   ####  ######   ##   #####   ####  #    #
@@ -58,6 +59,17 @@ bookmarkManager.on("bookmark-editor-toggled", () => {
 bookmarkManager.on("folder-editor-toggled", () => {
   updateTheme();
 });
+
+/*
+ #    # #  ####  #####  ####  #####  #   #
+ #    # # #        #   #    # #    #  # #
+ ###### #  ####    #   #    # #    #   #
+ #    # #      #   #   #    # #####    #
+ #    # # #    #   #   #    # #   #    #
+ #    # #  ####    #    ####  #    #   #
+*/
+
+let historyManager = new HistoryManager(document.getElementById('history-container'));
 
 /*
  ###### #    # #    #  ####               ####  ######   ##   #####   ####  #    #
@@ -136,6 +148,19 @@ ipcRenderer.on("searchManager-goToSearch", (event, text) => {
 
 ipcRenderer.on("bookmarkManager-addBookmark", (event, name, url) => {
   bookmarkManager.getDefaultFolder().addBookmark(name, url);
+});
+
+/*
+ # #####   ####              #    # #  ####  #####  ####  #####  #   #
+ # #    # #    #             #    # # #        #   #    # #    #  # #
+ # #    # #         #####    ###### #  ####    #   #    # #    #   #
+ # #####  #                  #    # #      #   #   #    # #####    #
+ # #      #    #             #    # # #    #   #   #    # #   #    #
+ # #       ####              #    # #  ####    #    ####  #    #   #
+*/
+
+ipcRenderer.on("historyManager-insertBeforeHistoryItem", (event, url) => {
+  historyManager.insertBeforeHistoryItem(url);
 });
 
 /*
