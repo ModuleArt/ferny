@@ -23,8 +23,8 @@ class HistoryManager extends EventEmitter {
         this.loadHistory();
     }
 
-    appendHistoryItem(id, url, time) {
-        let historyItem = new HistoryItem(id, url, time);
+    appendHistoryItem(id, url, time, title) {
+        let historyItem = new HistoryItem(id, url, time, title);
         this.history.push(historyItem);
         this.historyContainer.appendChild(historyItem.getNode());
     }
@@ -33,22 +33,27 @@ class HistoryManager extends EventEmitter {
         let Data = {
             id: this.historyCounter++,
             url: url, 
-            time: Math.floor(Date.now() / 1000)
+            time: Math.floor(Date.now() / 1000),
+            title: url
         };
 
-        let historyItem = new HistoryItem(Data.id, Data.url, Data.time);
+        let historyItem = new HistoryItem(Data.id, Data.url, Data.time, Data.title);
         this.history.push(historyItem);
-        this.historyContainer.insertBefore(historyItem.getNode(), this.historyContainer.firstChild);
+        this.historyContainer.insertBefore(historyItem.getNode(), this.historyContainer.children[0]);
 
-        try {
-            prependFile(ppath + "/json/history/history.json", JSON.stringify(Data) + "\n", (err) => {
-                saveFileToJsonFolder("history", 'history-counter', this.historyCounter);
-            });
-        } catch (error) {
-            saveFileToJsonFolder("history", 'history', JSON.stringify(Data)).then(() => {
-                saveFileToJsonFolder("history", 'history-counter', this.historyCounter);
-            });
-        }
+        historyItem.on("title-updated", (title) => {
+            Data.title = title;
+            
+            try {
+                prependFile(ppath + "/json/history/history.json", JSON.stringify(Data) + "\n", (err) => {
+                    saveFileToJsonFolder("history", 'history-counter', this.historyCounter);
+                });
+            } catch (error) {
+                saveFileToJsonFolder("history", 'history', JSON.stringify(Data)).then(() => {
+                    saveFileToJsonFolder("history", 'history-counter', this.historyCounter);
+                });
+            }
+        });
     }
 
     loadHistory() {
@@ -63,7 +68,7 @@ class HistoryManager extends EventEmitter {
             });
             historyReadline.forEach((line, index) => {
                 let obj = JSON.parse(line);
-                this.appendHistoryItem(obj.id, obj.url, obj.time)
+                this.appendHistoryItem(obj.id, obj.url, obj.time, obj.title);
             });
         });
     }

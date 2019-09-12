@@ -525,3 +525,75 @@ main {
 .bookmark-editor button, .folder-editor button {
     width: calc(50% - 4px);
 }
+
+/*
+ #    # #  ####  #####  ####  #####  #   #
+ #    # # #        #   #    # #    #  # #
+ ###### #  ####    #   #    # #    #   #
+ #    # #      #   #   #    # #####    #
+ #    # # #    #   #   #    # #   #    #
+ #    # #  ####    #    ####  #    #   #
+*/
+
+#history-container {
+    margin: -2px;
+    text-align: left;
+}
+
+.history-item {
+    margin: 4px;
+    width: 192px;
+    border-radius: calc(var(--px-radius) + 4px);
+    border: 1px solid var(--color-border);
+    background-color: var(--color-element);
+    outline: none;
+    position: relative;
+    text-align: left;
+    height: 46px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.history-item:focus {
+    box-shadow: var(--shadow-focus);
+}
+
+.history-icon {
+    position: absolute;
+    top: 7px;
+    left: 7px;
+}
+
+.history-url {
+    position: absolute;
+    top: 26px;
+    right: 7px;
+    left: 7px;
+    overflow: hidden;
+    white-space: nowrap;
+    word-break: keep-all;
+    text-overflow: ellipsis;
+    font-size: 10px;
+    opacity: var(--opacity-over);
+    margin-bottom: 16px;
+}
+
+.history-title {
+    position: absolute;
+    right: 7px;
+    top: 5px;
+    left: 28px;
+    overflow: hidden;
+    white-space: nowrap;
+    word-break: keep-all;
+    text-overflow: ellipsis;
+}
+
+/*
+ ##### #    # ######    ###### #    # #####
+   #   #    # #         #      ##   # #    #
+   #   ###### #####     #####  # #  # #    #
+   #   #    # #         #      #  # # #    #
+   #   #    # #         #      #   ## #    #
+   #   #    # ######    ###### #    # #####
+*/
