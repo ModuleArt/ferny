@@ -125,6 +125,23 @@ function updateTheme() {
 }
 
 /*
+ ###### #    # #    #  ####              #    # #  ####  #####  ####  #####  #   #
+ #      #    # ##   # #    #             #    # # #        #   #    # #    #  # #
+ #####  #    # # #  # #         #####    ###### #  ####    #   #    # #    #   #
+ #      #    # #  # # #                  #    # #      #   #   #    # #####    #
+ #      #    # #   ## #    #             #    # # #    #   #   #    # #   #    #
+ #       ####  #    #  ####              #    # #  ####    #    ####  #    #   #
+*/
+
+function clearHistory() {
+  historyManager.clearHistory();
+}
+
+function deleteSelectedHistory() {
+  historyManager.deleteSelectedHistory();
+}
+
+/*
  # #####   ####               ####  ######   ##   #####   ####  #    #
  # #    # #    #             #      #       #  #  #    # #    # #    #
  # #    # #         #####     ####  #####  #    # #    # #      ######
@@ -135,6 +152,21 @@ function updateTheme() {
 
 ipcRenderer.on("searchManager-goToSearch", (event, text) => {
   searchManager.goToSearch(text);
+});
+
+/*
+ # #####   ####               ####  #    # ###### #####  #        ##   #   #
+ # #    # #    #             #    # #    # #      #    # #       #  #   # #
+ # #    # #         #####    #    # #    # #####  #    # #      #    #   #
+ # #####  #                  #    # #    # #      #####  #      ######   #
+ # #      #    #             #    #  #  #  #      #   #  #      #    #   #
+ # #       ####               ####    ##   ###### #    # ###### #    #   #
+*/
+
+ipcRenderer.on("overlay-scrollToId", (event, id) => {
+  document.getElementById(id).scrollIntoView({
+    behavior: "smooth"
+  });
 });
 
 /*

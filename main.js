@@ -136,10 +136,10 @@ const sideMenu = Menu.buildFromTemplate([{
     } }
   ] }, { 
   label: 'History', accelerator: 'CmdOrCtrl+H', icon: app.getAppPath() + '/imgs/icons16/history.png', click: () => { 
-    overlay.openHistory(); 
+    overlay.scrollToId("history-title")
   } }, { 
   label: 'Downloads', accelerator: 'CmdOrCtrl+D', icon: app.getAppPath() + '/imgs/icons16/download.png', click: () => { 
-    overlay.openDownloads(); 
+    overlay.scrollToId("downloads-title"); 
   } }, { type: 'separator' }, { 
   label: 'Zoom', icon: app.getAppPath() + '/imgs/icons16/zoom.png', submenu: [{ 
     label: 'Zoom in', icon: app.getAppPath() + '/imgs/icons16/zoom-in.png', accelerator: 'CmdOrCtrl+=', click: () => { 
@@ -224,20 +224,20 @@ const sideMenu = Menu.buildFromTemplate([{
       }
     } }
   ] }, { type: 'separator' }, { 
-  label: 'Settings', icon: app.getAppPath() + '/imgs/icons16/settings.png', accelerator: 'CmdOrCtrl+,', click: () => { 
+  enabled: false, label: 'Settings', icon: app.getAppPath() + '/imgs/icons16/settings.png', accelerator: 'CmdOrCtrl+,', click: () => { 
     overlay.openSettings(); 
   } }, { 
   label: 'Help', icon: app.getAppPath() + '/imgs/icons16/help.png', submenu: [{ 
     enabled: false, label: 'Check for updates', icon: app.getAppPath() + '/imgs/icons16/reload.png', accelerator: 'CmdOrCtrl+Shift+U', click: () => { 
       checkForUpdates(); 
     } }, { type: 'separator' }, { 
-    label: 'About', icon: app.getAppPath() + '/imgs/icons16/about.png', accelerator: 'F2', click: () => { 
+      enabled: false, label: 'About', icon: app.getAppPath() + '/imgs/icons16/about.png', accelerator: 'F2', click: () => { 
       overlay.openAbout(); 
     } }, { 
-    label: 'Hotkeys', icon: app.getAppPath() + '/imgs/icons16/keyboard.png', accelerator: 'F1', click: () => { 
+      enabled: false, label: 'Hotkeys', icon: app.getAppPath() + '/imgs/icons16/keyboard.png', accelerator: 'F1', click: () => { 
       showKeyBindsWindow(); 
     } }, { 
-    label: 'Welcome', icon: app.getAppPath() + '/imgs/icons16/startup.png', accelerator: 'F7', click: () => { 
+      enabled: false, label: 'Welcome', icon: app.getAppPath() + '/imgs/icons16/startup.png', accelerator: 'F7', click: () => { 
       showWelcomeWindow(); 
     } }, { type: 'separator' }, { 
     label: 'Report an issue', icon: app.getAppPath() + '/imgs/icons16/bug.png', accelerator: 'CmdOrCtrl+Shift+I', click: () => { 
@@ -245,7 +245,7 @@ const sideMenu = Menu.buildFromTemplate([{
     } }
   ] }, { 
   label: 'More', icon: app.getAppPath() + '/imgs/icons16/more.png', submenu: [{ 
-    label: 'Clear browsing data', icon: app.getAppPath() + '/imgs/icons16/broom.png', accelerator: 'CmdOrCtrl+Shift+Delete', click: () => { 
+    enabled: false, label: 'Clear browsing data', icon: app.getAppPath() + '/imgs/icons16/broom.png', accelerator: 'CmdOrCtrl+Shift+Delete', click: () => { 
       overlay.openSettings('clear-browsing-data'); 
     } }, { type: 'separator' }, { 
     label: 'Show overlay', icon: app.getAppPath() + '/imgs/icons16/details.png', accelerator: 'F3', click: () => { 
@@ -258,9 +258,6 @@ const sideMenu = Menu.buildFromTemplate([{
         overlay.goToSearch();
       }
     } }, { 
-    enabled: false, label: 'Close active panel', icon: app.getAppPath() + '/imgs/icons16/close.png', accelerator: 'Esc', click: () => { 
-      mainWindow.webContents.send('action-esc'); 
-    } }, { type: 'separator' }, { 
     label: 'Switch tab', icon: app.getAppPath() + '/imgs/icons16/numerical.png', submenu: [{ 
       label: 'Next tab', icon: app.getAppPath() + '/imgs/icons16/next.png', accelerator: 'CmdOrCtrl+Tab', click: () => { 
         if(tabManager.hasActiveTab()) {

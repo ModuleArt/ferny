@@ -72,7 +72,7 @@ class Folder extends EventEmitter {
     }
 
     newBookmark() {
-        this.emit("add-bookmark", this, "New bookmark", "https://duckduckgo.com");
+        this.emit("add-bookmark", this, "New bookmark", "https://");
     }
 
     addBookmark(name, url) {
@@ -116,8 +116,6 @@ class Folder extends EventEmitter {
         } else {
             cont.appendChild(bookmark.getNode());
         }
-        
-        // this.node.getElementsByClassName('folder-container')[0].appendChild(bookmark.getNode());
 
         this.emit("append-bookmark");
         return null;

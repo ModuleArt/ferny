@@ -44,36 +44,7 @@ class Overlay extends EventEmitter {
 
     scrollToId(id) {
         this.show();
-    }
-
-    openHistory() {
-        this.show();
-        this.view.webContents.loadFile(this.appPath + "/html/history.html");
-    }
-
-    openDownloads() {
-        this.show();
-        this.view.webContents.loadFile(this.appPath + "/html/downloads.html");
-    }
-
-    openSettings(shortcutId) {
-        this.show();
-
-        if(shortcutId == null) {
-            this.view.webContents.loadFile(this.appPath + "/html/settings.html");
-        } else {
-            this.view.webContents.loadURL(this.appPath + "/html/settings.html#" + shortcutId);
-        }
-    }
-
-    openAbout() {
-        this.show();
-        this.view.webContents.loadFile(this.appPath + "/html/about.html");
-    }
-
-    openCertificate() {
-        this.show();
-        this.view.webContents.loadFile(this.appPath + "/html/certificate.html");
+        this.view.webContents.send("overlay-scrollToId", id);
     }
 
     showButtonMenu() {
@@ -81,21 +52,18 @@ class Overlay extends EventEmitter {
             label: 'Show overlay', icon: this.appPath + '/imgs/icons16/details.png', click: () => { 
                 this.show(); 
             } }, { type: 'separator' }, { 
+            label: 'Search', icon: this.appPath + '/imgs/icons16/zoom.png', click: () => { 
+                this.scrollToId("search-title"); 
+            } }, { 
+            label: 'Bookmarks', icon: this.appPath + '/imgs/icons16/bookmarks.png', accelerator: 'CmdOrCtrl+B', click: () => { 
+                this.scrollToId("bookmarks-title"); 
+            } }, { 
             label: 'History', icon: this.appPath + '/imgs/icons16/history.png', accelerator: 'CmdOrCtrl+H', click: () => { 
-                this.openHistory(); 
+                this.scrollToId("history-title"); 
             } }, { 
-            label: 'Downloads', icon: this.appPath + '/imgs/icons16/download.png', accelerator: 'CmdOrCtrl+H', click: () => { 
-                this.openDownloads(); 
-            } }, { type: 'separator' }, { 
-            label: 'Certificate info', icon: this.appPath + '/imgs/icons16/certificate.png', accelerator: 'CmdOrCtrl+I', click: () => { 
-                this.openCertificate(); 
-            } }, { type: 'separator' }, { 
-            label: 'Settings', icon: this.appPath + '/imgs/icons16/settings.png', accelerator: 'CmdOrCtrl+,', click: () => { 
-                this.openSettings(); 
-            } }, { 
-            label: 'About', icon: this.appPath + '/imgs/icons16/about.png', accelerator: 'F2', click: () => { 
-                this.openAbout(); 
-            } },
+            label: 'Downloads', icon: this.appPath + '/imgs/icons16/downloads.png', accelerator: 'CmdOrCtrl+D', click: () => { 
+                this.scrollToId("downloads-title"); 
+            } }
           ]);
         buttonMenu.popup(this.window);
     }
@@ -105,7 +73,7 @@ class Overlay extends EventEmitter {
     }
 
     goToSearch(text) {
-        this.show();
+        this.scrollToId("search-title"); 
         this.view.webContents.send("searchManager-goToSearch", text);
     }
 

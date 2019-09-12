@@ -84,10 +84,10 @@ main {
 
 .block-title {
     text-align: left;
-    margin: 8px 4px;
+    padding: 16px 0;
+    padding-bottom: 4px;
+    margin: 4px;
     margin-top: 32px;
-    padding: 0;
-    height: 32px;
 }
 
 .block-title label {
@@ -554,8 +554,21 @@ main {
     vertical-align: top;
 }
 
+.history-item:hover .history-checkbox, .history-checkbox:checked {
+    display: block;
+}
+
 .history-item:focus {
     box-shadow: var(--shadow-focus);
+}
+
+.history-checkbox {
+    position: absolute;
+    left: 2px;
+    top: 3px;
+    height: 20px;
+    width: 20px;
+    display: none;
 }
 
 .history-icon {

@@ -19,15 +19,15 @@ class HistoryItem extends EventEmitter {
         this.url = url;
         this.time = time;
         this.title = title;
-        console.log(title);
 
         this.node = document.createElement('button');
         this.node.classList.add('history-item');
         this.node.name = id;
-        this.id = "history-" + id;
+        this.node.id = "history-" + id;
         this.node.innerHTML = `
             <img class='history-icon' src="http://www.google.com/s2/favicons?domain=` + url + `">
             <label class='history-title'>` + title + `</label>
+            <input type="checkbox" class='history-checkbox'>
             <label class='history-url'>` + url + `</label>
         `;
         
@@ -64,6 +64,10 @@ class HistoryItem extends EventEmitter {
 
     getTitle() {
         return this.title;
+    }
+
+    isSelected() {
+        return this.node.getElementsByClassName('history-checkbox')[0].checked;
     }
 }
 

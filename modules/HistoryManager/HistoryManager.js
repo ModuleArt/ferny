@@ -72,6 +72,49 @@ class HistoryManager extends EventEmitter {
             });
         });
     }
+
+    clearHistory() {
+        saveFileToJsonFolder("history", 'history-counter', 0).then(() => {
+            this.historyCounter = 0;
+            saveFileToJsonFolder("history", 'history', "").then(() => {
+                this.history = [];
+                this.historyContainer.innerHTML = "";
+            });
+        });
+    }
+
+    deleteSelectedHistory() {
+        let arr = [];
+
+        for(let i = 0; i < this.history.length; i++) {
+            if(this.history[i].isSelected()) {
+                arr.push(this.history[i].getId());
+                this.historyContainer.removeChild(this.history[i].getNode());
+                this.history.splice(i, 1);
+                i--;
+            }
+        }
+
+        if(arr.length > 0) {
+            checkFileExists(ppath + "/json/history/history.json").then(() => {
+                fs.readFile(ppath + "/json/history/history.json", (err, data) => {
+                    let text = data.toString();
+                    let lines = text.split('\n');
+                    saveFileToJsonFolder("history", "history", "").then(() => {
+                        for(let i = 0; i < lines.length - 1; i++) {
+                            let obj = JSON.parse(lines[i]);
+                            if(arr.includes(obj.id)) {
+                                continue;
+                            }
+                            fs.appendFile(ppath + "/json/history/history.json", lines[i] + "\n", (err) => {
+    
+                            });
+                        }
+                    });
+                });
+            });
+        }
+    }
 }
 
 module.exports = HistoryManager;

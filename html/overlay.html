@@ -64,10 +64,16 @@
             <div class="block-title" id="history-title">
                 <img class="theme-icon" name="history-16">
                 <label>History</label>
+                <div class="block-buttons">
+                    <button class="nav-btn" title="Delete selected history" onclick="deleteSelectedHistory()">
+                        <img class="theme-icon" name="delete-16">
+                    </button>
+                    <button class="nav-btn" title="Clear all history" onclick="clearHistory()">
+                        <img class="theme-icon" name="clear-16">
+                    </button>
+                </div>
             </div>
-            <div class="block-container" id="history-container">
-                
-            </div>
+            <div class="block-container" id="history-container"></div>
 
             <div class="block-title" id="downloads-title">
                 <img class="theme-icon" name="download-16">
