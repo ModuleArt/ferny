@@ -102,7 +102,7 @@
     margin: -1px;
     margin-right: 0;
     text-align: left;
-    background-color: transparent;
+    background-color: var(--color-element);
     outline: none;
     transition: opacity 0.25s, transform 0.25s;
 }
@@ -112,7 +112,8 @@
 }
 
 .tabman-tab.active {
-    background-color: var(--color-element);
+    background-color: var(--color-back);
+    border-bottom: none;
 }
 
 .tabman-tab:active {
@@ -135,7 +136,7 @@
 .tabman-tab-icon {
     display: inline-block;
     height: 16px;
-    opacity: var(--opacity-over);
+    /* opacity: var(--opacity-over); */
 }
 
 .tabman-tab-icon img {
@@ -165,7 +166,7 @@
     white-space: nowrap;
     word-break: keep-all;
     text-overflow: ellipsis;
-    opacity: var(--opacity-over);
+    /* opacity: var(--opacity-over); */
 }
 
 .tabman-tab.active .tabman-tab-title {

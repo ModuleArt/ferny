@@ -3,7 +3,7 @@
     outline: none;
     float: left;
     color: var(--color-top);
-    background: none;
+    background-color: var(--color-element);
     font-size: var(--px-font);
     padding: 10px;
     height: 34px;
@@ -14,15 +14,11 @@
 
 .overlay-button img {
     vertical-align: top;
-    opacity: var(--opacity-over) !important;
 }
 
 .overlay-button.active {
     border-bottom: 1px solid var(--color-back);
-}
-
-.overlay-button.active img {
-    opacity: 1 !important;
+    background-color: var(--color-back);
 }
 
 .overlay-button:hover {

@@ -3,7 +3,7 @@ if (!document) {
 }
 
 const EventEmitter = require("events");
-const { ipcRenderer, NativeImage } = require("electron");
+const { ipcRenderer } = require("electron");
 const getAvColor = require('color.js');
 
 const rgbToRgbaString = require("../rgbToRgbaString.js");
@@ -16,6 +16,7 @@ class TabRenderer extends EventEmitter {
     stopButton = null;
     addressBar = null;
     targetURL = null;
+    tabDrag = null;
 
     constructor() {
         super();
@@ -122,6 +123,7 @@ class TabRenderer extends EventEmitter {
             } else {
                 tabs[i].classList.remove("active");
             }
+            this.updateTabColor(tabs[i]);
         }
 
         return null;
@@ -153,15 +155,26 @@ class TabRenderer extends EventEmitter {
     }
 
     setTabIcon(id, icon) {
-        let img = this.getTabById(id).getElementsByClassName("tabman-tab-icon")[0];
+        let tab = this.getTabById(id);
+        let img = tab.getElementsByClassName("tabman-tab-icon")[0];
         img.src = icon;
 
-        var color = new getAvColor(img);
-        color.mostUsed(result => {
-            if(document.body.classList.contains('color-tabs')) {
+        this.updateTabColor(tab);
+
+        return null;
+    }
+
+    updateTabColor(tab) {
+        if(tab.classList.contains("active")) {
+            tab.style.backgroundColor = "";
+        } else {
+            let img = tab.getElementsByClassName("tabman-tab-icon")[0];
+
+            let color = new getAvColor(img);
+            color.mostUsed(result => {
                 img.parentNode.style.backgroundColor = rgbToRgbaString(result[0]);
-            }
-        });
+            });
+        }
 
         return null;
     }

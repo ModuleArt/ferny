@@ -982,7 +982,7 @@ function showMainWindow() {
         if(tabManager.hasActiveTab()) {
           tabManager.getActiveTab().activate();
         }
-        // overlay.refreshBounds();
+        overlay.refreshBounds();
       });
     
       mainWindow.on('unmaximize', () => {
@@ -990,7 +990,7 @@ function showMainWindow() {
         if(tabManager.hasActiveTab()) {
           tabManager.getActiveTab().activate();
         }
-        // overlay.refreshBounds();
+        overlay.refreshBounds();
       });
     
       mainWindow.once('ready-to-show', () => {

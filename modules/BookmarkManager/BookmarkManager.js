@@ -253,29 +253,45 @@ class BookmarkManager extends EventEmitter {
             this.bookmarkCounter = bookmarkCounter;
         });
 
-        checkFileExists(ppath + "/json/bookmarks/folders.json").then(() => {
-            let foldersReadline = readlPromise.createInterface({
-                terminal: false, 
-                input: fs.createReadStream(ppath + "/json/bookmarks/folders.json")
-            });
-            foldersReadline.forEach((line, index) => {
-                let obj = JSON.parse(line);
-                if(obj.id != -1) {
-                    this.appendFolder(new Folder(obj.id, obj.name, true, obj.position));
-                } else {
-                    this.defaultFolder.setPosition(obj.position);
-                }
+        let foldersPromise = new Promise((resolve, reject) => {
+            checkFileExists(ppath + "/json/bookmarks/folders.json").then(() => {
+                // let foldersReadline = readlPromise.createInterface({
+                //     terminal: false, 
+                //     input: fs.createReadStream(ppath + "/json/bookmarks/folders.json")
+                // });
+                // foldersReadline.forEach((line, index) => {
+                //     let obj = JSON.parse(line);
+                //     if(obj.id != -1) {
+                //         this.appendFolder(new Folder(obj.id, obj.name, true, obj.position));
+                //     } else {
+                //         this.defaultFolder.setPosition(obj.position);
+                //     }
+                // });
+                loadFileFromJsonFolder("bookmarks", "folders").then((data) => {
+                    let lines = data.toString().split("\n");
+                    for(let i = 0; i < lines.length - 1; i++) {
+                        let obj = JSON.parse(lines[i]);
+                        if(obj.id != -1) {
+                            this.appendFolder(new Folder(obj.id, obj.name, true, obj.position));
+                        } else {
+                            this.defaultFolder.setPosition(obj.position);
+                        }
+                    }
+                    resolve();
+                });
             });
         });
 
-        checkFileExists(ppath + "/json/bookmarks/bookmarks.json").then(() => {
-            let bookmarksReadline = readlPromise.createInterface({
-                terminal: false, 
-                input: fs.createReadStream(ppath + "/json/bookmarks/bookmarks.json")
-            });
-            bookmarksReadline.forEach((line, index) => {
-                let obj = JSON.parse(line);
-                this.getFolderById(obj.folder).appendBookmark(new Bookmark(obj.id, obj.name, obj.url, obj.position));
+        foldersPromise.then(() => {
+            checkFileExists(ppath + "/json/bookmarks/bookmarks.json").then(() => {
+                let bookmarksReadline = readlPromise.createInterface({
+                    terminal: false, 
+                    input: fs.createReadStream(ppath + "/json/bookmarks/bookmarks.json")
+                });
+                bookmarksReadline.forEach((line, index) => {
+                    let obj = JSON.parse(line);
+                    this.getFolderById(obj.folder).appendBookmark(new Bookmark(obj.id, obj.name, obj.url, obj.position));
+                });
             });
         });
     }
