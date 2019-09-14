@@ -71,6 +71,10 @@ bookmarkManager.on("folder-editor-toggled", () => {
 
 let historyManager = new HistoryManager(document.getElementById('history-container'));
 
+historyManager.on("history-item-added", () => {
+  updateTheme();
+});
+
 /*
  ###### #    # #    #  ####               ####  ######   ##   #####   ####  #    #
  #      #    # ##   # #    #             #      #       #  #  #    # #    # #    #

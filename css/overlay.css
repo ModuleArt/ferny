@@ -283,10 +283,6 @@ main {
     padding-bottom: 36px;
 }
 
-#bookmarks-container.movable {
-
-}
-
 .folder-move {
     position: absolute;
     left: 7px;
@@ -331,8 +327,6 @@ main {
     position: absolute;
     top: -3px;
     display: none;
-    animation: append-center;
-    animation-duration: 0.25s;
 }
 
 .folder-header .add-bookmark-btn {
@@ -562,10 +556,6 @@ main {
     vertical-align: top;
 }
 
-.history-item:hover .history-checkbox, .history-checkbox:checked {
-    display: block;
-}
-
 .history-item:focus {
     box-shadow: var(--shadow-focus);
 }
@@ -574,11 +564,15 @@ main {
     position: absolute;
     left: 2px;
     top: 3px;
-    height: 20px;
-    width: 20px;
-    display: none;
-    animation: append-center;
-    animation-duration: 0.25s;
+    height: 19px;
+    width: 19px;
+    transform: scale(0);
+    transition: transform 0.25s;
+    outline: none;
+}
+
+.history-item:hover .history-checkbox, .history-checkbox:checked, .history-checkbox:focus {
+    transform: scale(1);
 }
 
 .history-icon {
@@ -610,6 +604,42 @@ main {
     white-space: nowrap;
     word-break: keep-all;
     text-overflow: ellipsis;
+}
+
+.history-item:hover .history-title {
+    right: 28px;
+}
+
+.history-copy {
+    transform: scale(0);
+    position: absolute;
+    right: 4px;
+    top: 4px;
+    width: 22px;
+    height: 22px;
+    background: none;
+    border: 1px solid var(--color-border);
+    padding: 0 2px;
+    border-radius: var(--px-radius);
+    outline: none;
+    transition: transform 0.25s;
+    background-color: var(--color-element);
+}
+
+.history-copy:hover {
+    background-color: var(--color-second);
+}
+
+.history-copy:active {
+    background-color: var(--color-border);
+}
+
+.history-copy:focus {
+    box-shadow: var(--shadow-focus);
+}
+
+.history-item:hover .history-copy, .history-copy:focus {
+    transform: scale(1);
 }
 
 /*

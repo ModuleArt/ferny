@@ -71,6 +71,7 @@ class Bookmark extends EventEmitter {
         copyBtn.onclick = (event) => {
             event.stopPropagation();
             this.copyURL();
+            this.toggleOptions();
         }
         bookmarkMenu.appendChild(copyBtn);
 
@@ -115,6 +116,7 @@ class Bookmark extends EventEmitter {
 
     open() {
         ipcRenderer.send("tabManager-addTab", this.url, true);
+        return null;
     }
 
     getId() {
@@ -143,7 +145,6 @@ class Bookmark extends EventEmitter {
 
     setName(name) {
         this.name = name;
-
         return null;
     }
 
@@ -153,7 +154,6 @@ class Bookmark extends EventEmitter {
 
     setURL(url) {
         this.url = url;
-
         return null;
     }
 
@@ -230,7 +230,6 @@ class Bookmark extends EventEmitter {
 
     copyURL() {
         clipboard.writeText(this.url);
-
         return null;
     }
 

@@ -255,18 +255,6 @@ class BookmarkManager extends EventEmitter {
 
         let foldersPromise = new Promise((resolve, reject) => {
             checkFileExists(ppath + "/json/bookmarks/folders.json").then(() => {
-                // let foldersReadline = readlPromise.createInterface({
-                //     terminal: false, 
-                //     input: fs.createReadStream(ppath + "/json/bookmarks/folders.json")
-                // });
-                // foldersReadline.forEach((line, index) => {
-                //     let obj = JSON.parse(line);
-                //     if(obj.id != -1) {
-                //         this.appendFolder(new Folder(obj.id, obj.name, true, obj.position));
-                //     } else {
-                //         this.defaultFolder.setPosition(obj.position);
-                //     }
-                // });
                 loadFileFromJsonFolder("bookmarks", "folders").then((data) => {
                     let lines = data.toString().split("\n");
                     for(let i = 0; i < lines.length - 1; i++) {

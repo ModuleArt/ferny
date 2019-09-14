@@ -27,6 +27,8 @@ class HistoryManager extends EventEmitter {
         let historyItem = new HistoryItem(id, url, time, title);
         this.history.push(historyItem);
         this.historyContainer.appendChild(historyItem.getNode());
+
+        return null;
     }
 
     insertBeforeHistoryItem(url) {
@@ -54,6 +56,9 @@ class HistoryManager extends EventEmitter {
                 });
             }
         });
+
+        this.emit("history-item-added");
+        return null;
     }
 
     loadHistory() {
@@ -71,6 +76,8 @@ class HistoryManager extends EventEmitter {
                 this.appendHistoryItem(obj.id, obj.url, obj.time, obj.title);
             });
         });
+
+        return null;
     }
 
     clearHistory() {
@@ -81,6 +88,8 @@ class HistoryManager extends EventEmitter {
                 this.historyContainer.innerHTML = "";
             });
         });
+
+        return null;
     }
 
     deleteSelectedHistory() {
@@ -114,6 +123,8 @@ class HistoryManager extends EventEmitter {
                 });
             });
         }
+
+        return null;
     }
 }
 
