@@ -195,8 +195,8 @@ function showOverlayButtonMenu() {
   ipcRenderer.send('overlay-showButtonMenu');
 }
 
-function goToSearch(text) {
-  ipcRenderer.send('overlay-goToSearch', text);
+function goToSearch(text, selectionStart) {
+  ipcRenderer.send('overlay-goToSearch', text, selectionStart);
 }
 
 /*

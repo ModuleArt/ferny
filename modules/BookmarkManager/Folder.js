@@ -50,7 +50,7 @@ class Folder extends EventEmitter {
         this.node.getElementsByClassName('folder-header')[0].appendChild(addBookmarkBtn);
 
         let openAllBtn = document.createElement("button");
-        openAllBtn.classList.add('nav-btn', 'open-all-btn');
+        openAllBtn.classList.add("nav-btn", "open-all-btn");
         openAllBtn.title = "Open all bookmarks";
         openAllBtn.innerHTML = `<img class='theme-icon' name='link-16'>`;
         openAllBtn.onclick = () => {

@@ -232,6 +232,7 @@ class SearchManager extends EventEmitter {
 
     newTab(url) {
         ipcRenderer.send("tabManager-addTab", url, true);
+        return null;
     }
 
     setSearchEngine(engineName) {
@@ -243,19 +244,30 @@ class SearchManager extends EventEmitter {
                 break;
             }
         }
+
+        return null;
     }
 
-    goToSearch(text) {
+    goToSearch(text, cursorPos) {
         if(text == null) {
             this.searchInput.value = "";
         } else {
             this.searchInput.value = text;
         }
+
+        if(cursorPos != null) {
+            this.searchInput.setSelectionRange(cursorPos, cursorPos);
+        }
+
         this.searchInput.focus();
+
+        return null;
     }
 
     clearSearch() {
         this.searchInput.value = "";
+
+        return null;
     }
 }
 

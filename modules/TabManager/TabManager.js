@@ -46,7 +46,7 @@ class TabManager extends EventEmitter {
                 this.emit("active-tab-closed");
             }
 
-            if(this.tabs.length == 0) {
+            if(this.tabs.length === 0) {
                 this.emit("last-tab-closed");
             }
         });

@@ -743,8 +743,8 @@ ipcMain.on('overlay-showButtonMenu', (event) => {
   overlay.showButtonMenu();
 });
 
-ipcMain.on('overlay-goToSearch', (event, text) => {
-  overlay.goToSearch(text);
+ipcMain.on('overlay-goToSearch', (event, text, cursorPos) => {
+  overlay.goToSearch(text, cursorPos);
 });
 
 /*

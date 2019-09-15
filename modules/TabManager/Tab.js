@@ -435,7 +435,7 @@ class Tab extends EventEmitter {
 
     zoomToActualSize() {
         let zoomFactor = this.view.webContents.getZoomFactor();
-        if(zoomFactor != 1) {
+        if(zoomFactor !== 1) {
             this.view.webContents.setZoomFactor(1);
         }
     }

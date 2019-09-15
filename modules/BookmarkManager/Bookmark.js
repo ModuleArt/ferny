@@ -1,6 +1,6 @@
 const EventEmitter = require("events");
 const { ipcRenderer, clipboard } = require("electron");
-const getAvColor = require('color.js');
+const getAvColor = require("color.js");
 
 const rgbToRgbaString = require("../rgbToRgbaString.js");
 
@@ -19,8 +19,8 @@ class Bookmark extends EventEmitter {
         this.url = url;
         this.position = position;
 
-        this.node = document.createElement('button');
-        this.node.classList.add('bookmark');
+        this.node = document.createElement("button");
+        this.node.classList.add("bookmark");
         this.node.title = name + "\n" + url;
         this.node.name = id;
         this.node.position = position;
@@ -30,7 +30,7 @@ class Bookmark extends EventEmitter {
             <label class='bookmark-name'>` + name + `</label>
             <label class='bookmark-preview'>` + url + `</label>
         `;
-        let color = new getAvColor(this.node.getElementsByTagName('img')[0]);
+        let color = new getAvColor(this.node.getElementsByTagName("img")[0]);
         color.mostUsed(result => {
             this.node.style.backgroundColor = rgbToRgbaString(result[0]);
         });
@@ -39,7 +39,7 @@ class Bookmark extends EventEmitter {
         }
         this.node.onauxclick = (event) => {
             event.preventDefault();
-            if(event.which == 2) {
+            if(event.which === 2) {
                 ipcRenderer.send("tabManager-addTab", url, false);
             }
         }
@@ -50,8 +50,8 @@ class Bookmark extends EventEmitter {
             event.preventDefault();
         }
 
-        let optionsBtn = document.createElement('button');
-        optionsBtn.classList.add('bookmark-options');
+        let optionsBtn = document.createElement("button");
+        optionsBtn.classList.add("bookmark-options");
         optionsBtn.title = "Toggle options";
         optionsBtn.innerHTML = `<img name="options-12" class="theme-icon">`;
         optionsBtn.onclick = (event) => {
@@ -60,12 +60,12 @@ class Bookmark extends EventEmitter {
         }
         this.node.appendChild(optionsBtn);
 
-        let bookmarkMenu = document.createElement('div');
-        bookmarkMenu.classList.add('bookmark-menu');
+        let bookmarkMenu = document.createElement("div");
+        bookmarkMenu.classList.add("bookmark-menu");
         this.node.appendChild(bookmarkMenu);
 
-        let copyBtn = document.createElement('button');
-        copyBtn.classList.add('nav-btn');
+        let copyBtn = document.createElement("button");
+        copyBtn.classList.add("nav-btn");
         copyBtn.title = "Copy URL";
         copyBtn.innerHTML = `<img name="copy-16" class="theme-icon"><label>Copy</label>`;
         copyBtn.onclick = (event) => {
@@ -75,8 +75,8 @@ class Bookmark extends EventEmitter {
         }
         bookmarkMenu.appendChild(copyBtn);
 
-        let editBtn = document.createElement('button');
-        editBtn.classList.add('nav-btn');
+        let editBtn = document.createElement("button");
+        editBtn.classList.add("nav-btn");
         editBtn.title = "Edit bookmark";
         editBtn.innerHTML = `<img name="edit-16" class="theme-icon"><label>Edit</label>`;
         editBtn.onclick = (event) => {
@@ -85,8 +85,8 @@ class Bookmark extends EventEmitter {
         }
         bookmarkMenu.appendChild(editBtn);
 
-        let deleteBtn = document.createElement('button');
-        deleteBtn.classList.add('nav-btn');
+        let deleteBtn = document.createElement("button");
+        deleteBtn.classList.add("nav-btn");
         deleteBtn.title = "Delete bookmark";
         deleteBtn.innerHTML = `<img name="delete-16" class="theme-icon">`;
         deleteBtn.onclick = (event) => {
@@ -127,11 +127,11 @@ class Bookmark extends EventEmitter {
         this.name = name;
         this.url = url;
 
-        this.node.getElementsByClassName('bookmark-name')[0].innerHTML = name;
-        this.node.getElementsByClassName('bookmark-preview')[0].innerHTML = url;
+        this.node.getElementsByClassName("bookmark-name")[0].innerHTML = name;
+        this.node.getElementsByClassName("bookmark-preview")[0].innerHTML = url;
         this.node.title = name + "\n" + url;
 
-        let icon = this.node.getElementsByClassName('bookmark-icon')[0];
+        let icon = this.node.getElementsByClassName("bookmark-icon")[0];
         icon.src = "http://www.google.com/s2/favicons?domain=" + url;
 
         let color = new getAvColor(icon);
@@ -166,8 +166,8 @@ class Bookmark extends EventEmitter {
     }
 
     toggleOptions() {
-        this.node.classList.toggle('show-menu');
-        this.node.classList.remove('show-editor');
+        this.node.classList.toggle("show-menu");
+        this.node.classList.remove("show-editor");
 
         let bookmarkEditor = this.node.getElementsByClassName("bookmark-editor")[0];
         if(bookmarkEditor != null) {
@@ -179,33 +179,33 @@ class Bookmark extends EventEmitter {
     }
 
     toggleEditor() {
-        this.node.classList.remove('show-menu');
-        this.node.classList.toggle('show-editor');
+        this.node.classList.remove("show-menu");
+        this.node.classList.toggle("show-editor");
 
         let bookmarkEditor = this.node.getElementsByClassName("bookmark-editor")[0];
         if(bookmarkEditor == null) {
-            bookmarkEditor = document.createElement('div');
-            bookmarkEditor.classList.add('bookmark-editor');
+            bookmarkEditor = document.createElement("div");
+            bookmarkEditor.classList.add("bookmark-editor");
             bookmarkEditor.onclick = (event) => {
                 event.stopPropagation();
             } 
             this.node.appendChild(bookmarkEditor);
 
-            let nameInput = document.createElement('input');
+            let nameInput = document.createElement("input");
             nameInput.type = "text";
             nameInput.placeholder = "Bookmark name";
             nameInput.value = this.name;
             bookmarkEditor.appendChild(nameInput);
             nameInput.focus();
 
-            let urlInput = document.createElement('input');
+            let urlInput = document.createElement("input");
             urlInput.type = "text";
             urlInput.placeholder = "Bookmark URL";
             urlInput.value = this.url;
             bookmarkEditor.appendChild(urlInput);
 
-            let saveBtn = document.createElement('button');
-            saveBtn.classList.add('nav-btn');
+            let saveBtn = document.createElement("button");
+            saveBtn.classList.add("nav-btn");
             saveBtn.innerHTML = `<img class="theme-icon" name="save-16"><label>Save</label>`;
             saveBtn.onclick = () => {
                 this.edit(nameInput.value, urlInput.value);
@@ -213,8 +213,8 @@ class Bookmark extends EventEmitter {
             }
             bookmarkEditor.appendChild(saveBtn);
 
-            let cancelBtn = document.createElement('button');
-            cancelBtn.classList.add('nav-btn');
+            let cancelBtn = document.createElement("button");
+            cancelBtn.classList.add("nav-btn");
             cancelBtn.innerHTML = `<img class="theme-icon" name="cancel-16"><label>Cancel</label>`;
             cancelBtn.onclick = () => {
                 this.toggleEditor();

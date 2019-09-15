@@ -72,9 +72,9 @@ class Overlay extends EventEmitter {
         this.view.webContents.openDevTools();
     }
 
-    goToSearch(text) {
+    goToSearch(text, cursorPos) {
         this.scrollToId("search-title"); 
-        this.view.webContents.send("searchManager-goToSearch", text);
+        this.view.webContents.send("searchManager-goToSearch", text, cursorPos);
     }
 
     addBookmark(name, url) {

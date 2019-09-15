@@ -162,8 +162,8 @@ function collapseHistory() {
  # #       ####               ####  ###### #    # #    #  ####  #    #
 */
 
-ipcRenderer.on("searchManager-goToSearch", (event, text) => {
-  searchManager.goToSearch(text);
+ipcRenderer.on("searchManager-goToSearch", (event, text, cursorPos) => {
+  searchManager.goToSearch(text, cursorPos);
 });
 
 /*

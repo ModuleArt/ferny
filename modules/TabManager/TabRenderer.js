@@ -56,7 +56,7 @@ class TabRenderer extends EventEmitter {
         }
         tab.onauxclick = (event) => {
             event.preventDefault();
-            if(event.which == 2) {
+            if(event.which === 2) {
                 ipcRenderer.send("tabManager-closeTab", id);
             }
         }
