@@ -6,9 +6,11 @@
 
 <p align="center">
   <img alt="GitHub All Releases" src="https://img.shields.io/github/downloads/ModuleArt/ferny/total">
+  <img alt="GitHub release (latest by date including pre-releases)" src="https://img.shields.io/github/v/release/moduleart/ferny?include_prereleases">
   <a href="https://app.fossa.com/projects/git%2Bgithub.com%2FModuleArt%2Fferny?ref=badge_shield" alt="FOSSA Status">
     <img src="https://app.fossa.com/api/projects/git%2Bgithub.com%2FModuleArt%2Fferny.svg?type=shield"/>
   </a>
+  <img alt="Codacy grade" src="https://img.shields.io/codacy/grade/6fac6a3440d7480281c19780ed37ce30">
 </p>
 
 <p align="center">
