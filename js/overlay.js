@@ -145,6 +145,14 @@ function deleteSelectedHistory() {
   historyManager.deleteSelectedHistory();
 }
 
+function loadMoreHistory() {
+  historyManager.setLimiter(false);
+}
+
+function collapseHistory() {
+  historyManager.setLimiter(true);
+}
+
 /*
  # #####   ####               ####  ######   ##   #####   ####  #    #
  # #    # #    #             #      #       #  #  #    # #    # #    #

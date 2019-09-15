@@ -26,14 +26,10 @@ class HistoryItem extends EventEmitter {
         this.node.name = id;
         this.node.id = "history-" + id;
         this.node.innerHTML = `
-            <img class='history-icon' src="http://www.google.com/s2/favicons?domain=` + url + `">
+            <img class='history-icon' src='http://www.google.com/s2/favicons?domain=` + url + `'>
             <label class='history-title'>` + title + `</label>
             <label class='history-url'>` + url + `</label>
         `;        
-        let color = new getAvColor(this.node.getElementsByTagName('img')[0]);
-        color.mostUsed(result => {
-            this.node.style.backgroundColor = rgbToRgbaString(result[0]);
-        });
         this.node.onclick = () => {
             this.open();
         }
@@ -65,6 +61,11 @@ class HistoryItem extends EventEmitter {
         }
         this.node.appendChild(copyBtn);
 
+        let color = new getAvColor(this.node.getElementsByClassName('history-icon')[0]);
+        color.mostUsed(result => {
+            this.node.style.backgroundColor = rgbToRgbaString(result[0]);
+        });
+
         this.loadTitle().then((text) => {
             this.title = text;
             this.node.getElementsByClassName("history-title")[0].innerHTML = text;
@@ -76,6 +77,7 @@ class HistoryItem extends EventEmitter {
         return new Promise((resolve, reject) => {
             jquery.ajax({
                 url: "http://textance.herokuapp.com/title/" + this.url,
+                async: true,
                 complete: (data) => {
                     resolve(data.responseText);
                 }

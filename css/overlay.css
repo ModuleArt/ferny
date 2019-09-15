@@ -561,17 +561,42 @@ main {
 }
 
 .history-checkbox {
-    position: absolute;
-    left: 2px;
-    top: 3px;
-    height: 19px;
-    width: 19px;
-    transform: scale(0);
-    transition: transform 0.25s;
-    outline: none;
+    -webkit-appearance: none;
 }
 
-.history-item:hover .history-checkbox, .history-checkbox:checked, .history-checkbox:focus {
+.history-checkbox::after {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    content: "";
+    top: 4px;
+    left: 4px;;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-element);
+    border-radius: var(--px-radius);
+    transform: scale(0);
+    transition: transform 0.25s;
+}
+
+.history-checkbox:focus::after {
+    box-shadow: var(--shadow-focus);
+}
+
+.history-checkbox:hover::after {
+    background-color: var(--color-second);
+}
+
+.history-checkbox:active::after {
+    background-color: var(--color-border);
+}
+
+.history-checkbox:checked::after {
+    content: "\2713";
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.history-item:hover .history-checkbox::after, .history-checkbox:checked::after, .history-checkbox:focus::after {
     transform: scale(1);
 }
 

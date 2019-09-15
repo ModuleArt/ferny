@@ -14,13 +14,14 @@ class HistoryManager extends EventEmitter {
     history = [];
     historyContainer = null;
     historyCounter = 0;
+    historyLimiter = true;
 
     constructor(historyContainer) {
         super();
 
         this.historyContainer = historyContainer;
 
-        this.loadHistory();
+        this.setLimiter(true);
     }
 
     appendHistoryItem(id, url, time, title) {
@@ -28,6 +29,7 @@ class HistoryManager extends EventEmitter {
         this.history.push(historyItem);
         this.historyContainer.appendChild(historyItem.getNode());
 
+        this.emit("history-item-added");
         return null;
     }
 
@@ -57,23 +59,35 @@ class HistoryManager extends EventEmitter {
             }
         });
 
+        if(this.historyLimiter) {
+            this.historyContainer.removeChild(this.historyContainer.lastChild);
+        }
+
         this.emit("history-item-added");
         return null;
     }
 
-    loadHistory() {
+    loadHistory(count) {
         loadFileFromJsonFolder("history", "history-counter").then((historyCounter) => {
             this.historyCounter = historyCounter;
         });
 
         checkFileExists(ppath + "/json/history/history.json").then(() => {
+            this.historyContainer.innerHTML = "";
+
             let historyReadline = readlPromise.createInterface({
                 terminal: false, 
                 input: fs.createReadStream(ppath + "/json/history/history.json")
             });
             historyReadline.forEach((line, index) => {
                 let obj = JSON.parse(line);
-                this.appendHistoryItem(obj.id, obj.url, obj.time, obj.title);
+                if(count == null) {
+                    this.appendHistoryItem(obj.id, obj.url, obj.time, obj.title);
+                } else {
+                    if(index < count) {
+                        this.appendHistoryItem(obj.id, obj.url, obj.time, obj.title);
+                    }
+                }
             });
         });
 
@@ -125,6 +139,19 @@ class HistoryManager extends EventEmitter {
         }
 
         return null;
+    }
+
+    setLimiter(bool) {
+        this.historyLimiter = bool;
+        if(bool) {
+            document.getElementById("more-history-btn").style.display = "";
+            document.getElementById("collapse-history-btn").style.display = "none";
+            this.loadHistory(16);
+        } else {
+            document.getElementById("more-history-btn").style.display = "none";
+            document.getElementById("collapse-history-btn").style.display = "";
+            this.loadHistory();
+        }
     }
 }
 
