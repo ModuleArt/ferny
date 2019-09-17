@@ -1,6 +1,6 @@
 const EventEmitter = require("events");
 const jquery = require("jquery");
-const getAvColor = require('color.js');
+const getAvColor = require("color.js");
 const { ipcRenderer, clipboard } = require("electron");
 
 const rgbToRgbaString = require("../rgbToRgbaString.js");
@@ -21,8 +21,8 @@ class HistoryItem extends EventEmitter {
         this.time = time;
         this.title = title;
 
-        this.node = document.createElement('button');
-        this.node.classList.add('history-item');
+        this.node = document.createElement("button");
+        this.node.classList.add("history-item");
         this.node.name = id;
         this.node.id = "history-" + id;
         this.node.innerHTML = `
@@ -35,7 +35,7 @@ class HistoryItem extends EventEmitter {
         }
         this.node.onauxclick = (event) => {
             event.preventDefault();
-            if(event.which == 2) {
+            if(event.which === 2) {
                 ipcRenderer.send("tabManager-addTab", url, false);
             }
         }
@@ -43,16 +43,16 @@ class HistoryItem extends EventEmitter {
             event.preventDefault();
         }
 
-        let checkbox = document.createElement('input');
+        let checkbox = document.createElement("input");
         checkbox.type = "checkbox";
-        checkbox.classList.add('history-checkbox');
+        checkbox.classList.add("history-checkbox");
         checkbox.onclick = (event) => {
             event.stopPropagation();
         }
         this.node.appendChild(checkbox);
 
-        let copyBtn = document.createElement('button');
-        copyBtn.classList.add('history-copy');
+        let copyBtn = document.createElement("button");
+        copyBtn.classList.add("history-copy");
         copyBtn.title = "Copy URL";
         copyBtn.innerHTML = `<img name="copy-12" class="theme-icon">`;
         copyBtn.onclick = (event) => {
@@ -61,7 +61,7 @@ class HistoryItem extends EventEmitter {
         }
         this.node.appendChild(copyBtn);
 
-        let color = new getAvColor(this.node.getElementsByClassName('history-icon')[0]);
+        let color = new getAvColor(this.node.getElementsByClassName("history-icon")[0]);
         color.mostUsed(result => {
             this.node.style.backgroundColor = rgbToRgbaString(result[0]);
         });
@@ -111,7 +111,7 @@ class HistoryItem extends EventEmitter {
     }
 
     isSelected() {
-        return this.node.getElementsByClassName('history-checkbox')[0].checked;
+        return this.node.getElementsByClassName("history-checkbox")[0].checked;
     }
 
     copyURL() {

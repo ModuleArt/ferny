@@ -49,20 +49,23 @@ class Overlay extends EventEmitter {
 
     showButtonMenu() {
         let buttonMenu = Menu.buildFromTemplate([{ 
-            label: 'Show overlay', icon: this.appPath + '/imgs/icons16/details.png', click: () => { 
+            label: "Show overlay", icon: this.appPath + "/imgs/icons16/details.png", click: () => { 
                 this.show(); 
-            } }, { type: 'separator' }, { 
-            label: 'Search', icon: this.appPath + '/imgs/icons16/zoom.png', click: () => { 
-                this.scrollToId("search-title"); 
-            } }, { 
-            label: 'Bookmarks', icon: this.appPath + '/imgs/icons16/bookmarks.png', accelerator: 'CmdOrCtrl+B', click: () => { 
+            } }, { type: "separator" }, { 
+            label: "Bookmarks", icon: this.appPath + "/imgs/icons16/bookmarks.png", accelerator: "CmdOrCtrl+B", click: () => { 
                 this.scrollToId("bookmarks-title"); 
             } }, { 
-            label: 'History', icon: this.appPath + '/imgs/icons16/history.png', accelerator: 'CmdOrCtrl+H', click: () => { 
+            label: "History", icon: this.appPath + "/imgs/icons16/history.png", accelerator: "CmdOrCtrl+H", click: () => { 
                 this.scrollToId("history-title"); 
             } }, { 
-            label: 'Downloads', icon: this.appPath + '/imgs/icons16/downloads.png', accelerator: 'CmdOrCtrl+D', click: () => { 
+            label: "Downloads", icon: this.appPath + "/imgs/icons16/downloads.png", accelerator: "CmdOrCtrl+D", click: () => { 
                 this.scrollToId("downloads-title"); 
+            } }, { type: "separator" }, { 
+            enabled: false, label: "Settings", icon: this.appPath + "/imgs/icons16/settings.png", accelerator: "CmdOrCtrl+,", click: () => { 
+                this.emit("open-settings");
+            } }, { 
+            enabled: false, label: "About", icon: this.appPath + "/imgs/icons16/about.png", accelerator: "CmdOrCtrl+Shift+A", click: () => { 
+                this.emit("open-about");
             } }
           ]);
         buttonMenu.popup(this.window);

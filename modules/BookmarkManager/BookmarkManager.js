@@ -208,7 +208,8 @@ class BookmarkManager extends EventEmitter {
                 itemSelector: '.folder',
                 masonry: {
                     columnWidth: 200
-                }
+                },
+                transitionDuration: 0
             });
 
             if(this.folderDrag != null) {
