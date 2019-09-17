@@ -930,7 +930,7 @@ function showMainWindow() {
         minWidth: 520, minHeight: 300,
         frame: false,
         show: false,
-        icon: app.getAppPath() + '/imgs/icon.ico',
+        icon: app.getAppPath() + "/imgs/icon.ico",
         webPreferences: {
           nodeIntegration: true,
           webviewTag: true
@@ -939,61 +939,61 @@ function showMainWindow() {
       });
       mainWindow.setMenu(sideMenu);
     
-      mainWindow.loadFile(app.getAppPath() + '/html/browser.html');
+      mainWindow.loadFile(app.getAppPath() + "/html/browser.html");
     
-      mainWindow.webContents.on('context-menu', (event, params) => {
+      mainWindow.webContents.on("context-menu", (event, params) => {
         if(params.isEditable) {
           let searchMenu = Menu.buildFromTemplate([
-            { label: 'Cut', icon: app.getAppPath() + '/imgs/icons16/cut.png', accelerator: 'CmdOrCtrl+X', enabled: params.editFlags.canCut, click: () => { 
+            { label: "Cut", icon: app.getAppPath() + "/imgs/icons16/cut.png", accelerator: "CmdOrCtrl+X", enabled: params.editFlags.canCut, click: () => { 
               mainWindow.webContents.cut(); } },
-            { label: 'Copy', icon: app.getAppPath() + '/imgs/icons16/copy.png', accelerator: 'CmdOrCtrl+C', enabled: params.editFlags.canCopy, click: () => { 
+            { label: "Copy", icon: app.getAppPath() + "/imgs/icons16/copy.png", accelerator: "CmdOrCtrl+C", enabled: params.editFlags.canCopy, click: () => { 
               mainWindow.webContents.copy(); } },
-            { label: 'Paste', icon: app.getAppPath() + '/imgs/icons16/paste.png', accelerator: 'CmdOrCtrl+V', enabled: params.editFlags.canPaste, click: () => { 
+            { label: "Paste", icon: app.getAppPath() + "/imgs/icons16/paste.png", accelerator: "CmdOrCtrl+V", enabled: params.editFlags.canPaste, click: () => { 
               mainWindow.webContents.paste(); } },
-            { type: 'separator' },
-            { label: 'Paste and search', icon: app.getAppPath() + '/imgs/icons16/zoom.png', enabled: params.editFlags.canPaste, click: () => { 
-              mainWindow.webContents.send('action-navigate-suggest', clipboard.readText()); } },
-            { type: 'separator' },
-            { label: 'Undo', icon: app.getAppPath() + '/imgs/icons16/undo.png', accelerator: 'CmdOrCtrl+Z', enabled: params.editFlags.canUndo, click: () => { 
+            { type: "separator" },
+            { label: "Paste and search", icon: app.getAppPath() + "/imgs/icons16/zoom.png", enabled: params.editFlags.canPaste, click: () => { 
+              overlay.performSearch(clipboard.readText()); } },
+            { type: "separator" },
+            { label: "Undo", icon: app.getAppPath() + "/imgs/icons16/undo.png", accelerator: "CmdOrCtrl+Z", enabled: params.editFlags.canUndo, click: () => { 
               mainWindow.webContents.undo(); } },
-            { label: 'Redo', icon: app.getAppPath() + '/imgs/icons16/redo.png', accelerator: 'CmdOrCtrl+Shift+Z', enabled: params.editFlags.canRedo, click: () => {
+            { label: "Redo", icon: app.getAppPath() + "/imgs/icons16/redo.png", accelerator: "CmdOrCtrl+Shift+Z", enabled: params.editFlags.canRedo, click: () => {
               mainWindow.webContents.redo(); } },
-            { type: 'separator' },
-            { label: 'Select all', icon: app.getAppPath() + '/imgs/icons16/select-all.png', accelerator: 'CmdOrCtrl+A', enabled: params.editFlags.canSelectAll, click: () => { 
+            { type: "separator" },
+            { label: "Select all", icon: app.getAppPath() + "/imgs/icons16/select-all.png", accelerator: "CmdOrCtrl+A", enabled: params.editFlags.canSelectAll, click: () => { 
               mainWindow.webContents.selectAll(); } },
-            { type: 'separator' },
-            { label: 'Delete', icon: app.getAppPath() + '/imgs/icons16/delete.png', accelerator: 'Backspace', enabled: params.editFlags.canDelete, click: () => { 
+            { type: "separator" },
+            { label: "Delete", icon: app.getAppPath() + "/imgs/icons16/delete.png", accelerator: "Backspace", enabled: params.editFlags.canDelete, click: () => { 
               mainWindow.webContents.delete(); } }
           ]);
           searchMenu.popup(mainWindow);
         }
       });
     
-      mainWindow.on('focus', () => {
-        mainWindow.webContents.send('window-focus');
+      mainWindow.on("focus", () => {
+        mainWindow.webContents.send("window-focus");
       });
     
-      mainWindow.on('blur', () => {
-        mainWindow.webContents.send('window-blur');
+      mainWindow.on("blur", () => {
+        mainWindow.webContents.send("window-blur");
       });
     
-      mainWindow.on('maximize', () => {
-        mainWindow.webContents.send('window-maximize');
+      mainWindow.on("maximize", () => {
+        mainWindow.webContents.send("window-maximize");
         if(tabManager.hasActiveTab()) {
           tabManager.getActiveTab().activate();
         }
         overlay.refreshBounds();
       });
     
-      mainWindow.on('unmaximize', () => {
-        mainWindow.webContents.send('window-unmaximize');
+      mainWindow.on("unmaximize", () => {
+        mainWindow.webContents.send("window-unmaximize");
         if(tabManager.hasActiveTab()) {
           tabManager.getActiveTab().activate();
         }
         overlay.refreshBounds();
       });
     
-      mainWindow.once('ready-to-show', () => {
+      mainWindow.once("ready-to-show", () => {
         initOverlay();
         initTabManager();
   
@@ -1015,43 +1015,43 @@ function showMainWindow() {
         }
       });
     
-      mainWindow.on('maximize', () => {
-        mainWindow.webContents.send('action-maximize-window');
+      mainWindow.on("maximize", () => {
+        mainWindow.webContents.send("action-maximize-window");
       });
     
-      mainWindow.on('unmaximize', () => {
-        mainWindow.webContents.send('action-unmaximize-window');
+      mainWindow.on("unmaximize", () => {
+        mainWindow.webContents.send("action-unmaximize-window");
       });
   
-      mainWindow.on('app-command', (event, command) => {
-        if(command == 'browser-backward') {
+      mainWindow.on("app-command", (event, command) => {
+        if(command == "browser-backward") {
           if(tabManager.hasActiveTab()) {
             tabManager.getActiveTab().goBack();
           }
-        } else if(command == 'browser-forward') {
+        } else if(command == "browser-forward") {
           if(tabManager.hasActiveTab()) {
             tabManager.getActiveTab().goForward();
           }
-        } else if(command == 'browser-favorites') {
+        } else if(command == "browser-favorites") {
           overlay.openBookmarks();
-        } else if(command == 'browser-home') {
+        } else if(command == "browser-home") {
           if(tabManager.hasActiveTab()) {
             tabManager.getActiveTab().goHome();
           }
-        } else if(command == 'browser-refresh') {
+        } else if(command == "browser-refresh") {
           if(tabManager.hasActiveTab()) {
             tabManager.getActiveTab().reload();
           }
-        } else if(command == 'browser-stop') {
+        } else if(command == "browser-stop") {
           if(tabManager.hasActiveTab()) {
             tabManager.getActiveTab().stop();
           }
-        } else if(command == 'browser-search') {
+        } else if(command == "browser-search") {
           overlay.show();
         } 
       });
     
-      mainWindow.on('close', function(event) {
+      mainWindow.on("close", function(event) {
         event.preventDefault();
     
         var download = false;

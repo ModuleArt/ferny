@@ -28,8 +28,8 @@ class Overlay extends EventEmitter {
     }
 
     refreshBounds() {
-        let size = this.window.getSize();
-        this.view.setBounds({ x: 0, y: this.top, width: size[0], height: size[1] - this.top });
+        let size = this.window.getBounds();
+        this.view.setBounds({ x: 0, y: this.top, width: size.width, height: size.height - this.top });
     }
 
     show() {
@@ -78,6 +78,10 @@ class Overlay extends EventEmitter {
     goToSearch(text, cursorPos) {
         this.scrollToId("search-title"); 
         this.view.webContents.send("searchManager-goToSearch", text, cursorPos);
+    }
+
+    performSearch(text) {
+        this.view.webContents.send("searchManager-performSearch", text);
     }
 
     addBookmark(name, url) {

@@ -269,6 +269,10 @@ class SearchManager extends EventEmitter {
 
         return null;
     }
+
+    performSearch(text) {
+        this.navigateSuggest(text);
+    }
 }
 
 module.exports = SearchManager;

@@ -388,8 +388,6 @@ main {
     padding: 2px;
     border-radius: calc(var(--px-radius) + 4px);
     text-align: center;
-    animation: slide-up;
-    animation-duration: 0.25s;
 }
 
 .bookmark {

@@ -166,6 +166,10 @@ ipcRenderer.on("searchManager-goToSearch", (event, text, cursorPos) => {
   searchManager.goToSearch(text, cursorPos);
 });
 
+ipcRenderer.on("searchManager-performSearch", (event, text) => {
+  searchManager.performSearch(text);
+});
+
 /*
  # #####   ####               ####  #    # ###### #####  #        ##   #   #
  # #    # #    #             #    # #    # #      #    # #       #  #   # #
