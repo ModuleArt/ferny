@@ -9,8 +9,8 @@
 
 const EventEmitter = require("events");
 const { ipcRenderer } = require("electron");
-const isUrl = require('validate.io-uri');
-const autoSuggest = require('suggestion');
+const isUrl = require("validate.io-uri");
+const autoSuggest = require("suggestion");
 
 const loadSearchEngine = require("../loadSearchEngine.js");
 
@@ -29,7 +29,7 @@ class SearchManager extends EventEmitter {
         this.searchSuggest = searchSuggest;
 
         this.searchEngines = searchEngines;
-        let engines = searchEngines.getElementsByClassName('search-engine');
+        let engines = searchEngines.getElementsByClassName("search-engine");
         for(let i = 0; i < engines.length; i++) {
             engines[i].onclick = () => {
                 this.searchWith(null, engines[i].name);
@@ -42,25 +42,24 @@ class SearchManager extends EventEmitter {
             if (event.deltaY < 0) {
                 var suggestions = this.searchSuggestContainer.childNodes;
                 var i = 0;
-                while (i < suggestions.length && !suggestions[i].classList.contains('active')) {
+                while (i < suggestions.length && !suggestions[i].classList.contains("active")) {
                     i++;
                 }
                 if (i > 0) {
                     this.searchInput.value = suggestions[i].previousSibling.value;
-                    suggestions[i].classList.remove('active');
-                    suggestions[i].previousSibling.classList.add('active');
+                    suggestions[i].classList.remove("active");
+                    suggestions[i].previousSibling.classList.add("active");
                 }
-            }
-            if (event.deltaY > 0) {
+            } else if (event.deltaY > 0) {
                 var suggestions = this.searchSuggestContainer.childNodes;
                 var i = 0;
-                while (i < suggestions.length && !suggestions[i].classList.contains('active')) {
+                while (i < suggestions.length && !suggestions[i].classList.contains("active")) {
                     i++;
                 }
                 if (i < suggestions.length - 1) {
-                    document.getElementById('search-input').value = suggestions[i].nextSibling.value;
-                    suggestions[i].classList.remove('active');
-                    suggestions[i].nextSibling.classList.add('active');
+                    document.getElementById("search-input").value = suggestions[i].nextSibling.value;
+                    suggestions[i].classList.remove("active");
+                    suggestions[i].nextSibling.classList.add("active");
                 }
             }
         }
@@ -79,7 +78,7 @@ class SearchManager extends EventEmitter {
                     var suggestions = this.searchSuggestContainer.childNodes;
                     if(suggestions.length > 0) {
                         var i = 0;
-                        while (i < suggestions.length && !suggestions[i].classList.contains('active')) {
+                        while (i < suggestions.length && !suggestions[i].classList.contains("active")) {
                             i++;
                         }
                         this.navigateSuggest(suggestions[i].value);
@@ -92,25 +91,25 @@ class SearchManager extends EventEmitter {
             if (event.keyCode === 40) {
                 var suggestions = this.searchSuggestContainer.childNodes;
                 var i = 0;
-                while (i < suggestions.length && !suggestions[i].classList.contains('active')) {
+                while (i < suggestions.length && !suggestions[i].classList.contains("active")) {
                     i++;    
                 }
                 if (i < suggestions.length - 1) {
                     this.searchInput.value = suggestions[i].nextSibling.value;
-                    suggestions[i].classList.remove('active');
-                    suggestions[i].nextSibling.classList.add('active');
+                    suggestions[i].classList.remove("active");
+                    suggestions[i].nextSibling.classList.add("active");
                 }
             }
             if (event.keyCode === 38) {
                 var suggestions = this.searchSuggestContainer.childNodes;
                 var i = 0;
-                while (i < suggestions.length && !suggestions[i].classList.contains('active')) {
+                while (i < suggestions.length && !suggestions[i].classList.contains("active")) {
                     i++;
                 }
                 if (i > 0) {
                     this.searchInput.value = suggestions[i].previousSibling.value;
-                    suggestions[i].classList.remove('active');
-                    suggestions[i].previousSibling.classList.add('active');
+                    suggestions[i].classList.remove("active");
+                    suggestions[i].previousSibling.classList.add("active");
                 }
             }
         }
@@ -123,9 +122,9 @@ class SearchManager extends EventEmitter {
 
     updateClearSearchButton() {
         if(this.searchInput.value.length > 0) {
-            this.clearSearchButton.classList.add('show');
+            this.clearSearchButton.classList.add("show");
         } else {
-            this.clearSearchButton.classList.remove('show');
+            this.clearSearchButton.classList.remove("show");
         }
     }
 
@@ -137,10 +136,10 @@ class SearchManager extends EventEmitter {
 
                 this.searchSuggestContainer.innerHTML = "";
 
-                let firstInput = document.createElement('input');
+                let firstInput = document.createElement("input");
                 firstInput.tabIndex = -1;
-                firstInput.classList.add('active');
-                firstInput.type = 'button';
+                firstInput.classList.add("active");
+                firstInput.type = "button";
                 firstInput.value = this.searchInput.value;
                 firstInput.onclick = () => {
                     this.navigateSuggest(firstInput.value);
@@ -151,13 +150,13 @@ class SearchManager extends EventEmitter {
                     if (this.searchSuggestContainer.childNodes.length < 5) {
                         for (var i = 0; i < 5; i++) {
                             if (suggestions[i] != null) {
-                                let s = document.createElement('input');
+                                let s = document.createElement("input");
                                 s.tabIndex = -1;
-                                s.type = 'button';
+                                s.type = "button";
                                 s.value = suggestions[i];
                                 s.onclick = () => {
                                     this.navigateSuggest(s.value);
-                                }
+                                };
                                 this.searchSuggestContainer.appendChild(s);
                             }
                         }
@@ -171,44 +170,44 @@ class SearchManager extends EventEmitter {
         if(text == null) {
             var suggestions = this.searchSuggestContainer.childNodes;
             var i = 0;
-            while (i < suggestions.length && !suggestions[i].classList.contains('active')) {
+            while (i < suggestions.length && !suggestions[i].classList.contains("active")) {
                 i++;
             }
             text = suggestions[i].value;
         }
       
         switch (engine) {
-            case 'google':
+            case "google":
                 this.newTab("https://google.com/search?q=" + text);
                 break;
-            case 'bing':
+            case"'bing":
                 this.newTab("https://bing.com/search?q=" + text);
                 break;
-            case 'duckduckgo':
+            case "duckduckgo":
                 this.newTab("https://duckduckgo.com/?q=" + text);
                 break;
-            case 'yahoo':
+            case "yahoo":
                 this.newTab("https://search.yahoo.com/search?p=" + text);
                 break;
-            case 'wikipedia':
+            case "wikipedia":
                 this.newTab("https://wikipedia.org/wiki/Special:Search?search=" + text);
                 break;
-            case 'yandex':
+            case "yandex":
                 this.newTab("https://yandex.com/search/?text=" + text);
                 break;
-            case 'mailru':
+            case "mailru":
                 this.newTab("https://go.mail.ru/search?q=" + text);
                 break;
-            case 'baidu':
+            case "baidu":
                 this.newTab("https://www.baidu.com/s?wd=" + text);
                 break;
-            case 'naver':
+            case "naver":
                 this.newTab("https://search.naver.com/search.naver?query=" + text);
                 break;
-            case 'qwant':
+            case "qwant":
                 this.newTab("https://www.qwant.com/?q=" + text);
                 break;
-            case 'youtube':
+            case "youtube":
                 this.newTab("https://www.youtube.com/results?search_query=" + text);
                 break;
         }
@@ -219,9 +218,9 @@ class SearchManager extends EventEmitter {
             if(isUrl(text)) {
                 this.newTab(text);
             } else {
-                let engines = this.searchEngines.getElementsByClassName('search-engine');
+                let engines = this.searchEngines.getElementsByClassName("search-engine");
                 for(let i = 0; i < engines.length; i++) {
-                    if(engines[i].classList.contains('active')) {
+                    if(engines[i].classList.contains("active")) {
                         this.searchWith(text, engines[i].name);
                         break;
                     }
@@ -236,11 +235,11 @@ class SearchManager extends EventEmitter {
     }
 
     setSearchEngine(engineName) {
-        let engines = this.searchEngines.getElementsByClassName('search-engine');
+        let engines = this.searchEngines.getElementsByClassName("search-engine");
         for(let i = 0; i < engines.length; i++) {
             if(engines[i].name == engineName) {
-                engines[i].classList.add('active');
-                document.getElementById('search-icon').src = engines[i].getElementsByTagName('img')[0].src;
+                engines[i].classList.add("active");
+                document.getElementById("search-icon").src = engines[i].getElementsByTagName("img")[0].src;
                 break;
             }
         }

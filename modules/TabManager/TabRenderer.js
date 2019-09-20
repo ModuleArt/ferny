@@ -46,7 +46,7 @@ class TabRenderer extends EventEmitter {
         tab.name = id;
         tab.title = title + "\n" + url;
         tab.innerHTML = `
-            <img class='tabman-tab-icon'>
+            <img class='tabman-tab-icon' src='../imgs/icon16.png'>
             <label class='tabman-tab-title'>` + title + `</label>
             <div class='tabman-tab-buttons'></div>
         `;
@@ -76,12 +76,12 @@ class TabRenderer extends EventEmitter {
                 ipcRenderer.send("tabManager-navigate", event.dataTransfer.files[0].path);
             }
         }
-        tab.onmouseenter = (event) => {
-            ipcRenderer.send("tabManager-showPreview", id);
-        }
-        tab.onmouseleave = (event) => {
-            ipcRenderer.send("tabManager-hidePreview", id);
-        }
+        // tab.onmouseenter = (event) => {
+        //     ipcRenderer.send("tabManager-showPreview", id);
+        // }
+        // tab.onmouseleave = (event) => {
+        //     ipcRenderer.send("tabManager-hidePreview", id);
+        // }
         tab.oncontextmenu = (event) => {
             ipcRenderer.send("tabManager-showTabMenu", id);
             ipcRenderer.send("tabManager-hidePreview", id);
@@ -110,6 +110,7 @@ class TabRenderer extends EventEmitter {
         let tabs = this.tabContainer.childNodes;
         for(let i = 0; i < tabs.length; i++) {
             tabs[i].classList.remove("active");
+            this.updateTabColor(tabs[i]);
         }
 
         return null;

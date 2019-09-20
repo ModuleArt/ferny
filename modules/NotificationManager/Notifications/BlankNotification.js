@@ -25,8 +25,8 @@ class BlankNotification extends EventEmitter {
             this.close.call(this);
         }
         closeButton.title = "Close";
-        closeButton.classList.add('nav-btn', 'notif-close');
-        closeButton.innerHTML = `<img class='theme-icon' name='cancel-16'>`;
+        closeButton.classList.add('notif-close');
+        closeButton.innerHTML = `<img class='theme-icon' name='cancel-12'>`;
 
         this.node.appendChild(closeButton);
 

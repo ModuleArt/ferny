@@ -12,7 +12,7 @@ const UpdateNotification = require(__dirname + '/Notifications/UpdateNotificatio
 const DownloadNotification = require(__dirname + '/Notifications/DownloadNotification.js');
 
 class NotificationManager extends EventEmitter {
-    maxNotifCount = 5;
+    maxNotifCount = 1;
 
     notifPanel = null;
     notifArray = [];
@@ -27,7 +27,7 @@ class NotificationManager extends EventEmitter {
 
     appendNotif(notif) {
         this.notifArray.push(notif);
-        this.notifPanel.insertBefore(notif.getNode(), this.notifPanel.firstChild);
+        this.notifPanel.appendChild(notif.getNode());
         notif.on("close", (notification) => {
             this.destroyNotifById(notification.getId());
         });
