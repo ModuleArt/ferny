@@ -98,6 +98,11 @@ body {
   ####   ####  #    #   #   #    # # #    # ###### #    #  ####
 */
 
+hr {
+    border: 0.5px solid var(--color-border);
+    margin: 10px;
+}
+
 .container {
     position: absolute;
     right: 0;
@@ -109,6 +114,7 @@ body {
     display: none;
     padding: 32px;
     overflow-y: auto;
+    color: var(--color-top);
 }
 
 .container.active {
@@ -116,9 +122,14 @@ body {
 }
 
 .container .title {
-    color: var(--color-top);
     font-size: 24px;
-    margin-bottom: 16px;
+    display: block;
+    margin-bottom: 32px;
+}
+
+.nav-label {
+    margin: 2px;
+    display: inline-block;
 }
 
 /*                        

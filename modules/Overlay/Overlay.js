@@ -89,6 +89,10 @@ class Overlay extends EventEmitter {
     clearHistory() {
         this.view.webContents.send("historyManager-clearHistory");
     }
+
+    changeTheme(theme) {
+        this.view.webContents.send("action-change-theme", theme);
+    }
 }
 
 module.exports = Overlay;

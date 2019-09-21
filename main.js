@@ -704,8 +704,9 @@ ipcMain.on('request-unmaximize-window', (event, arg) => {
   mainWindow.unmaximize();
 });
 
-ipcMain.on('request-change-theme', (event, arg) => {
-  mainWindow.webContents.send('action-change-theme', arg);
+ipcMain.on('request-change-theme', (event, theme) => {
+  mainWindow.webContents.send('action-change-theme', theme);
+  overlay.changeTheme(theme);
 });
 
 ipcMain.on('request-toggle-fullscreen', (event, arg) => {
@@ -960,7 +961,7 @@ function showSettingsWindow() {
 
       settingsWindow.once("ready-to-show", () => {
         settingsWindow.show();
-        settingsWindow.webContents.openDevTools();
+        // settingsWindow.webContents.openDevTools();
       });
     });
   }

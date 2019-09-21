@@ -28,6 +28,20 @@
     </div>
     <div class="container" id="clear-browsing-data">
         <label class="title">Clear browsing data</label>
+        <div class="nav-checkbox">
+          <label>Cookies and other site data</label>
+          <input type="checkbox" id="clear-storage-checkbox">
+        </div>
+        <div class="nav-checkbox">
+          <label>Cached images and files</label>
+          <input type="checkbox" id="clear-cache-checkbox">
+        </div>
+        <hr>
+        <label class="nav-label" id="cache-size-label"></label><br>
+        <button class="nav-btn" onclick="clearBrowsingData()">
+          <img class="theme-icon" name="delete-16">
+          <label>Clear data</label>
+        </button>
     </div>
     
     <script type="text/javascript" src="../js/settings.js"></script>

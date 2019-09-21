@@ -258,6 +258,19 @@ ipcRenderer.on("historyManager-clearHistory", (event, text) => {
 });
 
 /*
+ # #####   ####              ##### #    # ###### #    # ######  ####
+ # #    # #    #               #   #    # #      ##  ## #      #
+ # #    # #         #####      #   ###### #####  # ## # #####   ####
+ # #####  #                    #   #    # #      #    # #           #
+ # #      #    #               #   #    # #      #    # #      #    #
+ # #       ####                #   #    # ###### #    # ######  ####
+*/
+
+ipcRenderer.on("action-change-theme", (event, theme) => {
+  applyTheme(theme);
+});
+
+/*
  # #    # # #####
  # ##   # #   #
  # # #  # #   #

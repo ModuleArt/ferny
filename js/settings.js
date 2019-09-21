@@ -15,6 +15,7 @@ const path = require("path");
 const saveFileToJsonFolder = require("../modules/saveFileToJsonFolder.js");
 const loadTheme = require("../modules/loadTheme.js");
 const applyTheme = require("../modules/applyTheme.js");
+const bytesToSize = require("../modules/bytesToSize.js");
 
 /*
  ###### #    # #    #  ####              ##### #    # ###### #    # ######  ####
@@ -93,6 +94,30 @@ function requestTheme(theme) {
 }
 
 /*
+ ###### #    # #    #  ####               ####  #      ######   ##   #####     #####    ##   #####   ##
+ #      #    # ##   # #    #             #    # #      #       #  #  #    #    #    #  #  #    #    #  #
+ #####  #    # # #  # #         #####    #      #      #####  #    # #    #    #    # #    #   #   #    #
+ #      #    # #  # # #                  #      #      #      ###### #####     #    # ######   #   ######
+ #      #    # #   ## #    #             #    # #      #      #    # #   #     #    # #    #   #   #    #
+ #       ####  #    #  ####               ####  ###### ###### #    # #    #    #####  #    #   #   #    #
+*/
+
+function clearBrowsingData() {
+  var clearCache = document.getElementById('clear-cache-checkbox').checked;
+  var clearStorage = document.getElementById('clear-storage-checkbox').checked;
+  if(!clearCache && !clearStorage) {
+    notif("First check something", "warning")
+  } else {
+    let Data = {
+      cache: clearCache,
+      storage: clearStorage
+    };
+  
+    ipcRenderer.send('request-clear-browsing-data', Data);
+  }
+}
+
+/*
  ###### #    # #    #  ####               ####    ##   ##### ######  ####   ####  #####  # ######  ####
  #      #    # ##   # #    #             #    #  #  #    #   #      #    # #    # #    # # #      #
  #####  #    # # #  # #         #####    #      #    #   #   #####  #      #    # #    # # #####   ####
@@ -116,6 +141,19 @@ function showCategory(id) {
 }
 
 /*
+ # #####   ####               ####    ##    ####  #    # ######
+ # #    # #    #             #    #  #  #  #    # #    # #
+ # #    # #         #####    #      #    # #      ###### #####
+ # #####  #                  #      ###### #      #    # #
+ # #      #    #             #    # #    # #    # #    # #
+ # #       ####               ####  #    #  ####  #    # ######
+*/
+
+ipcRenderer.on('action-set-cache-size', (event, arg) => {
+  document.getElementById('cache-size-label').innerHTML = "Cache size: " + bytesToSize(arg.cacheSize);
+});
+
+/*
  # #    # # #####
  # ##   # #   #
  # # #  # #   #
@@ -128,6 +166,8 @@ function init() {
   updateTheme();
 
   loadThemesFromFolder();
+
+  ipcRenderer.send("request-set-cache-size");
 }
 
 document.onreadystatechange = () => {
