@@ -674,6 +674,31 @@ main {
 }
 
 /*
+ #    # ###### #    # #    #    #####  ##### #    #
+ ##  ## #      ##   # #    #    #    #   #   ##   #
+ # ## # #####  # #  # #    #    #####    #   # #  #
+ #    # #      #  # # #    #    #    #   #   #  # #
+ #    # #      #   ## #    #    #    #   #   #   ##
+ #    # ###### #    #  ####     #####    #   #    #
+*/
+
+#settings-btn {
+    position: fixed;
+    left: 4px;
+    bottom: 4px;
+    background-color: transparent;
+    border-color: transparent;
+}
+
+#settings-btn:hover {
+    background-color: var(--color-second);
+}
+
+#settings-btn:focus, #settings-btn:hover {
+    border-color: var(--color-border);
+}
+
+/*
  ##### #    # ######    ###### #    # #####
    #   #    # #         #      ##   # #    #
    #   ###### #####     #####  # #  # #    #

@@ -388,16 +388,8 @@ app.on('ready', function() {
 .####.##.........######.....##.....##.##.....##.####.##....##
 */
 
-ipcMain.on('request-set-color-tabs', (event, arg) => {
-  setColorTabs(arg);
-});
-
 ipcMain.on('request-cancel-update', (event, arg) => {
   cancelUpdate();
-});
-
-ipcMain.on('request-set-start-page', (event, arg) => {
-  mainWindow.webContents.send('action-set-start-page', arg);
 });
 
 ipcMain.on('request-check-open-with', (event, arg) => {
@@ -406,31 +398,6 @@ ipcMain.on('request-check-open-with', (event, arg) => {
     mainWindow.webContents.send('action-open-url-in-new-tab', openFilePath);
   }
 });
-
-// ipcMain.on('request-save-as-page', (event, arg) => {
-//   let saveAsWindow = new BrowserWindow({
-//     show: false
-//   });
-
-//   saveAsWindow.loadURL(arg);
-  
-//   saveAsWindow.webContents.on('did-finish-load', () => {
-//     saveAsWindow.show();
-//     dialog.showSaveDialog(saveAsWindow, { title: "Save page as" }, (filename, bookmark) => {
-//       if(typeof(filename) != "undefined") {
-//         saveAsWindow.webContents.savePage(filename, 'HTMLComplete', (error) => {
-//           if (error) {  
-//             console.log('error');
-//           } else {
-//             console.log('success');
-//           }
-//         });
-//       } else {
-//         console.log('undefined');
-//       }
-//     });
-//   });
-// });
 
 ipcMain.on('request-clear-browsing-data', (event, arg) => {
   const ses = mainWindow.webContents.session;
@@ -468,14 +435,6 @@ ipcMain.on('request-set-cache-size', (event, arg) => {
   });
 });
 
-ipcMain.on('request-webview-zoomin', (event, arg) => {
-  mainWindow.webContents.send('action-zoom-zoomin');
-});
-
-ipcMain.on('request-webview-zoomout', (event, arg) => {
-  mainWindow.webContents.send('action-zoom-zoomout');
-});
-
 ipcMain.on('request-info-contextmenu', (event, arg) => {
   let infoMenu = Menu.buildFromTemplate([
     { label: 'Certificate info', accelerator: 'CmdOrCtrl+I', icon: app.getAppPath() + '/imgs/icons16/certificate.png', click: () => { mainWindow.webContents.send('action-page-certificate'); } }
@@ -483,53 +442,11 @@ ipcMain.on('request-info-contextmenu', (event, arg) => {
   infoMenu.popup(mainWindow);
 });
 
-ipcMain.on('request-home-button-contextmenu', (event, arg) => {
-  let homeMenu = Menu.buildFromTemplate([
-    { label: 'Home page settings', icon: app.getAppPath() + '/imgs/icons16/settings.png', click: () => { mainWindow.webContents.send('action-open-settings', 'home-page'); } }
-  ]);
-  homeMenu.popup(mainWindow);
-});
-
-ipcMain.on('request-folder-contextmenu', (event, arg) => {
-  let folderMenu = Menu.buildFromTemplate([
-    { label: 'Edit folder', icon: app.getAppPath() + '/imgs/icons16/edit.png', click: () => { mainWindow.webContents.send('action-edit-folder', arg); } },
-    { type: "separator" },
-    { label: 'Bookmarks settings', icon: app.getAppPath() + '/imgs/icons16/settings.png', click: () => { mainWindow.webContents.send('action-open-settings', 'bookmarks'); } },
-    { label: 'Bookmark manager', accelerator: 'CmdOrCtrl+B', icon: app.getAppPath() + '/imgs/icons16/bookmarks.png', click: () => { mainWindow.webContents.send('action-open-bookmarks'); } }
-  ]);
-  folderMenu.popup(mainWindow);
-});
-
-ipcMain.on('request-bookmark-contextmenu', (event, arg) => {
-  let bookmarkMenu = Menu.buildFromTemplate([
-    { label: 'Open in new tab', icon: app.getAppPath() + '/imgs/icons16/tab.png', click: () => { mainWindow.webContents.send('action-open-url-in-new-tab', arg.url); } },
-    { label: 'Copy URL', icon: app.getAppPath() + '/imgs/icons16/copy-link.png', click: () => { mainWindow.webContents.send('action-copy-text', arg.url); } },
-    { type: "separator" },
-    { label: 'Edit bookmark', icon: app.getAppPath() + '/imgs/icons16/edit.png', click: () => { mainWindow.webContents.send('action-edit-bookmark', arg); } },
-    { type: "separator" },
-    { label: 'Bookmarks settings', icon: app.getAppPath() + '/imgs/icons16/settings.png', click: () => { mainWindow.webContents.send('action-open-settings', 'bookmarks'); } },
-    { label: 'Bookmark manager', accelerator: 'CmdOrCtrl+B', icon: app.getAppPath() + '/imgs/icons16/bookmarks.png', click: () => { mainWindow.webContents.send('action-open-bookmarks',); } }
-  ]);
-  bookmarkMenu.popup(mainWindow);
-});
-
-ipcMain.on('request-update-bookmarks-bar', (event, arg) => {
-  mainWindow.webContents.send('action-update-bookmarks-bar');
-});
-
-ipcMain.on('request-update-home-page', (event, arg) => {
-  mainWindow.webContents.send('action-update-home-page');
-});
-
 ipcMain.on('request-install-update', (event, arg) => {
   autoUpdater.quitAndInstall();
 });
 
-ipcMain.on('request-set-search-engine', (event, arg) => {
-  mainWindow.webContents.send('action-set-search-engine', arg);
-});
-
-ipcMain.on('request-show-welcome-screen', (event, arg) => {
+ipcMain.on('action-show-welcome-screen', (event, arg) => {
   showWelcomeWindow();
 });
 
@@ -539,24 +456,6 @@ ipcMain.on('request-add-status-notif', (event, arg) => {
 
 ipcMain.on('request-add-quest-notif', (event, arg) => {
   mainWindow.webContents.send('action-add-quest-notif', arg);
-});
-
-ipcMain.on('request-load-certificate', (event, arg) => {
-  mainWindow.webContents.send('action-load-certificate', arg);
-});
-
-ipcMain.on('request-open-url', (event, arg) => {
-  mainWindow.webContents.send('action-open-url', arg);
-});
-
-ipcMain.on('request-open-url-in-new-tab', (event, arg) => {
-  mainWindow.webContents.send('action-open-url-in-new-tab', arg);
-});
-
-ipcMain.on('request-open-settings', (event, arg) => {
-  mainWindow.webContents.send('action-open-settings', arg);
-  welcomeWindow.setClosable(true);
-  welcomeWindow.close();
 });
 
 ipcMain.on('action-clear-downloads', (event, arg) => {
@@ -579,71 +478,8 @@ ipcMain.on('request-check-for-updates', (event, arg) => {
   checkForUpdates();
 });
 
-ipcMain.on('request-tabs-list', (event, arg) => {
-  let m = new Menu();
-
-  if(arg.length > 0) {
-    for(let i = 0; i < arg.length; i++) {
-      let num = i + 1;
-      if (i < 9) {
-        let mi = new MenuItem({
-          type: 'checkbox',
-          label: arg[i].label,
-          checked: arg[i].active,
-          accelerator: "CmdOrCtrl+" + num,
-          click: () => { mainWindow.webContents.send('action-activate-tab', i); }
-        });
-        m.append(mi);
-      } else {
-        let mi = new MenuItem({
-          type: 'checkbox',
-          label: arg[i].label + " [" + num + "]",
-          checked: arg[i].active,
-          click: () => { mainWindow.webContents.send('action-activate-tab', i); }
-        });
-        m.append(mi);
-      }
-    }
-  } else {
-    let createItem = new MenuItem({ 
-      label: 'New Tab', 
-      icon: app.getAppPath() + '/imgs/icons16/create.png', 
-      accelerator: 'CmdOrCtrl+T', 
-      click: () => { mainWindow.webContents.send('action-tab-newtab'); } 
-    });
-    m.append(createItem);
-  }  
-  
-  let sep = new MenuItem({ type: 'separator' });
-  m.append(sep);
-  let nextItem = new MenuItem({ 
-    label: 'Next tab', 
-    icon: app.getAppPath() + '/imgs/icons16/next.png', 
-    accelerator: 'CmdOrCtrl+Tab', 
-    click: () => { mainWindow.webContents.send('action-next-tab'); } 
-  });
-  m.append(nextItem);
-  let prevItem = new MenuItem({ 
-    label: 'Previous tab', 
-    icon: app.getAppPath() + '/imgs/icons16/prev.png', 
-    accelerator: 'CmdOrCtrl+Shift+Tab', 
-    click: () => { mainWindow.webContents.send('action-prev-tab'); } 
-  });
-  m.append(prevItem);
-
-  m.popup(mainWindow);
-});
-
 ipcMain.on('request-side-menu', (event, arg) => {
   sideMenu.popup(mainWindow);
-});
-
-ipcMain.on('request-tab-reload', (event, arg) => {
-  mainWindow.webContents.send('action-tab-reload');
-});
-
-ipcMain.on('request-tab-goback', (event, arg) => {
-  mainWindow.webContents.send('action-tab-goback');
 });
 
 ipcMain.on('request-resume-download', (event, arg) => {
@@ -713,8 +549,17 @@ ipcMain.on('request-toggle-fullscreen', (event, arg) => {
   toggleFullscreen();
 });
 
-ipcMain.on('request-close-welcome', (event, arg) => {
-  welcomeWindow.close();
+/*
+ # #####   ####               ####  ###### ##### ##### # #    #  ####   ####
+ # #    # #    #             #      #        #     #   # ##   # #    # #
+ # #    # #         #####     ####  #####    #     #   # # #  # #       ####
+ # #####  #                       # #        #     #   # #  # # #  ###      #
+ # #      #    #             #    # #        #     #   # #   ## #    # #    #
+ # #       ####               ####  ######   #     #   # #    #  ####   ####
+*/
+
+ipcMain.on("action-open-settings", (event) => {
+  showSettingsWindow();
 });
 
 /*
@@ -916,10 +761,6 @@ function saveBounds() {
     maximize: mainWindow.isMaximized()
   }
   saveFileToJsonFolder(null, 'bounds', JSON.stringify(Data));
-}
-
-function setColorTabs(bool) {
-  mainWindow.webContents.send('action-set-color-tabs', bool);
 }
 
 function showAboutWindow() {

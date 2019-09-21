@@ -91,10 +91,6 @@ function popupInfoContextMenu() {
   ipcRenderer.send("request-info-contextmenu");
 }
 
-function popupHomeButtonContextMenu() {
-  ipcRenderer.send("request-home-button-contextmenu");
-}
-
 function requestSideMenu() {
   ipcRenderer.send("request-side-menu");
 }
