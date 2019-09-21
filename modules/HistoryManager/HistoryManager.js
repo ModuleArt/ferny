@@ -42,8 +42,13 @@ class HistoryManager extends EventEmitter {
         };
 
         let historyItem = new HistoryItem(Data.id, Data.url, Data.time, Data.title);
-        this.history.push(historyItem);
-        this.historyContainer.insertBefore(historyItem.getNode(), this.historyContainer.children[0]);
+        this.history.unshift(historyItem);
+
+        if(this.history.length <= 0) {
+            this.historyContainer.appendChild(historyItem.getNode());
+        } else {
+            this.historyContainer.insertBefore(historyItem.getNode(), this.historyContainer.children[0]);
+        }
 
         historyItem.on("title-updated", (title) => {
             Data.title = title;
@@ -59,7 +64,8 @@ class HistoryManager extends EventEmitter {
             }
         });
 
-        if(this.historyLimiter) {
+        if(this.historyLimiter && this.history.length > 16) {
+            this.history.splice(this.history.length - 1, 1);
             this.historyContainer.removeChild(this.historyContainer.lastChild);
         }
 
@@ -94,12 +100,23 @@ class HistoryManager extends EventEmitter {
         return null;
     }
 
+    askClearHistory() {
+        if(this.history.length > 0) {
+            this.emit("clear-history")
+        } else {
+            this.emit("history-already-cleared");
+        }
+
+        return null;
+    }
+
     clearHistory() {
         saveFileToJsonFolder("history", 'history-counter', 0).then(() => {
             this.historyCounter = 0;
             saveFileToJsonFolder("history", 'history', "").then(() => {
                 this.history = [];
                 this.historyContainer.innerHTML = "";
+                this.emit("history-cleared")
             });
         });
 

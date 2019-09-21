@@ -1,15 +1,14 @@
 .notif-panel {
     position: absolute;
-    left: 128px;
+    left: 0;
     top: 0;
-    right: 128px;
+    right: 0;
     z-index: 999;
     text-align: center;
 }
 
 .notif {
     transition: 0.25s;
-    border-radius: 0 0 calc(var(--px-radius) + 4px) calc(var(--px-radius) + 4px);
     border: 1px solid var(--color-border);
     border-top: none;
     animation-name: slide-down;
@@ -17,10 +16,10 @@
     background-color: var(--color-element);
     position: absolute;
     top: 0;
-    left: 128px;
-    right: 128px;
-    height: 29px;
-    -webkit-app-region: no-drag;
+    left: 0;
+    right: 0;
+    height: 33px;
+    -webkit-app-region: drag;
 }
 
 .notif.closed {
@@ -30,50 +29,40 @@
 
 .notif-container {
     border-radius: 0 0 calc(var(--px-radius) + 2px) calc(var(--px-radius) + 2px);
-    height: 28px;
+    height: 32px;
 }
 
 .notif-text {
     color: var(--color-top);
-    position: absolute;
-    right: 28px;
-    top: 5px;
-    left: 28px;
-    overflow: hidden;
-    white-space: nowrap;
-    word-break: keep-all;
-    text-overflow: ellipsis;
+    display: inline-block;
+    margin-right: 8px;
+    padding: 5px;
+    vertical-align: middle;
 }
 
 .notif-icon {
     position: absolute;
-    left: 6px;
-    top: 6px;
+    left: 8px;
+    top: 8px;
 }
 
 .notif-body {
 	margin: 0 24px;
-    padding: 4px;
+    padding: 2px;
 }
 
 .notif-close {
 	border-radius: var(--px-radius);
-	width: 20px;
-	height: 20px;
+	width: 22px;
+	height: 22px;
     position: absolute;
-    right: 5px;
-    top: 4px;
-    display: none;
-    animation: anim-show;
-    animation-duration: 0.25s;
+    right: 4px;
+    top: 5px;
     background-color: var(--color-element);
     border: 1px solid var(--color-border);
     outline: none;
-    padding: 0 2px;
-}
-
-.notif:hover .notif-close {
-    display: block;
+    padding: 0 3px;
+    -webkit-app-region: no-drag;
 }
 
 .notif-close:hover {
@@ -86,4 +75,13 @@
 
 .notif-close:focus {
 	box-shadow: var(--shadow-focus);
+}
+
+.notif .nav-btn {
+    height: 24px;
+    -webkit-app-region: no-drag;
+}
+
+.notif .nav-btn img {
+    padding: 3px 7px;
 }

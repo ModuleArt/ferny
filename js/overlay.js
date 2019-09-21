@@ -100,6 +100,23 @@ historyManager.on("history-item-added", () => {
   updateTheme();
 });
 
+historyManager.on("clear-history", () => {
+  ipcRenderer.send("request-add-quest-notif", { 
+    text: "Are you sure to clear all history?", 
+    ops: [{ 
+      text:'Clear', icon:'delete-16', click:'clearHistory()' 
+    }] 
+  });
+});
+
+historyManager.on("history-cleared", () => {
+  ipcRenderer.send("request-add-status-notif", { text: "History cleared", type: "success" });
+});
+
+historyManager.on("history-already-cleared", () => {
+  ipcRenderer.send("request-add-status-notif", { text: "History already cleared", type: "info" });
+});
+
 /*
  ###### #    # #    #  ####               ####  ######   ##   #####   ####  #    #
  #      #    # ##   # #    #             #      #       #  #  #    # #    # #    #
@@ -163,7 +180,7 @@ function updateTheme() {
 */
 
 function clearHistory() {
-  historyManager.clearHistory();
+  historyManager.askClearHistory();
 }
 
 function deleteSelectedHistory() {
@@ -234,6 +251,10 @@ ipcRenderer.on("bookmarkManager-addBookmark", (event, name, url) => {
 
 ipcRenderer.on("historyManager-insertBeforeHistoryItem", (event, url) => {
   historyManager.insertBeforeHistoryItem(url);
+});
+
+ipcRenderer.on("historyManager-clearHistory", (event, text) => {
+  historyManager.clearHistory();
 });
 
 /*

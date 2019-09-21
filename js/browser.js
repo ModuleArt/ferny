@@ -1,25 +1,14 @@
 /*
-.##.....##....###....####.##....##
-.###...###...##.##....##..###...##
-.####.####..##...##...##..####..##
-.##.###.##.##.....##..##..##.##.##
-.##.....##.#########..##..##..####
-.##.....##.##.....##..##..##...###
-.##.....##.##.....##.####.##....##
+ #####  ######  ####  #    # # #####  ######
+ #    # #      #    # #    # # #    # #
+ #    # #####  #    # #    # # #    # #####
+ #####  #      #  # # #    # # #####  #
+ #   #  #      #   #  #    # # #   #  #
+ #    # ######  ### #  ####  # #    # ######
 */
 
-const { ipcRenderer } = require('electron');
+const { ipcRenderer } = require("electron");
 const dragula = require("dragula");
-
-/*
-.##.....##..#######..########..##.....##.##.......########..######.
-.###...###.##.....##.##.....##.##.....##.##.......##.......##....##
-.####.####.##.....##.##.....##.##.....##.##.......##.......##......
-.##.###.##.##.....##.##.....##.##.....##.##.......######....######.
-.##.....##.##.....##.##.....##.##.....##.##.......##.............##
-.##.....##.##.....##.##.....##.##.....##.##.......##.......##....##
-.##.....##..#######..########...#######..########.########..######.
-*/
 
 const applyTheme = require("../modules/applyTheme.js");
 const loadTheme = require("../modules/loadTheme.js");
@@ -27,6 +16,21 @@ const applyWinControls = require("../modules/applyWinControls.js");
 
 const NotificationManager = require("../modules/NotificationManager/NotificationManager.js");
 const TabRenderer = require("../modules/TabManager/TabRenderer.js");
+
+/*
+ ###### #    # #    #  ####              ##### #    # ###### #    # ######  ####
+ #      #    # ##   # #    #               #   #    # #      ##  ## #      #
+ #####  #    # # #  # #         #####      #   ###### #####  # ## # #####   ####
+ #      #    # #  # # #                    #   #    # #      #    # #           #
+ #      #    # #   ## #    #               #   #    # #      #    # #      #    #
+ #       ####  #    #  ####                #   #    # ###### #    # ######  ####
+*/
+
+function updateTheme() {
+  loadTheme().then(function(theme) {
+    applyTheme(theme);
+  });
+}
 
 /*
  #    #  ####  ##### # ###### #  ####    ##   ##### #  ####  #    #  ####
@@ -37,20 +41,19 @@ const TabRenderer = require("../modules/TabManager/TabRenderer.js");
  #    #  ####    #   # #      #  ####  #    #   #   #  ####  #    #  ####
 */
 
-let notificationManager = new NotificationManager(document.getElementById('notif-panel'));
+let notificationManager = new NotificationManager(document.getElementById("notif-panel"));
 
 notificationManager.on("notif-added", (notif) => {
   updateTheme();
 });
 
 /*
-.########....###....########...######.
-....##......##.##...##.....##.##....##
-....##.....##...##..##.....##.##......
-....##....##.....##.########...######.
-....##....#########.##.....##.......##
-....##....##.....##.##.....##.##....##
-....##....##.....##.########...######.
+ #####   ##   #####   ####
+   #    #  #  #    # #
+   #   #    # #####   ####
+   #   ###### #    #      #
+   #   #    # #    # #    #
+   #   #    # #####   ####
 */
 
 let tabRenderer = new TabRenderer();
@@ -59,14 +62,14 @@ let tabDrag = dragula([tabRenderer.getTabContainer()], {
   direction: "horizontal"
 });
 
-tabDrag.on('drag', function(el, source) {
-  let div = el.getElementsByClassName('tabman-tab-preview')[0];
+tabDrag.on("drag", function(el, source) {
+  let div = el.getElementsByClassName("tabman-tab-preview")[0];
   if(div != null) {
     div.parentNode.removeChild(div);
   }
 });
 
-tabDrag.on('drop', function(el, target, source, sibling) {
+tabDrag.on("drop", function(el, target, source, sibling) {
   tabRenderer.updateTabsPositions();
 });
 
@@ -80,39 +83,32 @@ tabDrag.on('drop', function(el, target, source, sibling) {
 .##........#######..##....##..######.....##....####..#######..##....##..######.
 */
 
-function updateTheme() {
-  loadTheme().then(function(theme) {
-    applyTheme(theme);
-  });
-}
-
 function prevDef(event) {
   event.preventDefault();
 }
 
 function popupInfoContextMenu() {
-  ipcRenderer.send('request-info-contextmenu');
+  ipcRenderer.send("request-info-contextmenu");
 }
 
 function popupHomeButtonContextMenu() {
-  ipcRenderer.send('request-home-button-contextmenu');
+  ipcRenderer.send("request-home-button-contextmenu");
 }
 
 function requestSideMenu() {
-  ipcRenderer.send('request-side-menu');
+  ipcRenderer.send("request-side-menu");
 }
 
 function installUpdate() {
-  ipcRenderer.send('request-install-update');
+  ipcRenderer.send("request-install-update");
 }
 
 function clearDownloads() {
-  ipcRenderer.send('action-clear-downloads');
-  document.getElementById('sidebar-webview').send('action-clear-downloads');
+  ipcRenderer.send("action-clear-downloads");
 }
 
 function clearHistory() {
-  document.getElementById('sidebar-webview').send('action-clear-history');
+  ipcRenderer.send("overlay-clearHistory")
 }
 
 function cancelUpdate() {

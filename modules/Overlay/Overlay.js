@@ -85,6 +85,10 @@ class Overlay extends EventEmitter {
     addHistoryItem(url) {
         this.view.webContents.send("historyManager-insertBeforeHistoryItem", url);
     }
+
+    clearHistory() {
+        this.view.webContents.send("historyManager-clearHistory");
+    }
 }
 
 module.exports = Overlay;

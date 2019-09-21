@@ -13,8 +13,6 @@ class QuestNotification extends TextNotification {
 
         super.getNode().appendChild(img);
 
-        super.getNode().getElementsByClassName('notif-body')[0].innerHTML += "<hr>";
-
         for(let i = 0; i < buttons.length; i++) {
             let btn = document.createElement('buttons');
             btn.classList.add('nav-btn');

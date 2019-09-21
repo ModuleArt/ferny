@@ -745,6 +745,10 @@ ipcMain.on('overlay-goToSearch', (event, text, cursorPos) => {
   overlay.goToSearch(text, cursorPos);
 });
 
+ipcMain.on('overlay-clearHistory', (event) => {
+  overlay.clearHistory();
+});
+
 /*
  # #####   ####              #####   ##   #####     #    #   ##   #    #   ##    ####  ###### #####
  # #    # #    #               #    #  #  #    #    ##  ##  #  #  ##   #  #  #  #    # #      #    #
