@@ -13,6 +13,10 @@ class QuestNotification extends TextNotification {
 
         super.getNode().appendChild(img);
 
+        let buttonsContainer = document.createElement("div");
+        buttonsContainer.classList.add("notif-buttons");
+        super.getNode().appendChild(buttonsContainer);
+
         for(let i = 0; i < buttons.length; i++) {
             let btn = document.createElement('buttons');
             btn.classList.add('nav-btn');
@@ -21,7 +25,7 @@ class QuestNotification extends TextNotification {
                 eval(buttons[i].click);
                 super.close();
             }
-            super.getNode().getElementsByClassName('notif-body')[0].appendChild(btn);
+            buttonsContainer.appendChild(btn);
         }
     }
 }

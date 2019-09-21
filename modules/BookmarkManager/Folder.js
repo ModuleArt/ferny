@@ -236,7 +236,7 @@ class Folder extends EventEmitter {
             deleteBtn.classList.add('nav-btn');
             deleteBtn.innerHTML = `<img class="theme-icon" name="delete-16"><label>Delete</label>`;
             deleteBtn.onclick = () => {
-                this.delete();
+                this.askForDelete();
             }
             folderEditor.appendChild(deleteBtn);
         } else {
@@ -244,6 +244,11 @@ class Folder extends EventEmitter {
         }
 
         this.emit("toggle-editor");
+        return null;
+    }
+
+    askForDelete() {
+        this.emit("ask-for-delete", this.id, this.name);
         return null;
     }
 

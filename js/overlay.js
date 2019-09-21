@@ -52,6 +52,15 @@ bookmarkManager.on("folder-appended", () => {
   updateTheme();
 });
 
+bookmarkManager.on("ask-for-delete-folder", (id, name) => {
+  ipcRenderer.send("request-add-quest-notif", { 
+    text: `Are you sure to delete "` + name + `" folder?`, 
+    ops: [{ 
+      text: "Delete", icon: "delete-16", click: "removeFolder('" + id + "')" 
+    }] 
+  });
+});
+
 bookmarkManager.on("folder-deleted", () => {
   ipcRenderer.send("request-add-status-notif", { text: "Folder deleted", type: "error" });
 });
@@ -104,7 +113,7 @@ historyManager.on("clear-history", () => {
   ipcRenderer.send("request-add-quest-notif", { 
     text: "Are you sure to clear all history?", 
     ops: [{ 
-      text:'Clear', icon:'delete-16', click:'clearHistory()' 
+      text: "Clear", icon: "delete-16", click: "clearHistory()" 
     }] 
   });
 });
@@ -238,6 +247,10 @@ ipcRenderer.on("overlay-scrollToId", (event, id) => {
 
 ipcRenderer.on("bookmarkManager-addBookmark", (event, name, url) => {
   bookmarkManager.getDefaultFolder().addBookmark(name, url);
+});
+
+ipcRenderer.on("bookmarkManager-removeFolder", (event, id) => {
+  bookmarkManager.removeFolder(id);
 });
 
 /*

@@ -93,6 +93,10 @@ class Overlay extends EventEmitter {
     changeTheme(theme) {
         this.view.webContents.send("action-change-theme", theme);
     }
+
+    removeFolder(id) {
+        this.view.webContents.send("bookmarkManager-removeFolder", id);
+    }
 }
 
 module.exports = Overlay;

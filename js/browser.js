@@ -184,15 +184,19 @@ function checkOpenWith() {
 */
 
 function showOverlay() {
-  ipcRenderer.send('overlay-show');
+  ipcRenderer.send("overlay-show");
 }
 
 function showOverlayButtonMenu() {
-  ipcRenderer.send('overlay-showButtonMenu');
+  ipcRenderer.send("overlay-showButtonMenu");
 }
 
 function goToSearch(text, selectionStart) {
-  ipcRenderer.send('overlay-goToSearch', text, selectionStart);
+  ipcRenderer.send("overlay-goToSearch", text, selectionStart);
+}
+
+function removeFolder(id) {
+  ipcRenderer.send("overlay-removeFolder", id);
 }
 
 /*

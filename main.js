@@ -726,20 +726,24 @@ ipcMain.on('request-close-welcome', (event, arg) => {
  # #       ####               ####    ##   ###### #    # ###### #    #   #
 */
 
-ipcMain.on('overlay-show', (event) => {
+ipcMain.on("overlay-show", (event) => {
   overlay.show();
 });
 
-ipcMain.on('overlay-showButtonMenu', (event) => {
+ipcMain.on("overlay-showButtonMenu", (event) => {
   overlay.showButtonMenu();
 });
 
-ipcMain.on('overlay-goToSearch', (event, text, cursorPos) => {
+ipcMain.on("overlay-goToSearch", (event, text, cursorPos) => {
   overlay.goToSearch(text, cursorPos);
 });
 
-ipcMain.on('overlay-clearHistory', (event) => {
+ipcMain.on("overlay-clearHistory", (event) => {
   overlay.clearHistory();
+});
+
+ipcMain.on("overlay-removeFolder", (event, id) => {
+  overlay.removeFolder(id);
 });
 
 /*

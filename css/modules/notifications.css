@@ -28,7 +28,6 @@
 }
 
 .notif-container {
-    border-radius: 0 0 calc(var(--px-radius) + 2px) calc(var(--px-radius) + 2px);
     height: 32px;
 }
 
@@ -43,7 +42,7 @@
     word-break: keep-all;
     text-overflow: ellipsis;
     position: absolute;
-    width: calc(100% - 64px);
+    width: calc(100% - 256px);
 }
 
 .notif-icon {
@@ -60,15 +59,15 @@
 
 .notif-close {
 	border-radius: var(--px-radius);
-	width: 22px;
-	height: 22px;
+	width: 24px;
+	height: 24px;
     position: absolute;
     right: 4px;
-    top: 5px;
+    top: 4px;
     background-color: var(--color-element);
     border: 1px solid var(--color-border);
     outline: none;
-    padding: 0 3px;
+    padding: 0 4px;
     -webkit-app-region: no-drag;
 }
 
@@ -91,4 +90,11 @@
 
 .notif .nav-btn img {
     padding: 3px 7px;
+}
+
+.notif-buttons {
+    padding: 2px;
+    position: absolute;
+    right: 48px;
+    top: 0;
 }

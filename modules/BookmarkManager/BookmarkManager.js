@@ -90,6 +90,9 @@ class BookmarkManager extends EventEmitter {
             }
             this.emit("bookmark-editor-toggled");
         });
+        folder.on("ask-for-delete", (id, name) => {
+            this.emit("ask-for-delete-folder", id, name);
+        });
         folder.on("delete", (id) => {
             this.removeFolder(id);
             if(this.isotope != null) {
