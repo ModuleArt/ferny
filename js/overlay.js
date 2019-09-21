@@ -69,7 +69,6 @@ bookmarkManager.on("folder-edited", () => {
   ipcRenderer.send("request-add-status-notif", { text: "Folder edited", type: "info" });
 });
 
-
 bookmarkManager.on("bookmark-added", () => {
   ipcRenderer.send("request-add-status-notif", { text: "Bookmark added", type: "success" });
 });
@@ -250,7 +249,7 @@ ipcRenderer.on("bookmarkManager-addBookmark", (event, name, url) => {
 });
 
 ipcRenderer.on("bookmarkManager-removeFolder", (event, id) => {
-  bookmarkManager.removeFolder(id);
+  bookmarkManager.getFolderById(id).delete();
 });
 
 /*

@@ -13,6 +13,7 @@ const fs = require("fs");
 const path = require("path");
 
 const saveFileToJsonFolder = require("../modules/saveFileToJsonFolder.js");
+const loadFileFromJsonFolder = require("../modules/loadFileFromJsonFolder.js");
 const loadTheme = require("../modules/loadTheme.js");
 const applyTheme = require("../modules/applyTheme.js");
 const bytesToSize = require("../modules/bytesToSize.js");
@@ -94,6 +95,46 @@ function requestTheme(theme) {
 }
 
 /*
+ ###### #    # #    #  ####              #    #  ####  #    # ######    #####    ##    ####  ######
+ #      #    # ##   # #    #             #    # #    # ##  ## #         #    #  #  #  #    # #
+ #####  #    # # #  # #         #####    ###### #    # # ## # #####     #    # #    # #      #####
+ #      #    # #  # # #                  #    # #    # #    # #         #####  ###### #  ### #
+ #      #    # #   ## #    #             #    # #    # #    # #         #      #    # #    # #
+ #       ####  #    #  ####              #    #  ####  #    # ######    #      #    #  ####  ######
+*/
+
+function loadHomePage() {
+  loadFileFromJsonFolder(null, "home").then((data) => {
+    let Data = JSON.parse(data);
+    document.getElementById("home-page-input").value = Data.url;
+    if(Data.on == 1) {
+      document.getElementById("home-page-checkbox").checked = true;
+    }
+  });
+}
+
+function saveHomePage() {
+  var url = document.getElementById("home-page-input").value;
+  var on = document.getElementById("home-page-checkbox").checked;
+
+  if(url.length <= 0) {
+    ipcRenderer.send("request-add-status-notif", { text: "First enter the home page URL", type: "warning" });
+  } else {
+    if(on) {
+      on = 1;
+    } else {
+      on = 0;
+    }
+  
+    saveFileToJsonFolder(null, "home", JSON.stringify({ url, on })).then(function() {
+      ipcRenderer.send("request-add-status-notif", { text: "Home page saved", type: "success" });
+
+      ipcRenderer.send("tabManager-setHomePage", { url, on });
+    });
+  }
+}
+
+/*
  ###### #    # #    #  ####               ####  #      ######   ##   #####     #####    ##   #####   ##
  #      #    # ##   # #    #             #    # #      #       #  #  #    #    #    #  #  #    #    #  #
  #####  #    # # #  # #         #####    #      #      #####  #    # #    #    #    # #    #   #   #    #
@@ -106,7 +147,7 @@ function clearBrowsingData() {
   var clearCache = document.getElementById('clear-cache-checkbox').checked;
   var clearStorage = document.getElementById('clear-storage-checkbox').checked;
   if(!clearCache && !clearStorage) {
-    notif("First check something", "warning")
+    ipcRenderer.send("request-add-status-notif", { text: "First check something", type: "error" });
   } else {
     let Data = {
       cache: clearCache,
@@ -166,6 +207,8 @@ function init() {
   updateTheme();
 
   loadThemesFromFolder();
+
+  loadHomePage();
 
   ipcRenderer.send("request-set-cache-size");
 }

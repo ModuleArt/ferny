@@ -16,6 +16,10 @@
             <img name="theme-16" class="theme-icon">
             <label>Themes</label>
         </button>
+        <button class="nav-btn" onclick="showCategory('home-page')">
+            <img name="home-16" class="theme-icon">
+            <label>Home page</label>
+        </button>
         <button class="nav-btn" onclick="showCategory('clear-browsing-data')">
             <img name="clear-16" class="theme-icon">
             <label>Clear browsing data</label>
@@ -25,6 +29,19 @@
     <div class="container active" id="themes">
         <label class="title">Themes</label>
         <div id="theme-manager"></div>
+    </div>
+    <div class="container" id="home-page">
+        <label class="title">Home page</label>
+        <input type="text" id="home-page-input" placeholder="Home page URL">
+        <div class="nav-checkbox">
+            <label>Show button</label>
+            <input type="checkbox" id="home-page-checkbox" class="checkbox">
+        </div>
+        <hr>
+        <button class="nav-btn" onclick="saveHomePage()">
+            <img class="theme-icon" name="save-16">
+            <label>Save</label>
+        </button>
     </div>
     <div class="container" id="clear-browsing-data">
         <label class="title">Clear browsing data</label>

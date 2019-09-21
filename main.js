@@ -832,6 +832,10 @@ ipcMain.on('tabManager-goHome', (event) => {
   }
 });
 
+ipcMain.on('tabManager-setHomePage', (event, homePage) => {
+  tabManager.setHomePage(homePage);
+});
+
 /*
  ###### #    # #    #  ####               ####  #    # ###### #####  #        ##   #   #
  #      #    # ##   # #    #             #    # #    # #      #    # #       #  #   # #

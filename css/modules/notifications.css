@@ -42,7 +42,8 @@
     word-break: keep-all;
     text-overflow: ellipsis;
     position: absolute;
-    width: calc(100% - 256px);
+    right: 256px;
+    left: 32px;
 }
 
 .notif-icon {

@@ -127,7 +127,12 @@ hr {
     margin-bottom: 32px;
 }
 
+.container input[type=text] {
+    width: calc(100% - 8px);
+}
+
 .nav-label {
+    padding: 2px;
     margin: 2px;
     display: inline-block;
 }
