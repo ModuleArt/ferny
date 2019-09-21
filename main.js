@@ -231,8 +231,8 @@ const sideMenu = Menu.buildFromTemplate([{
     label: "Check for updates", icon: app.getAppPath() + "/imgs/icons16/reload.png", accelerator: "CmdOrCtrl+Shift+U", click: () => { 
       checkForUpdates(); 
     } }, { type: "separator" }, { 
-    enabled: false, label: "About", icon: app.getAppPath() + "/imgs/icons16/about.png", accelerator: "F2", click: () => { 
-      // overlay.openAbout(); 
+    label: "About", icon: app.getAppPath() + "/imgs/icons16/about.png", accelerator: "F2", click: () => { 
+      showAboutWindow();
     } }, { 
     enabled: false, label: "Hotkeys", icon: app.getAppPath() + "/imgs/icons16/keyboard.png", accelerator: "F1", click: () => { 
       // showKeyBindsWindow(); 
@@ -314,6 +314,8 @@ const sideMenu = Menu.buildFromTemplate([{
 let mainWindow = null;
 let welcomeWindow = null;
 let keyBindsWindow = null;
+let aboutWindow = null;
+let settingsWindow = null;
 
 let downloadsArray = [];
 let curDownloadNum = 0;
@@ -722,10 +724,6 @@ ipcMain.on('request-close-keybinds', (event, arg) => {
   keyBindsWindow.close();
 });
 
-ipcMain.on('request-open-license-file', (event, arg) => {
-  mainWindow.webContents.send('action-open-url-in-new-tab', app.getAppPath() + "/LICENSE");
-});
-
 /*
  # #####   ####               ####  #    # ###### #####  #        ##   #   #
  # #    # #    #             #    # #    # #      #    # #       #  #   # #
@@ -759,6 +757,11 @@ ipcMain.on('overlay-goToSearch', (event, text, cursorPos) => {
 ipcMain.on('tabManager-newTab', (event) => {
   tabManager.newTab();
 });
+
+ipcMain.on('tabManager-newBackgroundTab', (event) => {
+  tabManager.newBackgroundTab();
+});
+
 
 ipcMain.on('tabManager-addTab', (event, url, active) => {
   tabManager.addTab(url, active);
@@ -914,6 +917,34 @@ function setColorTabs(bool) {
   mainWindow.webContents.send('action-set-color-tabs', bool);
 }
 
+function showAboutWindow() {
+  if(aboutWindow === null || aboutWindow.isDestroyed()) {
+    loadTheme().then((theme) => {
+      aboutWindow = new BrowserWindow({
+        title: "About Ferny",
+        modal: true,
+        parent: mainWindow,
+        width: 480, height: 350,
+        resizable: false,
+        show: false,
+        icon: app.getAppPath() + "/imgs/icon.ico",
+        webPreferences: {
+          nodeIntegration: true
+        },
+        backgroundColor: theme.colorBack
+      });
+
+      aboutWindow.setMenuBarVisibility(false);
+  
+      aboutWindow.loadFile(app.getAppPath() + "/html/about.html");
+
+      aboutWindow.once("ready-to-show", () => {
+        aboutWindow.show();
+      });
+    });
+  }
+}
+
 function showMainWindow() {
   loadBounds().then((Data) => {
     if(Data.maximize) {
@@ -932,8 +963,7 @@ function showMainWindow() {
         show: false,
         icon: app.getAppPath() + "/imgs/icon.ico",
         webPreferences: {
-          nodeIntegration: true,
-          webviewTag: true
+          nodeIntegration: true
         },
         backgroundColor: theme.colorBack
       });

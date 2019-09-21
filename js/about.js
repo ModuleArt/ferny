@@ -34,59 +34,59 @@ const applyTheme = require("../modules/applyTheme.js");
 */
 
 function openLicenseFile() {
-  ipcRenderer.send('request-open-license-file');
+  ipcRenderer.send("tabManager-addTab", "file://" + __dirname + "/../LICENSE", true);
 }
 
 function loadAbout() {
-  document.getElementById('about-electron').innerHTML = "Electron: v" + process.versions.electron;
-  document.getElementById('about-chrome').innerHTML = "Chrome: v" + process.versions.chrome;
-  document.getElementById('about-node').innerHTML = "Node: " + process.version;
+  document.getElementById("about-electron").innerHTML = "Electron: v" + process.versions.electron;
+  document.getElementById("about-chrome").innerHTML = "Chrome: v" + process.versions.chrome;
+  document.getElementById("about-node").innerHTML = "Node: " + process.version;
 
-  ipcRenderer.send('request-set-about');
+  ipcRenderer.send("request-set-about");
 }
 
 function openIssuesPage() {
-  ipcRenderer.send('request-open-url-in-new-tab', "https://github.com/ModuleArt/ferny/issues");
+  ipcRenderer.send("tabManager-addTab", "https://github.com/ModuleArt/ferny/issues", true);
 }
 
 function openDonatePage() {
-  ipcRenderer.send('request-open-url-in-new-tab', "https://www.patreon.com/moduleart");
+  ipcRenderer.send("tabManager-addTab", "https://www.patreon.com/moduleart", true);
 }
 
 function openDeveloperPage() {
-  ipcRenderer.send('request-open-url-in-new-tab', "https://moduleart.github.io/");
+  ipcRenderer.send("tabManager-addTab", "https://moduleart.github.io/", true);
 }
 
 function openAppPage() {
-  ipcRenderer.send('request-open-url-in-new-tab', "https://moduleart.github.io/ferny");
+  ipcRenderer.send("tabManager-addTab", "https://moduleart.github.io/ferny", true);
 }
 
 function openReleasesPage() {
-  ipcRenderer.send('request-open-url-in-new-tab', "https://github.com/ModuleArt/ferny/releases");
+  ipcRenderer.send("tabManager-addTab", "https://github.com/ModuleArt/ferny/releases", true);
 }
 
 function openPlannerPage() {
-  ipcRenderer.send('request-open-url-in-new-tab', "https://trello.com/b/cb5lXUgS/ferny");
+  ipcRenderer.send("tabManager-addTab", "https://trello.com/b/cb5lXUgS/ferny", true);
 }
 
 function openSourcePage() {
-  ipcRenderer.send('request-open-url-in-new-tab', "https://github.com/ModuleArt/ferny");
+  ipcRenderer.send("tabManager-addTab", "https://github.com/ModuleArt/ferny", true);
 }
 
 function openElectronPage() {
-  ipcRenderer.send('request-open-url-in-new-tab', "https://electronjs.org/releases");
+  ipcRenderer.send("tabManager-addTab", "https://electronjs.org/releases", true);
 }
 
 function openChromePage() {
-  ipcRenderer.send('request-open-url-in-new-tab', "https://chromereleases.googleblog.com");
+  ipcRenderer.send("tabManager-addTab", "https://chromereleases.googleblog.com", true);
 }
 
 function openNodePage() {
-  ipcRenderer.send('request-open-url-in-new-tab', "https://nodejs.org/en/download/releases");
+  ipcRenderer.send("tabManager-addTab", "https://nodejs.org/en/download/releases", true);
 }
 
 function checkForUpdates() {
-  ipcRenderer.send('request-check-for-updates');
+  ipcRenderer.send("request-check-for-updates");
 }
 
 /*
@@ -100,7 +100,7 @@ function checkForUpdates() {
 */
 
 ipcRenderer.on('action-set-about', (event, arg) => {
-  document.getElementById('about-app').innerHTML = "Beta v" + arg.version + "<br>" + arg.arch + " / " + arg.platform;
+  document.getElementById('about-app').innerHTML = "Beta v" + arg.version + "<br>" + arg.platform + " / " + arg.arch;
 });
 
 /*

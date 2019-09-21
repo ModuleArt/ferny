@@ -34,6 +34,12 @@ class TabManager extends EventEmitter {
         return null;
     }
 
+    newBackgroundTab() {
+        this.addTab(this.homePage, false);
+
+        return null;
+    }
+
     addTab(url, active) {
         let id = this.tabCounter++;
 

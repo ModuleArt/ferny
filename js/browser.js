@@ -212,6 +212,10 @@ function newTab() {
   ipcRenderer.send('tabManager-newTab');
 }
 
+function newBackgroundTab() {
+  ipcRenderer.send('tabManager-newBackgroundTab');
+}
+
 function showTabList() {
   tabRenderer.showTabList();
 }

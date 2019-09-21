@@ -60,12 +60,6 @@ class Overlay extends EventEmitter {
             } }, { 
             label: "Downloads", icon: this.appPath + "/imgs/icons16/downloads.png", accelerator: "CmdOrCtrl+D", click: () => { 
                 this.scrollToId("downloads-title"); 
-            } }, { type: "separator" }, { 
-            enabled: false, label: "Settings", icon: this.appPath + "/imgs/icons16/settings.png", accelerator: "CmdOrCtrl+,", click: () => { 
-                this.emit("open-settings");
-            } }, { 
-            enabled: false, label: "About", icon: this.appPath + "/imgs/icons16/about.png", accelerator: "CmdOrCtrl+Shift+A", click: () => { 
-                this.emit("open-about");
             } }
           ]);
         buttonMenu.popup(this.window);

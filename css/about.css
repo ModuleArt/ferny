@@ -78,16 +78,61 @@
 .########...#######..########.....##...
 */
 
+hr {
+  border: 0.5px solid var(--color-border);
+  margin: 10px;
+}
+
 body {
   margin: 0;
   padding: 0;
-  overflow-x: hidden;
+  overflow: hidden;
   background-color: var(--color-back);
-  padding: 64px;
+  text-align: center;
+}
+
+.block-title {
+  margin: 2px;
+  margin-top: 32px;
+  border-bottom: 1px solid var(--color-border);
+  padding: 4px;
+}
+
+.block-title img, .block-title label {
+  vertical-align: middle;
+}
+
+.block-title label { 
+  padding-left: 8px;
+}
+
+.column-left {
+  padding: 16px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 40%;
+  bottom: 0;
+}
+
+.column-right {
+  border-left: 1px solid var(--color-border);
+  padding: 16px;
+  padding-bottom: 48px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 60%;
+  bottom: 0;
+  overflow-y: auto;
 }
 
 label {
   color: var(--color-top);
+}
+
+.nav-btn, .link {
+  width: calc(100% - 4px);
 }
 
 /* theme icon */
@@ -106,7 +151,7 @@ label {
 */
 
 label.title {
-  font-size: 36px;
+  font-size: 42px;
   display: inline-block;
 }
 
@@ -134,7 +179,7 @@ label.subtitle {
 .about-div button {
   background: none;
   border: 1px solid transparent;
-  border-radius: 50%;
+  border-radius: 50% 50% var(--px-radius) 50%;
   padding: 8px;
   margin: 2px;
   outline: none;

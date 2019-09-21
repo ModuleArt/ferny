@@ -26,7 +26,7 @@ class Tab extends EventEmitter {
         });
 
         this.view.webContents.on("page-title-updated", (event, title, explicitSet) => {
-            this.window.webContents.send("tabRenderer-setTabTitle", { id: this.id, title: title });
+            this.window.webContents.send("tabRenderer-setTabTitle", { id: this.id, title });
         });
 
         this.view.webContents.on("page-favicon-updated", (event, favicons) => {
@@ -221,7 +221,7 @@ class Tab extends EventEmitter {
     }
 
     setBounds(x, y, width, height) {
-        this.view.setBounds({ x: x, y: y, width: width, height: height });
+        this.view.setBounds({ x, y, width, height });
     }
 
     inspectElement(x, y) {
@@ -263,7 +263,7 @@ class Tab extends EventEmitter {
 
     isActive() {
         let active = false;
-        if(this.window.getBrowserView() == this.view) {
+        if(this.window.getBrowserView() === this.view) {
             active = true;
         }
         return active;

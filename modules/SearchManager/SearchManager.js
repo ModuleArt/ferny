@@ -30,7 +30,8 @@ class SearchManager extends EventEmitter {
 
         this.searchEngines = searchEngines;
         let engines = searchEngines.getElementsByClassName("search-engine");
-        engines.forEach(item => {
+
+        Array.from(engines).forEach(item => {
             item.onclick = () => {
                 this.searchWith(null, item.name);
             }
@@ -41,7 +42,7 @@ class SearchManager extends EventEmitter {
             event.preventDefault();
             if (event.deltaY < 0) {
                 var suggestions = this.searchSuggestContainer.childNodes;
-                var i = 0;
+                let i = 0;
                 while (i < suggestions.length && !suggestions[i].classList.contains("active")) {
                     i++;
                 }
@@ -52,7 +53,7 @@ class SearchManager extends EventEmitter {
                 }
             } else if (event.deltaY > 0) {
                 var suggestions = this.searchSuggestContainer.childNodes;
-                var i = 0;
+                let i = 0;
                 while (i < suggestions.length && !suggestions[i].classList.contains("active")) {
                     i++;
                 }
@@ -77,7 +78,7 @@ class SearchManager extends EventEmitter {
                 if (event.keyCode === 13) {
                     var suggestions = this.searchSuggestContainer.childNodes;
                     if(suggestions.length > 0) {
-                        var i = 0;
+                        let i = 0;
                         while (i < suggestions.length && !suggestions[i].classList.contains("active")) {
                             i++;
                         }
@@ -90,7 +91,7 @@ class SearchManager extends EventEmitter {
 
             if (event.keyCode === 40) {
                 var suggestions = this.searchSuggestContainer.childNodes;
-                var i = 0;
+                let i = 0;
                 while (i < suggestions.length && !suggestions[i].classList.contains("active")) {
                     i++;    
                 }
@@ -102,7 +103,7 @@ class SearchManager extends EventEmitter {
             }
             if (event.keyCode === 38) {
                 var suggestions = this.searchSuggestContainer.childNodes;
-                var i = 0;
+                let i = 0;
                 while (i < suggestions.length && !suggestions[i].classList.contains("active")) {
                     i++;
                 }
@@ -148,7 +149,7 @@ class SearchManager extends EventEmitter {
 
                 if (suggestions != null && suggestions.length > 0) {
                     if (this.searchSuggestContainer.childNodes.length < 5) {
-                        for (var i = 0; i < 5; i++) {
+                        for (let i = 0; i < 5; i++) {
                             if (suggestions[i] != null) {
                                 let s = document.createElement("input");
                                 s.tabIndex = -1;
@@ -169,7 +170,7 @@ class SearchManager extends EventEmitter {
     searchWith(text, engine) {
         if(text == null) {
             var suggestions = this.searchSuggestContainer.childNodes;
-            var i = 0;
+            let i = 0;
             while (i < suggestions.length && !suggestions[i].classList.contains("active")) {
                 i++;
             }

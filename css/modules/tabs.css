@@ -12,7 +12,7 @@
     left: 0;
     top: 0;
     right: 0;
-    background-color: var(--color-back);
+    background-color: var(--color-element);
     cursor: default;
     font-size: var(--px-font);
     border-bottom: 1px solid var(--color-border);

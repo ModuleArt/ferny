@@ -4,27 +4,26 @@
     <link rel="stylesheet" href="../css/modules/input.css">
     <link rel="stylesheet" href="../css/modules/webkit.css">
     <link rel="stylesheet" href="../css/modules/nav-btn.css">
-    <link rel="stylesheet" href="../css/modules/block-title.css">
     <link rel="stylesheet" href="../css/modules/link.css">
     <link rel="stylesheet" href="../css/about.css">
   </head>
   <body>
-    <label class="sidebar-title">About</label>
-      
-    <div class="block-title">
-      <img name="info-16" class="theme-icon">
-      <label>Information</label>
-    </div>
-    <div class="container">
+    <div class="column-left">
       <div class="about-div">
           <button>
             <img class="icon" src="../imgs/icon128.png" onclick="openAppPage()" title="App page">
           </button>
           <img class="beta" src="../imgs/color48/beta.png" title="Beta">
-      </div><br>
+      </div>
       <label class="title">Ferny</label><br>
       <label class="subtitle">Web Browser</label><br>
-      <label id="about-app"></label><br><br>
+      <label id="about-app"></label>
+    </div>
+    <div class="column-right">
+      <div class="block-title">
+        <img name="download-16" class="theme-icon">
+        <label>Updates</label>
+      </div>
       <button class="nav-btn" onclick="checkForUpdates()" title="Check for new version">
         <img class="theme-icon" name="reload-16">
         <label>Check for updates</label>
@@ -33,13 +32,10 @@
         <img class="theme-icon" name="calendar-16">
         <label>Planner</label>
       </button>
-    </div>
-    
-    <div class="block-title">
-      <img name="code-16" class="theme-icon">
-      <label>Created by</label>
-    </div>
-    <div class="container">
+      <div class="block-title">
+        <img name="code-16" class="theme-icon">
+        <label>Created by</label>
+      </div>
       <button class="nav-btn" onclick="openDeveloperPage()" title="Developer page">
         <img src="../imgs/module16.png">
         <label>Module Art</label>
@@ -48,13 +44,10 @@
         <img class="theme-icon" name="coin-16">
         <label>Donate</label>
       </button>
-    </div>
-
-    <div class="block-title">
-      <img name="github-16" class="theme-icon">
-      <label>GitHub</label>
-    </div>
-    <div class="container">
+      <div class="block-title">
+        <img name="github-16" class="theme-icon">
+        <label>GitHub</label>
+      </div>
       <button class="nav-btn" onclick="openReleasesPage()" title="GitHub page">
         <img class="theme-icon" name="download-16">
         <label>Releases</label>
@@ -63,43 +56,24 @@
         <img class="theme-icon" name="bug-report-16">
         <label>Issues</label>
       </button>
-    </div>
-
-    <div class="block-title">
-      <img name="license-16" class="theme-icon">
-      <label>License</label>
-    </div>
-    <div class="container">
+      <div class="block-title">
+        <img name="license-16" class="theme-icon">
+        <label>License</label>
+      </div>
       <label>GPL-3.0</label>
       <button class="nav-btn" onclick="openLicenseFile()" title="Open license file in new tab">
         <img class="theme-icon" name="file-16">
         <label>Open file</label>
       </button>
-    </div>
-    
-    <div class="block-title">
-      <img name="library-16" class="theme-icon">
-      <label>Libraries</label>
-    </div>
-    <div class="container">
-      <!-- <button class="nav-btn" onclick="openElectronPage()" title="Electron stable releases">
-        <img class="theme-icon" name="atom">
-        <label id="about-electron"></label>
-      </button>
-      <button class="nav-btn" onclick="openChromePage()" title="Chrome releases">
-        <img class="theme-icon" name="chrome">
-        <label id="about-chrome"></label>
-      </button> -->
-      <!-- <button class="nav-btn" onclick="openNodePage()" title="Node previous releases">
-        <img class="theme-icon" name="node-16">
-        <label id="about-node">
-      </button> -->
-
+      <div class="block-title">
+        <img name="library-16" class="theme-icon">
+        <label>Libraries</label>
+      </div>
       <button class="link" onclick="openElectronPage()" title="Electron stable releases" id="about-electron"></button>
       <button class="link" onclick="openChromePage()" title="Chrome releases" id="about-chrome"></button>
       <button class="link" onclick="openNodePage()" title="Node previous releases" id="about-node"></button>
     </div>
-    
+
     <script type="text/javascript" src="../js/about.js"></script>
   </body>
 </html>
