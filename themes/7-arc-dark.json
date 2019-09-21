@@ -1,0 +1,14 @@
+{
+    "name": "Arc",
+    "type": "Dark",
+    "icons": "white",
+    "colorBack": "#2F343F",
+    "colorElement": "#404552",
+    "colorBorder": "#21242C",
+    "colorSecond": "#393F4E",
+    "colorTop": "#FFFFFF",
+    "shadowFocus": "inset 0 0 4px rgba(0, 0, 0, 1)",
+    "opacityOver": "0.5",
+    "pxRadius": "4px"
+  }
+  

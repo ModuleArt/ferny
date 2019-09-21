@@ -279,10 +279,6 @@ main {
     position: relative;
 }
 
-#bookmarks-container:empty {
-    padding-bottom: 36px;
-}
-
 .folder-move {
     position: absolute;
     left: 7px;
@@ -540,6 +536,16 @@ main {
     text-align: left;
 }
 
+#history-container:empty::before {
+    content: "\2205  History is empty... Try to visit something...";
+    margin: 4px;
+    border: 1px solid var(--color-border);
+    padding: 4px;
+    border-radius: var(--px-radius);
+    display: block;
+    text-align: center;
+}
+
 .history-item {
     margin: 4px;
     width: 192px;
@@ -552,6 +558,7 @@ main {
     height: 46px;
     display: inline-block;
     vertical-align: top;
+    color: var(--color-top);
 }
 
 .history-item:focus {
@@ -574,6 +581,7 @@ main {
     border-radius: var(--px-radius);
     transform: scale(0);
     transition: transform 0.25s;
+    color: var(--color-top);
 }
 
 .history-checkbox:focus::after {

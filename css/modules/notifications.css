@@ -38,6 +38,12 @@
     margin-right: 8px;
     padding: 5px;
     vertical-align: middle;
+    overflow: hidden;
+    white-space: nowrap;
+    word-break: keep-all;
+    text-overflow: ellipsis;
+    position: absolute;
+    width: calc(100% - 64px);
 }
 
 .notif-icon {
@@ -49,6 +55,7 @@
 .notif-body {
 	margin: 0 24px;
     padding: 2px;
+    text-align: left;
 }
 
 .notif-close {

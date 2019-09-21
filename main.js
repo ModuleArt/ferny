@@ -224,8 +224,8 @@ const sideMenu = Menu.buildFromTemplate([{
       }
     } }
   ] }, { type: "separator" }, { 
-  enabled: false, label: "Settings", icon: app.getAppPath() + "/imgs/icons16/settings.png", accelerator: "CmdOrCtrl+,", click: () => { 
-    // overlay.openSettings(); 
+  label: "Settings", icon: app.getAppPath() + "/imgs/icons16/settings.png", accelerator: "CmdOrCtrl+,", click: () => { 
+    showSettingsWindow();
   } }, { 
   label: "Help", icon: app.getAppPath() + "/imgs/icons16/help.png", submenu: [{ 
     label: "Check for updates", icon: app.getAppPath() + "/imgs/icons16/reload.png", accelerator: "CmdOrCtrl+Shift+U", click: () => { 
@@ -233,9 +233,6 @@ const sideMenu = Menu.buildFromTemplate([{
     } }, { type: "separator" }, { 
     label: "About", icon: app.getAppPath() + "/imgs/icons16/about.png", accelerator: "F2", click: () => { 
       showAboutWindow();
-    } }, { 
-    enabled: false, label: "Hotkeys", icon: app.getAppPath() + "/imgs/icons16/keyboard.png", accelerator: "F1", click: () => { 
-      // showKeyBindsWindow(); 
     } }, { 
     enabled: false, label: "Welcome", icon: app.getAppPath() + "/imgs/icons16/startup.png", accelerator: "F7", click: () => { 
       // showWelcomeWindow(); 
@@ -303,7 +300,7 @@ const sideMenu = Menu.buildFromTemplate([{
       } }, { 
       label: "Developer mode (Overlay)", icon: app.getAppPath() + "/imgs/icons16/details.png", accelerator: "CmdOrCtrl+Shift+F11", click: () => { 
         overlay.openDevTools(); 
-      } }    
+      } }
     ] }
   ] }, { type: "separator" }, { 
   label: "Quit Ferny", icon: app.getAppPath() + "/imgs/icons16/exit.png", accelerator: "CmdOrCtrl+Shift+Q", click: () => { 
@@ -313,7 +310,6 @@ const sideMenu = Menu.buildFromTemplate([{
 
 let mainWindow = null;
 let welcomeWindow = null;
-let keyBindsWindow = null;
 let aboutWindow = null;
 let settingsWindow = null;
 
@@ -720,10 +716,6 @@ ipcMain.on('request-close-welcome', (event, arg) => {
   welcomeWindow.close();
 });
 
-ipcMain.on('request-close-keybinds', (event, arg) => {
-  keyBindsWindow.close();
-});
-
 /*
  # #####   ####               ####  #    # ###### #####  #        ##   #   #
  # #    # #    #             #    # #    # #      #    # #       #  #   # #
@@ -937,13 +929,38 @@ function showAboutWindow() {
         },
         backgroundColor: theme.colorBack
       });
-
-      aboutWindow.setMenuBarVisibility(false);
   
       aboutWindow.loadFile(app.getAppPath() + "/html/about.html");
 
       aboutWindow.once("ready-to-show", () => {
         aboutWindow.show();
+      });
+    });
+  }
+}
+
+function showSettingsWindow() {
+  if(settingsWindow === null || settingsWindow.isDestroyed()) {
+    loadTheme().then((theme) => {
+      settingsWindow = new BrowserWindow({
+        title: "Settings",
+        modal: true,
+        parent: mainWindow,
+        width: 640, height: 480,
+        resizable: false,
+        show: false,
+        icon: app.getAppPath() + "/imgs/icon.ico",
+        webPreferences: {
+          nodeIntegration: true
+        },
+        backgroundColor: theme.colorBack
+      });
+  
+      settingsWindow.loadFile(app.getAppPath() + "/html/settings.html");
+
+      settingsWindow.once("ready-to-show", () => {
+        settingsWindow.show();
+        settingsWindow.webContents.openDevTools();
       });
     });
   }
@@ -971,6 +988,8 @@ function showMainWindow() {
         },
         backgroundColor: theme.colorBack
       });
+
+      Menu.setApplicationMenu(null);
       mainWindow.setMenu(sideMenu);
     
       mainWindow.loadFile(app.getAppPath() + "/html/browser.html");
@@ -1257,42 +1276,6 @@ function showWelcomeWindow() {
     welcomeWindow.once('ready-to-show', () => {
       // welcomeWindow.webContents.openDevTools();
       welcomeWindow.show();
-    });
-  });
-}
-
-function showKeyBindsWindow() {
-  loadTheme().then(function(theme) {
-    keyBindsWindow = new BrowserWindow({
-      width: 480, height: 480,
-      minWidth: 480, minHeight: 180,
-      frame: false,
-      show: false,
-      modal: true,
-      parent: mainWindow,
-      icon: app.getAppPath() + '/imgs/icon.ico',
-      minimizable: false,
-      maximizable: false,
-      webPreferences: {
-        nodeIntegration: true
-      },
-      backgroundColor: theme.colorBack
-    }); 
-  
-    keyBindsWindow.setMenu(null);
-  
-    keyBindsWindow.on('focus', () => {
-      keyBindsWindow.webContents.send('action-focus-window');
-    });
-    keyBindsWindow.on('blur', () => {
-      keyBindsWindow.webContents.send('action-blur-window');
-    });
-  
-    keyBindsWindow.loadFile(app.getAppPath() + '/html/keybinds.html');
-  
-    keyBindsWindow.once('ready-to-show', () => {
-      // keyBindsWindow.webContents.openDevTools();
-      keyBindsWindow.show();
     });
   });
 }

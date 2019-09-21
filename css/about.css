@@ -84,6 +84,7 @@ hr {
 }
 
 body {
+  border-top: 1px solid var(--color-border);
   margin: 0;
   padding: 0;
   overflow: hidden;
@@ -113,10 +114,10 @@ body {
   top: 0;
   width: 40%;
   bottom: 0;
+  border-right: 1px solid var(--color-border);
 }
 
 .column-right {
-  border-left: 1px solid var(--color-border);
   padding: 16px;
   padding-bottom: 48px;
   position: absolute;

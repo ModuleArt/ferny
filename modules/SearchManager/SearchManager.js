@@ -31,7 +31,7 @@ class SearchManager extends EventEmitter {
         this.searchEngines = searchEngines;
         let engines = searchEngines.getElementsByClassName("search-engine");
 
-        Array.from(engines).forEach(item => {
+        Array.from(engines).forEach((item) => {
             item.onclick = () => {
                 this.searchWith(null, item.name);
             }
