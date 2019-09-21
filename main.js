@@ -881,7 +881,7 @@ function initTabManager() {
   });
 
   tabManager.on("add-status-notif", (text, type) => {
-    mainWindow.webContents.send("add-status-notif", { text: text, type: type });
+    mainWindow.webContents.send("action-add-status-notif", { text: text, type: type });
   });
 
   tabManager.on("add-history-item", (url) => {

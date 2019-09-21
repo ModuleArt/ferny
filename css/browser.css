@@ -168,7 +168,7 @@
   text-align: center;
   margin: 0;
   height: 30px;
-  transition: font-size 0.25s, height 0.25s, box-shadow 0.25s;
+  transition: font-size 0.25s, height 0.25s;
   padding: 8px;
   color: var(--color-top);
   border-radius: var(--px-radius);
@@ -180,6 +180,7 @@
 
 #search-input:focus {
   box-shadow: var(--shadow-focus);
+  border-color: var(--color-border);
 }
 
 #search-input:active {

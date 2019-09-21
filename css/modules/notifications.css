@@ -21,6 +21,7 @@
     right: 128px;
     height: 29px;
     -webkit-app-region: no-drag;
+    box-shadow: var(--shadow-focus);
 }
 
 .notif.closed {

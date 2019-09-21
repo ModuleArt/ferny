@@ -45,11 +45,36 @@ let searchManager = new SearchManager(
 let bookmarkManager = new BookmarkManager(document.getElementById('bookmarks-container'));
 
 bookmarkManager.on("folder-added", () => {
+  ipcRenderer.send("request-add-status-notif", { text: "Folder added", type: "success" });
+});
+
+bookmarkManager.on("folder-appended", () => {
   updateTheme();
 });
 
+bookmarkManager.on("folder-deleted", () => {
+  ipcRenderer.send("request-add-status-notif", { text: "Folder deleted", type: "error" });
+});
+
+bookmarkManager.on("folder-edited", () => {
+  ipcRenderer.send("request-add-status-notif", { text: "Folder edited", type: "info" });
+});
+
+
 bookmarkManager.on("bookmark-added", () => {
+  ipcRenderer.send("request-add-status-notif", { text: "Bookmark added", type: "success" });
+});
+
+bookmarkManager.on("bookmark-appended", () => {
   updateTheme();
+});
+
+bookmarkManager.on("bookmark-deleted", () => {
+  ipcRenderer.send("request-add-status-notif", { text: "Bookmark deleted", type: "error" });
+});
+
+bookmarkManager.on("bookmark-edited", () => {
+  ipcRenderer.send("request-add-status-notif", { text: "Bookmark edited", type: "info" });
 });
 
 bookmarkManager.on("bookmark-editor-toggled", () => {

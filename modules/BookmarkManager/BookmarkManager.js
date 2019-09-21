@@ -61,6 +61,7 @@ class BookmarkManager extends EventEmitter {
             this.saveFolders();
         });
 
+        this.emit("folder-added");
         return null;
     }
 
@@ -70,12 +71,13 @@ class BookmarkManager extends EventEmitter {
             folder.updateBookmarksPositions().then(() => {
                 this.saveBookmarks();
             });
+            this.emit("bookmark-added");
         });
         folder.on("append-bookmark", () => {
             if(this.isotope != null) {
                 this.isotope.arrange();
             }
-            this.emit("bookmark-added");
+            this.emit("bookmark-appended");
         });
         folder.on("bookmark-options-toggled", () => {
             if(this.isotope != null) {
@@ -94,9 +96,11 @@ class BookmarkManager extends EventEmitter {
                 this.isotope.arrange();
             }
             this.saveFolders();
+            this.emit("folder-deleted");
         });
         folder.on("edit", (id) => {
             this.saveFolders();
+            this.emit("folder-edited");
         });
         folder.on("bookmark-deleted", () => {
             if(this.isotope != null) {
@@ -105,9 +109,11 @@ class BookmarkManager extends EventEmitter {
             folder.updateBookmarksPositions().then(() => {
                 this.saveBookmarks();
             });
+            this.emit("bookmark-deleted");
         });
         folder.on("bookmark-edited", () => {
             this.saveBookmarks();
+            this.emit("bookmark-edited");
         });
         folder.on("toggle-editor", () => {
             if(this.isotope != null) {
@@ -141,7 +147,7 @@ class BookmarkManager extends EventEmitter {
             this.isotope.arrange();
         }
 
-        this.emit("folder-added");
+        this.emit("folder-appended");
         return null;
     }
 
