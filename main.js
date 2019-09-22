@@ -600,85 +600,103 @@ ipcMain.on("overlay-removeFolder", (event, id) => {
  # #       ####                #   #    # #####     #    # #    # #    # #    #  ####  ###### #    #
 */
 
-ipcMain.on('tabManager-newTab', (event) => {
+ipcMain.on("tabManager-newTab", (event) => {
   tabManager.newTab();
 });
 
-ipcMain.on('tabManager-newBackgroundTab', (event) => {
+ipcMain.on("tabManager-newBackgroundTab", (event) => {
   tabManager.newBackgroundTab();
 });
 
 
-ipcMain.on('tabManager-addTab', (event, url, active) => {
+ipcMain.on("tabManager-addTab", (event, url, active) => {
   tabManager.addTab(url, active);
 });
 
-ipcMain.on('tabManager-activateTab', (event, id) => {
+ipcMain.on("tabManager-activateTab", (event, id) => {
   tabManager.getTabById(id).activate();
 });
 
-ipcMain.on('tabManager-closeTab', (event, id) => {
+ipcMain.on("tabManager-closeTab", (event, id) => {
   tabManager.getTabById(id).close();
 });
 
-ipcMain.on('tabManager-goBack', (event) => {
+ipcMain.on("tabManager-goBack", (event) => {
   if(tabManager.hasActiveTab()) {
     tabManager.getActiveTab().goBack();
   }
 });
 
-ipcMain.on('tabManager-goForward', (event) => {
+ipcMain.on("tabManager-goForward", (event) => {
   if(tabManager.hasActiveTab()) {
     tabManager.getActiveTab().goForward();
   }
 });
 
-ipcMain.on('tabManager-reload', (event) => {
+ipcMain.on("tabManager-reload", (event) => {
   if(tabManager.hasActiveTab()) {
     tabManager.getActiveTab().reload();
   }
 });
 
-ipcMain.on('tabManager-stop', (event) => {
+ipcMain.on("tabManager-stop", (event) => {
   if(tabManager.hasActiveTab()) {
     tabManager.getActiveTab().stop();
   }
 });
 
-ipcMain.on('tabManager-navigate', (event, url) => {
+ipcMain.on("tabManager-navigate", (event, url) => {
   if(tabManager.hasActiveTab()) {
     tabManager.getActiveTab().navigate(url);
   }
 });
 
-ipcMain.on('tabManager-showPreview', (event, id) => {
+ipcMain.on("tabManager-showPreview", (event, id) => {
   tabManager.getTabById(id).showPreview();
 });
 
-ipcMain.on('tabManager-hidePreview', (event, id) => {
+ipcMain.on("tabManager-hidePreview", (event, id) => {
   tabManager.getTabById(id).hidePreview();
 });
 
-ipcMain.on('tabManager-showTabList', (event, arr) => {
+ipcMain.on("tabManager-showTabList", (event, arr) => {
   tabManager.showTabList(arr);
 });
 
-ipcMain.on('tabManager-showTabMenu', (event, id) => {
+ipcMain.on("tabManager-showTabMenu", (event, id) => {
   tabManager.getTabById(id).showMenu();
 });
 
-ipcMain.on('tabManager-updateTabsPositions', (event, arr) => {
+ipcMain.on("tabManager-updateTabsPositions", (event, arr) => {
   tabManager.updateTabsPositions(arr);
 });
 
-ipcMain.on('tabManager-goHome', (event) => {
+ipcMain.on("tabManager-goHome", (event) => {
   if(tabManager.hasActiveTab()) {
     tabManager.getActiveTab().goHome();
   }
 });
 
-ipcMain.on('tabManager-setHomePage', (event, homePage) => {
+ipcMain.on("tabManager-setHomePage", (event, homePage) => {
   tabManager.setHomePage(homePage);
+});
+
+ipcMain.on("tabManager-zoomOut", (event) => {
+  if(tabManager.hasActiveTab()) {
+    tabManager.getActiveTab().zoomOut();
+  }
+});
+
+ipcMain.on("tabManager-zoomIn", (event) => {
+  if(tabManager.hasActiveTab()) {
+    tabManager.getActiveTab().zoomIn();
+  }
+});
+
+ipcMain.on("tabManager-zoomToActualSize", (event) => {
+  if(tabManager.hasActiveTab()) {
+    tabManager.getActiveTab().zoomToActualSize();
+  }
 });
 
 /*
@@ -735,6 +753,10 @@ function initTabManager() {
 
   tabManager.on("add-status-notif", (text, type) => {
     mainWindow.webContents.send("action-add-status-notif", { text: text, type: type });
+  });
+
+  tabManager.on("refresh-zoom-notif", (zoomFactor) => {
+    mainWindow.webContents.send("action-refresh-zoom-notif", zoomFactor);
   });
 
   tabManager.on("add-history-item", (url) => {

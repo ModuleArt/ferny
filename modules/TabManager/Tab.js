@@ -19,7 +19,11 @@ class Tab extends EventEmitter {
         this.window = window;
         this.appPath = appPath;
 
-        this.view = new BrowserView();
+        this.view = new BrowserView({
+            webPreferences: {
+                preload: appPath + "/js/webview.js"
+            }
+        });
         this.view.setAutoResize({
             width: true,
             height: true
@@ -423,21 +427,29 @@ class Tab extends EventEmitter {
         let zoomFactor = this.view.webContents.getZoomFactor();
         if(zoomFactor < 2.5) {
           this.view.webContents.setZoomFactor(zoomFactor + 0.1);
+          this.emit("refresh-zoom-notif", Math.round((zoomFactor + 0.1) * 100));
         }
+
+        return null;
     }
 
     zoomOut() {
         let zoomFactor = this.view.webContents.getZoomFactor();
         if(zoomFactor > 0.3) {
           this.view.webContents.setZoomFactor(zoomFactor - 0.1);
+          this.emit("refresh-zoom-notif", Math.round((zoomFactor - 0.1) * 100));
         }
+        return null;
     }
 
     zoomToActualSize() {
         let zoomFactor = this.view.webContents.getZoomFactor();
         if(zoomFactor !== 1) {
             this.view.webContents.setZoomFactor(1);
+            this.emit("refresh-zoom-notif", 100);
         }
+
+        return null;
     }
 }
 

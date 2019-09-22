@@ -127,7 +127,7 @@ function saveHomePage() {
     }
   
     saveFileToJsonFolder(null, "home", JSON.stringify({ url, on })).then(function() {
-      ipcRenderer.send("request-add-status-notif", { text: "Home page saved", type: "success" });
+      ipcRenderer.send("request-add-status-notif", { text: `Home page saved: "` + url + `"`, type: "success" });
 
       ipcRenderer.send("tabManager-setHomePage", { url, on });
     });

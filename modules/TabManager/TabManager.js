@@ -70,6 +70,10 @@ class TabManager extends EventEmitter {
             this.emit("add-status-notif", text, type);
         });
 
+        tab.on("refresh-zoom-notif", (zoomFactor) => {
+            this.emit("refresh-zoom-notif", zoomFactor);
+        });
+
         tab.on("fullscreen", (bool) => {
             this.setFullscreen(bool);
         });

@@ -137,21 +137,15 @@ function closeWindow() {
 }
 
 function zoomIn() {
-  // var zoomFactor = tabGroup.getActiveTab().webview.getZoomFactor();
-  // if (zoomFactor < 2.5) {
-  //   tabGroup.getActiveTab().webview.setZoomFactor(zoomFactor + 0.1);
-  //   notificationManager.refreshZoomNotif(Math.round((zoomFactor + 0.1) * 100));
-  //   tabGroup.getActiveTab().webview.focus();
-  // }
+  ipcRenderer.send("tabManager-zoomIn");
 }
 
 function zoomOut() {
-  // var zoomFactor = tabGroup.getActiveTab().webview.getZoomFactor();
-  // if (zoomFactor > 0.3) {
-  //   tabGroup.getActiveTab().webview.setZoomFactor(zoomFactor - 0.1);
-  //   notificationManager.refreshZoomNotif(Math.round((zoomFactor - 0.1) * 100));
-  //   tabGroup.getActiveTab().webview.focus();
-  // }
+  ipcRenderer.send("tabManager-zoomOut");
+}
+
+function zoomToActualSize() {
+  ipcRenderer.send("tabManager-zoomToActualSize");
 }
 
 function focusSearch() {
@@ -291,22 +285,6 @@ ipcRenderer.on('action-page-focussearch', (event, arg) => {
   focusSearch();
 });
 
-ipcRenderer.on('action-add-status-notif', (event, arg) => {
-  notificationManager.addStatusNotif(arg.text, arg.type);
-});
-
-ipcRenderer.on('action-add-quest-notif', (event, arg) => {
-  notificationManager.addQuestNotif(arg.text, arg.ops);
-});
-
-ipcRenderer.on('action-add-update-notif', (event, arg) => {
-  notificationManager.addUpdateNotif(arg);
-});
-
-ipcRenderer.on('action-refresh-update-notif', (event, arg) => {
-  notificationManager.refreshUpdateNotif(arg.percent, arg.transferred, arg.total, arg.speed);
-});
-
 ipcRenderer.on('action-change-theme', (event, arg) => {
   applyTheme(arg);
 });
@@ -346,6 +324,35 @@ ipcRenderer.on('action-set-download-status-interrupted', (event, arg) => {
 ipcRenderer.on('action-set-download-process', (event, arg) => {
   document.getElementById('sidebar-webview').send('action-set-download-process', arg);
   notificationManager.refreshDownloadNotif(Math.round(arg.bytes / arg.total * 100), arg.bytes, arg.total, arg.index);
+});
+
+/*
+ # #####   ####              #    #  ####  ##### # ######
+ # #    # #    #             ##   # #    #   #   # #
+ # #    # #         #####    # #  # #    #   #   # #####
+ # #####  #                  #  # # #    #   #   # #
+ # #      #    #             #   ## #    #   #   # #
+ # #       ####              #    #  ####    #   # #
+*/
+
+ipcRenderer.on('action-add-status-notif', (event, arg) => {
+  notificationManager.addStatusNotif(arg.text, arg.type);
+});
+
+ipcRenderer.on('action-add-quest-notif', (event, arg) => {
+  notificationManager.addQuestNotif(arg.text, arg.ops);
+});
+
+ipcRenderer.on('action-add-update-notif', (event, arg) => {
+  notificationManager.addUpdateNotif(arg);
+});
+
+ipcRenderer.on('action-refresh-update-notif', (event, arg) => {
+  notificationManager.refreshUpdateNotif(arg.percent, arg.transferred, arg.total, arg.speed);
+});
+
+ipcRenderer.on("action-refresh-zoom-notif", (event, zoomFactor) => {
+  notificationManager.refreshZoomNotif(zoomFactor);
 });
 
 /*

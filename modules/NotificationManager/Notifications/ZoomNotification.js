@@ -13,8 +13,9 @@ class ZoomNotification extends TextNotification {
 
         super.getNode().getElementsByClassName('notif-container')[0].style.backgroundColor = rgbToRgbaString("rgb(15, 188, 249)");
 
-        super.getNode().getElementsByClassName('notif-body')[0].innerHTML += `
-            <hr>
+        let buttonsContainer = document.createElement("div");
+        buttonsContainer.classList.add("notif-buttons");
+        buttonsContainer.innerHTML = `
             <button class="nav-btn" onclick="zoomIn()">
                 <img class="nav-btn-icon theme-icon" name="zoom-in-16">
                 <label class="nav-btn-label">Zoom in</label>
@@ -23,7 +24,12 @@ class ZoomNotification extends TextNotification {
                 <img class="nav-btn-icon theme-icon" name="zoom-out-16">
                 <label class="nav-btn-label">Zoom out</label>
             </button>
+            <button class="nav-btn" onclick="zoomToActualSize()">
+                <img class="nav-btn-icon theme-icon" name="actual-zoom-16">
+                <label class="nav-btn-label">Reset</label>
+            </button>
         `;
+        super.getNode().appendChild(buttonsContainer);
     }
 }
 
