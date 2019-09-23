@@ -15,7 +15,7 @@
   <a alt="Codacy grade" href="https://app.codacy.com/manual/Beelink/ferny/dashboard">
     <img src="https://img.shields.io/codacy/grade/6fac6a3440d7480281c19780ed37ce30">
   </a>
-  <a alt="Discord channel" href="https://discord.gg/84ZXWu">
+  <a alt="Discord channel" href="https://discord.gg/JEpfZY">
     <img alt="Discord" src="https://img.shields.io/discord/625641944105877504?color=%237289DA&label=discord">
   </a>
 </p>
