@@ -2,7 +2,10 @@ const EventEmitter = require("events");
 const jquery = require("jquery");
 const getAvColor = require("color.js");
 const { ipcRenderer, clipboard } = require("electron");
+const parsePath = require("parse-path");
+const fileExtension = require("file-extension");
 
+const extToImagePath = require(__dirname + "/../extToImagePath.js");
 const rgbToRgbaString = require("../rgbToRgbaString.js");
 
 class HistoryItem extends EventEmitter {
@@ -26,7 +29,6 @@ class HistoryItem extends EventEmitter {
         this.node.name = id;
         this.node.id = "history-" + id;
         this.node.innerHTML = `
-            <img class='history-icon' src='http://www.google.com/s2/favicons?domain=` + url + `'>
             <label class='history-title'>` + title + `</label>
             <label class='history-url'>` + url + `</label>
         `;        
@@ -42,6 +44,20 @@ class HistoryItem extends EventEmitter {
         this.node.onkeyup = (event) => {
             event.preventDefault();
         }
+
+        let historyIcon = document.createElement("img");
+        historyIcon.classList.add("history-icon");
+        if(parsePath(url).protocol === "file") {
+            historyIcon.src = extToImagePath(fileExtension(url));
+            let fileName = url.replace(/^.*[\\\/]/, '');
+            this.setTitle(fileName);
+        } else {
+            historyIcon.src = "http://www.google.com/s2/favicons?domain=" + url;
+            this.loadTitle().then((text) => {
+                this.setTitle(text);
+            });
+        }
+        this.node.appendChild(historyIcon);
 
         let checkbox = document.createElement("input");
         checkbox.type = "checkbox";
@@ -61,15 +77,9 @@ class HistoryItem extends EventEmitter {
         }
         this.node.appendChild(copyBtn);
 
-        let color = new getAvColor(this.node.getElementsByClassName("history-icon")[0]);
+        let color = new getAvColor(historyIcon);
         color.mostUsed(result => {
             this.node.style.backgroundColor = rgbToRgbaString(result[0]);
-        });
-
-        this.loadTitle().then((text) => {
-            this.title = text;
-            this.node.getElementsByClassName("history-title")[0].innerHTML = text;
-            this.emit("title-updated", text);
         });
     }
 
@@ -108,6 +118,12 @@ class HistoryItem extends EventEmitter {
 
     getTitle() {
         return this.title;
+    }
+
+    setTitle(text) {
+        this.title = text;
+        this.node.getElementsByClassName("history-title")[0].innerHTML = text;
+        this.emit("title-updated", text);
     }
 
     isSelected() {

@@ -99,7 +99,8 @@ class Tab extends EventEmitter {
 
             let url = this.getURL();
             if(parsePath(url).protocol === "file") {
-                this.window.webContents.send("tabRenderer-setTabTitle", { id: this.id, title: url });
+                let fileName = url.replace(/^.*[\\\/]/, '');
+                this.window.webContents.send("tabRenderer-setTabTitle", { id: this.id, title: fileName });
                 this.window.webContents.send("tabRenderer-setTabIcon", { id: this.id, icon: extToImagePath(fileExtension(url)) });
             }
         });

@@ -230,10 +230,10 @@ function newTabDrop(event) {
   event.preventDefault();
   let textData = event.dataTransfer.getData("Text");
   if (textData) {
-    ipcRenderer.send('tabManager-addTab', textData, false);
+    ipcRenderer.send('tabManager-addTab', "file://" + textData, false);
   } else if(event.dataTransfer.files.length > 0) {
     for(let i = 0; i < event.dataTransfer.files.length; i++) {
-      ipcRenderer.send('tabManager-addTab', event.dataTransfer.files[i].path, false);
+      ipcRenderer.send('tabManager-addTab', "file://" + event.dataTransfer.files[i].path, false);
     }
   }
 }

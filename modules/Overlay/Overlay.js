@@ -29,6 +29,7 @@ class Overlay extends EventEmitter {
 
     refreshBounds() {
         let size = this.window.getBounds();
+        console.log(size);
         this.view.setBounds({ x: 0, y: this.top, width: size.width, height: size.height - this.top });
     }
 

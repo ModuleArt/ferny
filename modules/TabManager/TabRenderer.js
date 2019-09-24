@@ -71,9 +71,9 @@ class TabRenderer extends EventEmitter {
             event.preventDefault();
             var textData = event.dataTransfer.getData("Text");
             if (textData) {
-                ipcRenderer.send("tabManager-navigate", textData);
+                ipcRenderer.send("tabManager-navigate", "file://" + textData);
             } else if(event.dataTransfer.files.length > 0) {
-                ipcRenderer.send("tabManager-navigate", event.dataTransfer.files[0].path);
+                ipcRenderer.send("tabManager-navigate", "file://" + event.dataTransfer.files[0].path);
             }
         }
         // tab.onmouseenter = (event) => {

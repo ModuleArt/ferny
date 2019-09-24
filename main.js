@@ -901,13 +901,17 @@ function showMainWindow() {
       mainWindow.on("blur", () => {
         mainWindow.webContents.send("window-blur");
       });
+
+      mainWindow.on("resize", () => {
+        // overlay.refreshBounds();
+      });
     
       mainWindow.on("maximize", () => {
         mainWindow.webContents.send("window-maximize");
         if(tabManager.hasActiveTab()) {
           tabManager.getActiveTab().activate();
         }
-        overlay.refreshBounds();
+        // overlay.refreshBounds();
       });
     
       mainWindow.on("unmaximize", () => {
@@ -915,7 +919,7 @@ function showMainWindow() {
         if(tabManager.hasActiveTab()) {
           tabManager.getActiveTab().activate();
         }
-        overlay.refreshBounds();
+        // overlay.refreshBounds();
       });
     
       mainWindow.once("ready-to-show", () => {
@@ -1157,7 +1161,7 @@ function openFileDialog() {
     properties: [ 'multiSelections' ]
   }).then(({ canceled, filePaths, bookmarks }) => {
     filePaths.forEach((item, index) => {
-      tabManager.addTab(item, true);
+      tabManager.addTab("file://" + item, true);
     });
   });
 }
