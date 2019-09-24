@@ -199,11 +199,11 @@ function removeFolder(id) {
 */
 
 function newTab() {
-  ipcRenderer.send('tabManager-newTab');
+  ipcRenderer.send("tabManager-newTab");
 }
 
 function newBackgroundTab() {
-  ipcRenderer.send('tabManager-newBackgroundTab');
+  ipcRenderer.send("tabManager-newBackgroundTab");
 }
 
 function showTabList() {
@@ -211,29 +211,29 @@ function showTabList() {
 }
 
 function goBack() {
-  ipcRenderer.send('tabManager-goBack');
+  ipcRenderer.send("tabManager-goBack");
 }
 
 function goForward() {
-  ipcRenderer.send('tabManager-goForward');
+  ipcRenderer.send("tabManager-goForward");
 }
 
 function reload() {
-  ipcRenderer.send('tabManager-reload');
+  ipcRenderer.send("tabManager-reload");
 }
 
 function stop() {
-  ipcRenderer.send('tabManager-stop');
+  ipcRenderer.send("tabManager-stop");
 }
 
 function newTabDrop(event) {
   event.preventDefault();
   let textData = event.dataTransfer.getData("Text");
   if (textData) {
-    ipcRenderer.send('tabManager-addTab', "file://" + textData, false);
+    ipcRenderer.send("tabManager-addTab", "file://" + textData, false);
   } else if(event.dataTransfer.files.length > 0) {
     for(let i = 0; i < event.dataTransfer.files.length; i++) {
-      ipcRenderer.send('tabManager-addTab', "file://" + event.dataTransfer.files[i].path, false);
+      ipcRenderer.send("tabManager-addTab", "file://" + event.dataTransfer.files[i].path, false);
     }
   }
 }
@@ -260,26 +260,6 @@ function goHome() {
 ..##..##........##....##....##....##..##.......##...###.##.....##.##.......##....##..##.......##....##.
 .####.##.........######.....##.....##.########.##....##.########..########.##.....##.########.##.....##
 */
-
-ipcRenderer.on('action-set-color-tabs', (event, arg) => {
-  // if(arg) {
-  //   document.body.classList.add('color-tabs');
-  //   tabGroup.eachTab((currentTab, index, tabs) => {
-  //     var img = currentTab.tab.getElementsByTagName('img')[0];
-  //     var color = new getAvColor(img);
-  //     color.mostUsed(result => {
-  //       if(document.body.classList.contains('color-tabs')) {
-  //         currentTab.tab.style.backgroundColor = rgbToRgbaString(result[0]);
-  //       }
-  //     });
-  //   });
-  // } else {
-  //   document.body.classList.remove('color-tabs');
-  //   tabGroup.eachTab((currentTab, index, tabs) => {
-  //     currentTab.tab.style.backgroundColor = "";
-  //   });
-  // }
-});
 
 ipcRenderer.on('action-page-focussearch', (event, arg) => {
   focusSearch();

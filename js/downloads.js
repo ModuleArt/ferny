@@ -12,7 +12,7 @@ const { ipcRenderer } = require('electron');
 const { shell } = require('electron');
 const ppath = require('persist-path')('Ferny');
 const fs = require("fs");
-const getAvColor = require('color.js');
+const GetAvColor = require("color.js");
 const fileExtension = require('file-extension');
 
 /*
@@ -77,7 +77,7 @@ function createDownload(index, name, url, time) {
     <label>Date: </label><label class="download-date">` + epochToDate(time) + `</label> / <label>Time: </label><label class="download-time">` + epochToTime(time) + `</label><hr>
     <center class="download-buttons"></center>`;
 
-  var color = new getAvColor(div.getElementsByTagName('img')[0]);
+  var color = new GetAvColor(div.getElementsByTagName('img')[0]);
   color.mostUsed(result => {
     div.style.backgroundColor = rgbToRgbaString(result[0]);
   });
@@ -109,7 +109,7 @@ function createStoppedDownload(index, name, url, path, time) {
     Url: <label class="download-link" title="` + url + `">` + url + `</label><br>
     Date: <label class="download-date">` + epochToDate(time) + `</label> / Time: <label class="download-time">` + epochToTime(time) + `</label><hr>`;
 
-  var color = new getAvColor(div.getElementsByTagName('img')[0]);
+  var color = new GetAvColor(div.getElementsByTagName('img')[0]);
   color.mostUsed(result => {
     div.style.backgroundColor = rgbToRgbaString(result[0]);
   });

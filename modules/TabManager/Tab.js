@@ -24,6 +24,7 @@ class Tab extends EventEmitter {
                 preload: appPath + "/js/webview.js"
             }
         });
+        this.view.setBackgroundColor("#FFFFFF");
         this.view.setAutoResize({
             width: true,
             height: true
@@ -99,7 +100,7 @@ class Tab extends EventEmitter {
 
             let url = this.getURL();
             if(parsePath(url).protocol === "file") {
-                let fileName = url.replace(/^.*[\\\/]/, '');
+                let fileName = url.replace(/^.*[\\\/]/, "");
                 this.window.webContents.send("tabRenderer-setTabTitle", { id: this.id, title: fileName });
                 this.window.webContents.send("tabRenderer-setTabIcon", { id: this.id, icon: extToImagePath(fileExtension(url)) });
             }

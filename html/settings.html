@@ -1,66 +1,69 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-  <head>
-    <link rel="stylesheet" href="../css/modules/webkit.css">
-    <link rel="stylesheet" href="../css/modules/animations.css">
-    <link rel="stylesheet" href="../css/modules/nav-btn.css">
-    <link rel="stylesheet" href="../css/modules/input.css">
-    <link rel="stylesheet" href="../css/modules/checkbox.css">
-    <link rel="stylesheet" href="../css/modules/radio.css">
-    <link rel="stylesheet" href="../css/modules/link.css">
-    <link rel="stylesheet" href="../css/settings.css">
-  </head>
-  <body>
-    <div class="sidebar" id="sidebar">
-        <button class="nav-btn active" onclick="showCategory('themes')">
-            <img name="theme-16" class="theme-icon">
-            <label>Themes</label>
-        </button>
-        <button class="nav-btn" onclick="showCategory('home-page')">
-            <img name="home-16" class="theme-icon">
-            <label>Home page</label>
-        </button>
-        <button class="nav-btn" onclick="showCategory('clear-browsing-data')">
-            <img name="clear-16" class="theme-icon">
-            <label>Clear browsing data</label>
-        </button>
-    </div>
+    <head>
+        <link rel="stylesheet" href="../css/modules/webkit.css">
+        <link rel="stylesheet" href="../css/modules/animations.css">
+        <link rel="stylesheet" href="../css/modules/nav-btn.css">
+        <link rel="stylesheet" href="../css/modules/input.css">
+        <link rel="stylesheet" href="../css/modules/checkbox.css">
+        <link rel="stylesheet" href="../css/modules/radio.css">
+        <link rel="stylesheet" href="../css/modules/link.css">
+        <link rel="stylesheet" href="../css/settings.css">
+    </head>
+    <body>
+        <div class="sidebar" id="sidebar">
+            <button class="nav-btn active" onclick="showCategory('themes')">
+                <img name="theme-16" class="theme-icon">
+                <label>Themes</label>
+            </button>
+            <button class="nav-btn" onclick="showCategory('home-page')">
+                <img name="home-16" class="theme-icon">
+                <label>Home page</label>
+            </button><button class="nav-btn" onclick="showCategory('startup')">
+                <img name="home-16" class="theme-icon">
+                <label>Startup</label>
+            </button>
+            <button class="nav-btn" onclick="showCategory('clear-browsing-data')">
+                <img name="clear-16" class="theme-icon">
+                <label>Clear browsing data</label>
+            </button>
+        </div>
 
-    <div class="container active" id="themes">
-        <label class="title">Themes</label>
-        <div id="theme-manager"></div>
-    </div>
-    <div class="container" id="home-page">
-        <label class="title">Home page</label>
-        <input type="text" id="home-page-input" placeholder="Home page URL">
-        <div class="nav-checkbox">
-            <label>Show button</label>
-            <input type="checkbox" id="home-page-checkbox" class="checkbox">
+        <div class="container active" id="themes">
+            <label class="title">Themes</label>
+            <div id="theme-manager"></div>
         </div>
-        <hr>
-        <button class="nav-btn" onclick="saveHomePage()">
-            <img class="theme-icon" name="save-16">
-            <label>Save</label>
-        </button>
-    </div>
-    <div class="container" id="clear-browsing-data">
-        <label class="title">Clear browsing data</label>
-        <div class="nav-checkbox">
-          <label>Cookies and other site data</label>
-          <input type="checkbox" id="clear-storage-checkbox">
+        <div class="container" id="home-page">
+            <label class="title">Home page</label>
+            <input type="text" id="home-page-input" placeholder="Home page URL">
+            <div class="nav-checkbox">
+                <label>Show button</label>
+                <input type="checkbox" id="home-page-checkbox" class="checkbox">
+            </div>
+            <hr>
+            <button class="nav-btn" onclick="saveHomePage()">
+                <img class="theme-icon" name="save-16">
+                <label>Save</label>
+            </button>
         </div>
-        <div class="nav-checkbox">
-          <label>Cached images and files</label>
-          <input type="checkbox" id="clear-cache-checkbox">
+        <div class="container" id="clear-browsing-data">
+            <label class="title">Clear browsing data</label>
+            <div class="nav-checkbox">
+              <label>Cookies and other site data</label>
+              <input type="checkbox" id="clear-storage-checkbox">
+            </div>
+            <div class="nav-checkbox">
+              <label>Cached images and files</label>
+              <input type="checkbox" id="clear-cache-checkbox">
+            </div>
+            <hr>
+            <label class="nav-label" id="cache-size-label"></label><br>
+            <button class="nav-btn" onclick="clearBrowsingData()">
+              <img class="theme-icon" name="delete-16">
+              <label>Clear data</label>
+            </button>
         </div>
-        <hr>
-        <label class="nav-label" id="cache-size-label"></label><br>
-        <button class="nav-btn" onclick="clearBrowsingData()">
-          <img class="theme-icon" name="delete-16">
-          <label>Clear data</label>
-        </button>
-    </div>
-    
-    <script type="text/javascript" src="../js/settings.js"></script>
-  </body>
+        
+        <script type="text/javascript" src="../js/settings.js"></script>
+    </body>
 </html>

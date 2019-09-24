@@ -1,6 +1,6 @@
 const EventEmitter = require("events");
 const jquery = require("jquery");
-const getAvColor = require("color.js");
+const GetAvColor = require("color.js");
 const { ipcRenderer, clipboard } = require("electron");
 const parsePath = require("parse-path");
 const fileExtension = require("file-extension");
@@ -49,7 +49,7 @@ class HistoryItem extends EventEmitter {
         historyIcon.classList.add("history-icon");
         if(parsePath(url).protocol === "file") {
             historyIcon.src = extToImagePath(fileExtension(url));
-            let fileName = url.replace(/^.*[\\\/]/, '');
+            let fileName = url.replace(/^.*[\\\/]/, "");
             this.setTitle(fileName);
         } else {
             historyIcon.src = "http://www.google.com/s2/favicons?domain=" + url;
@@ -77,7 +77,7 @@ class HistoryItem extends EventEmitter {
         }
         this.node.appendChild(copyBtn);
 
-        let color = new getAvColor(historyIcon);
+        let color = new GetAvColor(historyIcon);
         color.mostUsed(result => {
             this.node.style.backgroundColor = rgbToRgbaString(result[0]);
         });

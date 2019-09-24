@@ -1,6 +1,6 @@
 const EventEmitter = require("events");
 const { ipcRenderer, clipboard } = require("electron");
-const getAvColor = require("color.js");
+const GetAvColor = require("color.js");
 
 const rgbToRgbaString = require("../rgbToRgbaString.js");
 
@@ -30,7 +30,7 @@ class Bookmark extends EventEmitter {
             <label class='bookmark-name'>` + name + `</label>
             <label class='bookmark-preview'>` + url + `</label>
         `;
-        let color = new getAvColor(this.node.getElementsByTagName("img")[0]);
+        let color = new GetAvColor(this.node.getElementsByTagName("img")[0]);
         color.mostUsed(result => {
             this.node.style.backgroundColor = rgbToRgbaString(result[0]);
         });
@@ -134,7 +134,7 @@ class Bookmark extends EventEmitter {
         let icon = this.node.getElementsByClassName("bookmark-icon")[0];
         icon.src = "http://www.google.com/s2/favicons?domain=" + url;
 
-        let color = new getAvColor(icon);
+        let color = new GetAvColor(icon);
         color.mostUsed(result => {
             this.node.style.backgroundColor = rgbToRgbaString(result[0]);
         });

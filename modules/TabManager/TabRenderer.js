@@ -4,7 +4,7 @@ if (!document) {
 
 const EventEmitter = require("events");
 const { ipcRenderer } = require("electron");
-const getAvColor = require('color.js');
+const GetAvColor = require("color.js");
 
 const rgbToRgbaString = require("../rgbToRgbaString.js");
 
@@ -171,7 +171,7 @@ class TabRenderer extends EventEmitter {
         } else {
             let img = tab.getElementsByClassName("tabman-tab-icon")[0];
 
-            let color = new getAvColor(img);
+            let color = new GetAvColor(img);
             color.mostUsed(result => {
                 img.parentNode.style.backgroundColor = rgbToRgbaString(result[0]);
             });

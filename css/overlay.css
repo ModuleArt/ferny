@@ -571,8 +571,8 @@ main {
 
 .history-checkbox::after {
     position: absolute;
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
     content: "";
     top: 4px;
     left: 4px;;
@@ -582,6 +582,8 @@ main {
     transform: scale(0);
     transition: transform 0.25s;
     color: var(--color-top);
+    padding-left: 4px;
+    padding-bottom: 4px;
 }
 
 .history-checkbox:focus::after {
@@ -599,7 +601,7 @@ main {
 .history-checkbox:checked::after {
     content: "\2713";
     font-weight: bold;
-    font-size: 18px;
+    font-size: 16px;
 }
 
 .history-item:hover .history-checkbox::after, .history-checkbox:checked::after, .history-checkbox:focus::after {
@@ -630,7 +632,7 @@ main {
     position: absolute;
     right: 7px;
     top: 5px;
-    left: 28px;
+    left: 30px;
     overflow: hidden;
     white-space: nowrap;
     word-break: keep-all;
