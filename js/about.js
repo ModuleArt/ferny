@@ -8,7 +8,7 @@
 .##.....##.##.....##.####.##....##
 */
 
-const { ipcRenderer } = require('electron');
+const { ipcRenderer } = require("electron");
 
 /*
 .##.....##..#######..########..##.....##.##.......########..######.
@@ -114,8 +114,8 @@ function updateTheme() {
 .####.##.........######.....##.....##.########.##....##.########..########.##.....##.########.##.....##
 */
 
-ipcRenderer.on('action-set-about', (event, arg) => {
-  document.getElementById('about-app').innerHTML = "Beta v" + arg.version + "<br>" + arg.platform + " / " + arg.arch;
+ipcRenderer.on("action-set-about", (event, arg) => {
+  document.getElementById("about-app").innerHTML = "Beta v" + arg.version + "<br>" + arg.platform + " / " + arg.arch;
 });
 
 /*
@@ -134,10 +134,10 @@ function init() {
 }
 
 document.onreadystatechange = () => {
-  if (document.readyState == "complete") {
+  if (document.readyState === "complete") {
       init();
   }
-}
+};
 
 /*
 .########.##.....##.########....########.##....##.########.
