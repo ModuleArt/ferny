@@ -95,6 +95,34 @@ function requestTheme(theme) {
 }
 
 /*
+ ###### #    # #    #  ####               ####  #####   ##   #####  ##### #    # #####
+ #      #    # ##   # #    #             #        #    #  #  #    #   #   #    # #    #
+ #####  #    # # #  # #         #####     ####    #   #    # #    #   #   #    # #    #
+ #      #    # #  # # #                       #   #   ###### #####    #   #    # #####
+ #      #    # #   ## #    #             #    #   #   #    # #   #    #   #    # #
+ #       ####  #    #  ####               ####    #   #    # #    #   #    ####  #
+*/
+
+function requestStartup(startup) {
+  saveFileToJsonFolder(null, "startup", startup).then(() => {
+    ipcRenderer.send("request-add-status-notif", { text: "Startup action changed", type: "success" });
+  });
+}
+
+function loadStartup() {
+  loadFileFromJsonFolder(null, "startup").then((data) => {
+    let startup = data.toString();
+    let radios = document.getElementsByName("startup");
+    for(let i = 0; i < radios.length; i++) {
+      if(radios[i].value === startup) {
+        radios[i].checked = true;
+        break;
+      }
+    }
+  });
+}
+
+/*
  ###### #    # #    #  ####              #    #  ####  #    # ######    #####    ##    ####  ######
  #      #    # ##   # #    #             #    # #    # ##  ## #         #    #  #  #  #    # #
  #####  #    # # #  # #         #####    ###### #    # # ## # #####     #    # #    # #      #####
@@ -209,6 +237,7 @@ function init() {
   loadThemesFromFolder();
 
   loadHomePage();
+  loadStartup();
 
   ipcRenderer.send("request-set-cache-size");
 }

@@ -11,6 +11,7 @@ input[type=radio] {
   vertical-align: middle;
   border: 1px solid var(--color-border);
   background-color: var(--color-element);
+  float: right;
 }
 
 input[type=radio]:hover {

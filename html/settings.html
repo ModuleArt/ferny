@@ -20,8 +20,8 @@
                 <img name="home-16" class="theme-icon">
                 <label>Home page</label>
             </button><button class="nav-btn" onclick="showCategory('startup')">
-                <img name="home-16" class="theme-icon">
-                <label>Startup</label>
+                <img name="launch-16" class="theme-icon">
+                <label>On startup</label>
             </button>
             <button class="nav-btn" onclick="showCategory('clear-browsing-data')">
                 <img name="clear-16" class="theme-icon">
@@ -31,10 +31,15 @@
 
         <div class="container active" id="themes">
             <label class="title">Themes</label>
+            <label class="nav-label">Choose the application color theme.</label>
+            <hr>
             <div id="theme-manager"></div>
         </div>
         <div class="container" id="home-page">
             <label class="title">Home page</label>
+            <label class="nav-label">The page that will open when you create new tab or click the home button.</label>
+            <hr>
+            <label class="nav-label">Home page URL:</label>
             <input type="text" id="home-page-input" placeholder="Home page URL">
             <div class="nav-checkbox">
                 <label>Show button</label>
@@ -46,21 +51,36 @@
                 <label>Save</label>
             </button>
         </div>
-        <div class="container" id="clear-browsing-data">
-            <label class="title">Clear browsing data</label>
+        <div class="container" id="startup">
+            <label class="title">On startup</label>
+            <label class="nav-label">This action will be performed when the application starts.</label>
+            <hr>
             <div class="nav-checkbox">
-              <label>Cookies and other site data</label>
-              <input type="checkbox" id="clear-storage-checkbox">
+                <label>Show overlay</label>
+                <input type="radio" onclick="requestStartup(this.value)" class="checkbox" name="startup" value="overlay" checked>
             </div>
             <div class="nav-checkbox">
-              <label>Cached images and files</label>
-              <input type="checkbox" id="clear-cache-checkbox">
+                <label>Open new tab</label>
+                <input type="radio" onclick="requestStartup(this.value)" class="checkbox" name="startup" value="new-tab">
+            </div>
+        </div>
+        <div class="container" id="clear-browsing-data">
+            <label class="title">Clear browsing data</label>
+            <label class="nav-label">Cleanup the local storage to free up space.</label>
+            <hr>
+            <div class="nav-checkbox">
+                <label>Cookies and other site data</label>
+                <input type="checkbox" id="clear-storage-checkbox">
+            </div>
+            <div class="nav-checkbox">
+                <label>Cached images and files</label>
+                <input type="checkbox" id="clear-cache-checkbox">
             </div>
             <hr>
             <label class="nav-label" id="cache-size-label"></label><br>
             <button class="nav-btn" onclick="clearBrowsingData()">
-              <img class="theme-icon" name="delete-16">
-              <label>Clear data</label>
+                <img class="theme-icon" name="delete-16">
+                <label>Clear data</label>
             </button>
         </div>
         
