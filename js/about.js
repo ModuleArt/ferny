@@ -85,6 +85,10 @@ function openNodePage() {
   ipcRenderer.send("tabManager-addTab", "https://nodejs.org/en/download/releases", true);
 }
 
+function openDiscordPage() {
+  ipcRenderer.send("tabManager-addTab", "https://discord.gg/9q4D8SJ", true);
+}
+
 function checkForUpdates() {
   ipcRenderer.send("request-check-for-updates");
 }

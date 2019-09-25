@@ -614,9 +614,6 @@ function showMainWindow() {
         },
         backgroundColor: theme.colorBack
       });
-
-      Menu.setApplicationMenu(null);
-      mainWindow.setMenu(sideMenu);
     
       mainWindow.loadFile(app.getAppPath() + "/html/browser.html");
     
@@ -1101,6 +1098,9 @@ function initMenu() {
       app.quit(); 
     } }
   ]);
+
+  Menu.setApplicationMenu(null);
+  mainWindow.setMenu(sideMenu);
 }
 
 function toggleFullscreen() {
