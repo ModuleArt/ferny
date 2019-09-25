@@ -144,7 +144,7 @@ class SearchManager extends EventEmitter {
                 firstInput.value = this.searchInput.value;
                 firstInput.onclick = () => {
                     this.navigateSuggest(firstInput.value);
-                }
+                };
                 this.searchSuggestContainer.appendChild(firstInput);
 
                 if (suggestions != null && suggestions.length > 0) {
@@ -215,7 +215,7 @@ class SearchManager extends EventEmitter {
     }
       
     navigateSuggest(text) {
-        if(text != "" && text != null) {
+        if(text !== "" && text !== null) {
             if(isUrl(text)) {
                 this.newTab(text);
             } else {
@@ -238,7 +238,7 @@ class SearchManager extends EventEmitter {
     setSearchEngine(engineName) {
         let engines = this.searchEngines.getElementsByClassName("search-engine");
         for(let i = 0; i < engines.length; i++) {
-            if(engines[i].name == engineName) {
+            if(engines[i].name === engineName) {
                 engines[i].classList.add("active");
                 document.getElementById("search-icon").src = engines[i].getElementsByTagName("img")[0].src;
                 break;
