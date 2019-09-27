@@ -14,7 +14,7 @@
         <div class="sidebar" id="sidebar">
             <button class="nav-btn active" onclick="showCategory('themes')">
                 <img name="theme-16" class="theme-icon">
-                <label>Themes</label>
+                <label>Appearance</label>
             </button>
             <button class="nav-btn" onclick="showCategory('home-page')">
                 <img name="home-16" class="theme-icon">
@@ -23,6 +23,10 @@
                 <img name="launch-16" class="theme-icon">
                 <label>On startup</label>
             </button>
+            </button><button class="nav-btn" onclick="showCategory('tabs')">
+                <img name="tab-16" class="theme-icon">
+                <label>Tabs</label>
+            </button>
             <button class="nav-btn" onclick="showCategory('clear-browsing-data')">
                 <img name="clear-16" class="theme-icon">
                 <label>Clear browsing data</label>
@@ -30,7 +34,7 @@
         </div>
 
         <div class="container active" id="themes">
-            <label class="title">Themes</label>
+            <label class="title">Theme</label>
             <label class="nav-label">Choose the application color theme.</label>
             <hr>
             <div id="theme-manager"></div>
@@ -63,6 +67,29 @@
                 <label>Open new tab</label>
                 <input type="radio" onclick="requestStartup(this.value)" class="checkbox" name="startup" value="new-tab">
             </div>
+        </div>
+        <div class="container" id="tabs">
+            <label class="title">On tab closed</label>
+            <hr>
+            <label class="title">On last tab closed</label>
+            <div class="nav-checkbox">
+                <label>Show overlay</label>
+                <input type="radio" onclick="requestLastTab(this.value)" class="checkbox" name="lasttab" value="overlay" checked>
+            </div>
+            <div class="nav-checkbox">
+                <label>Open new tab</label>
+                <input type="radio" onclick="requestLastTab(this.value)" class="checkbox" name="lasttab" value="new-tab">
+            </div>
+            <div class="nav-checkbox">
+                <label>Add new tab and show overlay</label>
+                <input type="radio" onclick="requestLastTab(this.value)" class="checkbox" name="lasttab" value="new-tab-overlay">
+            </div>
+            <div class="nav-checkbox">
+                <label>Quit</label>
+                <input type="radio" onclick="requestLastTab(this.value)" class="checkbox" name="lasttab" value="quit">
+            </div>
+            <hr>
+            <label class="title">Color tabs</label>
         </div>
         <div class="container" id="clear-browsing-data">
             <label class="title">Clear browsing data</label>

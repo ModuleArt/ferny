@@ -95,6 +95,34 @@ function requestTheme(theme) {
 }
 
 /*
+ ###### #    # #    #  ####              #        ##    ####  #####    #####   ##   #####
+ #      #    # ##   # #    #             #       #  #  #        #        #    #  #  #    #
+ #####  #    # # #  # #         #####    #      #    #  ####    #        #   #    # #####
+ #      #    # #  # # #                  #      ######      #   #        #   ###### #    #
+ #      #    # #   ## #    #             #      #    # #    #   #        #   #    # #    #
+ #       ####  #    #  ####              ###### #    #  ####    #        #   #    # #####
+*/
+
+function requestLastTab(lastTab) {
+  saveFileToJsonFolder(null, "lasttab", lastTab).then(function(bool) {
+    ipcRenderer.send("request-add-status-notif", { text: "Last tab closed action changed", type: "success" });
+  });
+}
+
+function loadLastTab() {
+  loadFileFromJsonFolder(null, "lasttab").then((data) => {
+    let lastTab = data.toString();
+    let radios = document.getElementsByName("lasttab");
+    for(let i = 0; i < radios.length; i++) {
+      if(radios[i].value === lastTab) {
+        radios[i].checked = true;
+        break;
+      }
+    }
+  });
+}
+
+/*
  ###### #    # #    #  ####               ####  #####   ##   #####  ##### #    # #####
  #      #    # ##   # #    #             #        #    #  #  #    #   #   #    # #    #
  #####  #    # # #  # #         #####     ####    #   #    # #    #   #   #    # #    #
@@ -238,6 +266,7 @@ function init() {
 
   loadHomePage();
   loadStartup();
+  loadLastTab();
 
   ipcRenderer.send("request-set-cache-size");
 }

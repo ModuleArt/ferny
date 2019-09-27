@@ -1,6 +1,7 @@
-const saveFileToJsonFolder = require("../modules/saveFileToJsonFolder.js");
-const ppath = require('persist-path')('Ferny');
+const ppath = require("persist-path")("Ferny");
 const fs = require("fs");
+
+const saveFileToJsonFolder = require("../modules/saveFileToJsonFolder.js");
 
 function loadLastTab() {
     return new Promise(function(resolve, reject) {
