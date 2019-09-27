@@ -1,14 +1,14 @@
 const EventEmitter = require("events");
-const prependFile = require('prepend-file');
-const ppath = require('persist-path')('Ferny');
-const readlPromise = require('readline-promise').default;
+const prependFile = require("prepend-file");
+const ppath = require("persist-path")("Ferny");
+const readlPromise = require("readline-promise").default;
 const fs = require("fs");
 
 const saveFileToJsonFolder = require("../saveFileToJsonFolder.js");
 const loadFileFromJsonFolder = require("../loadFileFromJsonFolder.js");
 const checkFileExists = require("../checkFileExists.js");
 
-const HistoryItem = require(__dirname + '/HistoryItem.js');
+const HistoryItem = require(__dirname + "/HistoryItem.js");
 
 class HistoryManager extends EventEmitter {
     history = [];
@@ -55,11 +55,11 @@ class HistoryManager extends EventEmitter {
             
             try {
                 prependFile(ppath + "/json/history/history.json", JSON.stringify(Data) + "\n", (err) => {
-                    saveFileToJsonFolder("history", 'history-counter', this.historyCounter);
+                    saveFileToJsonFolder("history", "history-counter", this.historyCounter);
                 });
             } catch (error) {
-                saveFileToJsonFolder("history", 'history', JSON.stringify(Data)).then(() => {
-                    saveFileToJsonFolder("history", 'history-counter', this.historyCounter);
+                saveFileToJsonFolder("history", "history", JSON.stringify(Data)).then(() => {
+                    saveFileToJsonFolder("history", "history-counter", this.historyCounter);
                 });
             }
         });
@@ -102,7 +102,7 @@ class HistoryManager extends EventEmitter {
 
     askClearHistory() {
         if(this.history.length > 0) {
-            this.emit("clear-history")
+            this.emit("clear-history");
         } else {
             this.emit("history-already-cleared");
         }
@@ -111,12 +111,12 @@ class HistoryManager extends EventEmitter {
     }
 
     clearHistory() {
-        saveFileToJsonFolder("history", 'history-counter', 0).then(() => {
+        saveFileToJsonFolder("history", "history-counter", 0).then(() => {
             this.historyCounter = 0;
-            saveFileToJsonFolder("history", 'history', "").then(() => {
+            saveFileToJsonFolder("history", "history", "").then(() => {
                 this.history = [];
                 this.historyContainer.innerHTML = "";
-                this.emit("history-cleared")
+                this.emit("history-cleared");
             });
         });
 
@@ -139,7 +139,7 @@ class HistoryManager extends EventEmitter {
             checkFileExists(ppath + "/json/history/history.json").then(() => {
                 fs.readFile(ppath + "/json/history/history.json", (err, data) => {
                     let text = data.toString();
-                    let lines = text.split('\n');
+                    let lines = text.split("\n");
                     saveFileToJsonFolder("history", "history", "").then(() => {
                         for(let i = 0; i < lines.length - 1; i++) {
                             let obj = JSON.parse(lines[i]);

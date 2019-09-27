@@ -28,26 +28,26 @@ class Folder extends EventEmitter {
         `;
 
         if(editable) {
-            this.node.classList.add('editable');
+            this.node.classList.add("editable");
 
             let editFolderBtn = document.createElement("button");
-            editFolderBtn.classList.add('nav-btn', 'edit-folder-btn');
+            editFolderBtn.classList.add("nav-btn", "edit-folder-btn");
             editFolderBtn.title = "Edit folder";
             editFolderBtn.innerHTML = `<img class='theme-icon' name='edit-folder-16'>`;
             editFolderBtn.onclick = () => {
                 this.toggleEditor();
             }
-            this.node.getElementsByClassName('folder-header')[0].appendChild(editFolderBtn);
+            this.node.getElementsByClassName("folder-header")[0].appendChild(editFolderBtn);
         }
 
         let addBookmarkBtn = document.createElement("button");
-        addBookmarkBtn.classList.add('nav-btn', 'add-bookmark-btn');
+        addBookmarkBtn.classList.add("nav-btn", "add-bookmark-btn");
         addBookmarkBtn.title = "Create bookmark here";
         addBookmarkBtn.innerHTML = `<img class='theme-icon' name='add-bookmark-16'>`;
         addBookmarkBtn.onclick = () => {
             this.newBookmark();
         }
-        this.node.getElementsByClassName('folder-header')[0].appendChild(addBookmarkBtn);
+        this.node.getElementsByClassName("folder-header")[0].appendChild(addBookmarkBtn);
 
         let openAllBtn = document.createElement("button");
         openAllBtn.classList.add("nav-btn", "open-all-btn");
@@ -56,7 +56,7 @@ class Folder extends EventEmitter {
         openAllBtn.onclick = () => {
             this.openAllBookmarks();
         }
-        this.node.getElementsByClassName('folder-header')[0].appendChild(openAllBtn);
+        this.node.getElementsByClassName("folder-header")[0].appendChild(openAllBtn);
     }
 
     toString() {
@@ -96,7 +96,7 @@ class Folder extends EventEmitter {
 
         this.bookmarks.push(bookmark);
 
-        let cont = this.node.getElementsByClassName('folder-container')[0];
+        let cont = this.node.getElementsByClassName("folder-container")[0];
         let nodes = cont.childNodes;
         if(nodes.length > 0) {
             if(bookmark.getPosition() != null) {
@@ -105,7 +105,7 @@ class Folder extends EventEmitter {
                         cont.insertBefore(bookmark.getNode(), nodes[i]);
                         break;
                     } else {
-                        if(nodes[i] == cont.lastChild){
+                        if(nodes[i] === cont.lastChild){
                             cont.appendChild(bookmark.getNode());
                         } 
                     }
@@ -124,7 +124,7 @@ class Folder extends EventEmitter {
     removeBookmark(id) {
         for(let i = 0; i < this.bookmarks.length; i++) {
             if(this.bookmarks[i].getId() == id) {
-                this.node.getElementsByClassName('folder-container')[0].removeChild(this.bookmarks[i].getNode());
+                this.node.getElementsByClassName("folder-container")[0].removeChild(this.bookmarks[i].getNode());
                 this.bookmarks.splice(i, 1);
                 break;
             }
@@ -133,7 +133,7 @@ class Folder extends EventEmitter {
 
     spliceBookmark(id) {
         for(let i = 0; i < this.bookmarks.length; i++) {
-            if(this.bookmarks[i].getId() == id) {
+            if(this.bookmarks[i].getId() === id) {
                 this.bookmarks.splice(i, 1);
                 break;
             }
@@ -156,7 +156,7 @@ class Folder extends EventEmitter {
 
     getBookmarkById(id) {
         for(let i = 0; i < this.bookmarks.length; i++) {
-            if(id == this.bookmarks[i].getId()) {
+            if(id === this.bookmarks[i].getId()) {
                 return this.bookmarks[i];
             }
         }
@@ -177,7 +177,7 @@ class Folder extends EventEmitter {
 
     updateBookmarksPositions() {
         return new Promise((resolve, reject) => {
-            let divs = this.node.getElementsByClassName('bookmark');
+            let divs = this.node.getElementsByClassName("bookmark");
             for(let i = 0; i < divs.length; i++) {
                 this.getBookmarkById(divs[i].name).setPosition(i);
             }
@@ -194,29 +194,29 @@ class Folder extends EventEmitter {
     edit(name) {
         this.name = name;
 
-        this.node.getElementsByClassName('folder-name')[0].innerHTML = name;
-        this.node.getElementsByClassName('folder-header')[0].title = name;
+        this.node.getElementsByClassName("folder-name")[0].innerHTML = name;
+        this.node.getElementsByClassName("folder-header")[0].title = name;
 
         this.emit("edit")
         return null;
     }
 
     toggleEditor() {
-        let folderEditor = this.node.getElementsByClassName('folder-editor')[0];
+        let folderEditor = this.node.getElementsByClassName("folder-editor")[0];
         if(folderEditor == null) {
-            folderEditor = document.createElement('div');
-            folderEditor.classList.add('folder-editor');
+            folderEditor = document.createElement("div");
+            folderEditor.classList.add("folder-editor");
             this.node.insertBefore(folderEditor, this.node.firstChild);
 
-            let nameInput = document.createElement('input');
+            let nameInput = document.createElement("input");
             nameInput.type = "text";
             nameInput.placeholder = "Folder name";
             nameInput.value = this.name;
             folderEditor.appendChild(nameInput);
             nameInput.focus();
 
-            let saveBtn = document.createElement('button');
-            saveBtn.classList.add('nav-btn');
+            let saveBtn = document.createElement("button");
+            saveBtn.classList.add("nav-btn");
             saveBtn.innerHTML = `<img class="theme-icon" name="save-16"><label>Save</label>`;
             saveBtn.onclick = () => {
                 this.edit(nameInput.value);
@@ -224,16 +224,16 @@ class Folder extends EventEmitter {
             }
             folderEditor.appendChild(saveBtn);
 
-            let cancelBtn = document.createElement('button');
-            cancelBtn.classList.add('nav-btn');
+            let cancelBtn = document.createElement("button");
+            cancelBtn.classList.add("nav-btn");
             cancelBtn.innerHTML = `<img class="theme-icon" name="cancel-16"><label>Cancel</label>`;
             cancelBtn.onclick = () => {
                 this.toggleEditor();
             }
             folderEditor.appendChild(cancelBtn);
 
-            let deleteBtn = document.createElement('button');
-            deleteBtn.classList.add('nav-btn');
+            let deleteBtn = document.createElement("button");
+            deleteBtn.classList.add("nav-btn");
             deleteBtn.innerHTML = `<img class="theme-icon" name="delete-16"><label>Delete</label>`;
             deleteBtn.onclick = () => {
                 this.askForDelete();
