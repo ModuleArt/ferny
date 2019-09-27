@@ -1,6 +1,8 @@
 const EventEmitter = require("events");
 const { Menu, MenuItem } = require('electron');
 
+const loadTabClosed = require("../loadTabClosed.js");
+
 const Tab = require(__dirname + '/Tab.js');
 
 class TabManager extends EventEmitter {
@@ -14,7 +16,8 @@ class TabManager extends EventEmitter {
     window = null;
     appPath = null;
 
-    homePage = "https://google.com"
+    homePage = "https://google.com";
+    tabClosedAction = "overlay";
 
     constructor(window, appPath) {
         super();
@@ -26,6 +29,10 @@ class TabManager extends EventEmitter {
         this.right = 0; 
         this.top = 74; 
         this.bottom = 0;
+
+        loadTabClosed().then((tabClosed) => {
+            this.setTabClosedAction(tabClosed.toString());
+        });
     }
 
     newTab() {
@@ -46,10 +53,11 @@ class TabManager extends EventEmitter {
         let tab = new Tab(this.window, id, this.appPath);
 
         tab.on("close", (closedTab) => {
+            let pos = closedTab.getPosition();
             this.destroyTabById(id);
 
             if(closedTab.isActive()) {
-                this.emit("active-tab-closed");
+                this.emit("active-tab-closed", this.tabClosedAction, pos);
             }
 
             if(this.tabs.length === 0) {
@@ -208,6 +216,14 @@ class TabManager extends EventEmitter {
         }
     }
 
+    getTabByPosition(pos) {
+        for(let i = 0; i < this.tabs.length; i++) {
+            if(this.tabs[i].getPosition() === pos) {
+                return this.tabs[i];
+            }
+        }
+    }
+
     destroyTabById(id) {
         for(let i = 0; i < this.tabs.length; i++) {
             if(this.tabs[i].getId() == id) {
@@ -231,6 +247,12 @@ class TabManager extends EventEmitter {
 
     getHomePage() {
         return this.homePage;
+    }
+
+    setTabClosedAction(tabClosed) {
+        this.tabClosedAction = tabClosed;
+
+        return null;
     }
 
     unactivateAllTabs() {

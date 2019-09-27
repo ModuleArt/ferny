@@ -95,6 +95,35 @@ function requestTheme(theme) {
 }
 
 /*
+ ###### #    # #    #  ####              #####   ##   #####      ####  #       ####   ####  ###### #####
+ #      #    # ##   # #    #               #    #  #  #    #    #    # #      #    # #      #      #    #
+ #####  #    # # #  # #         #####      #   #    # #####     #      #      #    #  ####  #####  #    #
+ #      #    # #  # # #                    #   ###### #    #    #      #      #    #      # #      #    #
+ #      #    # #   ## #    #               #   #    # #    #    #    # #      #    # #    # #      #    #
+ #       ####  #    #  ####                #   #    # #####      ####  ######  ####   ####  ###### #####
+*/
+
+function requestTabClosed(tabClosed) {
+  saveFileToJsonFolder(null, "tabclosed", tabClosed).then(function(bool) {
+    ipcRenderer.send("tabManager-setTabClosedAction", tabClosed);
+    ipcRenderer.send("request-add-status-notif", { text: "Active tab closed action changed", type: "success" });
+  });
+}
+
+function loadTabClosed() {
+  loadFileFromJsonFolder(null, "tabclosed").then((data) => {
+    let tabClosed = data.toString();
+    let radios = document.getElementsByName("tabclosed");
+    for(let i = 0; i < radios.length; i++) {
+      if(radios[i].value === tabClosed) {
+        radios[i].checked = true;
+        break;
+      }
+    }
+  });
+}
+
+/*
  ###### #    # #    #  ####              #        ##    ####  #####    #####   ##   #####
  #      #    # ##   # #    #             #       #  #  #        #        #    #  #  #    #
  #####  #    # # #  # #         #####    #      #    #  ####    #        #   #    # #####
@@ -266,6 +295,7 @@ function init() {
 
   loadHomePage();
   loadStartup();
+  loadTabClosed();
   loadLastTab();
 
   ipcRenderer.send("request-set-cache-size");

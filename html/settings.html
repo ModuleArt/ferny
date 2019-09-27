@@ -69,7 +69,19 @@
             </div>
         </div>
         <div class="container" id="tabs">
-            <label class="title">On tab closed</label>
+            <label class="title">On active tab closed</label>
+            <div class="nav-checkbox">
+                <label>Show overlay</label>
+                <input type="radio" onclick="requestTabClosed(this.value)" class="checkbox" name="tabclosed" value="overlay" checked>
+            </div>
+            <div class="nav-checkbox">
+                <label>Switch to next tab</label>
+                <input type="radio" onclick="requestTabClosed(this.value)" class="checkbox" name="tabclosed" value="next-tab">
+            </div>
+            <div class="nav-checkbox">
+                <label>Switch to previous tab</label>
+                <input type="radio" onclick="requestTabClosed(this.value)" class="checkbox" name="tabclosed" value="prev-tab">
+            </div>
             <hr>
             <label class="title">On last tab closed</label>
             <div class="nav-checkbox">

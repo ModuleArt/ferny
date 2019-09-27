@@ -435,6 +435,10 @@ ipcMain.on("tabManager-setHomePage", (event, homePage) => {
   tabManager.setHomePage(homePage);
 });
 
+ipcMain.on("tabManager-setTabClosedAction", (event, tabClosed) => {
+  tabManager.setTabClosedAction(tabClosed);
+});
+
 ipcMain.on("tabManager-zoomOut", (event) => {
   if(tabManager.hasActiveTab()) {
     tabManager.getActiveTab().zoomOut();
@@ -482,8 +486,30 @@ function initOverlay() {
 function initTabManager() {
   tabManager = new TabManager(mainWindow, app.getAppPath());
 
-  tabManager.on("active-tab-closed", () => {
-    overlay.show();
+  tabManager.on("active-tab-closed", (tabClosed, pos) => {
+    if(tabClosed === "overlay") {
+      overlay.show();
+    } else if(tabClosed === "next-tab") {
+      let nextTab = tabManager.getTabByPosition(pos + 1);
+      if(nextTab != null) {
+        nextTab.activate();
+      } else {
+        let prevTab = tabManager.getTabByPosition(pos - 1);
+        if(prevTab != null) {
+          prevTab.activate();
+        }
+      }
+    } else if(tabClosed === "prev-tab") {
+      let prevTab = tabManager.getTabByPosition(pos - 1);
+      if(prevTab != null) {
+        prevTab.activate();
+      } else {
+        let nextTab = tabManager.getTabByPosition(pos + 1);
+        if(nextTab != null) {
+          nextTab.activate();
+        }
+      }
+    }
   });
 
   tabManager.on("tab-activated", () => {

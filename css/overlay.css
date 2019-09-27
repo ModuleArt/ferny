@@ -286,6 +286,10 @@ main {
     display: none;
 }
 
+.folder-move:hover {
+    cursor: move;
+}
+
 #bookmarks-container.movable .folder-move {
     display: block;
 }
@@ -437,6 +441,10 @@ main {
     left: 6px;
     top: 7px;
     display: none;
+}
+
+.bookmark-move:hover {
+    cursor: move;
 }
 
 .bookmark-preview {
