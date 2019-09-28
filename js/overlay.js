@@ -15,6 +15,7 @@ const applyTheme = require("../modules/applyTheme.js");
 const BookmarkManager = require("../modules/BookmarkManager/BookmarkManager.js");
 const SearchManager = require("../modules/SearchManager/SearchManager.js");
 const HistoryManager = require("../modules/HistoryManager/HistoryManager.js");
+const DownloadManager = require("../modules/DownloadManager/DownloadManager.js");
 
 /*
   ####  ######   ##   #####   ####  #    #
@@ -42,7 +43,7 @@ let searchManager = new SearchManager(
  #####   ####   ####  #    # #    # #    # #    # #    #  ####
 */
 
-let bookmarkManager = new BookmarkManager(document.getElementById('bookmarks-container'));
+let bookmarkManager = new BookmarkManager(document.getElementById("bookmarks-container"));
 
 bookmarkManager.on("folder-added", () => {
   ipcRenderer.send("request-add-status-notif", { text: "Folder added", type: "success" });
@@ -102,7 +103,7 @@ bookmarkManager.on("folder-editor-toggled", () => {
  #    # #  ####    #    ####  #    #   #
 */
 
-let historyManager = new HistoryManager(document.getElementById('history-container'));
+let historyManager = new HistoryManager(document.getElementById("history-container"));
 
 historyManager.on("history-item-added", () => {
   updateTheme();
@@ -124,6 +125,17 @@ historyManager.on("history-cleared", () => {
 historyManager.on("history-already-cleared", () => {
   ipcRenderer.send("request-add-status-notif", { text: "History already cleared", type: "info" });
 });
+
+/*
+ #####   ####  #    # #    # #       ####    ##   #####   ####
+ #    # #    # #    # ##   # #      #    #  #  #  #    # #
+ #    # #    # #    # # #  # #      #    # #    # #    #  ####
+ #    # #    # # ## # #  # # #      #    # ###### #    #      #
+ #    # #    # ##  ## #   ## #      #    # #    # #    # #    #
+ #####   ####  #    # #    # ######  ####  #    # #####   ####
+*/
+
+let downloadManager = new DownloadManager(document.getElementById("downloads-container"));
 
 /*
  ###### #    # #    #  ####               ####  ###### ##### ##### # #    #  ####   ####
@@ -293,6 +305,39 @@ ipcRenderer.on("historyManager-clearHistory", (event, text) => {
 
 ipcRenderer.on("action-change-theme", (event, theme) => {
   applyTheme(theme);
+});
+
+/*
+ # #####   ####              #####   ####  #    # #    # #       ####    ##   #####   ####
+ # #    # #    #             #    # #    # #    # ##   # #      #    #  #  #  #    # #
+ # #    # #         #####    #    # #    # #    # # #  # #      #    # #    # #    #  ####
+ # #####  #                  #    # #    # # ## # #  # # #      #    # ###### #    #      #
+ # #      #    #             #    # #    # ##  ## #   ## #      #    # #    # #    # #    #
+ # #       ####              #####   ####  #    # #    # ######  ####  #    # #####   ####
+*/
+
+ipcRenderer.on("downloadManager-createDownload", (event, download) => {
+  downloadManager.insertBeforeDownload(download.id, download.name, download.url, download.time);
+});
+
+ipcRenderer.on("downloadManager-setDownloadStatusInterrupted", (event, download) => {
+  downloadManager.getDownloadById(download.id).setStatusInterrupted();
+});
+
+ipcRenderer.on("downloadManager-setDownloadStatusPause", (event, download) => {
+  downloadManager.getDownloadById(download.id).setStatusPause(download.bytes, download.total);
+});
+
+ipcRenderer.on("downloadManager-setDownloadProcess", (event, download) => {
+  downloadManager.getDownloadById(download.id).setProcess(download.bytes, download.total);
+});
+
+ipcRenderer.on("downloadManager-setDownloadStatusDone", (event, download) => {
+  downloadManager.getDownloadById(download.id).setStatusDone(download.path);
+});
+
+ipcRenderer.on("downloadManager-setDownloadStatusFailed", (event, download) => {
+  downloadManager.getDownloadById(download.id).setStatusFailed();
 });
 
 /*

@@ -3,7 +3,7 @@ const { Menu, MenuItem } = require('electron');
 
 const loadTabClosed = require("../loadTabClosed.js");
 
-const Tab = require(__dirname + '/Tab.js');
+const Tab = require(__dirname + "/Tab.js");
 
 class TabManager extends EventEmitter {
     left = 0; 
@@ -126,6 +126,30 @@ class TabManager extends EventEmitter {
 
         tab.on("add-history-item", (url) => {
             this.emit("add-history-item", url);
+        });
+
+        tab.on("create-download", (download) => {
+            this.emit("create-download", download);
+        });
+
+        tab.on("set-download-status-interrupted", (download) => {
+            this.emit("set-download-status-interrupted", download);
+        });
+
+        tab.on("set-download-status-pause", (download) => {
+            this.emit("set-download-status-pause", download);
+        });
+
+        tab.on("set-download-process", (download) => {
+            this.emit("set-download-process", download);
+        });
+
+        tab.on("set-download-status-done", (download) => {
+            this.emit("set-download-status-done", download);
+        });
+
+        tab.on("set-download-status-failed", (download) => {
+            this.emit("set-download-status-failed", download);
         });
 
         this.tabs.push(tab);

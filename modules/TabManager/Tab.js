@@ -11,6 +11,7 @@ class Tab extends EventEmitter {
     window = null;
     previewTimeout = null;
     position = null;
+    downloadCounter = 0;
 
     constructor(window, id, appPath) {
         super();
@@ -117,6 +118,52 @@ class Tab extends EventEmitter {
 
         this.view.webContents.on("update-target-url", (event, url) => {
             this.window.webContents.send("tabRenderer-updateTargetURL", url);
+        });
+
+        this.view.webContents.session.on("will-download", (event, item, webContents) => {
+            let index = this.id + "/" + this.downloadCounter++;
+
+            this.emit("create-download", {
+                id: index,
+                url: item.getURL(),
+                name: item.getFilename(),
+                time: item.getStartTime()
+            });
+
+            item.on("updated", (event, state) => {
+                if (state === "interrupted") {
+                    this.emit("set-download-status-interrupted", {
+                        id: index
+                    });
+                } else if (state === "progressing") {
+                    if (item.isPaused()) {
+                        this.emit("set-download-status-pause", {
+                            id: index,
+                            bytes: item.getReceivedBytes(),
+                            total: item.getTotalBytes()
+                        });
+                    } else {
+                        this.emit("set-download-process", {
+                            id: index,
+                            bytes: item.getReceivedBytes(),
+                            total: item.getTotalBytes()
+                        });
+                    }
+                }
+            });
+
+            item.once("done", (event, state) => {
+                if (state === "completed") {
+                    this.emit("set-download-status-done", {
+                        id: index,
+                        path: item.getSavePath()
+                    });
+                } else {
+                    this.emit("set-download-status-failed", {
+                        id: index
+                    });
+                }
+            });
         });
 
         this.view.webContents.on("context-menu", (event, params) => {

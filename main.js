@@ -542,6 +542,30 @@ function initTabManager() {
   tabManager.on("add-history-item", (url) => {
     overlay.addHistoryItem(url);
   });
+
+  tabManager.on("create-download", (download) => {
+    overlay.createDownload(download);
+  });
+
+  tabManager.on("set-download-status-interrupted", (download) => {
+    overlay.setDownloadStatusInterrupted(download);
+  });
+
+  tabManager.on("set-download-status-pause", (download) => {
+    overlay.setDownloadStatusPause(download);
+  });
+
+  tabManager.on("set-download-process", (download) => {
+    overlay.setDownloadProcess(download);
+  });
+
+  tabManager.on("set-download-status-done", (download) => {
+    overlay.setDownloadStatusDone(download);
+  });
+
+  tabManager.on("set-download-status-failed", (download) => {
+    overlay.setDownloadStatusFailed(download);
+  });
 }
 
 /*
@@ -790,87 +814,6 @@ function showMainWindow() {
             app.exit();
           }
         }
-      });
-    
-      mainWindow.webContents.session.on('will-download', (event, item, webContents) => {
-        curDownloadNum++;
-    
-        let curnum = curDownloadNum;
-    
-        let Item = {
-          index: curnum,
-          item: item,
-          url: item.getURL(),
-          name: item.getFilename(),
-          path: "",
-          time: item.getStartTime()
-        };
-    
-        downloadsArray.push(Item);
-        saveDownloads();
-    
-        let Data = {
-          index: curnum,
-          url: item.getURL(),
-          name: item.getFilename(),
-          time: item.getStartTime()
-        };
-    
-        mainWindow.webContents.send('action-create-download', Data);
-    
-        item.on('updated', (event, state) => {
-          if (state === 'interrupted') {
-            let Data = {
-              index: curnum,
-              name: item.getFilename()
-            };
-            mainWindow.webContents.send('action-set-download-status-interrupted', Data);
-          } else if (state === 'progressing') {
-            if (item.isPaused()) {
-              let Data = {
-                index: curnum,
-                bytes: item.getReceivedBytes(),
-                total: item.getTotalBytes(),
-                name: item.getFilename()
-              };
-              mainWindow.webContents.send('action-set-download-status-pause', Data);
-            } else {
-              let Data = {
-                index: curnum,
-                bytes: item.getReceivedBytes(),
-                total: item.getTotalBytes(),
-                name: item.getFilename()
-              };
-              mainWindow.webContents.send('action-set-download-process', Data);
-            }
-          }
-        });
-    
-        item.once('done', (event, state) => {
-          if (state === 'completed') {
-            let Data = {
-              index: curnum,
-              name: item.getFilename(),
-              path: item.getSavePath()
-            };
-            mainWindow.webContents.send('action-set-download-status-done', Data);
-            var i;
-            for(i = 0; i < downloadsArray.length; i++) {
-              if(downloadsArray[i].index == curnum) {
-                downloadsArray[i].path = item.getSavePath();
-                saveDownloads();
-              }
-            }
-          } else {
-            let Data = {
-              index: curnum,
-              state: state,
-              name: item.getFilename(),
-              url: item.getURL()
-            };
-            mainWindow.webContents.send('action-set-download-status-failed', Data);
-          }
-        });
       });
     });
   });

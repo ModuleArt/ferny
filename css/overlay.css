@@ -684,6 +684,46 @@ main {
 }
 
 /*
+ #####   ####  #    # #    # #       ####    ##   #####   ####
+ #    # #    # #    # ##   # #      #    #  #  #  #    # #
+ #    # #    # #    # # #  # #      #    # #    # #    #  ####
+ #    # #    # # ## # #  # # #      #    # ###### #    #      #
+ #    # #    # ##  ## #   ## #      #    # #    # #    # #    #
+ #####   ####  #    # #    # ######  ####  #    # #####   ####
+*/
+
+.download-item {
+    display: inline-block;
+    width: calc(100% - 32px);
+    position: relative;
+    margin: 4px;
+    width: 392px;
+    border-radius: calc(var(--px-radius) + 4px);
+    border: 1px solid var(--color-border);
+    background-color: var(--color-element);
+    outline: none;
+    text-align: left;
+    color: var(--color-top);
+    padding: 4px;
+}
+
+.download-label {
+    margin-left: 4px;
+    display: inline-block;
+    opacity: var(--opacity-over);
+}
+
+.download-status, .download-name, .download-url, .download-path {
+    left: 64px;
+    right: 4px;
+    position: absolute;
+    overflow: hidden;
+    white-space: nowrap;
+    word-break: keep-all;
+    text-overflow: ellipsis;
+}
+
+/*
  #    # ###### #    # #    #    #####  ##### #    #
  ##  ## #      ##   # #    #    #    #   #   ##   #
  # ## # #####  # #  # #    #    #####    #   # #  #

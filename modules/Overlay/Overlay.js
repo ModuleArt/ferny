@@ -97,6 +97,30 @@ class Overlay extends EventEmitter {
     removeFolder(id) {
         this.view.webContents.send("bookmarkManager-removeFolder", id);
     }
+
+    createDownload(download) {
+        this.view.webContents.send("downloadManager-createDownload", download);
+    }
+
+    setDownloadStatusInterrupted(download) {
+        this.view.webContents.send("downloadManager-setDownloadStatusInterrupted", download);
+    }
+
+    setDownloadStatusPause(download) {
+        this.view.webContents.send("downloadManager-setDownloadStatusPause", download);
+    }
+
+    setDownloadProcess(download) {
+        this.view.webContents.send("downloadManager-setDownloadProcess", download);
+    }
+
+    setDownloadStatusDone(download) {
+        this.view.webContents.send("downloadManager-setDownloadStatusDone", download);
+    }
+
+    setDownloadStatusFailed(download) {
+        this.view.webContents.send("downloadManager-setDownloadStatusFailed", download);
+    }
 }
 
 module.exports = Overlay;
