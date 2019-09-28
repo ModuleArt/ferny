@@ -16,16 +16,20 @@ class DownloadManager extends EventEmitter {
         this.downloadContainer = downloadContainer;
     }
 
-    insertBeforeDownload(id, name, url, time) {
+    appendDownload(begin, id, name, url, time) {
         let download = new Download(id, name, url, time);
-        this.downloads.push(download);
-        this.downloadContainer.insertBefore(download.getNode(), this.downloadContainer.firstChild);
-    }
 
-    appendDownload(id, name, url, time) {
-        let download = new Download(id, name, url, time);
+        download.on("status-changed", () => {
+            this.emit("download-status-changed");
+        });
+
         this.downloads.push(download);
-        this.downloadContainer.appendChild(download.getNode());
+
+        if(begin) {
+            this.downloadContainer.insertBefore(download.getNode(), this.downloadContainer.firstChild);
+        } else {
+            this.downloadContainer.appendChild(download.getNode());
+        }
     }
 
     getDownloadById(id) {

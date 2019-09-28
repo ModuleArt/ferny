@@ -692,6 +692,11 @@ main {
  #####   ####  #    # #    # ######  ####  #    # #####   ####
 */
 
+#downloads-container {
+    margin: -2px;
+    text-align: left;
+}
+
 .download-item {
     display: inline-block;
     width: calc(100% - 32px);
@@ -705,6 +710,10 @@ main {
     text-align: left;
     color: var(--color-top);
     padding: 4px;
+}
+
+.download-button {
+    margin-top: 16px;
 }
 
 .download-label {

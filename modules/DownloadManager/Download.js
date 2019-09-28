@@ -30,7 +30,7 @@ class Download extends EventEmitter {
                 <label class="download-label">URL:</label><label class="download-url">${url}</label><br>
                 <label class="download-label">Path:</label><label class="download-path">Unknown</label>
             </div>
-            <div class="downlaod-buttons"></div>
+            <div class="download-buttons"></div>
         `;
     }
 
@@ -53,6 +53,22 @@ class Download extends EventEmitter {
         this.node.getElementsByClassName("download-status")[0].innerHTML = "Completed";
         this.node.getElementsByClassName("download-path")[0].innerHTML = path;
 
+        this.node.getElementsByClassName("download-buttons")[0].innerHTML = `
+            <div class="nav-btn" onclick="showItemInFolder('${path.replace(/\\/g, "/")}')">
+                <img class="theme-icon" name="folder-16">
+                <label>Folder</label>
+            </div>
+            <div class="nav-btn" onclick="openItem('${path.replace(/\\/g, "/")}')">
+                <img class="theme-icon" name="file-16">
+                <label>Open</label>
+            </div>
+            <div class="nav-btn" onclick="removeDownload(${this.id})">
+                <img class="theme-icon" name="delete-16">
+                <label>Remove</label>
+            </div>
+        `;
+
+        this.emit("status-changed");
         return null;
     }
 

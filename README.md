@@ -18,6 +18,9 @@
   <a alt="Discord channel" href="https://discord.gg/9q4D8SJ">
     <img alt="Discord" src="https://img.shields.io/discord/625641944105877504?color=%237289DA&label=discord">
   </a>
+  <a alt="Buy ma a coffee" href="https://www.patreon.com/moduleart">
+    <img alt="Patreon" src="https://img.shields.io/badge/donate-patreon-%23E85B46">
+  </a>
 </p>
 
 <p align="center">
@@ -26,10 +29,12 @@
   It aims to be fast, private, beautiful and functional.
 </p>
 
-<h2>Screenshots</h2>
+<h2 align="center">Screenshots</h2>
 <img src="/docs/imgs/ferny/screen1.png">
 <img src="/docs/imgs/ferny/screen2.png">
 <img src="/docs/imgs/ferny/screen3.png">
 
-<h2>License</h2>
-<a href="https://app.fossa.com/projects/git%2Bgithub.com%2FModuleArt%2Fferny?ref=badge_large" alt="FOSSA Status"><img src="https://app.fossa.com/api/projects/git%2Bgithub.com%2FModuleArt%2Fferny.svg?type=large"/></a>
+<h2 align="center">License</h2>
+<p align="center">
+  <a href="https://app.fossa.com/projects/git%2Bgithub.com%2FModuleArt%2Fferny?ref=badge_large" alt="FOSSA Status"><img src="https://app.fossa.com/api/projects/git%2Bgithub.com%2FModuleArt%2Fferny.svg?type=large"/></a>
+</p>

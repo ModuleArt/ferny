@@ -7,7 +7,7 @@
   ####   ####  #    #  ####    #
 */
 
-const { ipcRenderer } = require("electron");
+const { ipcRenderer, shell } = require("electron");
 
 const loadTheme = require("../modules/loadTheme.js");
 const applyTheme = require("../modules/applyTheme.js");
@@ -137,6 +137,10 @@ historyManager.on("history-already-cleared", () => {
 
 let downloadManager = new DownloadManager(document.getElementById("downloads-container"));
 
+downloadManager.on("download-status-changed", () => {
+  updateTheme();
+});
+
 /*
  ###### #    # #    #  ####               ####  ###### ##### ##### # #    #  ####   ####
  #      #    # ##   # #    #             #      #        #     #   # ##   # #    # #
@@ -229,6 +233,27 @@ function collapseHistory() {
 }
 
 /*
+ ###### #    # #    #  ####              #####   ####  #    # #    # #       ####    ##   #####   ####
+ #      #    # ##   # #    #             #    # #    # #    # ##   # #      #    #  #  #  #    # #
+ #####  #    # # #  # #         #####    #    # #    # #    # # #  # #      #    # #    # #    #  ####
+ #      #    # #  # # #                  #    # #    # # ## # #  # # #      #    # ###### #    #      #
+ #      #    # #   ## #    #             #    # #    # ##  ## #   ## #      #    # #    # #    # #    #
+ #       ####  #    #  ####              #####   ####  #    # #    # ######  ####  #    # #####   ####
+*/
+
+function showItemInFolder(path) {
+  shell.showItemInFolder(path);
+}
+
+function openItem(path) {
+  shell.openItem(path);
+}
+
+function removeDownload() {
+
+}
+
+/*
  # #####   ####               ####  ######   ##   #####   ####  #    #
  # #    # #    #             #      #       #  #  #    # #    # #    #
  # #    # #         #####     ####  #####  #    # #    # #      ######
@@ -317,7 +342,7 @@ ipcRenderer.on("action-change-theme", (event, theme) => {
 */
 
 ipcRenderer.on("downloadManager-createDownload", (event, download) => {
-  downloadManager.insertBeforeDownload(download.id, download.name, download.url, download.time);
+  downloadManager.appendDownload(true, download.id, download.name, download.url, download.time);
 });
 
 ipcRenderer.on("downloadManager-setDownloadStatusInterrupted", (event, download) => {
