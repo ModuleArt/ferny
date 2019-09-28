@@ -9,7 +9,6 @@ const StatusNotification = require(__dirname + '/Notifications/StatusNotificatio
 const QuestNotification = require(__dirname + '/Notifications/QuestNotification.js');
 const ZoomNotification = require(__dirname + '/Notifications/ZoomNotification.js');
 const UpdateNotification = require(__dirname + '/Notifications/UpdateNotification.js');
-const DownloadNotification = require(__dirname + '/Notifications/DownloadNotification.js');
 
 class NotificationManager extends EventEmitter {
     maxNotifCount = 1;
@@ -54,34 +53,12 @@ class NotificationManager extends EventEmitter {
         this.appendNotif(new QuestNotification(this.notifCounter++, false, text, buttons));
     }
 
-    addDownloadNotif(fileName, downloadId) {
-        this.appendNotif(new DownloadNotification(this.notifCounter++, false, 'Downloading file: ' + fileName, downloadId));
-    }
-
-    refreshDownloadNotif(percent, transferred, total, downloadId) {
-        for(let i = 0; i < this.notifArray.length; i++) {
-            if(this.notifArray[i].constructor.name == "DownloadNotification") {
-                if(this.notifArray[i].getDownloadId() == downloadId) {
-                    this.notifArray[i].setProgress(percent, transferred, total);
-                    break;
-                }
-            }
-        }
-    }
-
-    closeDownloadNotif(downloadId) {
-        for(let i = 0; i < this.notifArray.length; i++) {
-            if(this.notifArray[i].constructor.name == "DownloadNotification") {
-                if(this.notifArray[i].getDownloadId() == downloadId) {
-                    this.notifArray[i].close();
-                    break;
-                }
-            }
-        }
-    }
-
     addUpdateNotif(releaseName) {
-        this.appendNotif(new UpdateNotification(this.notifCounter++, false, "Downloading update: " + releaseName));
+        if(releaseName == null) {
+            this.appendNotif(new UpdateNotification(this.notifCounter++, false, "Downloading update"));
+        } else {
+            this.appendNotif(new UpdateNotification(this.notifCounter++, false, "Downloading update: " + releaseName));
+        }
     }
 
     refreshUpdateNotif(percent, transferred, total, speed) {
@@ -94,7 +71,7 @@ class NotificationManager extends EventEmitter {
             }
         }
         if(bool) {
-            this.addZoomNotif(zoom);
+            this.addUpdateNotif();
         }
     }
 

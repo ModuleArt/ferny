@@ -345,6 +345,18 @@ ipcMain.on("overlay-removeFolder", (event, id) => {
   overlay.removeFolder(id);
 });
 
+ipcMain.on("overlay-removeFolder", (event, id) => {
+  overlay.removeFolder(id);
+});
+
+ipcMain.on("overlay-bookmarkThisPage", (event) => {
+  if(tabManager.hasActiveTab()) {
+    let at = tabManager.getActiveTab();
+    overlay.addBookmark(at.getTitle(), at.getURL());
+    overlay.scrollToId("bookmarks-title"); 
+  }
+});
+
 /*
  # #####   ####              #####   ##   #####     #    #   ##   #    #   ##    ####  ###### #####
  # #    # #    #               #    #  #  #    #    ##  ##  #  #  ##   #  #  #  #    # #      #    #
@@ -886,7 +898,6 @@ function initMenu() {
       } }, { type: "separator" }, { 
       label: "Bookmark this page", icon: app.getAppPath() + "/imgs/icons16/star.png", accelerator: "CmdOrCtrl+Shift+B", click: () => { 
         if(tabManager.hasActiveTab()) {
-          
           let at = tabManager.getActiveTab();
           overlay.addBookmark(at.getTitle(), at.getURL());
           overlay.scrollToId("bookmarks-title"); 

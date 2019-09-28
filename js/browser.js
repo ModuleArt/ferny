@@ -154,6 +154,10 @@ function focusSearch() {
   s.select();
 }
 
+function createBookmark() {
+  ipcRenderer.send("overlay-bookmarkThisPage");
+}
+
 function bookmarkAllTabs() {
   // tabGroup.eachTab((currentTab, index, tabs) => {
   //   createBookmark(currentTab.webview.getURL(), currentTab.getTitle(), null);
