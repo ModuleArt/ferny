@@ -133,7 +133,8 @@ class Tab extends EventEmitter {
             item.on("updated", (event, state) => {
                 if (state === "interrupted") {
                     this.emit("set-download-status-interrupted", {
-                        id: index
+                        id: index,
+                        name: item.getFilename()
                     });
                 } else if (state === "progressing") {
                     if (item.isPaused()) {
@@ -156,11 +157,13 @@ class Tab extends EventEmitter {
                 if (state === "completed") {
                     this.emit("set-download-status-done", {
                         id: index,
-                        path: item.getSavePath()
+                        path: item.getSavePath(),
+                        name: item.getFilename()
                     });
                 } else {
                     this.emit("set-download-status-failed", {
-                        id: index
+                        id: index,
+                        name: item.getFilename()
                     });
                 }
             });

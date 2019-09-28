@@ -545,10 +545,12 @@ function initTabManager() {
 
   tabManager.on("create-download", (download) => {
     overlay.createDownload(download);
+    mainWindow.webContents.send('action-add-status-notif', { type: "info", text: `Download started: "${download.name}"` });
   });
 
   tabManager.on("set-download-status-interrupted", (download) => {
     overlay.setDownloadStatusInterrupted(download);
+    mainWindow.webContents.send('action-add-status-notif', { type: "error", text: `Download interrupted: "${download.name}"` });
   });
 
   tabManager.on("set-download-status-pause", (download) => {
@@ -561,10 +563,12 @@ function initTabManager() {
 
   tabManager.on("set-download-status-done", (download) => {
     overlay.setDownloadStatusDone(download);
+    mainWindow.webContents.send('action-add-status-notif', { type: "success", text: `Download completed: "${download.name}"` });
   });
 
   tabManager.on("set-download-status-failed", (download) => {
     overlay.setDownloadStatusFailed(download);
+    mainWindow.webContents.send('action-add-status-notif', { type: "error", text: `Download failed: "${download.name}"` });
   });
 }
 

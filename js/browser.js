@@ -252,61 +252,6 @@ function goHome() {
 }
 
 /*
-.####.########...######.....########..########.##....##.########..########.########..########.########.
-..##..##.....##.##....##....##.....##.##.......###...##.##.....##.##.......##.....##.##.......##.....##
-..##..##.....##.##..........##.....##.##.......####..##.##.....##.##.......##.....##.##.......##.....##
-..##..########..##..........########..######...##.##.##.##.....##.######...########..######...########.
-..##..##........##..........##...##...##.......##..####.##.....##.##.......##...##...##.......##...##..
-..##..##........##....##....##....##..##.......##...###.##.....##.##.......##....##..##.......##....##.
-.####.##.........######.....##.....##.########.##....##.########..########.##.....##.########.##.....##
-*/
-
-ipcRenderer.on('action-page-focussearch', (event, arg) => {
-  focusSearch();
-});
-
-ipcRenderer.on('action-change-theme', (event, arg) => {
-  applyTheme(arg);
-});
-
-ipcRenderer.on('action-create-download', (event, arg) => {
-  document.getElementById('sidebar-webview').send('action-create-download', arg);
-  notificationManager.addStatusNotif('Download started: ' + arg.name, 'info');
-  notificationManager.addDownloadNotif(arg.name, arg.index);
-});
-
-ipcRenderer.on('action-create-stopped-download', (event, arg) => {
-  document.getElementById('sidebar-webview').send('action-create-stopped-download', arg);
-});
-
-ipcRenderer.on('action-set-download-status-pause', (event, arg) => {
-  document.getElementById('sidebar-webview').send('action-set-download-status-pause', arg);
-});
-
-ipcRenderer.on('action-set-download-status-done', (event, arg) => {
-  document.getElementById('sidebar-webview').send('action-set-download-status-done', arg);
-  notificationManager.addStatusNotif('Download complete: ' + arg.name, 'success');
-  notificationManager.closeDownloadNotif(arg.index);
-});
-
-ipcRenderer.on('action-set-download-status-failed', (event, arg) => {
-  document.getElementById('sidebar-webview').send('action-set-download-status-failed', arg);
-  notificationManager.addStatusNotif('Download ' + arg.state + ": " + arg.name, 'error');
-  notificationManager.closeDownloadNotif(arg.index);
-});
-
-ipcRenderer.on('action-set-download-status-interrupted', (event, arg) => {
-  document.getElementById('sidebar-webview').send('action-set-download-status-interrupted', arg);
-  notificationManager.addStatusNotif('Download interrupted: ' + arg.name, 'warning');
-  notificationManager.closeDownloadNotif(arg.index);
-});
-
-ipcRenderer.on('action-set-download-process', (event, arg) => {
-  document.getElementById('sidebar-webview').send('action-set-download-process', arg);
-  notificationManager.refreshDownloadNotif(Math.round(arg.bytes / arg.total * 100), arg.bytes, arg.total, arg.index);
-});
-
-/*
  # #####   ####              #    #  ####  ##### # ######
  # #    # #    #             ##   # #    #   #   # #
  # #    # #         #####    # #  # #    #   #   # #####
@@ -344,24 +289,32 @@ ipcRenderer.on("action-refresh-zoom-notif", (event, zoomFactor) => {
  # #       ####              #    # # #    # #####   ####  #    #
 */
 
-ipcRenderer.on('window-blur', (event) => {
-  document.getElementById('tabman').classList.add('blur');
+ipcRenderer.on("action-page-focussearch", (event, arg) => {
+  focusSearch();
 });
 
-ipcRenderer.on('window-focus', (event) => {
-  document.getElementById('tabman').classList.remove('blur');
+ipcRenderer.on("action-change-theme", (event, arg) => {
+  applyTheme(arg);
 });
 
-ipcRenderer.on('window-maximize', (event) => {
-  document.getElementById('drag-zone').classList.add('maximize');
-  document.getElementById('max-btn').style.display = "none";
-  document.getElementById('restore-btn').style.display = "";
+ipcRenderer.on("window-blur", (event) => {
+  document.getElementById("tabman").classList.add("blur");
 });
 
-ipcRenderer.on('window-unmaximize', (event) => {
-  document.getElementById('drag-zone').classList.remove('maximize');
-  document.getElementById('max-btn').style.display = "";
-  document.getElementById('restore-btn').style.display = "none";
+ipcRenderer.on("window-focus", (event) => {
+  document.getElementById("tabman").classList.remove("blur");
+});
+
+ipcRenderer.on("window-maximize", (event) => {
+  document.getElementById("drag-zone").classList.add("maximize");
+  document.getElementById("max-btn").style.display = "none";
+  document.getElementById("restore-btn").style.display = "";
+});
+
+ipcRenderer.on("window-unmaximize", (event) => {
+  document.getElementById("drag-zone").classList.remove("maximize");
+  document.getElementById("max-btn").style.display = "";
+  document.getElementById("restore-btn").style.display = "none";
 });
 
 /*
