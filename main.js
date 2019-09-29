@@ -8,7 +8,7 @@
 .##.....##.##.....##.####.##....##
 */
 
-const { ipcMain, app, Menu, MenuItem, BrowserWindow, dialog, clipboard } = require("electron");
+const { ipcMain, app, Menu, MenuItem, BrowserWindow, dialog, clipboard, session } = require("electron");
 const { autoUpdater } = require("electron-updater");
 const os = require("os");
 const fs = require("fs");
@@ -67,8 +67,8 @@ let welcomeWindow = null;
 let aboutWindow = null;
 let settingsWindow = null;
 
-let downloadsArray = [];
-let curDownloadNum = 0;
+let downloads = [];
+let downloadCounter = 0;
 
 let updateCancellationToken = null;
 
@@ -127,9 +127,63 @@ app.on("ready", function() {
     }
   });
 
+  session.defaultSession.on("will-download", (event, item, webContents) => {
+    let index = downloadCounter++;
+
+    downloads.push({ id: index, item });
+    overlay.createDownload({
+      id: index,
+      url: item.getURL(),
+      name: item.getFilename(),
+      time: item.getStartTime(),
+      downloadItem: item
+    });
+    mainWindow.webContents.send('action-add-status-notif', { type: "info", text: `Download started: "${item.getFilename()}"` });
+
+    item.on("updated", (event, state) => {
+      if (state === "interrupted") {
+        overlay.setDownloadStatusInterrupted({
+          id: index,
+          name: item.getFilename()
+        });
+        mainWindow.webContents.send('action-add-status-notif', { type: "error", text: `Download interrupted: "${item.getFilename()}"` });
+      } else if (state === "progressing") {
+        if (item.isPaused()) {
+          overlay.setDownloadStatusPause({
+            id: index,
+            bytes: item.getReceivedBytes(),
+            total: item.getTotalBytes()
+          });
+        } else {
+          overlay.setDownloadProcess({
+            id: index,
+            bytes: item.getReceivedBytes(),
+            total: item.getTotalBytes()
+          });
+        }
+      }
+    });
+
+    item.once("done", (event, state) => {
+      if (state === "completed") {
+        overlay.setDownloadStatusDone({
+          id: index,
+          path: item.getSavePath(),
+          name: item.getFilename()
+        });
+        mainWindow.webContents.send('action-add-status-notif', { type: "success", text: `Download completed: "${item.getFilename()}"` });
+      } else {
+        overlay.setDownloadStatusFailed({
+          id: index,
+          name: item.getFilename()
+        });
+        mainWindow.webContents.send('action-add-status-notif', { type: "error", text: `Download failed: "${item.getFilename()}"` });
+      }
+    });
+  });
+
   showMainWindow();
   // loadWelcome();
-  // loadDownloads();
 });
 
 /*
@@ -212,12 +266,6 @@ ipcMain.on('request-add-quest-notif', (event, arg) => {
   mainWindow.webContents.send('action-add-quest-notif', arg);
 });
 
-ipcMain.on('action-clear-downloads', (event, arg) => {
-  downloadsArray = [];
-  saveDownloads();
-  mainWindow.webContents.send('action-clear-downloads');
-});
-
 ipcMain.on('request-set-about', (event, arg) => {
   let Data = {
     version: app.getVersion(),
@@ -279,15 +327,30 @@ ipcMain.on('request-toggle-fullscreen', (event, arg) => {
 */
 
 ipcMain.on("downloadManager-resumeDownload", (event, id) => {
-  tabManager.resumeDownload(id);
+  for(let i = 0; i < downloads.length; i++) {
+    if(downloads[i].id == id) {
+      downloads[i].item.resume();
+      break;
+    }
+  }
 });
 
 ipcMain.on("downloadManager-pauseDownload", (event, id) => {
-  tabManager.pauseDownload(id);
+  for(let i = 0; i < downloads.length; i++) {
+    if(downloads[i].id == id) {
+      downloads[i].item.pause();
+      break;
+    }
+  }
 });
 
 ipcMain.on("downloadManager-cancelDownload", (event, id) => {
-  tabManager.cancelDownload(id);
+  for(let i = 0; i < downloads.length; i++) {
+    if(downloads[i].id == id) {
+      downloads[i].item.cancel();
+      break;
+    }
+  }
 });
 
 /*
@@ -541,34 +604,6 @@ function initTabManager() {
   tabManager.on("add-history-item", (url) => {
     overlay.addHistoryItem(url);
   });
-
-  tabManager.on("create-download", (download) => {
-    overlay.createDownload(download);
-    mainWindow.webContents.send('action-add-status-notif', { type: "info", text: `Download started: "${download.name}"` });
-  });
-
-  tabManager.on("set-download-status-interrupted", (download) => {
-    overlay.setDownloadStatusInterrupted(download);
-    mainWindow.webContents.send('action-add-status-notif', { type: "error", text: `Download interrupted: "${download.name}"` });
-  });
-
-  tabManager.on("set-download-status-pause", (download) => {
-    overlay.setDownloadStatusPause(download);
-  });
-
-  tabManager.on("set-download-process", (download) => {
-    overlay.setDownloadProcess(download);
-  });
-
-  tabManager.on("set-download-status-done", (download) => {
-    overlay.setDownloadStatusDone(download);
-    mainWindow.webContents.send('action-add-status-notif', { type: "success", text: `Download completed: "${download.name}"` });
-  });
-
-  tabManager.on("set-download-status-failed", (download) => {
-    overlay.setDownloadStatusFailed(download);
-    mainWindow.webContents.send('action-add-status-notif', { type: "error", text: `Download failed: "${download.name}"` });
-  });
 }
 
 /*
@@ -788,11 +823,11 @@ function showMainWindow() {
       mainWindow.on("close", function(event) {
         event.preventDefault();
     
-        var download = false;
+        let download = false;
     
-        for (var i = 0; i < downloadsArray.length; i++) {
+        for (let i = 0; i < downloads.length; i++) {
           try {
-            if(downloadsArray[i].item.getState() == "progressing") {
+            if(downloads[i].item.getState() == "progressing") {
               download = true;
               break;
             }
@@ -801,7 +836,7 @@ function showMainWindow() {
           }
         }
     
-        var update = false;
+        let update = false;
         
         if(updateCancellationToken != null) {
           update = true;
@@ -1143,22 +1178,6 @@ function openFileDialog() {
 }
 
 /*
-.########.....###....########....###........######.....###....##.....##.########..######.
-.##.....##...##.##......##......##.##......##....##...##.##...##.....##.##.......##....##
-.##.....##..##...##.....##.....##...##.....##........##...##..##.....##.##.......##......
-.##.....##.##.....##....##....##.....##.....######..##.....##.##.....##.######....######.
-.##.....##.#########....##....#########..........##.#########..##...##..##.............##
-.##.....##.##.....##....##....##.....##....##....##.##.....##...##.##...##.......##....##
-.########..##.....##....##....##.....##.....######..##.....##....###....########..######.
-*/
-
-function saveDownloads() {
-  saveFileToJsonFolder(null, 'curdownloadnum', curDownloadNum);
-  saveFileToJsonFolder(null, 'downloads', JSON.stringify(downloadsArray));
-  console.log("saved DOWNLOADS: " + downloadsArray.length);
-}
-
-/*
 .########.....###....########....###.......##........#######.....###....########.
 .##.....##...##.##......##......##.##......##.......##.....##...##.##...##.....##
 .##.....##..##...##.....##.....##...##.....##.......##.....##..##...##..##.....##
@@ -1167,28 +1186,6 @@ function saveDownloads() {
 .##.....##.##.....##....##....##.....##....##.......##.....##.##.....##.##.....##
 .########..##.....##....##....##.....##....########..#######..##.....##.########.
 */
-
-function loadDownloads() {
-  try {
-    curDownloadNum = fs.readFileSync(ppath + "/json/curdownloadnum.json");
-
-    var jsonstr = fs.readFileSync(ppath + "/json/downloads.json");
-    var arr = JSON.parse(jsonstr);
-
-    for (var i = 0; i < arr.length; i++) {
-      let Item = {
-        index: arr[i].index,
-        url: arr[i].url,
-        name: arr[i].name,
-        path: arr[i].path,
-        time: arr[i].time
-      };
-      downloadsArray.push(Item);
-    }
-  } catch(err) {
-    saveDownloads();
-  }
-}
 
 function loadWelcome() {
   try {

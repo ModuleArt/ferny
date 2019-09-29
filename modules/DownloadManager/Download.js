@@ -1,7 +1,13 @@
 const EventEmitter = require("events");
+const fileExtension = require("file-extension");
+const GetAvColor = require("color.js");
 
+const extToImagePath = require(__dirname + "/../extToImagePath.js");
 const bytesToSize = require(__dirname + "/../bytesToSize.js");
 const percent = require(__dirname + "/../percent.js");
+const epochToDate = require(__dirname + "/../epochToDate.js");
+const epochToTime = require(__dirname + "/../epochToTime.js");
+const rgbToRgbaString = require(__dirname + "/../rgbToRgbaString.js");
 
 class Download extends EventEmitter {
     id = null;
@@ -25,13 +31,20 @@ class Download extends EventEmitter {
         this.node.id = "download-" + id;
         this.node.innerHTML = `
             <div class="download-body">
-                <label class="download-label">Status:</label><label class="download-status">Started</label><br>
-                <label class="download-label">File:</label><label class="download-name">${name}</label><br>
-                <label class="download-label">URL:</label><label class="download-url">${url}</label><br>
-                <label class="download-label">Path:</label><label class="download-path">Unknown</label>
+                <img class="download-icon" src="${extToImagePath(fileExtension(name))}">
+                </label><label class="download-name">${name}</label><br>
+                <label class="download-url">${url}</label><br>
+                <hr>
+                <label class="download-status">Started</label>
+                <label class="download-time">${epochToDate(time)} / ${epochToTime(time)}</label>
             </div>
             <div class="download-buttons"></div>
         `;
+
+        let color = new GetAvColor(this.node.getElementsByClassName("download-icon")[0]);
+        color.mostUsed(result => {
+            this.node.style.backgroundColor = rgbToRgbaString(result[0]);
+        });
     }
 
     getNode() {
@@ -61,7 +74,6 @@ class Download extends EventEmitter {
         this.status = "done";
         this.path = path;
         this.node.getElementsByClassName("download-status")[0].innerHTML = "Completed";
-        this.node.getElementsByClassName("download-path")[0].innerHTML = path;
 
         this.node.getElementsByClassName("download-buttons")[0].innerHTML = `
             <div class="nav-btn" onclick="showItemInFolder('${path.replace(/\\/g, "/")}')" title="Show file in folder">
@@ -96,7 +108,7 @@ class Download extends EventEmitter {
     setStatusPause(bytes, total) {
         this.status = "pause";
         this.node.getElementsByClassName("download-status")[0].innerHTML = `
-            Paused - ${percent(bytes, total)}% (${bytesToSize(bytes)} / ${bytesToSize(total)})
+            Paused - ${percent(bytes, total)}%<br>(${bytesToSize(bytes)} / ${bytesToSize(total)})
         `;
 
         this.node.getElementsByClassName("download-buttons")[0].innerHTML = `
@@ -106,7 +118,6 @@ class Download extends EventEmitter {
             </div>
             <div class="nav-btn" onclick="cancelDownload('${this.id}')" title="Cancel download">
                 <img class="theme-icon" name="cancel-16">
-                <label>Cancel</label>
             </div>
         `;
 
@@ -116,7 +127,7 @@ class Download extends EventEmitter {
 
     setProcess(bytes, total) {
         this.node.getElementsByClassName("download-status")[0].innerHTML = `
-            Downloading - ${percent(bytes, total)}% (${bytesToSize(bytes)} / ${bytesToSize(total)})
+            Downloading - ${percent(bytes, total)}%<br>(${bytesToSize(bytes)} / ${bytesToSize(total)})
         `;
 
         if(this.status !== "processing") {
@@ -129,7 +140,6 @@ class Download extends EventEmitter {
                 </div>
                 <div class="nav-btn" onclick="cancelDownload('${this.id}')" title="Cancel download">
                     <img class="theme-icon" name="cancel-16">
-                    <label>Cancel</label>
                 </div>
             `;
         }

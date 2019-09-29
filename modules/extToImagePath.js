@@ -124,6 +124,12 @@ function extToImagePath(ext) {
     if(ext === "swift") {
         res = "../imgs/icons16/swift.png";
     } else
+    if(ext === "nes") {
+        res = "../imgs/icons16/game.png";
+    } else
+    if(ext === "torrent") {
+        res = "../imgs/icons16/torrent.png";
+    } else
     if(ext === "vb") {
         res = "../imgs/icons16/vb.png";
     } else

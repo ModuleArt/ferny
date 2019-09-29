@@ -6,7 +6,7 @@ const parsePath = require("parse-path");
 const fileExtension = require("file-extension");
 
 const extToImagePath = require(__dirname + "/../extToImagePath.js");
-const rgbToRgbaString = require("../rgbToRgbaString.js");
+const rgbToRgbaString = require(__dirname + "/../rgbToRgbaString.js");
 
 class HistoryItem extends EventEmitter {
     history = [];

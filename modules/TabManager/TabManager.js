@@ -19,8 +19,6 @@ class TabManager extends EventEmitter {
     homePage = "https://google.com";
     tabClosedAction = "overlay";
 
-    downloads = [];
-
     constructor(window, appPath) {
         super();
 
@@ -128,31 +126,6 @@ class TabManager extends EventEmitter {
 
         tab.on("add-history-item", (url) => {
             this.emit("add-history-item", url);
-        });
-
-        tab.on("create-download", (download) => {
-            this.emit("create-download", download);
-            this.downloads.push({ id: download.id, item: download.downloadItem });
-        });
-
-        tab.on("set-download-status-interrupted", (download) => {
-            this.emit("set-download-status-interrupted", download);
-        });
-
-        tab.on("set-download-status-pause", (download) => {
-            this.emit("set-download-status-pause", download);
-        });
-
-        tab.on("set-download-process", (download) => {
-            this.emit("set-download-process", download);
-        });
-
-        tab.on("set-download-status-done", (download) => {
-            this.emit("set-download-status-done", download);
-        });
-
-        tab.on("set-download-status-failed", (download) => {
-            this.emit("set-download-status-failed", download);
         });
 
         this.tabs.push(tab);
@@ -372,33 +345,6 @@ class TabManager extends EventEmitter {
         });
 
         return null;
-    }
-
-    pauseDownload(id) {
-        for(let i = 0; i < this.downloads.length; i++) {
-            if(this.downloads[i].id === id) {
-                this.downloads[i].item.pause();
-                break;
-            }
-        }
-    }
-
-    resumeDownload(id) {
-        for(let i = 0; i < this.downloads.length; i++) {
-            if(this.downloads[i].id === id) {
-                this.downloads[i].item.resume();
-                break;
-            }
-        }
-    }
-
-    cancelDownload(id) {
-        for(let i = 0; i < this.downloads.length; i++) {
-            if(this.downloads[i].id === id) {
-                this.downloads[i].item.cancel();
-                break;
-            }
-        }
     }
 }
 

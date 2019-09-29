@@ -250,7 +250,6 @@ function openItem(path) {
 }
 
 function pauseDownload(id) {
-  console.log(id);
   ipcRenderer.send("downloadManager-pauseDownload", id);
 }
 

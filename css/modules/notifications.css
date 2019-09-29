@@ -86,7 +86,6 @@
 
 .notif .nav-btn {
     height: 24px;
-    -webkit-app-region: no-drag;
 }
 
 .notif .nav-btn img {

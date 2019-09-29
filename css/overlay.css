@@ -712,31 +712,71 @@ main {
 .download-item {
     vertical-align: top;
     display: inline-block;
-    width: calc(100% - 32px);
     position: relative;
     margin: 4px;
-    width: 392px;
+    width: 192px;
     border-radius: calc(var(--px-radius) + 4px);
     border: 1px solid var(--color-border);
     background-color: var(--color-element);
-    text-align: left;
+    text-align: center;
     color: var(--color-top);
-    padding: 4px;
+}
+
+hr {
+    border: 0.5px solid var(--color-border);
+    margin: 0;
+    margin-top: 7px;
 }
 
 .download-buttons {
-    margin-top: 8px;
+    padding: 4px;
+    text-align: center;
+    border-top: 1px solid var(--color-border);
+    margin-top: 7px;
 }
 
-.download-label {
-    margin-left: 4px;
-    display: inline-block;
+.download-buttons .nav-btn {
+    margin: 0;
+}
+
+.download-icon {
+    position: absolute;
+    top: 7px;
+    left: 7px;
+}
+
+.download-status, .download-time {
+    display: block;
+    margin: 2px 7px;
+}
+
+.download-time {
+    font-size: 10px;
     opacity: var(--opacity-over);
+    user-select: all;
+    margin: 0;
 }
 
-.download-status, .download-name, .download-url, .download-path {
-    left: 64px;
-    right: 4px;
+.download-name {
+    text-align: left;
+    right: 7px;
+    top: 5px;
+    left: 30px;
+    user-select: all;
+    position: absolute;
+    overflow: hidden;
+    white-space: nowrap;
+    word-break: keep-all;
+    text-overflow: ellipsis;
+}
+
+.download-url {
+    top: 26px;
+    right: 7px;
+    left: 7px;
+    font-size: 10px;
+    opacity: var(--opacity-over);
+    user-select: all;
     position: absolute;
     overflow: hidden;
     white-space: nowrap;
