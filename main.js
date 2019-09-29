@@ -108,7 +108,7 @@ app.on("ready", function() {
   });
 
   autoUpdater.on("update-available", (info) => {
-    mainWindow.webContents.send("action-add-status-notif", { type: "success", text: `Update is available: "${info.releaseName}". Download started...` });
+    mainWindow.webContents.send("action-add-status-notif", { type: "success", text: `Update is available: ${info.releaseName}. Download started...` });
   });
 
   autoUpdater.on("update-downloaded", () => {
