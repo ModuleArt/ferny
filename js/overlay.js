@@ -141,6 +141,23 @@ downloadManager.on("download-status-changed", () => {
   updateTheme();
 });
 
+downloadManager.on("clear-downloads", () => {
+  ipcRenderer.send("request-add-quest-notif", { 
+    text: "Are you sure to clear all downloads?", 
+    ops: [{ 
+      text: "Clear", icon: "delete-16", click: "clearDownloads()" 
+    }] 
+  });
+});
+
+downloadManager.on("downloads-cleared", () => {
+  ipcRenderer.send("request-add-status-notif", { text: "Downloads cleared", type: "success" });
+});
+
+downloadManager.on("downloads-already-cleared", () => {
+  ipcRenderer.send("request-add-status-notif", { text: "Downloads already cleared", type: "info" });
+});
+
 /*
  ###### #    # #    #  ####               ####  ###### ##### ##### # #    #  ####   ####
  #      #    # ##   # #    #             #      #        #     #   # ##   # #    # #
@@ -265,6 +282,18 @@ function retryDownload(url) {
   ipcRenderer.send("tabManager-addTab", url, false);
 }
 
+function clearDownloads() {
+  downloadManager.askClearDownloads();
+}
+
+function loadMoreDownloads() {
+  downloadManager.setLimiter(false);
+}
+
+function collapseDownloads() {
+  downloadManager.setLimiter(true);
+}
+
 /*
  # #####   ####               ####  ######   ##   #####   ####  #    #
  # #    # #    #             #      #       #  #  #    # #    # #    #
@@ -375,6 +404,10 @@ ipcRenderer.on("downloadManager-setDownloadStatusDone", (event, download) => {
 
 ipcRenderer.on("downloadManager-setDownloadStatusFailed", (event, download) => {
   downloadManager.getDownloadById(download.id).setStatusFailed();
+});
+
+ipcRenderer.on("downloadManager-clearDownloads", (event, text) => {
+  downloadManager.clearDownloads();
 });
 
 /*

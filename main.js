@@ -391,8 +391,8 @@ ipcMain.on("overlay-clearHistory", (event) => {
   overlay.clearHistory();
 });
 
-ipcMain.on("overlay-removeFolder", (event, id) => {
-  overlay.removeFolder(id);
+ipcMain.on("overlay-clearDownloads", (event) => {
+  overlay.clearDownloads();
 });
 
 ipcMain.on("overlay-removeFolder", (event, id) => {

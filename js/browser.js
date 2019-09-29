@@ -100,7 +100,7 @@ function installUpdate() {
 }
 
 function clearDownloads() {
-  ipcRenderer.send("action-clear-downloads");
+  ipcRenderer.send("overlay-clearDownloads");
 }
 
 function clearHistory() {

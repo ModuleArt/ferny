@@ -96,6 +96,18 @@
             <div class="block-title" id="downloads-title">
                 <img class="theme-icon" name="download-16">
                 <label>Downloads</label>
+                <div class="block-buttons">
+                    <button class="nav-btn" title="Clear all downloads" onclick="clearDownloads()">
+                        <img class="theme-icon" name="clear-16">
+                    </button>
+                    <div class="block-title-vr"></div>
+                    <button id="more-downloads-btn" class="nav-btn" title="Load more downloads" onclick="loadMoreDownloads()">
+                        <img class="theme-icon" name="reload-16">
+                    </button>
+                    <button id="collapse-downloads-btn" class="nav-btn" title="Collapse downloads" onclick="collapseDownloads()">
+                        <img class="theme-icon" name="up-16">
+                    </button>
+                </div>
             </div>
             <div class="block-container" id="downloads-container"></div>
         </main>

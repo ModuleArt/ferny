@@ -731,8 +731,6 @@ hr {
 .download-buttons {
     padding: 4px;
     text-align: center;
-    border-top: 1px solid var(--color-border);
-    margin-top: 7px;
 }
 
 .download-buttons .nav-btn {

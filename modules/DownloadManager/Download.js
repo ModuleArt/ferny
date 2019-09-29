@@ -64,6 +64,9 @@ class Download extends EventEmitter {
                 <img class="theme-icon" name="download-16">
                 <label>Resume</label>
             </div>
+            <div class="nav-btn" onclick="cancelDownload('${this.id}')" title="Cancel download">
+                <img class="theme-icon" name="cancel-16">
+            </div>
         `;
 
         this.emit("status-changed");
@@ -100,6 +103,16 @@ class Download extends EventEmitter {
                 <label>Retry</label>
             </div>
         `;
+
+        this.emit("status-changed");
+        return null;
+    }
+
+    setStatusStopped(path) {
+        this.status = "stopped";
+        this.node.getElementsByClassName("download-status")[0].innerHTML = "Done";
+
+        this.node.getElementsByClassName("download-buttons")[0].innerHTML = "";
 
         this.emit("status-changed");
         return null;
