@@ -249,8 +249,21 @@ function openItem(path) {
   shell.openItem(path);
 }
 
-function removeDownload() {
+function pauseDownload(id) {
+  console.log(id);
+  ipcRenderer.send("downloadManager-pauseDownload", id);
+}
 
+function cancelDownload(id) {
+  ipcRenderer.send("downloadManager-cancelDownload", id);
+}
+
+function resumeDownload(id) {
+  ipcRenderer.send("downloadManager-resumeDownload", id);
+}
+
+function retryDownload(url) {
+  ipcRenderer.send("tabManager-addTab", url, false);
 }
 
 /*

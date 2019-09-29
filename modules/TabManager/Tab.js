@@ -127,7 +127,8 @@ class Tab extends EventEmitter {
                 id: index,
                 url: item.getURL(),
                 name: item.getFilename(),
-                time: item.getStartTime()
+                time: item.getStartTime(),
+                downloadItem: item
             });
 
             item.on("updated", (event, state) => {

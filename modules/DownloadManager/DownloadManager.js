@@ -33,7 +33,6 @@ class DownloadManager extends EventEmitter {
     }
 
     getDownloadById(id) {
-        console.log(id);
         for(let i = 0; i < this.downloads.length; i++) {
             if(this.downloads[i].getId() == id) {
                 return this.downloads[i];

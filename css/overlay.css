@@ -698,6 +698,7 @@ main {
 }
 
 .download-item {
+    vertical-align: top;
     display: inline-block;
     width: calc(100% - 32px);
     position: relative;
@@ -706,14 +707,13 @@ main {
     border-radius: calc(var(--px-radius) + 4px);
     border: 1px solid var(--color-border);
     background-color: var(--color-element);
-    outline: none;
     text-align: left;
     color: var(--color-top);
     padding: 4px;
 }
 
-.download-button {
-    margin-top: 16px;
+.download-buttons {
+    margin-top: 8px;
 }
 
 .download-label {

@@ -19,6 +19,8 @@ class TabManager extends EventEmitter {
     homePage = "https://google.com";
     tabClosedAction = "overlay";
 
+    downloads = [];
+
     constructor(window, appPath) {
         super();
 
@@ -130,6 +132,7 @@ class TabManager extends EventEmitter {
 
         tab.on("create-download", (download) => {
             this.emit("create-download", download);
+            this.downloads.push({ id: download.id, item: download.downloadItem });
         });
 
         tab.on("set-download-status-interrupted", (download) => {
@@ -369,6 +372,33 @@ class TabManager extends EventEmitter {
         });
 
         return null;
+    }
+
+    pauseDownload(id) {
+        for(let i = 0; i < this.downloads.length; i++) {
+            if(this.downloads[i].id === id) {
+                this.downloads[i].item.pause();
+                break;
+            }
+        }
+    }
+
+    resumeDownload(id) {
+        for(let i = 0; i < this.downloads.length; i++) {
+            if(this.downloads[i].id === id) {
+                this.downloads[i].item.resume();
+                break;
+            }
+        }
+    }
+
+    cancelDownload(id) {
+        for(let i = 0; i < this.downloads.length; i++) {
+            if(this.downloads[i].id === id) {
+                this.downloads[i].item.cancel();
+                break;
+            }
+        }
     }
 }
 

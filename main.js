@@ -91,7 +91,7 @@ app.on("window-all-closed", () => {
   }
 });
 
-app.on('ready', function() {
+app.on("ready", function() {
   autoUpdater.logger = require("electron-log");
   autoUpdater.logger.transports.file.level = "info";
 
@@ -129,7 +129,7 @@ app.on('ready', function() {
 
   showMainWindow();
   // loadWelcome();
-  loadDownloads();
+  // loadDownloads();
 });
 
 /*
@@ -236,40 +236,6 @@ ipcMain.on('request-side-menu', (event, arg) => {
   sideMenu.popup(mainWindow);
 });
 
-ipcMain.on('request-resume-download', (event, arg) => {
-  for(var i = 0; i < downloadsArray.length; i++) {
-    if(downloadsArray[i].index == arg) {
-      downloadsArray[i].item.resume();
-    }
-  }
-});
-
-ipcMain.on('request-pause-download', (event, arg) => {
-  for(var i = 0; i < downloadsArray.length; i++) {
-    if(downloadsArray[i].index == arg) {
-      downloadsArray[i].item.pause();
-    }
-  }
-});
-
-ipcMain.on('request-cancel-download', (event, arg) => {
-  for(var i = 0; i < downloadsArray.length; i++) {
-    if(downloadsArray[i].index == arg) {
-      downloadsArray[i].item.cancel();
-    }
-  }
-});
-
-ipcMain.on('request-remove-download', (event, arg) => {
-  for(var i = 0; i < downloadsArray.length; i++) {
-    if(downloadsArray[i].index == arg) {
-      downloadsArray.splice(i, 1);
-      break;
-    }
-  }
-  saveDownloads();
-});
-
 ipcMain.on('request-quit-app', (event, arg) => {
   app.quit();
 });
@@ -301,6 +267,27 @@ ipcMain.on('request-change-theme', (event, theme) => {
 
 ipcMain.on('request-toggle-fullscreen', (event, arg) => {
   toggleFullscreen();
+});
+
+/*
+ # #####   ####              #####   ####  #    # #    # #       ####    ##   #####   ####
+ # #    # #    #             #    # #    # #    # ##   # #      #    #  #  #  #    # #
+ # #    # #         #####    #    # #    # #    # # #  # #      #    # #    # #    #  ####
+ # #####  #                  #    # #    # # ## # #  # # #      #    # ###### #    #      #
+ # #      #    #             #    # #    # ##  ## #   ## #      #    # #    # #    # #    #
+ # #       ####              #####   ####  #    # #    # ######  ####  #    # #####   ####
+*/
+
+ipcMain.on("downloadManager-resumeDownload", (event, id) => {
+  tabManager.resumeDownload(id);
+});
+
+ipcMain.on("downloadManager-pauseDownload", (event, id) => {
+  tabManager.pauseDownload(id);
+});
+
+ipcMain.on("downloadManager-cancelDownload", (event, id) => {
+  tabManager.cancelDownload(id);
 });
 
 /*
