@@ -1,4 +1,4 @@
-const BlankNotification = require(__dirname + '/BlankNotification.js');
+const BlankNotification = require(__dirname + "/BlankNotification.js");
 
 class TextNotification extends BlankNotification {
     text = "";
@@ -8,11 +8,11 @@ class TextNotification extends BlankNotification {
 
         this.text = text;
 
-        super.getNode().getElementsByClassName('notif-body')[0].innerHTML = `<label class='notif-text'>` + this.text + `</label>`;
+        super.getNode().getElementsByClassName("notif-body")[0].innerHTML = `<label class='notif-text'>${this.text}</label>`;
     }
 
     setText(text) {
-        this.getNode().getElementsByClassName('notif-text')[0].innerHTML = text;
+        this.getNode().getElementsByClassName("notif-text")[0].innerHTML = text;
         super.refreshTimeout();
     }
 }

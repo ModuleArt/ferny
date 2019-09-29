@@ -53,20 +53,20 @@ class TabRenderer extends EventEmitter {
         tab.onclick = () => {
             tab.focus();
             ipcRenderer.send("tabManager-activateTab", id);
-        }
+        };
         tab.onauxclick = (event) => {
             event.preventDefault();
             if(event.which === 2) {
                 ipcRenderer.send("tabManager-closeTab", id);
             }
-        }
+        };
         tab.ondragenter = (event) => {
             event.preventDefault();
             ipcRenderer.send("tabManager-activateTab", id);
-        }
+        };
         tab.ondragover = (event) => {
             event.preventDefault();
-        }
+        };
         tab.ondrop = (event) => {
             event.preventDefault();
             var textData = event.dataTransfer.getData("Text");
@@ -75,7 +75,7 @@ class TabRenderer extends EventEmitter {
             } else if(event.dataTransfer.files.length > 0) {
                 ipcRenderer.send("tabManager-navigate", "file://" + event.dataTransfer.files[0].path);
             }
-        }
+        };
         // tab.onmouseenter = (event) => {
         //     ipcRenderer.send("tabManager-showPreview", id);
         // }
@@ -85,14 +85,14 @@ class TabRenderer extends EventEmitter {
         tab.oncontextmenu = (event) => {
             ipcRenderer.send("tabManager-showTabMenu", id);
             ipcRenderer.send("tabManager-hidePreview", id);
-        }
+        };
 
         let closeButton = document.createElement('button');
         closeButton.title = "Close tab";
         closeButton.onclick = (event) => {
             event.stopPropagation();
             ipcRenderer.send("tabManager-closeTab", id);
-        }
+        };
         tab.getElementsByClassName("tabman-tab-buttons")[0].appendChild(closeButton);
 
         this.tabContainer.appendChild(tab);

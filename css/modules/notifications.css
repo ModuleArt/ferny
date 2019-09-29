@@ -19,7 +19,7 @@
     left: 0;
     right: 0;
     height: 33px;
-    -webkit-app-region: drag;
+    -webkit-app-region: no-drag;
 }
 
 .notif.closed {
