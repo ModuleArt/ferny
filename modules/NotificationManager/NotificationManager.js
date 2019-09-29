@@ -8,7 +8,6 @@ const TextNotification = require(__dirname + '/Notifications/TextNotification.js
 const StatusNotification = require(__dirname + '/Notifications/StatusNotification.js');
 const QuestNotification = require(__dirname + '/Notifications/QuestNotification.js');
 const ZoomNotification = require(__dirname + '/Notifications/ZoomNotification.js');
-const UpdateNotification = require(__dirname + '/Notifications/UpdateNotification.js');
 
 class NotificationManager extends EventEmitter {
     maxNotifCount = 1;
@@ -51,28 +50,6 @@ class NotificationManager extends EventEmitter {
 
     addQuestNotif(text, buttons) {
         this.appendNotif(new QuestNotification(this.notifCounter++, false, text, buttons));
-    }
-
-    addUpdateNotif(releaseName) {
-        if(releaseName == null) {
-            this.appendNotif(new UpdateNotification(this.notifCounter++, false, "Downloading update"));
-        } else {
-            this.appendNotif(new UpdateNotification(this.notifCounter++, false, "Downloading update: " + releaseName));
-        }
-    }
-
-    refreshUpdateNotif(percent, transferred, total, speed) {
-        let bool = true;
-        for(let i = 0; i < this.notifArray.length; i++) {
-            if(this.notifArray[i].constructor.name == "UpdateNotification") {
-                bool = false;
-                this.notifArray[i].setProgress(percent, transferred, total, speed);
-                break;
-            }
-        }
-        if(bool) {
-            this.addUpdateNotif();
-        }
     }
 
     addZoomNotif(zoom) {

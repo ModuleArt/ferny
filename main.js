@@ -95,35 +95,40 @@ app.on("ready", function() {
   autoUpdater.logger = require("electron-log");
   autoUpdater.logger.transports.file.level = "info";
 
-  autoUpdater.on('checking-for-update', () => {
-    mainWindow.webContents.send('action-add-status-notif', { type: "info", text: "Checking for updates..." });
+  autoUpdater.on("checking-for-update", () => {
+    mainWindow.webContents.send("action-add-status-notif", { type: "info", text: "Checking for updates..." });
   });
 
-  autoUpdater.on('error', (error) => {
-    mainWindow.webContents.send('action-add-status-notif', { type: "error", text: "Update error: " + error });
+  autoUpdater.on("error", (error) => {
+    mainWindow.webContents.send("action-add-status-notif", { type: "error", text: "Update error: " + error });
   });
 
-  autoUpdater.on('update-not-available', () => {
-    mainWindow.webContents.send('action-add-status-notif', { type: "success", text: "App is up to date!" });
+  autoUpdater.on("update-not-available", () => {
+    mainWindow.webContents.send("action-add-status-notif", { type: "success", text: "App is up to date!" });
   });
 
-  autoUpdater.on('update-available', (info) => {
-    mainWindow.webContents.send('action-add-status-notif', { type: "success", text: "Update is available. Download started..." });
-    mainWindow.webContents.send('action-add-update-notif', info.releaseName);
+  autoUpdater.on("update-available", (info) => {
+    mainWindow.webContents.send("action-add-status-notif", { type: "success", text: `Update is available: "${info.releaseName}". Download started...` });
   });
 
-  autoUpdater.on('update-downloaded', () => {
-    mainWindow.webContents.send('action-add-quest-notif', { text: "Update is downloaded!", ops: [{ text:'Install now', icon:'check-16', click:'installUpdate();' }] });
+  autoUpdater.on("update-downloaded", () => {
+    mainWindow.webContents.send("action-add-quest-notif", { text: "Update is downloaded!", ops: [{ 
+      text: "Install now", 
+      icon: "check-16", 
+      click: "installUpdate();" 
+    }] });
   });
 
-  autoUpdater.on('download-progress', (progress) => {
+  autoUpdater.on("download-progress", (progress) => {
     if(progress != null) {
-      mainWindow.webContents.send('action-refresh-update-notif', { 
-        percent: progress.percent, 
-        transferred: progress.transferred, 
-        total: progress.total,
-        speed: progress.bytesPerSecond
-      });
+      let perc = Math.round(progress.percent);
+      if(perc % 25 == 0 && perc != 100) {
+        mainWindow.webContents.send("action-add-quest-notif", { text: `Update is being downloaded: ${perc}%`, ops: [{ 
+          text: "Cancel", 
+          icon: "cancel-16", 
+          click: "cancelUpdate();" 
+        }] });
+      }
     }
   });
 
