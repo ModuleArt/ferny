@@ -9,8 +9,8 @@ function applyWinControls(type) {
 }
 
 function setWindows(type) {
-    var windowControls = document.getElementById('window-controls');
-    windowControls.classList.add('windows');
+    var windowControls = document.getElementById("window-controls");
+    windowControls.classList.add("windows");
 
     if(type == null) {
         windowControls.innerHTML = `
@@ -35,8 +35,8 @@ function setWindows(type) {
 }
 
 function setLinux(type) {
-    var windowControls = document.getElementById('window-controls');
-    windowControls.classList.add('linux');
+    var windowControls = document.getElementById("window-controls");
+    windowControls.classList.add("linux");
 
     if(type == null) {
         windowControls.innerHTML = `
@@ -47,7 +47,7 @@ function setLinux(type) {
         `;
     } else if(type == "only-close") {
         windowControls.innerHTML = `
-            <button class="nav-btn" title="Close" id="close-btn" onclick="restoreWindow()"><img name="cancel-12" class="theme-icon"></button>
+            <button class="nav-btn" title="Close" id="close-btn" onclick="closeWindow()"><img name="cancel-12" class="theme-icon"></button>
         `;
     }
 }

@@ -25,10 +25,10 @@ class Tab extends EventEmitter {
             }
         });
         this.view.setBackgroundColor("#FFFFFF");
-        this.view.setAutoResize({
-            width: true,
-            height: true
-        });
+        // this.view.setAutoResize({
+        //     width: true,
+        //     height: true
+        // });
 
         this.view.webContents.on("page-title-updated", (event, title, explicitSet) => {
             this.window.webContents.send("tabRenderer-setTabTitle", { id: this.id, title });
@@ -253,7 +253,6 @@ class Tab extends EventEmitter {
 
     activate() {
         this.window.setBrowserView(this.view);
-        this.view.setBackgroundColor("#FFFFFF");
         this.window.webContents.send("tabRenderer-activateTab", this.id);
         this.window.webContents.send("tabRenderer-updateNavigationButtons", {
             canGoBack: this.view.webContents.canGoBack(),

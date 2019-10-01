@@ -17,6 +17,7 @@ const loadFileFromJsonFolder = require("../modules/loadFileFromJsonFolder.js");
 const loadTheme = require("../modules/loadTheme.js");
 const applyTheme = require("../modules/applyTheme.js");
 const bytesToSize = require("../modules/bytesToSize.js");
+const applyWinControls = require("../modules/applyWinControls.js");
 
 /*
  ###### #    # #    #  ####              ##### #    # ###### #    # ######  ####
@@ -92,6 +93,19 @@ function requestTheme(theme) {
       applyTheme(themeObj);
     });
   });
+}
+
+/*
+ ###### #    # #    #  ####              #    # # #    # #####   ####  #    #
+ #      #    # ##   # #    #             #    # # ##   # #    # #    # #    #
+ #####  #    # # #  # #         #####    #    # # # #  # #    # #    # #    #
+ #      #    # #  # # #                  # ## # # #  # # #    # #    # # ## #
+ #      #    # #   ## #    #             ##  ## # #   ## #    # #    # ##  ##
+ #       ####  #    #  ####              #    # # #    # #####   ####  #    #
+*/
+
+function closeWindow() {
+  ipcRenderer.send("settings-closeWindow");
 }
 
 /*
@@ -280,6 +294,23 @@ ipcRenderer.on("action-set-cache-size", (event, arg) => {
 });
 
 /*
+ # #####   ####              #    # # #    # #####   ####  #    #
+ # #    # #    #             #    # # ##   # #    # #    # #    #
+ # #    # #         #####    #    # # # #  # #    # #    # #    #
+ # #####  #                  # ## # # #  # # #    # #    # # ## #
+ # #      #    #             ##  ## # #   ## #    # #    # ##  ##
+ # #       ####              #    # # #    # #####   ####  #    #
+*/
+
+ipcRenderer.on("window-blur", (event) => {
+  document.getElementById("titlebar").classList.add("blur");
+});
+
+ipcRenderer.on("window-focus", (event) => {
+  document.getElementById("titlebar").classList.remove("blur");
+});
+
+/*
  # #    # # #####
  # ##   # #   #
  # # #  # #   #
@@ -289,6 +320,8 @@ ipcRenderer.on("action-set-cache-size", (event, arg) => {
 */
 
 function init() {
+  applyWinControls("only-close");
+
   updateTheme();
 
   loadThemesFromFolder();

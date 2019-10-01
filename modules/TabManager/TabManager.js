@@ -66,7 +66,9 @@ class TabManager extends EventEmitter {
         });
 
         tab.on("activate", (activatedTab) => {
-            activatedTab.setBounds(this.left, this.top, this.getWidth(), this.getHeight());
+            setTimeout(() => {
+                activatedTab.setBounds(this.left, this.top, this.getWidth(), this.getHeight());
+            }, 100);
             this.emit("tab-activated");
         });
 

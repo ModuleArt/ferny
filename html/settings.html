@@ -8,9 +8,17 @@
         <link rel="stylesheet" href="../css/modules/checkbox.css">
         <link rel="stylesheet" href="../css/modules/radio.css">
         <link rel="stylesheet" href="../css/modules/link.css">
+        <link rel="stylesheet" href="../css/modules/titlebar.css">
         <link rel="stylesheet" href="../css/settings.css">
     </head>
     <body>
+        <div id="drag-zone"></div>
+        <div id="titlebar">
+            <img id="titlebar-icon" class="theme-icon" name="settings-16">
+            <label id="titlebar-label">Settings</label>
+            <div id="window-controls"></div>
+        </div>
+        
         <div class="sidebar" id="sidebar">
             <button class="nav-btn active" onclick="showCategory('themes')">
                 <img name="theme-16" class="theme-icon">

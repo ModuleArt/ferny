@@ -211,6 +211,9 @@ class SearchManager extends EventEmitter {
             case "youtube":
                 this.newTab("https://www.youtube.com/results?search_query=" + text);
                 break;
+            case "ecosia":
+                this.newTab("https://www.ecosia.org/search?q=" + text);
+                break;
         }
     }
       

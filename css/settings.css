@@ -57,7 +57,6 @@
 */
 
 body {
-    border-top: 1px solid var(--color-border);
     padding: 0;
     margin: 0;
     overflow: hidden;
@@ -76,11 +75,11 @@ body {
 .sidebar {
     position: absolute;
     left: 0;
-    top: 0;
+    top: 33px;
     bottom: 0;
-    width: 30%;
+    width: 35%;
     border-right: 1px solid var(--color-border);
-    padding: 2px;
+    padding: 16px;
 }
 
 .sidebar button {
@@ -106,9 +105,9 @@ hr {
 .container {
     position: absolute;
     right: 0;
-    top: 0;
+    top: 33px;
     bottom: 0;
-    width: 70%;
+    width: 65%;
     animation: append-center;
     animation-duration: 0.25s;
     display: none;

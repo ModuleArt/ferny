@@ -371,6 +371,10 @@ ipcMain.on("action-open-settings", (event) => {
   showSettingsWindow();
 });
 
+ipcMain.on("settings-closeWindow", (event) => {
+  settingsWindow.close();
+});
+
 /*
  # #####   ####               ####  #    # ###### #####  #        ##   #   #
  # #    # #    #             #    # #    # #      #    # #       #  #   # #
@@ -664,6 +668,7 @@ function showSettingsWindow() {
       settingsWindow = new BrowserWindow({
         title: "Settings",
         modal: true,
+        frame: false,
         parent: mainWindow,
         width: 640, height: 480,
         resizable: false,
@@ -676,6 +681,14 @@ function showSettingsWindow() {
       });
   
       settingsWindow.loadFile(app.getAppPath() + "/html/settings.html");
+
+      settingsWindow.on("focus", () => {
+        settingsWindow.webContents.send("window-focus");
+      });
+    
+      settingsWindow.on("blur", () => {
+        settingsWindow.webContents.send("window-blur");
+      });
 
       settingsWindow.once("ready-to-show", () => {
         settingsWindow.show();
@@ -747,22 +760,31 @@ function showMainWindow() {
       });
 
       mainWindow.on("resize", () => {
-        // overlay.refreshBounds();
+        setTimeout(() => {
+          
+          overlay.refreshBounds();
+        }, 150);
+        if(tabManager.hasActiveTab()) {
+            tabManager.getActiveTab().activate();
+          }
       });
     
       mainWindow.on("maximize", () => {
         mainWindow.webContents.send("window-maximize");
-        if(tabManager.hasActiveTab()) {
-          tabManager.getActiveTab().activate();
-        }
+        // if(tabManager.hasActiveTab()) {
+        //   tabManager.getActiveTab().activate();
+        // }
+        // setTimeout(() => {
+        //   overlay.refreshBounds();
+        // }, 150);
         // overlay.refreshBounds();
       });
     
       mainWindow.on("unmaximize", () => {
         mainWindow.webContents.send("window-unmaximize");
-        if(tabManager.hasActiveTab()) {
-          tabManager.getActiveTab().activate();
-        }
+        // if(tabManager.hasActiveTab()) {
+        //   tabManager.getActiveTab().activate();
+        // }
         // overlay.refreshBounds();
       });
     
