@@ -52,6 +52,7 @@
     "get-ssl-certificate": "^2.3.2",
     "get-title-at-url": "^1.1.6",
     "is-dark-color": "^1.2.0",
+    "is-directory": "^0.3.1",
     "isotope-layout": "^3.0.6",
     "jquery": "^3.4.1",
     "parse-path": "^4.0.1",
@@ -63,7 +64,7 @@
     "validate.io-uri": "^1.0.0"
   },
   "devDependencies": {
-    "electron-nightly": "^8.0.0-nightly.20190930",
+    "electron": "^6.0.10",
     "electron-builder": "^20.44.4"
   },
   "build": {

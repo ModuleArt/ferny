@@ -205,13 +205,6 @@ ipcMain.on('request-cancel-update', (event, arg) => {
   cancelUpdate();
 });
 
-ipcMain.on('request-check-open-with', (event, arg) => {
-  if (process.platform == 'win32' && process.argv.length >= 2) {
-    var openFilePath = process.argv[1];
-    mainWindow.webContents.send('action-open-url-in-new-tab', openFilePath);
-  }
-});
-
 ipcMain.on('request-clear-browsing-data', (event, arg) => {
   const ses = mainWindow.webContents.session;
 
@@ -783,12 +776,11 @@ function showMainWindow() {
 
       mainWindow.on("resize", () => {
         setTimeout(() => {
-          
           overlay.refreshBounds();
         }, 150);
         if(tabManager.hasActiveTab()) {
-            tabManager.getActiveTab().activate();
-          }
+          tabManager.getActiveTab().activate();
+        }
       });
     
       mainWindow.on("maximize", () => {
@@ -818,18 +810,23 @@ function showMainWindow() {
         loadHomePage().then((homePage) => {
           tabManager.setHomePage(homePage);
         });
-      
-        loadStartup().then((startup) => {
-          if(startup == "overlay") {
-            overlay.show();
-          } else if(startup == "new-tab") {
-            tabManager.newTab();
-          }
-        });
   
         mainWindow.show();
         if(Data.maximize) {
           mainWindow.maximize();
+        }
+
+        if(process.argv.length >= 2 && process.argv[1] !== ".") {
+          let openFilePath = process.argv[1];
+          tabManager.addTab("file://" + openFilePath, true);
+        } else {
+          loadStartup().then((startup) => {
+            if(startup == "overlay") {
+              overlay.show();
+            } else if(startup == "new-tab") {
+              tabManager.newTab();
+            }
+          });
         }
       });
     

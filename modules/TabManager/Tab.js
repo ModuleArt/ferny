@@ -2,6 +2,7 @@ const EventEmitter = require("events");
 const { BrowserView, Menu, clipboard } = require("electron");
 const fileExtension = require("file-extension");
 const parsePath = require("parse-path");
+const isDirectory = require("is-directory");
 
 const extToImagePath = require(__dirname + "/../extToImagePath.js");
 
@@ -56,6 +57,19 @@ class Tab extends EventEmitter {
             });
             this.window.webContents.send("tabRenderer-updateAddressBar", url);
 
+            if(parsePath(url).protocol === "file") {
+                // if(isDirectory(url)) {
+                //     console.log(url);
+                //     this.window.webContents.send("tabRenderer-setTabIcon", { id: this.id, icon: __dirname + "/imgs/icons16/folder.png" });
+                // } else {
+                //     console.log("else")
+                    
+                // }
+                let fileName = url.replace(/^.*[\\\/]/, "");
+                this.window.webContents.send("tabRenderer-setTabTitle", { id: this.id, title: fileName });
+                this.window.webContents.send("tabRenderer-setTabIcon", { id: this.id, icon: extToImagePath(fileExtension(url)) });
+            }
+
             this.emit("add-history-item", url);
         });
 
@@ -98,13 +112,6 @@ class Tab extends EventEmitter {
                 canGoForward: this.view.webContents.canGoForward(),
                 isLoading: this.view.webContents.isLoading()
             });
-
-            let url = this.getURL();
-            if(parsePath(url).protocol === "file") {
-                let fileName = url.replace(/^.*[\\\/]/, "");
-                this.window.webContents.send("tabRenderer-setTabTitle", { id: this.id, title: fileName });
-                this.window.webContents.send("tabRenderer-setTabIcon", { id: this.id, icon: extToImagePath(fileExtension(url)) });
-            }
         });
 
         this.view.webContents.on("enter-html-full-screen", () => {

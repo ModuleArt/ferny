@@ -164,10 +164,6 @@ function bookmarkAllTabs() {
   // });
 }
 
-function checkOpenWith() {
-  ipcRenderer.send('request-check-open-with');
-}
-
 /*
  ###### #    # #    #  ####               ####  #    # ###### #####  #        ##   #   #
  #      #    # ##   # #    #             #    # #    # #      #    # #       #  #   # #
@@ -418,8 +414,6 @@ function init() {
   applyWinControls();
 
   updateTheme();
-
-  // checkOpenWith();
 }
 
 document.onreadystatechange = () => {
