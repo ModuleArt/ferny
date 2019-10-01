@@ -1,25 +1,29 @@
+@font-face {
+    font-family: SegMDL2;
+    src: url(../../fonts/SegMDL2.ttf);
+}
+
 /*
-.########.####.########.##.......########.########.....###....########.
-....##.....##.....##....##.......##.......##.....##...##.##...##.....##
-....##.....##.....##....##.......##.......##.....##..##...##..##.....##
-....##.....##.....##....##.......######...########..##.....##.########.
-....##.....##.....##....##.......##.......##.....##.#########.##...##..
-....##.....##.....##....##.......##.......##.....##.##.....##.##....##.
-....##....####....##....########.########.########..##.....##.##.....##
+ ##### # ##### #      ###### #####    ##   #####
+   #   #   #   #      #      #    #  #  #  #    #
+   #   #   #   #      #####  #####  #    # #    #
+   #   #   #   #      #      #    # ###### #####
+   #   #   #   #      #      #    # #    # #   #
+   #   #   #   ###### ###### #####  #    # #    #
 */
 
 #titlebar-icon {
     float: left;
     padding: 8px;
-  }
+}
   
-  #titlebar-title {
+#titlebar-title {
     position: absolute;
     top: 6px;
     left: 30px;
-  }
+}
   
-  #drag-zone {
+#drag-zone {
     -webkit-app-region: drag;
     position: absolute;
     left: 4px;
@@ -27,9 +31,9 @@
     top: 4px;
     bottom: calc(100% - 32px);
     z-index: -100;
-  }
+}
   
-  #titlebar {
+#titlebar {
     position: absolute;
     top: 0;
     right: 0;
@@ -37,62 +41,61 @@
     height: 33px;
     border-bottom: 1px solid var(--color-border);
     background-color: var(--color-element);
-  }
+}
 
-  #titlebar-icon {
+#titlebar-icon {
     padding: 8px;
-  }
+}
 
-  #window-controls #close-btn:hover {
+#window-controls #close-btn:hover {
     background-color: #E81022;
     color: white;
     opacity: 1 !important;
-  }
+}
 
-  #titlebar-label {
+#titlebar-label {
     position: absolute;
     top: 6px;
     left: 34px;
     font-size: var(--px-font);
     color: var(--color-top);
-  }
-
-#titlebar.blur #titlebar-label {
-  opacity: 0.5;
 }
 
-  #titlebar.blur #window-controls .button, #titlebar.blur .theme-icon, #window-controls .button:active, #window-controls #close-btn:active {
+#titlebar.blur #titlebar-label {
+    opacity: 0.5;
+}
+
+#titlebar.blur #window-controls .button, #titlebar.blur .theme-icon, #window-controls .button:active, #window-controls #close-btn:active {
     opacity: 0.5 !important;
-  }
+}
   
-  /*
-  .##......##.####.##....##.....######...#######..##....##.########.########...#######..##........######.
-  .##..##..##..##..###...##....##....##.##.....##.###...##....##....##.....##.##.....##.##.......##....##
-  .##..##..##..##..####..##....##.......##.....##.####..##....##....##.....##.##.....##.##.......##......
-  .##..##..##..##..##.##.##....##.......##.....##.##.##.##....##....########..##.....##.##........######.
-  .##..##..##..##..##..####....##.......##.....##.##..####....##....##...##...##.....##.##.............##
-  .##..##..##..##..##...###....##....##.##.....##.##...###....##....##....##..##.....##.##.......##....##
-  ..###..###..####.##....##.....######...#######..##....##....##....##.....##..#######..########..######.
-  */
+/*
+ #    # # #    #     ####   ####  #    # ##### #####   ####  #       ####
+ #    # # ##   #    #    # #    # ##   #   #   #    # #    # #      #
+ #    # # # #  #    #      #    # # #  #   #   #    # #    # #       ####
+ # ## # # #  # #    #      #    # #  # #   #   #####  #    # #           #
+ ##  ## # #   ##    #    # #    # #   ##   #   #   #  #    # #      #    #
+ #    # # #    #     ####   ####  #    #   #   #    #  ####  ######  ####
+*/
   
-  #window-controls {
+#window-controls {
     -webkit-app-region: no-drag;
     float: right;
     height: 32px;
     display: grid;
-    grid-template-columns: repeat(3, 46px);
-  }
+    grid-template-columns: repeat(1, 46px);
+}
   
-  #window-controls.linux {
+#window-controls.linux {
     grid-template-columns: repeat(1, 32px);
-  }
+}
   
-  #window-controls span {
+#window-controls span {
     font-family: SegMDL2;
     font-size: 10px;
-  }
+}
   
-  #window-controls .nav-btn {
+#window-controls .nav-btn {
     grid-row: 1 / span 1;
     border-radius: 0;
     width: 34px;
@@ -101,22 +104,22 @@
     border: none;
     background-color: transparent;
     border: 1px solid transparent;
-  }
+}
   
-  #window-controls .nav-btn:hover {
+#window-controls .nav-btn:hover {
     background-color: var(--color-second);
     border-color: var(--color-border);
-  }
+}
   
-  #window-controls .nav-btn:focus {
+#window-controls .nav-btn:focus {
     border-color: var(--color-border);
-  }
+}
   
-  #window-controls .nav-btn:active {
+#window-controls .nav-btn:active {
     background-color: var(--color-border);
-  }
+}
   
-  #window-controls .button {
+#window-controls .button {
     grid-row: 1 / span 1;
     display: flex;
     justify-content: center;
@@ -125,4 +128,4 @@
     height: 100%;
     color: var(--color-top);
     transition: background-color 0.25s;
-  }
+}

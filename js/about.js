@@ -22,6 +22,7 @@ const { ipcRenderer } = require("electron");
 
 const loadTheme = require("../modules/loadTheme.js");
 const applyTheme = require("../modules/applyTheme.js");
+const applyWinControls = require("../modules/applyWinControls.js");
 
 /*
 .########.##.....##.##....##..######..########.####..#######..##....##..######.
@@ -109,6 +110,19 @@ function updateTheme() {
 }
 
 /*
+ ###### #    # #    #  ####              #    # # #    # #####   ####  #    #
+ #      #    # ##   # #    #             #    # # ##   # #    # #    # #    #
+ #####  #    # # #  # #         #####    #    # # # #  # #    # #    # #    #
+ #      #    # #  # # #                  # ## # # #  # # #    # #    # # ## #
+ #      #    # #   ## #    #             ##  ## # #   ## #    # #    # ##  ##
+ #       ####  #    #  ####              #    # # #    # #####   ####  #    #
+*/
+
+function closeWindow() {
+  ipcRenderer.send("about-closeWindow");
+}
+
+/*
 .####.########...######.....########..########.##....##.########..########.########..########.########.
 ..##..##.....##.##....##....##.....##.##.......###...##.##.....##.##.......##.....##.##.......##.....##
 ..##..##.....##.##..........##.....##.##.......####..##.##.....##.##.......##.....##.##.......##.....##
@@ -123,6 +137,23 @@ ipcRenderer.on("action-set-about", (event, arg) => {
 });
 
 /*
+ # #####   ####              #    # # #    # #####   ####  #    #
+ # #    # #    #             #    # # ##   # #    # #    # #    #
+ # #    # #         #####    #    # # # #  # #    # #    # #    #
+ # #####  #                  # ## # # #  # # #    # #    # # ## #
+ # #      #    #             ##  ## # #   ## #    # #    # ##  ##
+ # #       ####              #    # # #    # #####   ####  #    #
+*/
+
+ipcRenderer.on("window-blur", (event) => {
+  document.getElementById("titlebar").classList.add("blur");
+});
+
+ipcRenderer.on("window-focus", (event) => {
+  document.getElementById("titlebar").classList.remove("blur");
+});
+
+/*
  # #    # # #####
  # ##   # #   #
  # # #  # #   #
@@ -132,6 +163,8 @@ ipcRenderer.on("action-set-about", (event, arg) => {
 */
 
 function init() {
+  applyWinControls("only-close");
+
   updateTheme();
 
   loadAbout();

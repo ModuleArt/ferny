@@ -376,6 +376,19 @@ ipcMain.on("settings-closeWindow", (event) => {
 });
 
 /*
+ # #####   ####                ##   #####   ####  #    # #####
+ # #    # #    #              #  #  #    # #    # #    #   #
+ # #    # #         #####    #    # #####  #    # #    #   #
+ # #####  #                  ###### #    # #    # #    #   #
+ # #      #    #             #    # #    # #    # #    #   #
+ # #       ####              #    # #####   ####   ####    #
+*/
+
+ipcMain.on("about-closeWindow", (event) => {
+  aboutWindow.close();
+});
+
+/*
  # #####   ####               ####  #    # ###### #####  #        ##   #   #
  # #    # #    #             #    # #    # #      #    # #       #  #   # #
  # #    # #         #####    #    # #    # #####  #    # #      #    #   #
@@ -646,6 +659,7 @@ function showAboutWindow() {
         width: 480, height: 350,
         resizable: false,
         show: false,
+        frame: false,
         icon: app.getAppPath() + "/imgs/icon.ico",
         webPreferences: {
           nodeIntegration: true
@@ -654,6 +668,14 @@ function showAboutWindow() {
       });
   
       aboutWindow.loadFile(app.getAppPath() + "/html/about.html");
+
+      aboutWindow.on("focus", () => {
+        aboutWindow.webContents.send("window-focus");
+      });
+    
+      aboutWindow.on("blur", () => {
+        aboutWindow.webContents.send("window-blur");
+      });
 
       aboutWindow.once("ready-to-show", () => {
         aboutWindow.show();
