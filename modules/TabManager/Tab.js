@@ -1,8 +1,7 @@
 const EventEmitter = require("events");
-const { BrowserView, Menu, clipboard } = require("electron");
+const { BrowserView, Menu, MenuItem, clipboard } = require("electron");
 const fileExtension = require("file-extension");
 const parsePath = require("parse-path");
-const isDirectory = require("is-directory");
 
 const extToImagePath = require(__dirname + "/../extToImagePath.js");
 
@@ -367,6 +366,20 @@ class Tab extends EventEmitter {
             label: "Reload ignoring cache", accelerator: "CmdOrCtrl+F5", click: () => { 
                 this.reloadIgnoringCache(); 
             } }, { type: "separator" }, { 
+            label: "Move tab", icon: this.appPath + "/imgs/icons16/divider-horizontal.png", submenu: [{
+                label: "Move left", accelerator: "CmdOrCtrl+Shift+PageUp", icon: this.appPath + "/imgs/icons16/prev.png", click: () => {
+
+                } }, {
+                label: "Move right", accelerator: "CmdOrCtrl+Shift+PageDown", icon: this.appPath + "/imgs/icons16/next.png", click: () => {
+
+                } }, { type: "separator" }, {
+                label: "Move to start", accelerator: "CmdOrCtrl+Shift+Home", icon: this.appPath + "/imgs/icons16/to-start.png", click: () => {
+
+                } }, {
+                label: "Move to end", accelerator: "CmdOrCtrl+Shift+End", icon: this.appPath + "/imgs/icons16/to-end.png", click: () => {
+
+                } } 
+            ] }, { type: "separator" }, { 
             label: "Close to the right", icon: this.appPath + "/imgs/icons16/swipe-right.png", click: () => { 
                 this.closeToTheRight(); 
             } }, { 
@@ -377,6 +390,31 @@ class Tab extends EventEmitter {
                 this.close(); 
             } }
         ]);
+
+        let history = new MenuItem({
+            label: "History",
+            icon: this.appPath + "/imgs/icons16/history.png",
+            submenu: []
+        });
+
+        let sep = new MenuItem({
+            type: "separator"
+        });
+
+        this.view.webContents.history.forEach((value, index) => {
+            let historyItem = new MenuItem({
+                label: value,
+                click: () => {
+                    this.navigate(value);
+                },
+                icon: this.appPath + "/imgs/icons16/link.png"
+            });
+            history.submenu.append(historyItem);
+        });
+
+        tabMenu.insert(8, history);
+        tabMenu.insert(9, sep);
+
         tabMenu.popup(this.window);
     }
 

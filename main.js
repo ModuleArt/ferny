@@ -112,6 +112,7 @@ app.on("ready", function() {
   });
 
   autoUpdater.on("update-downloaded", () => {
+    updateCancellationToken = null;
     mainWindow.webContents.send("action-add-quest-notif", { text: "Update is downloaded!", ops: [{ 
       text: "Install now", 
       icon: "check-16", 
