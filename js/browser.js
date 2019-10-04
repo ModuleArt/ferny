@@ -343,52 +343,60 @@ ipcRenderer.on('overlay-toggleButton', (event, bool) => {
  # #       ####                #   #    # #####     #    # ###### #    # #####  ###### #    # ###### #    #
 */
 
-ipcRenderer.on('tabRenderer-addTab', (event, arg) => {
+ipcRenderer.on("tabRenderer-addTab", (event, arg) => {
   tabRenderer.addTab(arg.id, arg.url, arg.active)
 });
 
-ipcRenderer.on('tabRenderer-activateTab', (event, id) => {
+ipcRenderer.on("tabRenderer-activateTab", (event, id) => {
   tabRenderer.activateTab(id);
 });
 
-ipcRenderer.on('tabRenderer-closeTab', (event, id) => {
+ipcRenderer.on("tabRenderer-closeTab", (event, id) => {
   tabRenderer.closeTab(id);
 });
 
-ipcRenderer.on('tabRenderer-setTabTitle', (event, arg) => {
+ipcRenderer.on("tabRenderer-setTabTitle", (event, arg) => {
   tabRenderer.setTabTitle(arg.id, arg.title);
 });
 
-ipcRenderer.on('tabRenderer-setTabIcon', (event, arg) => {
+ipcRenderer.on("tabRenderer-setTabIcon", (event, arg) => {
   tabRenderer.setTabIcon(arg.id, arg.icon);
 });
 
-ipcRenderer.on('tabRenderer-updateNavigationButtons', (event, arg) => {
+ipcRenderer.on("tabRenderer-updateNavigationButtons", (event, arg) => {
   tabRenderer.updateNavigationButtons(arg.canGoBack, arg.canGoForward, arg.isLoading);
 });
 
-ipcRenderer.on('tabRenderer-updateAddressBar', (event, url) => {
+ipcRenderer.on("tabRenderer-updateAddressBar", (event, url) => {
   tabRenderer.updateAddressBar(url);
 });
 
-ipcRenderer.on('tabRenderer-showPreview', (event, id, dataURL) => {
+ipcRenderer.on("tabRenderer-showPreview", (event, id, dataURL) => {
   tabRenderer.showPreview(id, dataURL);
 });
 
-ipcRenderer.on('tabRenderer-hidePreview', (event, id) => {
+ipcRenderer.on("tabRenderer-hidePreview", (event, id) => {
   tabRenderer.hidePreview(id);
 });
 
-ipcRenderer.on('tabRenderer-unactivateAllTabs', (event) => {
+ipcRenderer.on("tabRenderer-unactivateAllTabs", (event) => {
   tabRenderer.unactivateAllTabs();
 });
 
-ipcRenderer.on('tabRenderer-updateTargetURL', (event, url) => {
+ipcRenderer.on("tabRenderer-updateTargetURL", (event, url) => {
   tabRenderer.updateTargetURL(url);
 });
 
-ipcRenderer.on('tabRenderer-setHomePage', (event, homePage) => {
-  var btn = document.getElementById('home-btn');
+ipcRenderer.on("tabRenderer-moveTabBefore", (event, id, beforeId) => {
+  tabRenderer.moveTabBefore(id, beforeId);
+});
+
+ipcRenderer.on("tabRenderer-moveTabToEnd", (event, id) => {
+  tabRenderer.moveTabToEnd(id);
+});
+
+ipcRenderer.on("tabRenderer-setHomePage", (event, homePage) => {
+  var btn = document.getElementById("home-btn");
   if(homePage.on == 1) {
     btn.style.display = "";
     btn.onclick = () => {

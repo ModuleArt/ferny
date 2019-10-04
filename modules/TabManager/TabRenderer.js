@@ -239,7 +239,7 @@ class TabRenderer extends EventEmitter {
     }
 
     updateTabsPositions() {
-        let tabs = this.tabContainer.getElementsByClassName('tabman-tab');
+        let tabs = this.tabContainer.getElementsByClassName("tabman-tab");
         let arr = [];
         for(let i = 0; i < tabs.length; i++) {
             arr.push(tabs[i].name);
@@ -253,23 +253,43 @@ class TabRenderer extends EventEmitter {
         tabs.forEach((item, index) => {
             arr.push({ 
                 id: item.name, 
-                title: item.getElementsByClassName('tabman-tab-title')[0].innerHTML, 
-                active: item.classList.contains('active') 
+                title: item.getElementsByClassName("tabman-tab-title")[0].innerHTML, 
+                active: item.classList.contains("active") 
             });
         });
-        ipcRenderer.send('tabManager-showTabList', arr);
+        ipcRenderer.send("tabManager-showTabList", arr);
     }
 
     updateTargetURL(url) {
         if(url.length > 0) {
             this.targetURL.innerHTML = url;
-            this.targetURL.classList.add('show');
-            this.addressBar.classList.add('show-target');
+            this.targetURL.classList.add("show");
+            this.addressBar.classList.add("show-target");
         } else {
             this.targetURL.innerHTML = "";
-            this.targetURL.classList.remove('show');
-            this.addressBar.classList.remove('show-target');
+            this.targetURL.classList.remove("show");
+            this.addressBar.classList.remove("show-target");
         }
+    }
+
+    moveTabBefore(id, beforeId) {
+        console.log(id + " / " + beforeId)
+        let tab = document.getElementById("tab-" + id);
+        let beforeTab = document.getElementById("tab-" + beforeId);
+
+        this.tabContainer.insertBefore(tab, beforeTab);
+
+        this.updateTabsPositions();
+
+        return null;
+    }
+
+    moveTabToEnd(id) {
+        this.tabContainer.appendChild(document.getElementById("tab-" + id));
+
+        this.updateTabsPositions();
+
+        return null;
     }
 }
 

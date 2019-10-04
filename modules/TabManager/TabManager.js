@@ -126,6 +126,38 @@ class TabManager extends EventEmitter {
             });
         });
 
+        tab.on("move-left", (id, position) => {
+            this.tabs.forEach((item, index) => {
+                if(item.getPosition() == position - 1) {
+                    this.window.webContents.send("tabRenderer-moveTabBefore", id, item.getId());
+                }
+            });
+        });
+
+        tab.on("move-right", (id, position) => {
+            let rightTab = null;
+
+            this.tabs.forEach((item, index) => {
+                if(item.getPosition() == position + 2) {
+                    rightTab = item;
+                }
+            });
+
+            if(rightTab != null) {
+                this.window.webContents.send("tabRenderer-moveTabBefore", id, rightTab.getId());
+            } else {
+                this.window.webContents.send("tabRenderer-moveTabToEnd", id);
+            }
+        });
+
+        tab.on("move-to-start", (id, position) => {
+            this.tabs.forEach((item, index) => {
+                if(item.getPosition() == 0 && position != 0) {
+                    this.window.webContents.send("tabRenderer-moveTabBefore", id, item.getId());
+                }
+            });
+        });
+
         tab.on("add-history-item", (url) => {
             this.emit("add-history-item", url);
         });

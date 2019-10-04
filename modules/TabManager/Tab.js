@@ -2,6 +2,10 @@ const EventEmitter = require("events");
 const { BrowserView, Menu, MenuItem, clipboard } = require("electron");
 const fileExtension = require("file-extension");
 const parsePath = require("parse-path");
+// let jsdom = require("jsdom");
+// const { JSDOM } = jsdom;
+// const { window } = new JSDOM(`<!DOCTYPE html>`);
+// const jquery = require("jquery")(window);
 
 const extToImagePath = require(__dirname + "/../extToImagePath.js");
 
@@ -368,16 +372,16 @@ class Tab extends EventEmitter {
             } }, { type: "separator" }, { 
             label: "Move tab", icon: this.appPath + "/imgs/icons16/divider-horizontal.png", submenu: [{
                 label: "Move left", accelerator: "CmdOrCtrl+Shift+PageUp", icon: this.appPath + "/imgs/icons16/prev.png", click: () => {
-
+                    this.moveLeft();
                 } }, {
                 label: "Move right", accelerator: "CmdOrCtrl+Shift+PageDown", icon: this.appPath + "/imgs/icons16/next.png", click: () => {
-
+                    this.moveRight();
                 } }, { type: "separator" }, {
                 label: "Move to start", accelerator: "CmdOrCtrl+Shift+Home", icon: this.appPath + "/imgs/icons16/to-start.png", click: () => {
-
+                    this.moveToStart();
                 } }, {
                 label: "Move to end", accelerator: "CmdOrCtrl+Shift+End", icon: this.appPath + "/imgs/icons16/to-end.png", click: () => {
-
+                    this.moveToEnd();
                 } } 
             ] }, { type: "separator" }, { 
             label: "Close to the right", icon: this.appPath + "/imgs/icons16/swipe-right.png", click: () => { 
@@ -402,8 +406,25 @@ class Tab extends EventEmitter {
         });
 
         this.view.webContents.history.forEach((value, index) => {
+            // jquery.ajax({
+            //     url: "http://textance.herokuapp.com/title/" + value,
+            //     async: true,
+            //     complete: (data) => {
+            //         let historyItem = new MenuItem({
+            //             label: data.responseText,
+            //             sublabel: value,
+            //             click: () => {
+            //                 this.navigate(value);
+            //             },
+            //             icon: this.appPath + "/imgs/icons16/link.png"
+            //         });
+            //         history.submenu.append(historyItem);
+            //         tabMenu.popup(this.window);
+            //     }
+            // });
             let historyItem = new MenuItem({
-                label: value,
+                label: value.split("/")[2],
+                sublabel: value,
                 click: () => {
                     this.navigate(value);
                 },
@@ -497,6 +518,22 @@ class Tab extends EventEmitter {
         }
 
         return null;
+    }
+
+    moveLeft() {
+        this.emit("move-left", this.id, this.position);
+    }
+
+    moveRight() {
+        this.emit("move-right", this.id, this.position);
+    }
+
+    moveToStart() {
+        this.emit("move-to-start", this.id, this.position);
+    }
+
+    moveToEnd() {
+        this.window.webContents.send("tabRenderer-moveTabToEnd", this.id);
     }
 }
 
