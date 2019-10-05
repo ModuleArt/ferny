@@ -2,10 +2,6 @@ const EventEmitter = require("events");
 const { BrowserView, Menu, MenuItem, clipboard } = require("electron");
 const fileExtension = require("file-extension");
 const parsePath = require("parse-path");
-// let jsdom = require("jsdom");
-// const { JSDOM } = jsdom;
-// const { window } = new JSDOM(`<!DOCTYPE html>`);
-// const jquery = require("jquery")(window);
 
 const extToImagePath = require(__dirname + "/../extToImagePath.js");
 
@@ -366,6 +362,9 @@ class Tab extends EventEmitter {
             } }, { 
             label: "Go home", icon: this.appPath + "/imgs/icons16/home.png", accelerator: "CmdOrCtrl+Shift+H", click: () => { 
                 this.goHome(); 
+            } }, { 
+            label: "Bookmark tab", icon: this.appPath + "/imgs/icons16/star.png", accelerator: "CmdOrCtrl+Shift+B", click: () => { 
+                this.emit("bookmark-tab", this.getTitle(), this.getURL());
             } }, { type: "separator" }, { 
             label: "Reload ignoring cache", accelerator: "CmdOrCtrl+F5", click: () => { 
                 this.reloadIgnoringCache(); 
@@ -396,34 +395,14 @@ class Tab extends EventEmitter {
         ]);
 
         let history = new MenuItem({
-            label: "History",
+            label: "Tab history",
             icon: this.appPath + "/imgs/icons16/history.png",
             submenu: []
         });
 
-        let sep = new MenuItem({
-            type: "separator"
-        });
-
         this.view.webContents.history.forEach((value, index) => {
-            // jquery.ajax({
-            //     url: "http://textance.herokuapp.com/title/" + value,
-            //     async: true,
-            //     complete: (data) => {
-            //         let historyItem = new MenuItem({
-            //             label: data.responseText,
-            //             sublabel: value,
-            //             click: () => {
-            //                 this.navigate(value);
-            //             },
-            //             icon: this.appPath + "/imgs/icons16/link.png"
-            //         });
-            //         history.submenu.append(historyItem);
-            //         tabMenu.popup(this.window);
-            //     }
-            // });
             let historyItem = new MenuItem({
-                label: value.split("/")[2],
+                label: value.split("/")[2].replace("www.", ""),
                 sublabel: value,
                 click: () => {
                     this.navigate(value);
@@ -433,8 +412,7 @@ class Tab extends EventEmitter {
             history.submenu.append(historyItem);
         });
 
-        tabMenu.insert(8, history);
-        tabMenu.insert(9, sep);
+        tabMenu.insert(9, history);
 
         tabMenu.popup(this.window);
     }

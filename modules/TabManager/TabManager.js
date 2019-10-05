@@ -162,6 +162,10 @@ class TabManager extends EventEmitter {
             this.emit("add-history-item", url);
         });
 
+        tab.on("bookmark-tab", (title, url) => {
+            this.emit("bookmark-tab", title, url);
+        });
+
         this.tabs.push(tab);
 
         tab.navigate(url);

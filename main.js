@@ -620,6 +620,14 @@ function initTabManager() {
   tabManager.on("add-history-item", (url) => {
     overlay.addHistoryItem(url);
   });
+
+  tabManager.on("bookmark-tab", (title, url) => {
+    if(tabManager.hasActiveTab()) {
+      let at = tabManager.getActiveTab();
+      overlay.addBookmark(at.getTitle(), at.getURL());
+      overlay.scrollToId("bookmarks-title"); 
+    }
+  });
 }
 
 /*
@@ -945,6 +953,28 @@ function initMenu() {
           tabManager.getActiveTab().reloadIgnoringCache();
         }
       } }, { type: "separator" }, { 
+      label: "Move tab", icon: app.getAppPath() + "/imgs/icons16/divider-horizontal.png", submenu: [{
+        label: "Move left", accelerator: "CmdOrCtrl+Shift+PageUp", icon: app.getAppPath() + "/imgs/icons16/prev.png", click: () => {
+            if(tabManager.hasActiveTab()) {
+              tabManager.getActiveTab().moveLeft();
+            }
+        } }, {
+        label: "Move right", accelerator: "CmdOrCtrl+Shift+PageDown", icon: app.getAppPath() + "/imgs/icons16/next.png", click: () => {
+          if(tabManager.hasActiveTab()) {
+            tabManager.getActiveTab().moveRight();
+          }
+        } }, { type: "separator" }, {
+        label: "Move to start", accelerator: "CmdOrCtrl+Shift+Home", icon: app.getAppPath() + "/imgs/icons16/to-start.png", click: () => {
+          if(tabManager.hasActiveTab()) {
+            tabManager.getActiveTab().moveToStart();
+          }
+        } }, {
+        label: "Move to end", accelerator: "CmdOrCtrl+Shift+End", icon: app.getAppPath() + "/imgs/icons16/to-end.png", click: () => {
+          if(tabManager.hasActiveTab()) {
+            tabManager.getActiveTab().moveToEnd();
+          }
+        } } 
+    ] }, { type: "separator" }, {
       label: "Close to the right", icon: app.getAppPath() + "/imgs/icons16/swipe-right.png", click: () => { 
         if(tabManager.hasActiveTab()) {
           tabManager.getActiveTab().closeToTheRight(); 
@@ -1166,9 +1196,13 @@ function toggleFullscreen() {
 }
 
 function checkForUpdates() {
-  autoUpdater.checkForUpdates().then((downloadPromise) => {
-    updateCancellationToken = downloadPromise.cancellationToken;
-  });
+  if(updateCancellationToken == null) {
+    autoUpdater.checkForUpdates().then((downloadPromise) => {
+      updateCancellationToken = downloadPromise.cancellationToken;
+    });
+  } else {
+    mainWindow.webContents.send("action-add-status-notif", { type: "warning", text: "The update has already started" });
+  }
 }
 
 function cancelUpdate() {
