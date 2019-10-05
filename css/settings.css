@@ -108,7 +108,7 @@ hr {
     top: 33px;
     bottom: 0;
     width: 65%;
-    animation: append-center;
+    animation: slide-right;
     animation-duration: 0.25s;
     display: none;
     padding: 32px;
@@ -148,11 +148,6 @@ hr {
 .theme {
     display: inline-block;
     width: 100%;
-    background-color: var(--color-element);
-    padding: 2px;
-    margin: 2px;
-    border-radius: calc(var(--px-radius) + 4px);
-    border: 1px solid var(--color-border);
     text-align: left;
 }
   
@@ -161,7 +156,6 @@ hr {
     vertical-align: top;
     margin: 6px;
     margin-left: 0;
-    height: 39px;
 }
   
 .theme div {
@@ -169,13 +163,13 @@ hr {
     padding: 4px;
     display: inline-block;
     width: calc(70% - 22px);
-    height: 39px;
+    height: 33px;
 }
   
 .theme div label, .theme div span {
     display: inline-block;
     vertical-align: top;
-    padding: 4px 8px;
+    padding: 1px 8px;
 }
   
 .theme div span {
@@ -185,7 +179,7 @@ hr {
 .theme div img {
     opacity: var(--opacity-over);
     vertical-align: top;
-    padding: 7px;
+    padding: 4px;
 }
 
 /*

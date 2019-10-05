@@ -65,7 +65,7 @@ class HistoryManager extends EventEmitter {
         });
 
         if(this.historyLimiter && this.history.length > 16) {
-            this.history.splice(this.history.length - 1, 1);
+            this.history.pop();
             this.historyContainer.removeChild(this.historyContainer.lastChild);
         }
 

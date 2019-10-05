@@ -109,6 +109,34 @@ function closeWindow() {
 }
 
 /*
+ ###### #    # #    #  ####               ####  ######   ##   #####   ####  #    #    ###### #    #  ####  # #    # ######
+ #      #    # ##   # #    #             #      #       #  #  #    # #    # #    #    #      ##   # #    # # ##   # #
+ #####  #    # # #  # #         #####     ####  #####  #    # #    # #      ######    #####  # #  # #      # # #  # #####
+ #      #    # #  # # #                       # #      ###### #####  #      #    #    #      #  # # #  ### # #  # # #
+ #      #    # #   ## #    #             #    # #      #    # #   #  #    # #    #    #      #   ## #    # # #   ## #
+ #       ####  #    #  ####               ####  ###### #    # #    #  ####  #    #    ###### #    #  ####  # #    # ######
+*/
+
+function requestSearchEngine(engine) {
+  saveFileToJsonFolder(null, "search-engine", engine).then(function(bool) {
+    ipcRenderer.send("overlay-setSearchEngine", engine);
+  });
+}
+
+function loadSearchEngine() {
+  loadFileFromJsonFolder(null, "search-engine").then((data) => {
+    let searchEngine = data.toString();
+    let radios = document.getElementsByName("search-engine");
+    for(let i = 0; i < radios.length; i++) {
+      if(radios[i].value === searchEngine) {
+        radios[i].checked = true;
+        break;
+      }
+    }
+  });
+}
+
+/*
  ###### #    # #    #  ####              #####   ##   #####      ####  #       ####   ####  ###### #####
  #      #    # ##   # #    #               #    #  #  #    #    #    # #      #    # #      #      #    #
  #####  #    # # #  # #         #####      #   #    # #####     #      #      #    #  ####  #####  #    #
@@ -327,6 +355,7 @@ function init() {
   loadThemesFromFolder();
 
   loadHomePage();
+  loadSearchEngine();
   loadStartup();
   loadTabClosed();
   loadLastTab();

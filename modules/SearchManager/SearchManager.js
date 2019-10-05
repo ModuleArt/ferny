@@ -241,10 +241,11 @@ class SearchManager extends EventEmitter {
     setSearchEngine(engineName) {
         let engines = this.searchEngines.getElementsByClassName("search-engine");
         for(let i = 0; i < engines.length; i++) {
-            if(engines[i].name === engineName) {
+            if(engines[i].name == engineName) {
                 engines[i].classList.add("active");
                 document.getElementById("search-icon").src = engines[i].getElementsByTagName("img")[0].src;
-                break;
+            } else {
+                engines[i].classList.remove("active");
             }
         }
 

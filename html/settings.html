@@ -27,7 +27,12 @@
             <button class="nav-btn" onclick="showCategory('home-page')">
                 <img name="home-16" class="theme-icon">
                 <label>Home page</label>
-            </button><button class="nav-btn" onclick="showCategory('startup')">
+            </button>
+            <button class="nav-btn" onclick="showCategory('search-engine')">
+                <img name="search-16" class="theme-icon">
+                <label>Search engine</label>
+            </button>
+            <button class="nav-btn" onclick="showCategory('startup')">
                 <img name="launch-16" class="theme-icon">
                 <label>On startup</label>
             </button>
@@ -62,6 +67,71 @@
                 <img class="theme-icon" name="save-16">
                 <label>Save</label>
             </button>
+        </div>
+        <div class="container" id="search-engine">
+            <label class="title">Search engine</label>
+            <label class="nav-label">Search engine used in the address bar.</label>
+            <hr>
+            <div class="nav-checkbox">
+                <img src="../imgs/engines/google.png">
+                <label>Google</label>
+                <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" checked name="search-engine" value="google">
+            </div>
+            <div class="nav-checkbox">
+                <img src="../imgs/engines/bing.png">
+                <label>Bing</label>
+                <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" name="search-engine" value="bing">
+            </div>
+            <div class="nav-checkbox">
+                <img src="../imgs/engines/duckduckgo.png">
+                <label>DuckDuckGo</label>
+                <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" name="search-engine" value="duckduckgo">
+            </div>
+            <div class="nav-checkbox">
+                <img src="../imgs/engines/wikipedia.png">
+                <label>Wikipedia</label>
+                <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" name="search-engine" value="wikipedia">
+            </div>
+            <div class="nav-checkbox">
+                <img src="../imgs/engines/yahoo.png">
+                <label>Yahoo</label>
+                <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" name="search-engine" value="yahoo">
+            </div>
+            <div class="nav-checkbox">
+                <img src="../imgs/engines/yandex.png">
+                <label>Yandex</label>
+                <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" name="search-engine" value="yandex">
+            </div>
+            <div class="nav-checkbox">
+                <img src="../imgs/engines/mailru.png">
+                <label>Mail.ru</label>
+                <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" name="search-engine" value="mailru">
+            </div>
+            <div class="nav-checkbox">
+                <img src="../imgs/engines/baidu.png">
+                <label>Baidu</label>
+                <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" name="search-engine" value="baidu">
+            </div>
+            <div class="nav-checkbox">
+                <img src="../imgs/engines/naver.png">
+                <label>Naver</label>
+                <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" name="search-engine" value="naver">
+            </div>
+            <div class="nav-checkbox">
+                <img src="../imgs/engines/qwant.png">
+                <label>Qwant</label>
+                <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" name="search-engine" value="qwant">
+            </div>
+            <div class="nav-checkbox">
+                <img src="../imgs/engines/youtube.png">
+                <label>YouTube</label>
+                <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" name="search-engine" value="youtube">
+            </div>
+            <div class="nav-checkbox">
+                <img src="../imgs/engines/ecosia.png">
+                <label>Ecosia</label>
+                <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" name="search-engine" value="ecosia">
+            </div>
         </div>
         <div class="container" id="startup">
             <label class="title">On startup</label>

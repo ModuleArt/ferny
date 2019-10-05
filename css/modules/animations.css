@@ -20,6 +20,28 @@
   }
 }
 
+@keyframes slide-right {
+  from {
+      opacity: 0;
+      transform: translateX(40px);
+  }
+  to {
+      opacity: 1;
+      transform: translateX(0);
+  }
+}
+
+@keyframes slide-left {
+  from {
+      opacity: 0;
+      transform: translateX(-40px);
+  }
+  to {
+      opacity: 1;
+      transform: translateX(0);
+  }
+}
+
 @keyframes append-center {
     from {
       opacity: 0;

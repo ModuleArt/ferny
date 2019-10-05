@@ -5,11 +5,11 @@ const fs = require("fs");
 function loadSearchEngine() {
     return new Promise(function(resolve, reject) {
         try {
-            fs.readFile(ppath + "/json/searchengine.json", function(err, data) {
-                resolve(data);
+            fs.readFile(ppath + "/json/search-engine.json", function(err, data) {
+                resolve(data.toString());
             });
         } catch (e) {
-            saveFileToJsonFolder(null, "searchengine", "duckduckgo").then((bool) => {
+            saveFileToJsonFolder(null, "search-engine", "duckduckgo").then((bool) => {
                 resolve("duckduckgo");
             })
         }

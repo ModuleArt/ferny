@@ -132,6 +132,10 @@ class Overlay extends EventEmitter {
     setDownloadStatusFailed(download) {
         this.view.webContents.send("downloadManager-setDownloadStatusFailed", download);
     }
+
+    setSearchEngine(engineName) {
+        this.view.webContents.send("searchManager-setSearchEngine", engineName);
+    }
 }
 
 module.exports = Overlay;

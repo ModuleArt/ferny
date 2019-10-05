@@ -311,6 +311,10 @@ ipcRenderer.on("searchManager-performSearch", (event, text) => {
   searchManager.performSearch(text);
 });
 
+ipcRenderer.on("searchManager-setSearchEngine", (event, engine) => {
+  searchManager.setSearchEngine(engine);
+});
+
 /*
  # #####   ####               ####  #    # ###### #####  #        ##   #   #
  # #    # #    #             #    # #    # #      #    # #       #  #   # #

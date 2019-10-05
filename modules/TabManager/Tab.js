@@ -353,6 +353,9 @@ class Tab extends EventEmitter {
             } }, { 
             label: "Reload", icon: this.appPath + "/imgs/icons16/reload.png", accelerator: "F5", click: () => { 
                 this.reload(); 
+            } }, {
+            label: "Reload ignoring cache", accelerator: "CmdOrCtrl+F5", click: () => { 
+                this.reloadIgnoringCache(); 
             } }, { type: "separator" }, { 
             label: "Duplicate", icon: this.appPath + "/imgs/icons16/copy.png", accelerator: "CmdOrCtrl+Shift+D", click: () => { 
                 this.duplicate(); 
@@ -365,9 +368,6 @@ class Tab extends EventEmitter {
             } }, { 
             label: "Bookmark tab", icon: this.appPath + "/imgs/icons16/star.png", accelerator: "CmdOrCtrl+Shift+B", click: () => { 
                 this.emit("bookmark-tab", this.getTitle(), this.getURL());
-            } }, { type: "separator" }, { 
-            label: "Reload ignoring cache", accelerator: "CmdOrCtrl+F5", click: () => { 
-                this.reloadIgnoringCache(); 
             } }, { type: "separator" }, { 
             label: "Move tab", icon: this.appPath + "/imgs/icons16/divider-horizontal.png", submenu: [{
                 label: "Move left", accelerator: "CmdOrCtrl+Shift+PageUp", icon: this.appPath + "/imgs/icons16/prev.png", click: () => {
@@ -412,7 +412,7 @@ class Tab extends EventEmitter {
             history.submenu.append(historyItem);
         });
 
-        tabMenu.insert(9, history);
+        tabMenu.insert(10, history);
 
         tabMenu.popup(this.window);
     }
