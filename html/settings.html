@@ -40,6 +40,10 @@
                 <img name="tab-16" class="theme-icon">
                 <label>Tabs</label>
             </button>
+            <button class="nav-btn" onclick="showCategory('downloads')">
+                <img name="download-16" class="theme-icon">
+                <label>Downloads</label>
+            </button>
             <button class="nav-btn" onclick="showCategory('clear-browsing-data')">
                 <img name="clear-16" class="theme-icon">
                 <label>Clear browsing data</label>
@@ -104,7 +108,7 @@
             </div>
             <div class="nav-checkbox">
                 <img src="../imgs/engines/mailru.png">
-                <label>Mail.ru</label>
+                <label>MailRu</label>
                 <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" name="search-engine" value="mailru">
             </div>
             <div class="nav-checkbox">
@@ -178,6 +182,29 @@
                 <label>Quit</label>
                 <input type="radio" onclick="requestLastTab(this.value)" class="checkbox" name="lasttab" value="quit">
             </div>
+        </div>
+        <div class="container" id="downloads">
+            <label class="title">Downloads</label>
+            <label class="nav-label">A place to save downloaded files.</label>
+            <hr>
+            <div class="nav-checkbox">
+                <label>Always ask you where to save files</label>
+                <input type="radio" onclick="requestDownloadsFolder(this.value)" class="checkbox" name="downloads-folder" value="?ask?">
+            </div>
+            <div class="nav-checkbox">
+                <label>Downloads folder</label>
+                <input type="radio" onclick="requestDownloadsFolder(this.value)" class="checkbox" checked name="downloads-folder" value="?downloads?">
+            </div>
+            <div class="nav-checkbox">
+                <label>Custom directory</label>
+                <input type="radio" id="custom-folder-radio" onclick="requestDownloadsFolder(this.value)" class="checkbox" name="downloads-folder" value="?custom-folder?">
+            </div>
+            <hr>
+            <label class="nav-label" >Custom folder:</label><label class="nav-label" id="downloads-folder">None</label><br>
+            <button class="nav-btn" onclick="chooseDownloadsFolder()">
+                <img class="theme-icon" name="folder-16">
+                <label>Choose folder</label>
+            </button>
         </div>
         <div class="container" id="clear-browsing-data">
             <label class="title">Clear browsing data</label>

@@ -56,6 +56,7 @@ let settingsWindow = null;
 
 let downloads = [];
 let downloadCounter = 0;
+let downloadsFolder = "?ask?";
 
 let updateCancellationToken = null;
 
@@ -72,7 +73,7 @@ let overlay = null;
 */
 
 app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
+  if(process.platform !== "darwin") {
     app.quit();
   }
 });
@@ -122,6 +123,14 @@ app.on("ready", function() {
   session.defaultSession.on("will-download", (event, item, webContents) => {
     let index = downloadCounter++;
 
+    if(downloadsFolder !== "?ask?") {
+      if(downloadsFolder === "?downloads?") {
+        item.setSavePath(app.getPath("downloads") + "/" + item.getFilename());
+      } else {
+        item.setSavePath(downloadsFolder + "/" + item.getFilename());
+      }
+    }
+
     saveDownloadCounter();
 
     downloads.push({ id: index, item });
@@ -129,20 +138,19 @@ app.on("ready", function() {
       id: index,
       url: item.getURL(),
       name: item.getFilename(),
-      time: item.getStartTime(),
-      downloadItem: item
+      time: item.getStartTime()
     });
-    mainWindow.webContents.send('action-add-status-notif', { type: "info", text: `Download started: "${item.getFilename()}"` });
+    mainWindow.webContents.send("action-add-status-notif", { type: "info", text: `Download started: "${item.getFilename()}"` });
 
     item.on("updated", (event, state) => {
-      if (state === "interrupted") {
+      if(state === "interrupted") {
         overlay.setDownloadStatusInterrupted({
           id: index,
           name: item.getFilename()
         });
-        mainWindow.webContents.send('action-add-status-notif', { type: "error", text: `Download interrupted: "${item.getFilename()}"` });
-      } else if (state === "progressing") {
-        if (item.isPaused()) {
+        mainWindow.webContents.send("action-add-status-notif", { type: "error", text: `Download interrupted: "${item.getFilename()}"` });
+      } else if(state === "progressing") {
+        if(item.isPaused()) {
           overlay.setDownloadStatusPause({
             id: index,
             bytes: item.getReceivedBytes(),
@@ -159,19 +167,19 @@ app.on("ready", function() {
     });
 
     item.once("done", (event, state) => {
-      if (state === "completed") {
+      if(state === "completed") {
         overlay.setDownloadStatusDone({
           id: index,
           path: item.getSavePath(),
           name: item.getFilename()
         });
-        mainWindow.webContents.send('action-add-status-notif', { type: "success", text: `Download completed: "${item.getFilename()}"` });
+        mainWindow.webContents.send("action-add-status-notif", { type: "success", text: `Download completed: "${item.getFilename()}"` });
       } else {
         overlay.setDownloadStatusFailed({
           id: index,
           name: item.getFilename()
         });
-        mainWindow.webContents.send('action-add-status-notif', { type: "error", text: `Download failed: "${item.getFilename()}"` });
+        mainWindow.webContents.send("action-add-status-notif", { type: "error", text: `Download failed: "${item.getFilename()}"` });
       }
     });
   });
@@ -179,6 +187,37 @@ app.on("ready", function() {
   loadDownloadCounter();
   showMainWindow();
   // loadWelcome();
+});
+
+/*
+ # #####   ####              #    #   ##   # #    #
+ # #    # #    #             ##  ##  #  #  # ##   #
+ # #    # #         #####    # ## # #    # # # #  #
+ # #####  #                  #    # ###### # #  # #
+ # #      #    #             #    # #    # # #   ##
+ # #       ####              #    # #    # # #    #
+*/
+
+ipcMain.on("main-setDownloadsFolder", (event, folder) => {
+  downloadsFolder = folder;
+});
+
+ipcMain.on("main-chooseDownloadsFolder", (event, startFolder) => {
+  if(startFolder === "None") {
+    startFolder = app.getPath("downloads");
+  }
+
+  dialog.showOpenDialog(mainWindow, { 
+    properties: [ "openDirectory" ]
+  }).then(({ canceled, filePaths, bookmarks }) => {
+    if(filePaths[0]) {
+      settingsWindow.webContents.send("settings-setDownloadsFolder", filePaths[0]);
+    }
+  });
+});
+
+ipcMain.on("main-getDownloadsFolder", (event) => {
+  settingsWindow.webContents.send("settings-setDownloadsFolder", app.getPath("downloads"));
 });
 
 /*
@@ -200,7 +239,7 @@ ipcMain.on('request-clear-browsing-data', (event, arg) => {
 
   if(arg.cache) {
     ses.clearCache().then(function() {
-      mainWindow.webContents.send('action-add-status-notif', { text: "Cache cleared", type: "success" });
+      mainWindow.webContents.send("action-add-status-notif", { text: "Cache cleared", type: "success" });
     });
 
     ses.getCacheSize().then(function(value) {
@@ -214,7 +253,7 @@ ipcMain.on('request-clear-browsing-data', (event, arg) => {
 
   if(arg.storage) {
     ses.clearStorageData().then(function() {
-      mainWindow.webContents.send('action-add-status-notif', { text: "Storage cleared", type: "success" });
+      mainWindow.webContents.send("action-add-status-notif", { text: "Storage cleared", type: "success" });
     });
   }
 });
@@ -247,11 +286,11 @@ ipcMain.on('action-show-welcome-screen', (event, arg) => {
 });
 
 ipcMain.on('request-add-status-notif', (event, arg) => {
-  mainWindow.webContents.send('action-add-status-notif', arg);
+  mainWindow.webContents.send("action-add-status-notif", arg);
 });
 
 ipcMain.on('request-add-quest-notif', (event, arg) => {
-  mainWindow.webContents.send('action-add-quest-notif', arg);
+  mainWindow.webContents.send("action-add-quest-notif", arg);
 });
 
 ipcMain.on('request-set-about', (event, arg) => {
@@ -922,10 +961,10 @@ function showMainWindow() {
         }
     
         if(update) {
-          mainWindow.webContents.send('action-add-quest-notif', { text: "App update is in progress! Exit anyway?", ops: [{ text:'Exit', icon:'exit-16', click:'exitAppAnyway()' }] });
+          mainWindow.webContents.send("action-add-quest-notif", { text: "App update is in progress! Exit anyway?", ops: [{ text:'Exit', icon:'exit-16', click:'exitAppAnyway()' }] });
         } else {
           if(download) {
-            mainWindow.webContents.send('action-add-quest-notif', { text: "Download is in progress! Exit anyway?", ops: [{ text:'Exit', icon:'exit-16', click:'exitAppAnyway()' }] });
+            mainWindow.webContents.send("action-add-quest-notif", { text: "Download is in progress! Exit anyway?", ops: [{ text:'Exit', icon:'exit-16', click:'exitAppAnyway()' }] });
           } else {
             saveBounds();
             app.exit();
@@ -1027,7 +1066,7 @@ function initMenu() {
         }
       } }, { 
       enabled: false, label: "Bookmark all tabs", click: () => { 
-        // mainWindow.webContents.send('action-add-quest-notif', { 
+        // mainWindow.webContents.send("action-add-quest-notif", { 
         //   text: "Are you sure to bookmark all tabs?", 
         //   ops: [{ text:'Bookmark', icon:'add-bookmark-16', click:'bookmarkAllTabs()' }] 
         // }); 
@@ -1274,7 +1313,7 @@ function showWelcomeWindow() {
 
 function openFileDialog() {
   dialog.showOpenDialog(mainWindow, { 
-    properties: [ 'multiSelections' ]
+    properties: [ "multiSelections" ]
   }).then(({ canceled, filePaths, bookmarks }) => {
     filePaths.forEach((item, index) => {
       tabManager.addTab("file://" + item, true);

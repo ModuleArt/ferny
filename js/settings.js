@@ -8,6 +8,7 @@
 */
 
 const { ipcRenderer } = require("electron");
+const dialog = require("electron").remote.dialog;
 const ppath = require("persist-path")("Ferny");
 const fs = require("fs");
 const path = require("path");
@@ -120,6 +121,7 @@ function closeWindow() {
 function requestSearchEngine(engine) {
   saveFileToJsonFolder(null, "search-engine", engine).then(function(bool) {
     ipcRenderer.send("overlay-setSearchEngine", engine);
+    ipcRenderer.send("request-add-status-notif", { text: `Search engine changed: "${egnine}"`, type: "success" });
   });
 }
 
@@ -133,6 +135,48 @@ function loadSearchEngine() {
         break;
       }
     }
+  });
+}
+
+/*
+ ###### #    # #    #  ####              #####   ####  #    # #    # #       ####    ##   #####   ####
+ #      #    # ##   # #    #             #    # #    # #    # ##   # #      #    #  #  #  #    # #
+ #####  #    # # #  # #         #####    #    # #    # #    # # #  # #      #    # #    # #    #  ####
+ #      #    # #  # # #                  #    # #    # # ## # #  # # #      #    # ###### #    #      #
+ #      #    # #   ## #    #             #    # #    # ##  ## #   ## #      #    # #    # #    # #    #
+ #       ####  #    #  ####              #####   ####  #    # #    # ######  ####  #    # #####   ####
+*/
+
+function requestDownloadsFolder(folder) {
+  if(folder === "?custom-folder?") {
+    folder = document.getElementById("downloads-folder").innerHTML;
+  }
+
+  saveFileToJsonFolder("downloads", "downloads-folder", folder).then(function(bool) {
+    ipcRenderer.send("main-setDownloadsFolder", folder);
+    ipcRenderer.send("request-add-status-notif", { text: "Downloads folder changed", type: "success" });
+  });
+}
+
+function chooseDownloadsFolder() {
+  ipcRenderer.send("main-chooseDownloadsFolder", document.getElementById("downloads-folder").innerHTML);
+}
+
+function loadDownloadsFolder() {
+  ipcRenderer.send("main-getDownloadsFolder");
+  loadFileFromJsonFolder("downloads", "downloads-folder").then((data) => {
+    let folder = data.toString();
+    if(folder != "?ask?" && folder != "?downloads?" && folder.length > 0) {
+      document.getElementById("downloads-folder").innerHTML = folder;
+      folder = "?custom-folder?";
+    }
+    let radios = document.getElementsByName("downloads-folder");
+      for(let i = 0; i < radios.length; i++) {
+        if(radios[i].value === folder) {
+          radios[i].checked = true;
+          break;
+        }
+      }
   });
 }
 
@@ -339,6 +383,22 @@ ipcRenderer.on("window-focus", (event) => {
 });
 
 /*
+ # #####   ####               ####  ###### ##### ##### # #    #  ####   ####
+ # #    # #    #             #      #        #     #   # ##   # #    # #
+ # #    # #         #####     ####  #####    #     #   # # #  # #       ####
+ # #####  #                       # #        #     #   # #  # # #  ###      #
+ # #      #    #             #    # #        #     #   # #   ## #    # #    #
+ # #       ####               ####  ######   #     #   # #    #  ####   ####
+*/
+
+ipcRenderer.on("settings-setDownloadsFolder", (event, path) => {
+  document.getElementById("downloads-folder").innerHTML = path;
+  if(document.getElementById("custom-folder-radio").checked) {
+    requestDownloadsFolder("?custom-folder?");
+  }
+});
+
+/*
  # #    # # #####
  # ##   # #   #
  # # #  # #   #
@@ -359,6 +419,7 @@ function init() {
   loadStartup();
   loadTabClosed();
   loadLastTab();
+  loadDownloadsFolder();
 
   ipcRenderer.send("request-set-cache-size");
 }
