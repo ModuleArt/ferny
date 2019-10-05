@@ -102,7 +102,7 @@ class Overlay extends EventEmitter {
 
 
     changeTheme(theme) {
-        this.view.webContents.send("action-change-theme", theme);
+        this.view.webContents.send("overlay-changeTheme", theme);
     }
 
     removeFolder(id) {

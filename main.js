@@ -56,7 +56,7 @@ let settingsWindow = null;
 
 let downloads = [];
 let downloadCounter = 0;
-let downloadsFolder = "?ask?";
+let downloadsFolder = "?downloads?";
 
 let updateCancellationToken = null;
 
@@ -83,19 +83,19 @@ app.on("ready", function() {
   autoUpdater.logger.transports.file.level = "info";
 
   autoUpdater.on("checking-for-update", () => {
-    mainWindow.webContents.send("action-add-status-notif", { type: "info", text: "Checking for updates..." });
+    mainWindow.webContents.send("notificationManager-addStatusNotif", { type: "info", text: "Checking for updates..." });
   });
 
   autoUpdater.on("error", (error) => {
-    mainWindow.webContents.send("action-add-status-notif", { type: "error", text: "Update error: " + error });
+    mainWindow.webContents.send("notificationManager-addStatusNotif", { type: "error", text: "Update error: " + error });
   });
 
   autoUpdater.on("update-not-available", () => {
-    mainWindow.webContents.send("action-add-status-notif", { type: "success", text: "App is up to date!" });
+    mainWindow.webContents.send("notificationManager-addStatusNotif", { type: "success", text: "App is up to date!" });
   });
 
   autoUpdater.on("update-available", (info) => {
-    mainWindow.webContents.send("action-add-status-notif", { type: "success", text: `Update is available: ${info.releaseName}. Download started...` });
+    mainWindow.webContents.send("notificationManager-addStatusNotif", { type: "success", text: `Update is available: ${info.releaseName}. Download started...` });
   });
 
   autoUpdater.on("update-downloaded", () => {
@@ -127,7 +127,11 @@ app.on("ready", function() {
       if(downloadsFolder === "?downloads?") {
         item.setSavePath(app.getPath("downloads") + "/" + item.getFilename());
       } else {
-        item.setSavePath(downloadsFolder + "/" + item.getFilename());
+        if(downloadsFolder === "?desktop?") {
+          item.setSavePath(app.getPath("desktop") + "/" + item.getFilename());
+        } else {
+          item.setSavePath(downloadsFolder + "/" + item.getFilename());
+        }
       }
     }
 
@@ -140,7 +144,7 @@ app.on("ready", function() {
       name: item.getFilename(),
       time: item.getStartTime()
     });
-    mainWindow.webContents.send("action-add-status-notif", { type: "info", text: `Download started: "${item.getFilename()}"` });
+    mainWindow.webContents.send("notificationManager-addStatusNotif", { type: "info", text: `Download started: "${item.getFilename()}"` });
 
     item.on("updated", (event, state) => {
       if(state === "interrupted") {
@@ -148,7 +152,7 @@ app.on("ready", function() {
           id: index,
           name: item.getFilename()
         });
-        mainWindow.webContents.send("action-add-status-notif", { type: "error", text: `Download interrupted: "${item.getFilename()}"` });
+        mainWindow.webContents.send("notificationManager-addStatusNotif", { type: "error", text: `Download interrupted: "${item.getFilename()}"` });
       } else if(state === "progressing") {
         if(item.isPaused()) {
           overlay.setDownloadStatusPause({
@@ -173,13 +177,13 @@ app.on("ready", function() {
           path: item.getSavePath(),
           name: item.getFilename()
         });
-        mainWindow.webContents.send("action-add-status-notif", { type: "success", text: `Download completed: "${item.getFilename()}"` });
+        mainWindow.webContents.send("notificationManager-addStatusNotif", { type: "success", text: `Download completed: "${item.getFilename()}"` });
       } else {
         overlay.setDownloadStatusFailed({
           id: index,
           name: item.getFilename()
         });
-        mainWindow.webContents.send("action-add-status-notif", { type: "error", text: `Download failed: "${item.getFilename()}"` });
+        mainWindow.webContents.send("notificationManager-addStatusNotif", { type: "error", text: `Download failed: "${item.getFilename()}"` });
       }
     });
   });
@@ -220,6 +224,31 @@ ipcMain.on("main-getDownloadsFolder", (event) => {
   settingsWindow.webContents.send("settings-setDownloadsFolder", app.getPath("downloads"));
 });
 
+ipcMain.on("main-cancelUpdate", (event) => {
+  cancelUpdate();
+});
+
+ipcMain.on("main-installUpdate", (event) => {
+  autoUpdater.quitAndInstall();
+});
+
+ipcMain.on("main-addStatusNotif", (event, arg) => {
+  mainWindow.webContents.send("notificationManager-addStatusNotif", arg);
+});
+
+ipcMain.on("main-addQuestNotif", (event, arg) => {
+  mainWindow.webContents.send("notificationManager-addStatusNotif", arg);
+});
+
+ipcMain.on("main-checkForUpdates", (event, arg) => {
+  checkForUpdates();
+});
+
+ipcMain.on("main-changeTheme", (event, theme) => {
+  mainWindow.webContents.send("window-changeTheme", theme);
+  overlay.changeTheme(theme);
+});
+
 /*
 .####.########...######.....##.....##....###....####.##....##
 ..##..##.....##.##....##....###...###...##.##....##..###...##
@@ -230,16 +259,12 @@ ipcMain.on("main-getDownloadsFolder", (event) => {
 .####.##.........######.....##.....##.##.....##.####.##....##
 */
 
-ipcMain.on('request-cancel-update', (event, arg) => {
-  cancelUpdate();
-});
-
 ipcMain.on('request-clear-browsing-data', (event, arg) => {
   const ses = mainWindow.webContents.session;
 
   if(arg.cache) {
     ses.clearCache().then(function() {
-      mainWindow.webContents.send("action-add-status-notif", { text: "Cache cleared", type: "success" });
+      mainWindow.webContents.send("notificationManager-addStatusNotif", { text: "Cache cleared", type: "success" });
     });
 
     ses.getCacheSize().then(function(value) {
@@ -253,7 +278,7 @@ ipcMain.on('request-clear-browsing-data', (event, arg) => {
 
   if(arg.storage) {
     ses.clearStorageData().then(function() {
-      mainWindow.webContents.send("action-add-status-notif", { text: "Storage cleared", type: "success" });
+      mainWindow.webContents.send("notificationManager-addStatusNotif", { text: "Storage cleared", type: "success" });
     });
   }
 });
@@ -277,20 +302,8 @@ ipcMain.on('request-info-contextmenu', (event, arg) => {
   infoMenu.popup(mainWindow);
 });
 
-ipcMain.on('request-install-update', (event, arg) => {
-  autoUpdater.quitAndInstall();
-});
-
 ipcMain.on('action-show-welcome-screen', (event, arg) => {
   showWelcomeWindow();
-});
-
-ipcMain.on('request-add-status-notif', (event, arg) => {
-  mainWindow.webContents.send("action-add-status-notif", arg);
-});
-
-ipcMain.on('request-add-quest-notif', (event, arg) => {
-  mainWindow.webContents.send("action-add-quest-notif", arg);
 });
 
 ipcMain.on('request-set-about', (event, arg) => {
@@ -301,10 +314,6 @@ ipcMain.on('request-set-about', (event, arg) => {
   };
 
   event.sender.send('action-set-about', Data);
-});
-
-ipcMain.on('request-check-for-updates', (event, arg) => {
-  checkForUpdates();
 });
 
 ipcMain.on('request-side-menu', (event, arg) => {
@@ -333,11 +342,6 @@ ipcMain.on('request-maximize-window', (event, arg) => {
 
 ipcMain.on('request-unmaximize-window', (event, arg) => {
   mainWindow.unmaximize();
-});
-
-ipcMain.on('request-change-theme', (event, theme) => {
-  mainWindow.webContents.send('action-change-theme', theme);
-  overlay.changeTheme(theme);
 });
 
 ipcMain.on('request-toggle-fullscreen', (event, arg) => {
@@ -642,11 +646,11 @@ function initTabManager() {
   });
 
   tabManager.on("add-status-notif", (text, type) => {
-    mainWindow.webContents.send("action-add-status-notif", { text: text, type: type });
+    mainWindow.webContents.send("notificationManager-addStatusNotif", { text: text, type: type });
   });
 
   tabManager.on("refresh-zoom-notif", (zoomFactor) => {
-    mainWindow.webContents.send("action-refresh-zoom-notif", zoomFactor);
+    mainWindow.webContents.send("notificationManager-addStatusNotif", zoomFactor);
   });
 
   tabManager.on("add-history-item", (url) => {
@@ -1264,7 +1268,7 @@ function checkForUpdates() {
       updateCancellationToken = downloadPromise.cancellationToken;
     });
   } else {
-    mainWindow.webContents.send("action-add-status-notif", { type: "warning", text: "The update has already started" });
+    mainWindow.webContents.send("notificationManager-addStatusNotif", { type: "warning", text: "The update has already started" });
   }
 }
 

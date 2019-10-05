@@ -90,7 +90,7 @@ function loadThemesFromFolder() {
 function requestTheme(theme) {
   saveFileToJsonFolder(null, "theme", theme).then(function(bool) {
     loadTheme(theme).then(function(themeObj) {
-      ipcRenderer.send("request-change-theme", themeObj);
+      ipcRenderer.send("main-changeTheme", themeObj);
       applyTheme(themeObj);
     });
   });
@@ -121,7 +121,7 @@ function closeWindow() {
 function requestSearchEngine(engine) {
   saveFileToJsonFolder(null, "search-engine", engine).then(function(bool) {
     ipcRenderer.send("overlay-setSearchEngine", engine);
-    ipcRenderer.send("request-add-status-notif", { text: `Search engine changed: "${egnine}"`, type: "success" });
+    ipcRenderer.send("main-addStatusNotif", { text: `Search engine changed: "${egnine}"`, type: "success" });
   });
 }
 
@@ -154,7 +154,7 @@ function requestDownloadsFolder(folder) {
 
   saveFileToJsonFolder("downloads", "downloads-folder", folder).then(function(bool) {
     ipcRenderer.send("main-setDownloadsFolder", folder);
-    ipcRenderer.send("request-add-status-notif", { text: "Downloads folder changed", type: "success" });
+    ipcRenderer.send("main-addStatusNotif", { text: "Downloads folder changed", type: "success" });
   });
 }
 
@@ -166,7 +166,7 @@ function loadDownloadsFolder() {
   ipcRenderer.send("main-getDownloadsFolder");
   loadFileFromJsonFolder("downloads", "downloads-folder").then((data) => {
     let folder = data.toString();
-    if(folder != "?ask?" && folder != "?downloads?" && folder.length > 0) {
+    if(folder != "?ask?" && folder != "?downloads?" && folder != "?desktop?" && folder.length > 0) {
       document.getElementById("downloads-folder").innerHTML = folder;
       folder = "?custom-folder?";
     }
@@ -192,7 +192,7 @@ function loadDownloadsFolder() {
 function requestTabClosed(tabClosed) {
   saveFileToJsonFolder(null, "tabclosed", tabClosed).then(function(bool) {
     ipcRenderer.send("tabManager-setTabClosedAction", tabClosed);
-    ipcRenderer.send("request-add-status-notif", { text: "Active tab closed action changed", type: "success" });
+    ipcRenderer.send("main-addStatusNotif", { text: "Active tab closed action changed", type: "success" });
   });
 }
 
@@ -220,7 +220,7 @@ function loadTabClosed() {
 
 function requestLastTab(lastTab) {
   saveFileToJsonFolder(null, "lasttab", lastTab).then(function(bool) {
-    ipcRenderer.send("request-add-status-notif", { text: "Last tab closed action changed", type: "success" });
+    ipcRenderer.send("main-addStatusNotif", { text: "Last tab closed action changed", type: "success" });
   });
 }
 
@@ -248,7 +248,7 @@ function loadLastTab() {
 
 function requestStartup(startup) {
   saveFileToJsonFolder(null, "startup", startup).then(() => {
-    ipcRenderer.send("request-add-status-notif", { text: "Startup action changed", type: "success" });
+    ipcRenderer.send("main-addStatusNotif", { text: "Startup action changed", type: "success" });
   });
 }
 
@@ -289,7 +289,7 @@ function saveHomePage() {
   var on = document.getElementById("home-page-checkbox").checked;
 
   if(url.length <= 0) {
-    ipcRenderer.send("request-add-status-notif", { text: "First enter the home page URL", type: "warning" });
+    ipcRenderer.send("main-addStatusNotif", { text: "First enter the home page URL", type: "warning" });
   } else {
     if(on) {
       on = 1;
@@ -298,7 +298,7 @@ function saveHomePage() {
     }
   
     saveFileToJsonFolder(null, "home", JSON.stringify({ url, on })).then(function() {
-      ipcRenderer.send("request-add-status-notif", { text: `Home page saved: "` + url + `"`, type: "success" });
+      ipcRenderer.send("main-addStatusNotif", { text: `Home page saved: "` + url + `"`, type: "success" });
 
       ipcRenderer.send("tabManager-setHomePage", { url, on });
     });
@@ -318,7 +318,7 @@ function clearBrowsingData() {
   var clearCache = document.getElementById("clear-cache-checkbox").checked;
   var clearStorage = document.getElementById("clear-storage-checkbox").checked;
   if(!clearCache && !clearStorage) {
-    ipcRenderer.send("request-add-status-notif", { text: "First check something", type: "error" });
+    ipcRenderer.send("main-addStatusNotif", { text: "First check something", type: "error" });
   } else {
     let Data = {
       cache: clearCache,

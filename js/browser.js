@@ -96,7 +96,7 @@ function requestSideMenu() {
 }
 
 function installUpdate() {
-  ipcRenderer.send("request-install-update");
+  ipcRenderer.send("main-installUpdate");
 }
 
 function clearDownloads() {
@@ -108,12 +108,12 @@ function clearHistory() {
 }
 
 function cancelUpdate() {
-  ipcRenderer.send('request-cancel-update');
-  notificationManager.addStatusNotif('Update cancelled', 'error');
+  ipcRenderer.send("main-cancelUpdate");
+  notificationManager.addStatusNotif("Update cancelled", "error");
 }
 
 function checkForUpdates() {
-  ipcRenderer.send('request-check-for-updates');
+  ipcRenderer.send("main-checkForUpdates");
 }
 
 function exitAppAnyway() {
@@ -260,7 +260,7 @@ function goHome() {
  # #       ####              #    #  ####    #   # #
 */
 
-ipcRenderer.on('action-add-status-notif', (event, arg) => {
+ipcRenderer.on("notificationManager-addStatusNotif", (event, arg) => {
   notificationManager.addStatusNotif(arg.text, arg.type);
 });
 
@@ -293,7 +293,7 @@ ipcRenderer.on("action-page-focussearch", (event, arg) => {
   focusSearch();
 });
 
-ipcRenderer.on("action-change-theme", (event, arg) => {
+ipcRenderer.on("window-changeTheme", (event, arg) => {
   applyTheme(arg);
 });
 

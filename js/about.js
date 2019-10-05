@@ -91,7 +91,7 @@ function openDiscordPage() {
 }
 
 function checkForUpdates() {
-  ipcRenderer.send("request-check-for-updates");
+  ipcRenderer.send("main-checkForUpdates");
 }
 
 /*

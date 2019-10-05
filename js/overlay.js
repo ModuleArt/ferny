@@ -46,7 +46,7 @@ let searchManager = new SearchManager(
 let bookmarkManager = new BookmarkManager(document.getElementById("bookmarks-container"));
 
 bookmarkManager.on("folder-added", () => {
-  ipcRenderer.send("request-add-status-notif", { text: "Folder added", type: "success" });
+  ipcRenderer.send("main-addStatusNotif", { text: "Folder added", type: "success" });
 });
 
 bookmarkManager.on("folder-appended", () => {
@@ -54,7 +54,7 @@ bookmarkManager.on("folder-appended", () => {
 });
 
 bookmarkManager.on("ask-for-delete-folder", (id, name) => {
-  ipcRenderer.send("request-add-quest-notif", { 
+  ipcRenderer.send("notificationManager-addQuestNotif", { 
     text: `Are you sure to delete "` + name + `" folder?`, 
     ops: [{ 
       text: "Delete", icon: "delete-16", click: "removeFolder('" + id + "')" 
@@ -63,15 +63,15 @@ bookmarkManager.on("ask-for-delete-folder", (id, name) => {
 });
 
 bookmarkManager.on("folder-deleted", () => {
-  ipcRenderer.send("request-add-status-notif", { text: "Folder deleted", type: "error" });
+  ipcRenderer.send("main-addStatusNotif", { text: "Folder deleted", type: "error" });
 });
 
 bookmarkManager.on("folder-edited", () => {
-  ipcRenderer.send("request-add-status-notif", { text: "Folder edited", type: "info" });
+  ipcRenderer.send("main-addStatusNotif", { text: "Folder edited", type: "info" });
 });
 
 bookmarkManager.on("bookmark-added", () => {
-  ipcRenderer.send("request-add-status-notif", { text: "Bookmark added", type: "success" });
+  ipcRenderer.send("main-addStatusNotif", { text: "Bookmark added", type: "success" });
 });
 
 bookmarkManager.on("bookmark-appended", () => {
@@ -79,11 +79,11 @@ bookmarkManager.on("bookmark-appended", () => {
 });
 
 bookmarkManager.on("bookmark-deleted", () => {
-  ipcRenderer.send("request-add-status-notif", { text: "Bookmark deleted", type: "error" });
+  ipcRenderer.send("main-addStatusNotif", { text: "Bookmark deleted", type: "error" });
 });
 
 bookmarkManager.on("bookmark-edited", () => {
-  ipcRenderer.send("request-add-status-notif", { text: "Bookmark edited", type: "info" });
+  ipcRenderer.send("main-addStatusNotif", { text: "Bookmark edited", type: "info" });
 });
 
 bookmarkManager.on("bookmark-editor-toggled", () => {
@@ -110,7 +110,7 @@ historyManager.on("history-item-added", () => {
 });
 
 historyManager.on("clear-history", () => {
-  ipcRenderer.send("request-add-quest-notif", { 
+  ipcRenderer.send("notificationManager-addQuestNotif", { 
     text: "Are you sure to clear all history?", 
     ops: [{ 
       text: "Clear", icon: "delete-16", click: "clearHistory()" 
@@ -119,11 +119,11 @@ historyManager.on("clear-history", () => {
 });
 
 historyManager.on("history-cleared", () => {
-  ipcRenderer.send("request-add-status-notif", { text: "History cleared", type: "success" });
+  ipcRenderer.send("main-addStatusNotif", { text: "History cleared", type: "success" });
 });
 
 historyManager.on("history-already-cleared", () => {
-  ipcRenderer.send("request-add-status-notif", { text: "History already cleared", type: "info" });
+  ipcRenderer.send("main-addStatusNotif", { text: "History already cleared", type: "info" });
 });
 
 /*
@@ -142,7 +142,7 @@ downloadManager.on("download-status-changed", () => {
 });
 
 downloadManager.on("clear-downloads", () => {
-  ipcRenderer.send("request-add-quest-notif", { 
+  ipcRenderer.send("notificationManager-addQuestNotif", { 
     text: "Are you sure to clear all downloads?", 
     ops: [{ 
       text: "Clear", icon: "delete-16", click: "clearDownloads()" 
@@ -151,11 +151,11 @@ downloadManager.on("clear-downloads", () => {
 });
 
 downloadManager.on("downloads-cleared", () => {
-  ipcRenderer.send("request-add-status-notif", { text: "Downloads cleared", type: "success" });
+  ipcRenderer.send("main-addStatusNotif", { text: "Downloads cleared", type: "success" });
 });
 
 downloadManager.on("downloads-already-cleared", () => {
-  ipcRenderer.send("request-add-status-notif", { text: "Downloads already cleared", type: "info" });
+  ipcRenderer.send("main-addStatusNotif", { text: "Downloads already cleared", type: "info" });
 });
 
 /*
@@ -373,7 +373,7 @@ ipcRenderer.on("historyManager-clearHistory", (event, text) => {
  # #       ####                #   #    # ###### #    # ######  ####
 */
 
-ipcRenderer.on("action-change-theme", (event, theme) => {
+ipcRenderer.on("overlay-changeTheme", (event, theme) => {
   applyTheme(theme);
 });
 
