@@ -38,9 +38,10 @@
     top: 0;
     right: 0;
     left: 0;
-    height: 33px;
+    height: 34px;
     border-bottom: 1px solid var(--color-border);
     background-color: var(--color-element);
+    border: 1px solid var(--color-border);
 }
 
 #titlebar-icon {

@@ -17,20 +17,20 @@
 }
 
 .overlay-button.active {
-    border-bottom: 1px solid var(--color-back);
+    border-bottom: none;
     background-color: var(--color-back);
 }
 
 .overlay-button:hover {
     background-color: var(--color-second);
-    border-color: var(--color-border);
+    border-bottom: 1px solid var(--color-border);
 }
 
 .overlay-button:focus {
     box-shadow: var(--shadow-focus);
-    border-color: var(--color-border);
+    border-bottom: 1px solid var(--color-border);
 }
 
 .overlay-button:active {
-    background-color: var(--color-border);
+    border-bottom: 1px solid var(--color-border);
 }

@@ -12,16 +12,6 @@
   </head>
   <body>
     <div id="drag-zone"></div>
-    
-    <div class="tabman" id="tabman">
-      <button id="overlay-btn" class='overlay-button' onclick="showOverlay()" oncontextmenu="showOverlayButtonMenu()" title="Overlay"><img name="blocks-12" class="theme-icon"></button>
-      <div class="tabman-tabs" id="tabman-tabs" onmousewheel="tabsWheel(event)"></div>
-      <div class="tabman-buttons">
-        <button title="New tab" onclick="newTab()" oncontextmenu="newBackgroundTab()" ondrop="newTabDrop(event)" ondragover="prevDef(event)"><img name="create-12" class="theme-icon"></button>
-        <button title="Tabs list" onclick="showTabList()"><img name="down-12" class="theme-icon"></button>
-      </div>
-      <div id="window-controls"></div>
-    </div>
 
     <div id="titlebar">
       <button id="back-btn" class='nav-btn' title="Go back" onclick="goBack()"><img name="back-16" class="theme-icon"></button>
@@ -38,6 +28,16 @@
       <div class="title-bar-vr"></div>
       <button id="home-btn" class='nav-btn' title="Go home" onclick="goHome()" style="display: none;"><img name="home-16" class="theme-icon"></button>
       <button id="menu-btn" class='nav-btn' title="Menu" onclick="requestSideMenu()"><img name="menu-16" class="theme-icon"></button>
+    </div>
+    
+    <div class="tabman" id="tabman">
+      <button id="overlay-btn" class='overlay-button' onclick="showOverlay()" oncontextmenu="showOverlayButtonMenu()" title="Overlay"><img name="blocks-12" class="theme-icon"></button>
+      <div class="tabman-tabs" id="tabman-tabs" onmousewheel="tabsWheel(event)"></div>
+      <div class="tabman-buttons">
+        <button title="New tab" onclick="newTab()" oncontextmenu="newBackgroundTab()" ondrop="newTabDrop(event)" ondragover="prevDef(event)"><img name="create-12" class="theme-icon"></button>
+        <button title="Tabs list" onclick="showTabList()"><img name="down-12" class="theme-icon"></button>
+      </div>
+      <div id="window-controls"></div>
     </div>
 
     <div id="notif-panel"></div>

@@ -78,7 +78,7 @@ body {
     top: 33px;
     bottom: 0;
     width: 35%;
-    border-right: 1px solid var(--color-border);
+    border: 1px solid var(--color-border);
     padding: 16px;
 }
 
@@ -114,6 +114,8 @@ hr {
     padding: 32px;
     overflow-y: auto;
     color: var(--color-top);
+    border: 1px solid var(--color-border);
+    border-left: none;
 }
 
 .container.active {

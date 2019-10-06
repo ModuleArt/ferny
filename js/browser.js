@@ -328,9 +328,11 @@ ipcRenderer.on("window-unmaximize", (event) => {
 
 ipcRenderer.on('overlay-toggleButton', (event, bool) => {
   if(bool) {
-    document.getElementById('overlay-btn').classList.add('active');
+    document.getElementById("overlay-btn").classList.add("active");
+    document.getElementById("titlebar").style.display = "none";
   } else {
-    document.getElementById('overlay-btn').classList.remove('active');
+    document.getElementById("overlay-btn").classList.remove("active");
+    document.getElementById("titlebar").style.display = "";
   }
 });
 

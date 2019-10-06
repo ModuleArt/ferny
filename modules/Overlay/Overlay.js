@@ -4,7 +4,7 @@ const { BrowserView, Menu } = require('electron');
 class Overlay extends EventEmitter {
     window = null;
     view = null;
-    top = 33;
+    top = 34;
     appPath = null;
 
     constructor(window, appPath) {
@@ -22,6 +22,7 @@ class Overlay extends EventEmitter {
         //     width: true,
         //     height: true
         // });
+        // this.view.setBackgroundColor("#66CD00");
         this.view.webContents.loadFile(this.appPath + "/html/overlay.html");
 
         this.show();
@@ -29,7 +30,6 @@ class Overlay extends EventEmitter {
 
     refreshBounds() {
         let size = this.window.getBounds();
-        // console.log(size);
         this.view.setBounds({ 
             x: 0,
             y: this.top, 

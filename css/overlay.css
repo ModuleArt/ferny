@@ -57,9 +57,26 @@
 
 body {
     background-color: var(--color-back);
-    padding: 64px;
+    overflow: hidden;
     text-align: center;
     margin: 0;
+    border: 1px solid var(--color-border);
+    border-top: none;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+}
+
+#body-container {
+    overflow: auto;
+    padding: 64px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
 }
 
 main {

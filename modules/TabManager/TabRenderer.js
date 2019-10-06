@@ -231,11 +231,11 @@ class TabRenderer extends EventEmitter {
     }
 
     scrollLeft() {
-        tabs.scrollLeft -= 40;
+        this.tabContainer.scrollLeft -= 16;
     }
 
     scrollRight() {
-        tabs.scrollLeft += 40;
+        this.tabContainer.scrollLeft += 16;
     }
 
     updateTabsPositions() {

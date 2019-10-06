@@ -143,6 +143,7 @@
   display: flex;
   border-bottom: 1px solid var(--color-border);
   background-color: var(--color-back);
+  height: 41px;
 }
 
 #search-div {
@@ -399,7 +400,7 @@
 .########...#######..########.....##...
 */
 
-body, html {
+body {
   margin: 0;
   padding: 0;
   background-color: var(--color-back);
@@ -408,8 +409,9 @@ body, html {
   left: 0;
   right: 0;
   top: 0;
-  height: 74px;
+  bottom: 0;
   position: absolute;
+  border: 1px solid var(--color-border);
 }
 
 /* theme icon */
