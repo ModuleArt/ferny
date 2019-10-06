@@ -289,6 +289,10 @@ class Tab extends EventEmitter {
         this.view.webContents.goForward();
     }
 
+    canGoBack() {
+        return this.view.webContents.canGoBack();
+    }
+
     reload() {
         this.view.webContents.reload();
     }

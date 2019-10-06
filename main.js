@@ -917,7 +917,12 @@ function showMainWindow() {
       mainWindow.on("app-command", (event, command) => {
         if(command == "browser-backward") {
           if(tabManager.hasActiveTab()) {
-            tabManager.getActiveTab().goBack();
+            let activeTab = tabManager.getActiveTab();
+            if(activeTab.canGoBack()) {
+              activeTab.goBack();
+            } else {
+              overlay.show();
+            }
           }
         } else if(command == "browser-forward") {
           if(tabManager.hasActiveTab()) {

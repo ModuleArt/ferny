@@ -62,15 +62,27 @@
             <hr>
             <label class="nav-label">Home page URL:</label>
             <input type="text" id="home-page-input" placeholder="Home page URL">
-            <div class="nav-checkbox">
-                <label>Show button</label>
-                <input type="checkbox" id="home-page-checkbox" class="checkbox">
-            </div>
-            <hr>
             <button class="nav-btn" onclick="saveHomePage()">
                 <img class="theme-icon" name="save-16">
                 <label>Save</label>
             </button>
+            <button class="link" onclick="useHomePage('https://google.com')">
+                <label>Use Google</label>
+            </button>
+            <button class="link" onclick="useHomePage('https://bing.com')">
+                <label>Use Bing</label>
+            </button>
+            <button class="link" onclick="useHomePage('https://duckduckgo.com')">
+                <label>Use DuckDuckGo</label>
+            </button>
+            <button class="link" onclick="useHomePage('https://yahoo.com')">
+                <label>Use Yahoo</label>
+            </button>
+            <hr>
+            <div class="nav-checkbox" onclick="saveHomePage()">
+                <label>Show button</label>
+                <input type="checkbox" id="home-page-checkbox" class="checkbox">
+            </div>
         </div>
         <div class="container" id="search-engine">
             <label class="title">Search engine</label>

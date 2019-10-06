@@ -138,6 +138,23 @@ hr {
     display: inline-block;
 }
 
+/*
+ #    #  ####  #    # ######    #####    ##    ####  ######
+ #    # #    # ##  ## #         #    #  #  #  #    # #
+ ###### #    # # ## # #####     #    # #    # #      #####
+ #    # #    # #    # #         #####  ###### #  ### #
+ #    # #    # #    # #         #      #    # #    # #
+ #    #  ####  #    # ######    #      #    #  ####  ######
+*/
+
+.link {
+    width: calc(50% - 7px);
+}
+
+#home-page-input {
+    width: calc(100% - 90px);
+}
+
 /*                        
   ##### #    # ###### #    # ######  ####  
     #   #    # #      ##  ## #      #      
@@ -156,26 +173,22 @@ hr {
 .theme button {
     width: 30%;
     vertical-align: top;
-    margin: 6px;
+    margin: 2px;
     margin-left: 0;
 }
   
 .theme div {
-    margin: 6px;
+    margin: 2px;
     padding: 4px;
     display: inline-block;
-    width: calc(70% - 22px);
+    width: calc(70% - 10px);
     height: 33px;
 }
   
-.theme div label, .theme div span {
+.theme div label {
     display: inline-block;
     vertical-align: top;
     padding: 1px 8px;
-}
-  
-.theme div span {
-    height: 100%;
 }
 
 .theme div img {

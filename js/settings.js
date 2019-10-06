@@ -49,8 +49,7 @@ function loadThemesFromFolder() {
         theme.style.borderRadius = "calc(" + themeObj.pxRadius + " + 4px)";
         theme.innerHTML = `
           <div>
-            <label>` + themeObj.name + `</label>
-            <span>` + themeObj.type + `</span>
+            <label>${themeObj.name} ${themeObj.type}</label>
             <img src='../imgs/theme-icons/` + themeObj.icons + `/theme-16.png'>
           </div>
           <button class='nav-btn' onclick="requestTheme('` + file.split(".")[0] + `')">
@@ -62,19 +61,13 @@ function loadThemesFromFolder() {
         div.style.backgroundColor = themeObj.colorBack;
         div.style.borderRadius = "calc(" + themeObj.pxRadius + " + 4px)";
         div.style.border = "1px solid " + themeObj.colorBorder;
+        div.style.boxShadow = themeObj.shadowFocus;
 
         let label = div.getElementsByTagName("label")[0];
         label.style.color = themeObj.colorTop;
         label.style.backgroundColor = themeObj.colorElement;
         label.style.border = "1px solid " + themeObj.colorBorder;
         label.style.borderRadius = themeObj.pxRadius;
-
-        let span = div.getElementsByTagName("span")[0];
-        span.style.color = themeObj.colorTop;
-        span.style.backgroundColor = themeObj.colorSecond;
-        span.style.border = "1px solid " + themeObj.colorBorder;
-        span.style.borderRadius = themeObj.pxRadius;
-        span.style.boxShadow = themeObj.shadowFocus;
 
         let img = div.getElementsByTagName("img")[0];
         img.style.opacity = themeObj.opacityOver;
@@ -299,10 +292,14 @@ function saveHomePage() {
   
     saveFileToJsonFolder(null, "home", JSON.stringify({ url, on })).then(function() {
       ipcRenderer.send("main-addStatusNotif", { text: `Home page saved: "` + url + `"`, type: "success" });
-
       ipcRenderer.send("tabManager-setHomePage", { url, on });
     });
   }
+}
+
+function useHomePage(url) {
+  document.getElementById("home-page-input").value = url;
+  ipcRenderer.send("main-addStatusNotif", { text: `Home page saved: "` + url + `"`, type: "success" });
 }
 
 /*
