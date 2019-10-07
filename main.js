@@ -81,6 +81,7 @@ app.on("window-all-closed", () => {
 app.on("ready", function() {
   autoUpdater.logger = require("electron-log");
   autoUpdater.logger.transports.file.level = "info";
+  autoUpdater.autoDownload = false;
 
   autoUpdater.on("checking-for-update", () => {
     mainWindow.webContents.send("notificationManager-addStatusNotif", { type: "info", text: "Checking for updates..." });
@@ -95,7 +96,11 @@ app.on("ready", function() {
   });
 
   autoUpdater.on("update-available", (info) => {
-    mainWindow.webContents.send("notificationManager-addStatusNotif", { type: "success", text: `Update is available: ${info.releaseName}. Download started...` });
+    mainWindow.webContents.send("action-add-quest-notif", { text: `Update is available: ${info.releaseName}`, ops: [{ 
+      text: "Start download", 
+      icon: "download-16", 
+      click: "downloadUpdate();" 
+    }] });
   });
 
   autoUpdater.on("update-downloaded", () => {
@@ -230,6 +235,12 @@ ipcMain.on("main-cancelUpdate", (event) => {
 
 ipcMain.on("main-installUpdate", (event) => {
   autoUpdater.quitAndInstall();
+});
+
+ipcMain.on("main-downloadUpdate", (event) => {
+  autoUpdater.downloadUpdate(updateCancellationToken).then(() => {
+    mainWindow.webContents.send("notificationManager-addStatusNotif", { type: "info", text: "Download started..." });
+  });
 });
 
 ipcMain.on("main-addStatusNotif", (event, arg) => {

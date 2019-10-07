@@ -84,12 +84,17 @@ hr {
 }
 
 body {
-  border-top: 1px solid var(--color-border);
+  border: 1px solid var(--color-border);
   margin: 0;
   padding: 0;
   overflow: hidden;
   background-color: var(--color-back);
   text-align: center;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
 }
 
 .block-title {
@@ -108,13 +113,13 @@ body {
 }
 
 .column-left {
-  padding: 16px;
+  padding: 12px;
   position: absolute;
   left: 0;
   top: 33px;
   width: 40%;
   bottom: 0;
-  border: 1px solid var(--color-border);
+  border-right: 1px solid var(--color-border);
 }
 
 .column-right {
@@ -126,8 +131,6 @@ body {
   width: 60%;
   bottom: 0;
   overflow-y: auto;
-  border: 1px solid var(--color-border);
-  border-left: none;
 }
 
 label {

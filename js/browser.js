@@ -99,6 +99,10 @@ function installUpdate() {
   ipcRenderer.send("main-installUpdate");
 }
 
+function downloadUpdate() {
+  ipcRenderer.send("main-downloadUpdate");
+}
+
 function clearDownloads() {
   ipcRenderer.send("overlay-clearDownloads");
 }

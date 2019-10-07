@@ -61,6 +61,12 @@ body {
     margin: 0;
     overflow: hidden;
     background-color: var(--color-back);
+    border: 1px solid var(--color-border);
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
 }
 
 /*
@@ -78,7 +84,7 @@ body {
     top: 33px;
     bottom: 0;
     width: 35%;
-    border: 1px solid var(--color-border);
+    border-right: 1px solid var(--color-border);
     padding: 16px;
 }
 
@@ -114,7 +120,6 @@ hr {
     padding: 32px;
     overflow-y: auto;
     color: var(--color-top);
-    border: 1px solid var(--color-border);
     border-left: none;
 }
 
