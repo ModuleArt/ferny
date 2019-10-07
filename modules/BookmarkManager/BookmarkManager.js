@@ -155,6 +155,7 @@ class BookmarkManager extends EventEmitter {
     }
 
     removeFolder(id) {
+        console.log("removeFolder=" + id);
         for(let i = 0; i < this.folders.length; i++) {
             if(this.folders[i].getId() == id) {
                 this.folderContainer.removeChild(this.folders[i].getNode());

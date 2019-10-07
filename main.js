@@ -248,7 +248,7 @@ ipcMain.on("main-addStatusNotif", (event, arg) => {
 });
 
 ipcMain.on("main-addQuestNotif", (event, arg) => {
-  mainWindow.webContents.send("notificationManager-addStatusNotif", arg);
+  mainWindow.webContents.send("notificationManager-addQuestNotif", arg);
 });
 
 ipcMain.on("main-checkForUpdates", (event, arg) => {
@@ -661,7 +661,7 @@ function initTabManager() {
   });
 
   tabManager.on("refresh-zoom-notif", (zoomFactor) => {
-    mainWindow.webContents.send("notificationManager-addStatusNotif", zoomFactor);
+    mainWindow.webContents.send("notificationManager-refreshZoomNotif", zoomFactor);
   });
 
   tabManager.on("add-history-item", (url) => {

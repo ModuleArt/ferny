@@ -268,19 +268,11 @@ ipcRenderer.on("notificationManager-addStatusNotif", (event, arg) => {
   notificationManager.addStatusNotif(arg.text, arg.type);
 });
 
-ipcRenderer.on('action-add-quest-notif', (event, arg) => {
+ipcRenderer.on("notificationManager-addQuestNotif", (event, arg) => {
   notificationManager.addQuestNotif(arg.text, arg.ops);
 });
 
-ipcRenderer.on('action-add-update-notif', (event, arg) => {
-  notificationManager.addUpdateNotif(arg);
-});
-
-ipcRenderer.on('action-refresh-update-notif', (event, arg) => {
-  notificationManager.refreshUpdateNotif(arg.percent, arg.transferred, arg.total, arg.speed);
-});
-
-ipcRenderer.on("action-refresh-zoom-notif", (event, zoomFactor) => {
+ipcRenderer.on("notificationManager-refreshZoomNotif", (event, zoomFactor) => {
   notificationManager.refreshZoomNotif(zoomFactor);
 });
 

@@ -54,7 +54,7 @@ bookmarkManager.on("folder-appended", () => {
 });
 
 bookmarkManager.on("ask-for-delete-folder", (id, name) => {
-  ipcRenderer.send("notificationManager-addQuestNotif", { 
+  ipcRenderer.send("main-addQuestNotif", { 
     text: `Are you sure to delete "` + name + `" folder?`, 
     ops: [{ 
       text: "Delete", icon: "delete-16", click: "removeFolder('" + id + "')" 
@@ -110,7 +110,7 @@ historyManager.on("history-item-added", () => {
 });
 
 historyManager.on("clear-history", () => {
-  ipcRenderer.send("notificationManager-addQuestNotif", { 
+  ipcRenderer.send("main-addQuestNotif", { 
     text: "Are you sure to clear all history?", 
     ops: [{ 
       text: "Clear", icon: "delete-16", click: "clearHistory()" 
@@ -142,7 +142,7 @@ downloadManager.on("download-status-changed", () => {
 });
 
 downloadManager.on("clear-downloads", () => {
-  ipcRenderer.send("notificationManager-addQuestNotif", { 
+  ipcRenderer.send("main-addQuestNotif", { 
     text: "Are you sure to clear all downloads?", 
     ops: [{ 
       text: "Clear", icon: "delete-16", click: "clearDownloads()" 
