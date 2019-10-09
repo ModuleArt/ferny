@@ -102,6 +102,7 @@ body {
   margin-top: 32px;
   border-bottom: 1px solid var(--color-border);
   padding: 4px;
+  padding-bottom: 8px;
 }
 
 .block-title img, .block-title label {
@@ -117,7 +118,7 @@ body {
   position: absolute;
   left: 0;
   top: 33px;
-  width: 40%;
+  width: 37%;
   bottom: 0;
   border-right: 1px solid var(--color-border);
 }
@@ -128,7 +129,7 @@ body {
   position: absolute;
   right: 0;
   top: 33px;
-  width: 60%;
+  width: 63%;
   bottom: 0;
   overflow-y: auto;
 }
@@ -137,8 +138,18 @@ label {
   color: var(--color-top);
 }
 
-.nav-btn, .link {
+.nav-btn {
   width: calc(100% - 4px);
+}
+
+.nav-label {
+  padding: 2px;
+  margin: 2px;
+  display: inline-block;
+}
+
+.nav-label.mini {
+  font-size: 12px;
 }
 
 /* theme icon */

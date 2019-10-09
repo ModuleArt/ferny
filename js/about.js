@@ -90,6 +90,10 @@ function openDiscordPage() {
   ipcRenderer.send("tabManager-addTab", "https://discord.gg/9q4D8SJ", true);
 }
 
+function openLicensePage() {
+  ipcRenderer.send("tabManager-addTab", "https://github.com/ModuleArt/ferny/blob/master/LICENSE", true);
+}
+
 function checkForUpdates() {
   ipcRenderer.send("main-checkForUpdates");
 }

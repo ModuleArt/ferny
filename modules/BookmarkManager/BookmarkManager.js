@@ -56,7 +56,10 @@ class BookmarkManager extends EventEmitter {
     }
 
     addFolder(name) {
-        this.appendFolder(new Folder(this.folderCounter++, name, true));
+        let folder = new Folder(this.folderCounter++, name, true);
+        this.appendFolder(folder);
+        folder.toggleEditor();
+
         this.updateFoldersPositions().then(() => {
             this.saveFolders();
         });
@@ -178,7 +181,9 @@ class BookmarkManager extends EventEmitter {
     }
 
     addBookmarkToFolder(folder, bookmarkName, bookmarkURL) {
-        folder.appendBookmark(new Bookmark(this.bookmarkCounter++, bookmarkName, bookmarkURL));
+        let bookmark = new Bookmark(this.bookmarkCounter++, bookmarkName, bookmarkURL);
+        folder.appendBookmark(bookmark);
+        bookmark.toggleEditor();
     }
 
     moveBookmark(fromFolderId, toFolderId, bookmarkId) {

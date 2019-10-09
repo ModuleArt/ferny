@@ -194,6 +194,7 @@ app.on("ready", function() {
   });
 
   loadDownloadCounter();
+  loadDownloadsFolder();
   showMainWindow();
   // loadWelcome();
 });
@@ -582,6 +583,12 @@ ipcMain.on("tabManager-zoomToActualSize", (event) => {
   }
 });
 
+ipcMain.on("tabManager-popupTabHistory", (event) => {
+  if(tabManager.hasActiveTab()) {
+    tabManager.getActiveTab().popupTabHistory();
+  }
+});
+
 /*
  ###### #    # #    #  ####               ####  #    # ###### #####  #        ##   #   #
  #      #    # ##   # #    #             #    # #    # #      #    # #       #  #   # #
@@ -685,6 +692,18 @@ function initTabManager() {
  #      #    # #   ## #    #             #    # #    # ##  ## #   ## #      #    # #    # #    # #    #
  #       ####  #    #  ####              #####   ####  #    # #    # ######  ####  #    # #####   ####
 */
+
+function loadDownloadsFolder() {
+  try {
+    fs.readFile(ppath + "/json/downloads/downloads-folder.json", (err, data) => {
+      if(!err) {
+        downloadsFolder = data.toString();
+      }      
+    });
+  } catch (e) {
+
+  }
+}
 
 function loadDownloadCounter() {
   try {
@@ -1063,7 +1082,7 @@ function initMenu() {
           tabManager.getActiveTab().closeToTheRight(); 
         }
       } }, { 
-      label: "Close others", accelerator: "CmdOrCtrl+Shift+W", click: () => { 
+      label: "Close others", icon: app.getAppPath() + "/imgs/icons16/swipe-both.png", accelerator: "CmdOrCtrl+Shift+W", click: () => { 
         if(tabManager.hasActiveTab()) {
           tabManager.getActiveTab().closeOthers(); 
         }
@@ -1202,7 +1221,7 @@ function initMenu() {
       enabled: false, label: "Clear browsing data", icon: app.getAppPath() + "/imgs/icons16/broom.png", accelerator: "CmdOrCtrl+Shift+Delete", click: () => { 
         // overlay.openSettings('clear-browsing-data'); 
       } }, { type: "separator" }, { 
-      label: "Show overlay", icon: app.getAppPath() + "/imgs/icons16/details.png", accelerator: "F3", click: () => { 
+      label: "Show overlay", icon: app.getAppPath() + "/imgs/icons16/details.png", accelerator: "F1", click: () => { 
         overlay.show(); 
       } }, { 
       label: "Open search", icon: app.getAppPath() + "/imgs/icons16/zoom.png", accelerator: "F6", click: () => { 

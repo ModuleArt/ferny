@@ -399,11 +399,11 @@ main {
 }
 
 .folder-editor {
-    margin-bottom: 4px;
+    margin-bottom: -1px;
     border: 1px solid var(--color-border);
     background-color: var(--color-back);
     padding: 2px;
-    border-radius: calc(var(--px-radius) + 4px);
+    border-radius: calc(var(--px-radius) + 4px) calc(var(--px-radius) + 4px) 0 0;
     text-align: center;
 }
 
@@ -581,7 +581,7 @@ main {
     outline: none;
     position: relative;
     text-align: left;
-    height: 46px;
+    height: 62px;
     display: inline-block;
     vertical-align: top;
     color: var(--color-top);
@@ -651,7 +651,20 @@ main {
     text-overflow: ellipsis;
     font-size: 10px;
     opacity: var(--opacity-over);
-    margin-bottom: 16px;
+    margin-bottom: 32px;
+}
+
+.history-time {
+    position: absolute;
+    top: 42px;
+    right: 7px;
+    left: 7px;
+    overflow: hidden;
+    white-space: nowrap;
+    word-break: keep-all;
+    text-overflow: ellipsis;
+    font-size: 10px;
+    opacity: var(--opacity-over);
 }
 
 .history-title {

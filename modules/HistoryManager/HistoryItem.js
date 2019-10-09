@@ -7,6 +7,8 @@ const fileExtension = require("file-extension");
 
 const extToImagePath = require(__dirname + "/../extToImagePath.js");
 const rgbToRgbaString = require(__dirname + "/../rgbToRgbaString.js");
+const epochToDate = require(__dirname + "/../epochToDate.js");
+const epochToTime = require(__dirname + "/../epochToTime.js");
 
 class HistoryItem extends EventEmitter {
     history = [];
@@ -29,8 +31,9 @@ class HistoryItem extends EventEmitter {
         this.node.name = id;
         this.node.id = "history-" + id;
         this.node.innerHTML = `
-            <label class='history-title'>` + title + `</label>
-            <label class='history-url'>` + url + `</label>
+            <label class='history-title'>${title}</label>
+            <label class='history-url'>${url}</label>
+            <label class="history-time">${epochToDate(time)} / ${epochToTime(time)}</label>
         `;        
         this.node.onclick = () => {
             this.open();

@@ -4,7 +4,7 @@ input[type=radio] {
   -webkit-appearance: none;
   appearance: none;
   outline: none;
-  border-radius: var(--px-radius);
+  border-radius: calc(var(--px-radius) + 4px);
   width: 24px;
   height: 24px;
   position: relative;
@@ -30,7 +30,7 @@ input[type=radio]::after {
   height: 14px;
   content: "";
   background-color: var(--color-border);
-  border-radius: calc(var(--px-radius) - 4px);
+  border-radius: var(--px-radius);
   transition: 0.25s;
 }
 

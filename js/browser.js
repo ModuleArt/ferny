@@ -168,6 +168,10 @@ function bookmarkAllTabs() {
   // });
 }
 
+function popupTabHistory() {
+  ipcRenderer.send("tabManager-popupTabHistory");
+}
+
 /*
  ###### #    # #    #  ####               ####  #    # ###### #####  #        ##   #   #
  #      #    # ##   # #    #             #    # #    # #      #    # #       #  #   # #

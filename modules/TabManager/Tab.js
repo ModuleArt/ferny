@@ -390,7 +390,7 @@ class Tab extends EventEmitter {
             label: "Close to the right", icon: this.appPath + "/imgs/icons16/swipe-right.png", click: () => { 
                 this.closeToTheRight(); 
             } }, { 
-            label: "Close others", accelerator: "CmdOrCtrl+Shift+W", click: () => { 
+            label: "Close others", icon: this.appPath + "/imgs/icons16/swipe-both.png", accelerator: "CmdOrCtrl+Shift+W", click: () => { 
                 this.closeOthers(); 
             } }, { 
             label: "Close tab", icon: this.appPath + "/imgs/icons16/close.png", accelerator: "CmdOrCtrl+W", click: () => { 
@@ -516,6 +516,23 @@ class Tab extends EventEmitter {
 
     moveToEnd() {
         this.window.webContents.send("tabRenderer-moveTabToEnd", this.id);
+    }
+
+    popupTabHistory() {
+        let tabHistory = Menu.buildFromTemplate([]);
+
+        this.view.webContents.history.forEach((value, index) => {
+            let historyItem = new MenuItem({
+                label: value.split("/")[2].replace("www.", ""),
+                sublabel: value,
+                click: () => {
+                    this.navigate(value);
+                },
+                icon: this.appPath + "/imgs/icons16/link.png"
+            });
+            tabHistory.append(historyItem);
+        });
+        tabHistory.popup(this.window);
     }
 }
 

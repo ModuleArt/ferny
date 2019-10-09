@@ -1,5 +1,5 @@
 const EventEmitter = require("events");
-const { BrowserView, Menu } = require('electron');
+const { BrowserView, Menu, MenuItem, clipboard } = require('electron');
 
 class Overlay extends EventEmitter {
     window = null;
@@ -26,6 +26,7 @@ class Overlay extends EventEmitter {
         this.view.webContents.loadFile(this.appPath + "/html/overlay.html");
 
         this.view.webContents.on("context-menu", (event, params) => {
+            console.log(params);
             if(params.isEditable) {
                 let editMenu = Menu.buildFromTemplate([{ 
                     label: "Cut", icon: this.appPath + "/imgs/icons16/cut.png", accelerator: "CmdOrCtrl+X", enabled: params.editFlags.canCut, click: () => { 
@@ -50,6 +51,22 @@ class Overlay extends EventEmitter {
                         this.view.webContents.delete();
                     } }
                 ]);
+
+                if(params.y < 200) {
+                    let mi = new MenuItem({
+                        label: "Paste and search", 
+                        icon: appPath + "/imgs/icons16/zoom.png", 
+                        enabled: params.editFlags.canPaste, 
+                        click: () => { 
+                            this.performSearch(clipboard.readText()); }
+                    });
+                    let sep = new MenuItem({
+                        type: "separator"
+                    });
+                    editMenu.insert(4, mi);
+                    editMenu.insert(5, sep);
+                }
+
                 editMenu.popup(this.window);
             }
         });
@@ -58,12 +75,12 @@ class Overlay extends EventEmitter {
     }
 
     refreshBounds() {
-        let size = this.window.getBounds();
+        let size = this.window.getSize();
         this.view.setBounds({ 
             x: 0,
             y: this.top, 
-            width: size.width, 
-            height: size.height - this.top 
+            width: size[0],
+            height: size[1] - this.top 
         });
     }
 

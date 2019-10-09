@@ -1,0 +1,13 @@
+{
+  "name": "Twitchy",
+  "type": "Dark",
+  "icons": "white",
+  "colorBack": "#161121",
+  "colorElement": "#2F194F",
+  "colorBorder": "#1D132E",
+  "colorSecond": "#351A5C",
+  "colorTop": "#FFFFFF",
+  "shadowFocus": "inset 0 0 4px rgba(190, 147, 254, 0.5)",
+  "opacityOver": "0.5",
+  "pxRadius": "16px"
+}

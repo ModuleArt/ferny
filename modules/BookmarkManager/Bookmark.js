@@ -25,12 +25,24 @@ class Bookmark extends EventEmitter {
         this.node.name = id;
         this.node.position = position;
         this.node.innerHTML = `
-            <img class='bookmark-icon' src="http://www.google.com/s2/favicons?domain=` + url + `">
             <img title="Drag here" class="theme-icon bookmark-move" name="move-16">
             <label class='bookmark-name'>` + name + `</label>
             <label class='bookmark-preview'>` + url + `</label>
         `;
-        let color = new GetAvColor(this.node.getElementsByTagName("img")[0]);
+
+        let bookmarkIcon = document.createElement("img");
+        bookmarkIcon.classList.add("bookmark-icon");
+        bookmarkIcon.src = "http://www.google.com/s2/favicons?domain=" + url;
+        bookmarkIcon.onerror = () => {
+            bookmarkIcon.src = __dirname + "/../../imgs/icons16/star.png";
+            let color = new GetAvColor(bookmarkIcon);
+            color.mostUsed(result => {
+                this.node.style.backgroundColor = rgbToRgbaString(result[0]);
+            });
+        };
+        this.node.appendChild(bookmarkIcon);
+
+        let color = new GetAvColor(bookmarkIcon);
         color.mostUsed(result => {
             this.node.style.backgroundColor = rgbToRgbaString(result[0]);
         });

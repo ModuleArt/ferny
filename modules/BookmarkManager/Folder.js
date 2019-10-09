@@ -156,7 +156,7 @@ class Folder extends EventEmitter {
 
     getBookmarkById(id) {
         for(let i = 0; i < this.bookmarks.length; i++) {
-            if(id === this.bookmarks[i].getId()) {
+            if(id == this.bookmarks[i].getId()) {
                 return this.bookmarks[i];
             }
         }
@@ -204,6 +204,8 @@ class Folder extends EventEmitter {
     toggleEditor() {
         let folderEditor = this.node.getElementsByClassName("folder-editor")[0];
         if(folderEditor == null) {
+            this.node.getElementsByClassName("folder-header")[0].style.display = "none";
+
             folderEditor = document.createElement("div");
             folderEditor.classList.add("folder-editor");
             this.node.insertBefore(folderEditor, this.node.firstChild);
@@ -240,6 +242,8 @@ class Folder extends EventEmitter {
             }
             folderEditor.appendChild(deleteBtn);
         } else {
+            this.node.getElementsByClassName("folder-header")[0].style.display = "";
+
             this.node.removeChild(folderEditor);
         }
 

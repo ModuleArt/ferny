@@ -29,6 +29,16 @@
     </div>
     <div class="column-right">
       <div class="block-title">
+        <img name="info-16" class="theme-icon">
+        <label>Info</label>
+      </div>
+      <label class="nav-label mini">
+        Ferny is a privacy-focused, cross-platform, chromium-based web browser
+        with a greatfull user experience, built on top of Electron, JS and styled-components.
+        It aims to be fast, private, beautiful and functional.
+      </label>
+
+      <div class="block-title">
         <img name="download-16" class="theme-icon">
         <label>Updates</label>
       </div>
@@ -38,8 +48,10 @@
       </button>
       <button class="nav-btn" onclick="openPlannerPage()" title="Trello page">
         <img class="theme-icon" name="calendar-16">
-        <label>Trello planner</label>
+        <label>Updates planner</label>
       </button>
+      <label class="nav-label mini">Feature is missing?</label><button onclick="openIssuesPage()" class="link">Request feature</button>
+
       <div class="block-title">
         <img name="user-16" class="theme-icon">
         <label>Community</label>
@@ -48,6 +60,9 @@
         <img src="../imgs/discord16.png">
         <label>Discord chat</label>
       </button>
+      <label class="nav-label mini">Have a question?</label><button onclick="openDiscordPage()" class="link">Ask here</button>
+      <button onclick="openDiscordPage()" class="link">Help translate this app</button>
+
       <div class="block-title">
         <img name="code-16" class="theme-icon">
         <label>Created by</label>
@@ -58,8 +73,9 @@
       </button>
       <button class="nav-btn" onclick="openDonatePage()" title="Patreon page">
         <img class="theme-icon" name="coin-16">
-        <label>Donate</label>
+        <label>Buy me coffee</label>
       </button>
+      <label class="nav-label mini">Do you want to support?</label><button onclick="openDonatePage()" class="link">Donate</button>
       <div class="block-title">
         <img name="github-16" class="theme-icon">
         <label>GitHub</label>
@@ -72,15 +88,17 @@
         <img class="theme-icon" name="bug-report-16">
         <label>Issues</label>
       </button>
+      <label class="nav-label mini">Found a bug?</label><button class="link" onclick="openIssuesPage()" title="Create new issue on GitHub">Report</button>
       <div class="block-title">
         <img name="license-16" class="theme-icon">
         <label>License</label>
       </div>
-      <label>GPL-3.0</label>
-      <button class="nav-btn" onclick="openLicenseFile()" title="Open license file in new tab">
+      <button class="nav-btn" onclick="openLicensePage()" title="GitHub page">
         <img class="theme-icon" name="file-16">
-        <label>Open file</label>
+        <label>Show license</label>
       </button>
+      <label class="nav-label">GPL-3.0</label>
+      <button class="link" onclick="openLicenseFile()" title="Open license file in new tab">Open file</button>
       <div class="block-title">
         <img name="library-16" class="theme-icon">
         <label>Libraries</label>
