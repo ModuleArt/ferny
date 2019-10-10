@@ -33,9 +33,12 @@
 </p>
 
 <h2 align="center">Screenshots</h2>
-<img src="/docs/imgs/ferny/screen1.png">
-<img src="/docs/imgs/ferny/screen2.png">
-<img src="/docs/imgs/ferny/screen3.png">
+<img src="/docs/imgs/ferny/tab.png">
+<img src="/docs/imgs/ferny/overlay.png">
+<img src="/docs/imgs/ferny/darkmode.png">
+<img src="/docs/imgs/ferny/search.png">
+<img src="/docs/imgs/ferny/history.png">
+<img src="/docs/imgs/ferny/settings.png">
 
 <h2 align="center">License</h2>
 <p align="center">

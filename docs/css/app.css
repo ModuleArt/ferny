@@ -127,7 +127,7 @@ body {
 }
 
 .main .links a {
-    padding: 12px 24px;
+    padding: 10px 24px;
     margin: 8px;
     border: 2px solid rgba(255, 255, 255, 0.5);
     border-radius: 4px;
@@ -140,7 +140,20 @@ body {
 }
 
 .main .links a.blue {
-    background-color: rgb(19, 175, 245);
+    background-color: #3498db;
+    border-color: transparent;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+}
+
+
+.main .links a.green {
+    background-color: #1abc9c;
+    border-color: transparent;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+}
+
+.main .links a.red {
+    background-color: #e74c3c;
     border-color: transparent;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
 }
@@ -416,10 +429,6 @@ body {
         width: calc(100% - 16px);
     }
 
-    .main .links .button {
-        width: calc(50% - 2px);
-    }
-
     .main .features .row {
         flex-direction: column;
     }
@@ -432,6 +441,10 @@ body {
 @media only screen and (max-width: 420px) {
     .main .links a img {
         display: none;
+    }
+
+    .main .links .button {
+        width: calc(50% - 8px);
     }
 
     .main {
