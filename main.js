@@ -15,7 +15,7 @@ const ppath = require("persist-path")("Ferny");
 
 const saveFileToJsonFolder = require(app.getAppPath() + "/modules/saveFileToJsonFolder.js");
 const loadTheme = require(app.getAppPath() + "/modules/loadTheme.js");
-const loadLastTab = require(app.getAppPath() + "/modules/loadLastTab.js");
+const loadLastTabModule = require(app.getAppPath() + "/modules/loadLastTab.js");
 const loadStartup = require(app.getAppPath() + "/modules/loadStartup.js");
 const loadHomePage = require(app.getAppPath() + "/modules/loadHomePage.js");
 const loadBounds = require(app.getAppPath() + "/modules/loadBounds.js");
@@ -657,14 +657,14 @@ function initTabManager() {
   });
 
   tabManager.on("last-tab-closed", () => {
-    loadLastTab().then((lastTab) => {
-      if(lastTab == "new-tab") {
+    loadLastTabModule().then((lastTab) => {
+      if(lastTab === "new-tab") {
         tabManager.newTab();
-      } else if(lastTab == "quit") {
+      } else if(lastTab === "quit") {
         app.quit();
-      } else if(lastTab == "overlay") {
+      } else if(lastTab === "overlay") {
         overlay.show();
-      } else if(lastTab == "new-tab-overlay") {
+      } else if(lastTab === "new-tab-overlay") {
         tabManager.newTab();
         overlay.show();
       }

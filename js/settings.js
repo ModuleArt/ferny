@@ -19,6 +19,7 @@ const loadTheme = require("../modules/loadTheme.js");
 const applyTheme = require("../modules/applyTheme.js");
 const bytesToSize = require("../modules/bytesToSize.js");
 const applyWinControls = require("../modules/applyWinControls.js");
+const loadLastTabModule = require("../modules/loadLastTab.js");
 
 /*
  ###### #    # #    #  ####              ##### #    # ###### #    # ######  ####
@@ -218,8 +219,7 @@ function requestLastTab(lastTab) {
 }
 
 function loadLastTab() {
-  loadFileFromJsonFolder(null, "lasttab").then((data) => {
-    let lastTab = data.toString();
+  loadLastTabModule().then((lastTab) => {
     let radios = document.getElementsByName("lasttab");
     for(let i = 0; i < radios.length; i++) {
       if(radios[i].value === lastTab) {

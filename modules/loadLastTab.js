@@ -4,14 +4,25 @@ const fs = require("fs");
 const saveFileToJsonFolder = require("../modules/saveFileToJsonFolder.js");
 
 function loadLastTab() {
-    return new Promise(function(resolve, reject) {
+    return new Promise((resolve, reject) => {
+        let defaultValue = "overlay";
+        let possibleValues = ["overlay", "new-tab", "new-tab-overlay", "quit"];
         try {
             fs.readFile(ppath + "/json/lasttab.json", (err, data) => {
-                resolve(data);
+                data = data.toString();
+                if(err) {
+                    resolve(defaultValue);
+                } else {
+                    if(possibleValues.includes(data)) {
+                        resolve(data);
+                    } else {
+                        resolve(defaultValue);
+                    }
+                }
             });
         } catch (e) {
-            saveFileToJsonFolder(null, "lasttab", "overlay").then((bool) => {
-                resolve("overlay");
+            saveFileToJsonFolder(null, "lasttab", defaultValue).then((bool) => {
+                resolve(defaultValue);
             })
         }
     });
