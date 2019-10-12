@@ -9,5 +9,5 @@
   "colorTop": "#FFFFFF",
   "shadowFocus": "inset 0 0 4px rgba(0, 0, 0, 1)",
   "opacityOver": "0.5",
-  "pxRadius": "16px"
+  "pxRadius": "12px"
 }

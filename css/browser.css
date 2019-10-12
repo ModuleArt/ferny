@@ -129,9 +129,9 @@
 }
 
 #drag-zone.maximize {
-  left: 0;
-  right: 0;
-  top: 0;
+  left: -1px;
+  right: -1px;
+  top: -1px;
 }
 
 #titlebar {
@@ -173,6 +173,7 @@
   padding: 8px;
   color: var(--color-top);
   border-radius: var(--px-radius);
+  transition-delay: 0.5s;
 }
 
 #search-input:hover {
@@ -227,6 +228,7 @@
   text-align: center;
   opacity: 0;
   transition: opacity 0.25s;
+  transition-delay: 0.5s;
   text-align: center;
 }
 
@@ -248,13 +250,9 @@
 #window-controls {
   -webkit-app-region: no-drag;
   float: right;
-  height: 32px;
+  height: 34px;
   display: grid;
-  grid-template-columns: repeat(3, 46px);
-}
-
-#window-controls.linux {
-  grid-template-columns: repeat(3, 32px);
+  margin: -1px;
 }
 
 #window-controls span {
@@ -267,8 +265,7 @@
   border-radius: 0;
   width: 34px;
   height: 34px;
-  margin: -1px;
-  border: none;
+  margin: 0;
   background-color: transparent;
   border: 1px solid transparent;
 }
@@ -291,8 +288,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  height: 100%;
+  width: 46px;
+  height: 34px;
   color: var(--color-top);
   transition: background-color 0.25s;
 }

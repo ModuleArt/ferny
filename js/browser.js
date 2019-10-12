@@ -163,9 +163,7 @@ function createBookmark() {
 }
 
 function bookmarkAllTabs() {
-  // tabGroup.eachTab((currentTab, index, tabs) => {
-  //   createBookmark(currentTab.webview.getURL(), currentTab.getTitle(), null);
-  // });
+  ipcRenderer.send("main-bookmarkAllTabs");
 }
 
 function popupTabHistory() {

@@ -35,6 +35,8 @@
     flex-direction: row;
     overflow-x: auto;
     overflow-y: hidden;
+    margin: -1px;
+    padding: 1px;
 }
 
 /*

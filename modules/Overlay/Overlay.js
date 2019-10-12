@@ -26,7 +26,7 @@ class Overlay extends EventEmitter {
         this.view.webContents.loadFile(this.appPath + "/html/overlay.html");
 
         this.view.webContents.on("context-menu", (event, params) => {
-            console.log(params);
+            // console.log(params);
             if(params.isEditable) {
                 let editMenu = Menu.buildFromTemplate([{ 
                     label: "Cut", icon: this.appPath + "/imgs/icons16/cut.png", accelerator: "CmdOrCtrl+X", enabled: params.editFlags.canCut, click: () => { 
@@ -134,6 +134,10 @@ class Overlay extends EventEmitter {
         this.view.webContents.send("bookmarkManager-addBookmark", name, url);
     }
 
+    addFolderWithBookmarks(folderName, bookmarks) {
+        this.view.webContents.send("bookmarkManager-addFolderWithBookmarks", folderName, bookmarks);
+    }
+
     addHistoryItem(url) {
         this.view.webContents.send("historyManager-insertBeforeHistoryItem", url);
     }
@@ -181,6 +185,15 @@ class Overlay extends EventEmitter {
 
     setSearchEngine(engineName) {
         this.view.webContents.send("searchManager-setSearchEngine", engineName);
+    }
+
+    setFullscreen(bool) {
+        if(bool) {
+            this.top = 0;
+        } else {
+            this.top = 34;
+        }
+        this.refreshBounds();
     }
 }
 

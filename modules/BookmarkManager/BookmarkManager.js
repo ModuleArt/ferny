@@ -68,6 +68,25 @@ class BookmarkManager extends EventEmitter {
         return null;
     }
 
+    addFolderWithBookmarks(folderName, folderBookmarks) {
+        let folder = new Folder(this.folderCounter++, folderName, true);
+        this.appendFolder(folder);
+
+        folderBookmarks.forEach((item, index) => {
+            folder.appendBookmark(new Bookmark(this.bookmarkCounter++, item.name, item.url));
+        });
+
+        this.updateFoldersPositions().then(() => {
+            this.saveFolders();
+            folder.updateBookmarksPositions().then(() => {
+                this.saveBookmarks();
+            });
+        });
+
+        this.emit("folder-added");
+        return null;
+    }
+
     appendFolder(folder) {
         folder.on("add-bookmark", (folder, bookmarkName, bookmarkURL) => {
             this.addBookmarkToFolder(folder, bookmarkName, bookmarkURL);
@@ -158,7 +177,6 @@ class BookmarkManager extends EventEmitter {
     }
 
     removeFolder(id) {
-        console.log("removeFolder=" + id);
         for(let i = 0; i < this.folders.length; i++) {
             if(this.folders[i].getId() == id) {
                 this.folderContainer.removeChild(this.folders[i].getNode());

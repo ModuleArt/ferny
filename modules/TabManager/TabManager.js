@@ -188,7 +188,7 @@ class TabManager extends EventEmitter {
         if(bool) {
             this.top = 0;
         } else {
-            this.top = 74;
+            this.top = 75;
         }
         if(this.hasActiveTab()) {
             this.getActiveTab().activate();
@@ -325,37 +325,42 @@ class TabManager extends EventEmitter {
                 }
             });
         } else {
-            let createItem = new MenuItem({ 
-                label: 'New Tab', 
-                icon: this.appPath + '/imgs/icons16/create.png', 
-                accelerator: 'CmdOrCtrl+T', 
+            m.append(new MenuItem({ 
+                label: "New Tab", 
+                icon: this.appPath + "/imgs/icons16/create.png", 
+                accelerator: "CmdOrCtrl+T", 
                 click: () => { this.newTab(); } 
-            });
-            m.append(createItem);
+            }));
         }  
         
-        let sep = new MenuItem({ type: 'separator' });
-        m.append(sep);
-        let nextItem = new MenuItem({ 
-            label: 'Next tab', 
-            icon: this.appPath + '/imgs/icons16/next.png', 
-            accelerator: 'CmdOrCtrl+Tab', 
+        m.append(new MenuItem({ type: "separator" }));
+        m.append(new MenuItem({ 
+            label: "Next tab", 
+            icon: this.appPath + "/imgs/icons16/next.png", 
+            accelerator: "CmdOrCtrl+Tab", 
             enabled: this.hasActiveTab(),
             click: () => { 
                 this.getActiveTab().nextTab(); 
             } 
-        });
-        m.append(nextItem);
-        let prevItem = new MenuItem({ 
-            label: 'Previous tab', 
-            icon: this.appPath + '/imgs/icons16/prev.png', 
-            accelerator: 'CmdOrCtrl+Shift+Tab', 
+        }));
+        m.append(new MenuItem({ 
+            label: "Previous tab", 
+            icon: this.appPath + "/imgs/icons16/prev.png", 
+            accelerator: "CmdOrCtrl+Shift+Tab", 
             enabled: this.hasActiveTab(),
             click: () => { 
                 this.getActiveTab().prevTab(); 
             } 
-        });
-        m.append(prevItem);
+        }));
+        m.append(new MenuItem({ type: "separator" }));
+        m.append(new MenuItem({ 
+            label: "Close all tabs", 
+            icon: this.appPath + "/imgs/icons16/close.png", 
+            enabled: this.hasTabs(),
+            click: () => { 
+                this.closeAllTabs();
+            } 
+        }));
 
         m.popup(this.window);
 
@@ -383,6 +388,12 @@ class TabManager extends EventEmitter {
         });
 
         return null;
+    }
+
+    closeAllTabs() {
+        for(let i = this.tabs.length - 1; i >= 0; i--) {
+            this.tabs[i].close();
+        }
     }
 }
 

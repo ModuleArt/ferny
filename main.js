@@ -96,7 +96,7 @@ app.on("ready", function() {
   });
 
   autoUpdater.on("update-available", (info) => {
-    mainWindow.webContents.send("action-add-quest-notif", { text: `Update is available: ${info.releaseName}`, ops: [{ 
+    mainWindow.webContents.send("notificationManager-addQuestNotif", { text: `Update is available: ${info.releaseName}`, ops: [{ 
       text: "Start download", 
       icon: "download-16", 
       click: "downloadUpdate();" 
@@ -105,7 +105,7 @@ app.on("ready", function() {
 
   autoUpdater.on("update-downloaded", () => {
     updateCancellationToken = null;
-    mainWindow.webContents.send("action-add-quest-notif", { text: "Update is downloaded!", ops: [{ 
+    mainWindow.webContents.send("notificationManager-addQuestNotif", { text: "Update is downloaded!", ops: [{ 
       text: "Install now", 
       icon: "check-16", 
       click: "installUpdate();" 
@@ -116,7 +116,7 @@ app.on("ready", function() {
     if(progress != null) {
       let perc = Math.round(progress.percent);
       if(perc % 25 == 0 && perc != 100) {
-        mainWindow.webContents.send("action-add-quest-notif", { text: `Update is being downloaded: ${perc}%`, ops: [{ 
+        mainWindow.webContents.send("notificationManager-addQuestNotif", { text: `Update is being downloaded: ${perc}%`, ops: [{ 
           text: "Cancel", 
           icon: "cancel-16", 
           click: "cancelUpdate();" 
@@ -207,6 +207,14 @@ app.on("ready", function() {
  # #      #    #             #    # #    # # #   ##
  # #       ####              #    # #    # # #    #
 */
+
+ipcMain.on("main-bookmarkAllTabs", (event) => {
+  let arr = [];
+  tabManager.getTabs().forEach((tab, index) => {
+    arr.push({ name: tab.getTitle(), url: tab.getURL() });
+  });
+  overlay.addFolderWithBookmarks("Bookmarked tabs", arr);
+});
 
 ipcMain.on("main-setDownloadsFolder", (event, folder) => {
   downloadsFolder = folder;
@@ -743,9 +751,9 @@ function saveBounds() {
     y: mainWindow.getBounds().y,
     width: mainWindow.getBounds().width,
     height: mainWindow.getBounds().height,
-    maximize: mainWindow.isMaximized()
+    maximize: mainWindow.isMaximized() || mainWindow.isFullScreen()
   }
-  saveFileToJsonFolder(null, 'bounds', JSON.stringify(Data));
+  saveFileToJsonFolder(null, "bounds", JSON.stringify(Data));
 }
 
 function showAboutWindow() {
@@ -825,14 +833,14 @@ function showMainWindow() {
       Data.x = null;
       Data.y = null;
       Data.width = 1000;
-      Data.height = 600;
+      Data.height = 650;
     }
   
     loadTheme().then(function(theme) {
       mainWindow = new BrowserWindow({
         x: Data.x, y: Data.y,
         width: Data.width, height: Data.height,
-        minWidth: 520, minHeight: 300,
+        minWidth: 480, minHeight: 300,
         frame: false,
         show: false,
         icon: app.getAppPath() + "/imgs/icon.ico",
@@ -925,6 +933,7 @@ function showMainWindow() {
         if(process.argv.length >= 2 && process.argv[1] !== ".") {
           let openFilePath = process.argv[1];
           tabManager.addTab("file://" + openFilePath, true);
+          mainWindow.webContents.send("notificationManager-addStatusNotif", { text: `Opened with Ferny: "${openFilePath}"`, type: "info" });
         } else {
           loadStartup().then((startup) => {
             if(startup == "overlay") {
@@ -1000,10 +1009,10 @@ function showMainWindow() {
         }
     
         if(update) {
-          mainWindow.webContents.send("action-add-quest-notif", { text: "App update is in progress! Exit anyway?", ops: [{ text:'Exit', icon:'exit-16', click:'exitAppAnyway()' }] });
+          mainWindow.webContents.send("notificationManager-addQuestNotif", { text: "App update is in progress! Exit anyway?", ops: [{ text:'Exit', icon:'exit-16', click:'exitAppAnyway()' }] });
         } else {
           if(download) {
-            mainWindow.webContents.send("action-add-quest-notif", { text: "Download is in progress! Exit anyway?", ops: [{ text:'Exit', icon:'exit-16', click:'exitAppAnyway()' }] });
+            mainWindow.webContents.send("notificationManager-addQuestNotif", { text: "Download is in progress! Exit anyway?", ops: [{ text:'Exit', icon:'exit-16', click:'exitAppAnyway()' }] });
           } else {
             saveBounds();
             app.exit();
@@ -1034,6 +1043,11 @@ function initMenu() {
         if(tabManager.hasActiveTab()) {
           tabManager.getActiveTab().reload(); 
         } 
+      } }, { 
+      label: "Reload ignoring cache", icon: app.getAppPath() + "/imgs/icons16/database-reload.png", accelerator: "CmdOrCtrl+Shift+F5", click: () => { 
+        if(tabManager.hasActiveTab()) {
+          tabManager.getActiveTab().reloadIgnoringCache();
+        }
       } }, { type: "separator" }, { 
       label: "Duplicate", icon: app.getAppPath() + "/imgs/icons16/copy.png", accelerator: "CmdOrCtrl+Shift+D", click: () => { 
         if(tabManager.hasActiveTab()) {
@@ -1048,11 +1062,6 @@ function initMenu() {
       label: "Go home", icon: app.getAppPath() + "/imgs/icons16/home.png", accelerator: "CmdOrCtrl+Shift+H", click: () => { 
         if(tabManager.hasActiveTab()) {
           tabManager.getActiveTab().goHome(); 
-        }
-      } }, { type: "separator" }, { 
-      label: "Reload ignoring cache", accelerator: "CmdOrCtrl+F5", click: () => { 
-        if(tabManager.hasActiveTab()) {
-          tabManager.getActiveTab().reloadIgnoringCache();
         }
       } }, { type: "separator" }, { 
       label: "Move tab", icon: app.getAppPath() + "/imgs/icons16/divider-horizontal.png", submenu: [{
@@ -1104,11 +1113,16 @@ function initMenu() {
           overlay.scrollToId("bookmarks-title"); 
         }
       } }, { 
-      enabled: false, label: "Bookmark all tabs", click: () => { 
-        // mainWindow.webContents.send("action-add-quest-notif", { 
-        //   text: "Are you sure to bookmark all tabs?", 
-        //   ops: [{ text:'Bookmark', icon:'add-bookmark-16', click:'bookmarkAllTabs()' }] 
-        // }); 
+      label: "Bookmark all tabs", icon: app.getAppPath() + "/imgs/icons16/tab.png", click: () => { 
+        if(tabManager.hasTabs()) {
+          mainWindow.webContents.send("notificationManager-addQuestNotif", { text: "Are you sure to bookmark all opened tabs?", ops: [{ 
+            text: "Bookmark tabs", 
+            icon: "add-bookmark-16", 
+            click: "bookmarkAllTabs();" 
+          }] });
+        } else {
+          mainWindow.webContents.send("notificationManager-addStatusNotif", { text: "There is no tabs", type: "error" });
+        }
       } }
     ] }, { 
     label: "History", accelerator: "CmdOrCtrl+H", icon: app.getAppPath() + "/imgs/icons16/history.png", click: () => { 
@@ -1295,6 +1309,7 @@ function toggleFullscreen() {
     mainWindow.setFullScreen(true);
   }
   tabManager.setFullscreen(mainWindow.isFullScreen());
+  overlay.setFullscreen(mainWindow.isFullScreen());
 }
 
 function checkForUpdates() {

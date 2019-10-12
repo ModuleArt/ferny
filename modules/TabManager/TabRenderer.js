@@ -266,7 +266,6 @@ class TabRenderer extends EventEmitter {
             this.targetURL.classList.add("show");
             this.addressBar.classList.add("show-target");
         } else {
-            this.targetURL.innerHTML = "";
             this.targetURL.classList.remove("show");
             this.addressBar.classList.remove("show-target");
         }

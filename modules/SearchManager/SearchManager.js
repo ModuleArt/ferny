@@ -214,6 +214,15 @@ class SearchManager extends EventEmitter {
             case "ecosia":
                 this.newTab("https://www.ecosia.org/search?q=" + text);
                 break;
+            case "twitter":
+                this.newTab("https://twitter.com/search?q=" + text);
+                break;
+            case "amazon":
+                this.newTab("https://www.amazon.com/s?k=" + text);
+                break;
+            case "twitch":
+                this.newTab("https://www.twitch.tv/search?term=" + text);
+                break;
         }
     }
       

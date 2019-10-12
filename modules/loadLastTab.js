@@ -6,7 +6,7 @@ const saveFileToJsonFolder = require("../modules/saveFileToJsonFolder.js");
 function loadLastTab() {
     return new Promise(function(resolve, reject) {
         try {
-            fs.readFile(ppath + "/json/lasttab.json", function(err, data) {
+            fs.readFile(ppath + "/json/lasttab.json", (err, data) => {
                 resolve(data);
             });
         } catch (e) {

@@ -181,7 +181,7 @@ function openSettings() {
 */
 
 function goSearch() {
-  searchManager.navigateSuggest(document.getElementById('search-input').value);
+  searchManager.navigateSuggest(document.getElementById("search-input").value);
 }
 
 function clearSearch() {
@@ -345,6 +345,10 @@ ipcRenderer.on("bookmarkManager-addBookmark", (event, name, url) => {
 
 ipcRenderer.on("bookmarkManager-removeFolder", (event, id) => {
   bookmarkManager.getFolderById(id).delete();
+});
+
+ipcRenderer.on("bookmarkManager-addFolderWithBookmarks", (event, folderName, bookmarks) => {
+  bookmarkManager.addFolderWithBookmarks(folderName, bookmarks);
 });
 
 /*

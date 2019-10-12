@@ -52,7 +52,7 @@ class BlankNotification extends EventEmitter {
         if(this.autoClose) {
             this.timeout = setTimeout(() => {
                 this.close.call(this);
-            }, 5000);
+            }, 2500);
         }
         return null;
     }

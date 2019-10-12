@@ -159,8 +159,11 @@ class Tab extends EventEmitter {
                 if(params.linkURL.length > 0) {
                     let viewMenu = Menu.buildFromTemplate([{ 
                         label: "Open link in new tab", icon: this.appPath + "/imgs/icons16/tab.png", click: () => { 
-                            this.emit("add-tab", params.linkURL, true);
+                            this.emit("add-tab", params.linkURL, false);
                         } }, { type: "separator" }, { 
+                        label: "Copy link text", icon: this.appPath + "/imgs/icons16/text.png", click: () => { 
+                            clipboard.writeText(params.linkText); 
+                        } }, { 
                         label: "Copy link address", icon: this.appPath + "/imgs/icons16/copy.png", click: () => { 
                             clipboard.writeText(params.linkURL); 
                         } }, { type: "separator" }, {
@@ -358,7 +361,7 @@ class Tab extends EventEmitter {
             label: "Reload", icon: this.appPath + "/imgs/icons16/reload.png", accelerator: "F5", click: () => { 
                 this.reload(); 
             } }, {
-            label: "Reload ignoring cache", accelerator: "CmdOrCtrl+F5", click: () => { 
+            label: "Reload ignoring cache", icon: this.appPath + "/imgs/icons16/database-reload.png", accelerator: "CmdOrCtrl+Shift+F5", click: () => { 
                 this.reloadIgnoringCache(); 
             } }, { type: "separator" }, { 
             label: "Duplicate", icon: this.appPath + "/imgs/icons16/copy.png", accelerator: "CmdOrCtrl+Shift+D", click: () => { 
