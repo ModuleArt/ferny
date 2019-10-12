@@ -20,6 +20,7 @@ const applyTheme = require("../modules/applyTheme.js");
 const bytesToSize = require("../modules/bytesToSize.js");
 const applyWinControls = require("../modules/applyWinControls.js");
 const loadLastTabModule = require("../modules/loadLastTab.js");
+const loadSearchEngineModule = require("../modules/loadSearchEngine.js");
 
 /*
  ###### #    # #    #  ####              ##### #    # ###### #    # ######  ####
@@ -120,8 +121,7 @@ function requestSearchEngine(engine) {
 }
 
 function loadSearchEngine() {
-  loadFileFromJsonFolder(null, "search-engine").then((data) => {
-    let searchEngine = data.toString();
+  loadSearchEngineModule().then((searchEngine) => {
     let radios = document.getElementsByName("search-engine");
     for(let i = 0; i < radios.length; i++) {
       if(radios[i].value === searchEngine) {

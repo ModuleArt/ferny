@@ -12,7 +12,7 @@ const { ipcRenderer } = require("electron");
 const isUrl = require("validate.io-uri");
 const autoSuggest = require("suggestion");
 
-const loadSearchEngine = require("../loadSearchEngine.js");
+const loadSearchEngineModule = require("../loadSearchEngine.js");
 
 class SearchManager extends EventEmitter {
     searchInput = null;
@@ -115,8 +115,7 @@ class SearchManager extends EventEmitter {
             }
         }
 
-        this.setSearchEngine("duckduckgo");
-        loadSearchEngine().then((searchEngine) => {
+        loadSearchEngineModule().then((searchEngine) => {
             this.setSearchEngine(searchEngine);
         });
     }

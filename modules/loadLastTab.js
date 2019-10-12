@@ -9,10 +9,10 @@ function loadLastTab() {
         let possibleValues = ["overlay", "new-tab", "new-tab-overlay", "quit"];
         try {
             fs.readFile(ppath + "/json/lasttab.json", (err, data) => {
-                data = data.toString();
                 if(err) {
                     resolve(defaultValue);
                 } else {
+                    data = data.toString();
                     if(possibleValues.includes(data)) {
                         resolve(data);
                     } else {
