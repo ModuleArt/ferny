@@ -821,7 +821,7 @@ function showSettingsWindow() {
 
       settingsWindow.once("ready-to-show", () => {
         settingsWindow.show();
-        // settingsWindow.webContents.openDevTools();
+        settingsWindow.webContents.openDevTools();
       });
     });
   }

@@ -1,7 +1,7 @@
 const EventEmitter = require("events");
 const { Menu, MenuItem } = require('electron');
 
-const loadTabClosed = require("../loadTabClosed.js");
+const loadTabClosedModule = require("../loadTabClosed.js");
 
 const Tab = require(__dirname + "/Tab.js");
 
@@ -30,8 +30,8 @@ class TabManager extends EventEmitter {
         this.top = 75; 
         this.bottom = 0;
 
-        loadTabClosed().then((tabClosed) => {
-            this.setTabClosedAction(tabClosed.toString());
+        loadTabClosedModule().then((tabClosed) => {
+            this.setTabClosedAction(tabClosed);
         });
     }
 

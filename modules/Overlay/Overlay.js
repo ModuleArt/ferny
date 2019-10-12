@@ -70,8 +70,6 @@ class Overlay extends EventEmitter {
                 editMenu.popup(this.window);
             }
         });
-
-        this.show();
     }
 
     refreshBounds() {

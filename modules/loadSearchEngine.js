@@ -4,7 +4,7 @@ const fs = require("fs");
 const saveFileToJsonFolder = require("../modules/saveFileToJsonFolder.js");
 
 function loadSearchEngine() {
-    return new Promise(function(resolve, reject) {
+    return new Promise((resolve, reject) => {
         let defaultValue = "duckduckgo";
         let possibleValues = ["duckduckgo", "google", "bing", "wikipedia", "yahoo", "yandex", "mailru", 
             "baidu", "naver", "qwant", "youtube", "youtube", "ecosia", "twitter", "amazon", "twitch"];

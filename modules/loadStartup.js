@@ -4,11 +4,11 @@ const fs = require("fs");
 const saveFileToJsonFolder = require("../modules/saveFileToJsonFolder.js");
 
 function loadStartup() {
-    return new Promise(function(resolve, reject) {
+    return new Promise((resolve, reject) => {
         let defaultValue = "overlay";
         let possibleValues = ["overlay", "new-tab"];
         try {
-            fs.readFile(ppath + "/json/startup.json", function(err, data) {
+            fs.readFile(ppath + "/json/startup.json", (err, data) => {
                 if(err) {
                     resolve(defaultValue);
                 } else {

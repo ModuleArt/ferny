@@ -22,6 +22,7 @@ const applyWinControls = require("../modules/applyWinControls.js");
 const loadLastTabModule = require("../modules/loadLastTab.js");
 const loadSearchEngineModule = require("../modules/loadSearchEngine.js");
 const loadStartupModule = require("../modules/loadStartup.js");
+const loadTabClosedModule = require("../modules/loadTabClosed.js");
 
 /*
  ###### #    # #    #  ####              ##### #    # ###### #    # ######  ####
@@ -117,7 +118,7 @@ function closeWindow() {
 function requestSearchEngine(engine) {
   saveFileToJsonFolder(null, "search-engine", engine).then(function(bool) {
     ipcRenderer.send("overlay-setSearchEngine", engine);
-    ipcRenderer.send("main-addStatusNotif", { text: `Search engine changed: "${egnine}"`, type: "success" });
+    ipcRenderer.send("main-addStatusNotif", { text: `Search engine changed: "${engine}"`, type: "success" });
   });
 }
 
@@ -192,8 +193,7 @@ function requestTabClosed(tabClosed) {
 }
 
 function loadTabClosed() {
-  loadFileFromJsonFolder(null, "tabclosed").then((data) => {
-    let tabClosed = data.toString();
+  loadTabClosedModule().then((tabClosed) => {
     let radios = document.getElementsByName("tabclosed");
     for(let i = 0; i < radios.length; i++) {
       if(radios[i].value === tabClosed) {
