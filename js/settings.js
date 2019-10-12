@@ -23,6 +23,7 @@ const loadLastTabModule = require("../modules/loadLastTab.js");
 const loadSearchEngineModule = require("../modules/loadSearchEngine.js");
 const loadStartupModule = require("../modules/loadStartup.js");
 const loadTabClosedModule = require("../modules/loadTabClosed.js");
+const loadWinControlsModule = require("../modules/loadWinControls.js");
 
 /*
  ###### #    # #    #  ####              ##### #    # ###### #    # ######  ####
@@ -327,6 +328,25 @@ function clearBrowsingData() {
 }
 
 /*
+ ###### #    # #    #  ####              #    # # #    #     ####   ####  #    # ##### #####   ####  #       ####
+ #      #    # ##   # #    #             #    # # ##   #    #    # #    # ##   #   #   #    # #    # #      #
+ #####  #    # # #  # #         #####    #    # # # #  #    #      #    # # #  #   #   #    # #    # #       ####
+ #      #    # #  # # #                  # ## # # #  # #    #      #    # #  # #   #   #####  #    # #           #
+ #      #    # #   ## #    #             ##  ## # #   ##    #    # #    # #   ##   #   #   #  #    # #      #    #
+ #       ####  #    #  ####              #    # # #    #     ####   ####  #    #   #   #    #  ####  ######  ####
+*/
+
+function requestWinControls(bool) {
+  saveFileToJsonFolder(null, "wincontrols", JSON.stringify({ systemTitlebar: bool })).then(() => {
+    if(bool) {
+      ipcRenderer.send("main-addStatusNotif", { text: "System titlebar turned on", type: "success" });
+    } else {
+      ipcRenderer.send("main-addStatusNotif", { text: "System titlebar turned off", type: "info" });
+    }
+  });
+}
+
+/*
  ###### #    # #    #  ####               ####    ##   ##### ######  ####   ####  #####  # ######  ####
  #      #    # ##   # #    #             #    #  #  #    #   #      #    # #    # #    # # #      #
  #####  #    # # #  # #         #####    #      #    #   #   #####  #      #    # #    # # #####   ####
@@ -405,7 +425,10 @@ ipcRenderer.on("settings-setDownloadsFolder", (event, path) => {
 */
 
 function init() {
-  applyWinControls("only-close");
+  loadWinControlsModule().then((winControls) => {
+    applyWinControls(winControls.systemTitlebar, "only-close");
+    document.getElementById("system-titlebar-checkbox").checked = winControls.systemTitlebar;
+  });
 
   updateTheme();
 

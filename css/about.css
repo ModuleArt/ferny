@@ -134,6 +134,15 @@ body {
   overflow-y: auto;
 }
 
+body.system-titlebar .column-left {
+  top: 0;
+  padding: 24px 12px;
+}
+
+body.system-titlebar .column-right {
+  top: 0;
+}
+
 label {
   color: var(--color-top);
 }

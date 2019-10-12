@@ -783,6 +783,7 @@ hr {
     opacity: var(--opacity-over);
     user-select: all;
     margin: 0;
+    cursor: text;
 }
 
 .download-name {
@@ -796,6 +797,7 @@ hr {
     white-space: nowrap;
     word-break: keep-all;
     text-overflow: ellipsis;
+    cursor: text;
 }
 
 .download-url {
@@ -810,6 +812,7 @@ hr {
     white-space: nowrap;
     word-break: keep-all;
     text-overflow: ellipsis;
+    cursor: text;
 }
 
 /*

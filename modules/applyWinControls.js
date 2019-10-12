@@ -1,15 +1,25 @@
-function applyWinControls(type) {
-    var platform = process.platform;
-
-    if(platform == "win32") {
-        setWindows(type);
-    } else if(platform == "linux") {
-        setLinux(type);
+function applyWinControls(show, type) {
+    if(show) {
+        setNone();
+    } else {
+        let platform = process.platform;
+        if(platform === "win32") {
+            setWindows(type);
+        } else if(platform === "linux") {
+            setLinux(type);
+        }
+        document.body.classList.remove("system-titlebar");
     }
 }
 
+function setNone() {
+    let windowControls = document.getElementById("window-controls");
+    windowControls.innerHTML = "";
+    document.body.classList.add("system-titlebar");
+}
+
 function setWindows(type) {
-    var windowControls = document.getElementById("window-controls");
+    let windowControls = document.getElementById("window-controls");
     windowControls.classList.add("windows");
 
     if(type == null) {
@@ -35,7 +45,7 @@ function setWindows(type) {
 }
 
 function setLinux(type) {
-    var windowControls = document.getElementById("window-controls");
+    let windowControls = document.getElementById("window-controls");
     windowControls.classList.add("linux");
 
     if(type == null) {

@@ -157,6 +157,9 @@ class SearchManager extends EventEmitter {
                                 s.onclick = () => {
                                     this.navigateSuggest(s.value);
                                 };
+                                s.oncontextmenu = () => {
+                                    this.navigateSuggest(s.value, true);
+                                };
                                 this.searchSuggestContainer.appendChild(s);
                             }
                         }
@@ -166,7 +169,7 @@ class SearchManager extends EventEmitter {
         }
     }
       
-    searchWith(text, engine) {
+    searchWith(text, engine, background) {
         if(text == null) {
             var suggestions = this.searchSuggestContainer.childNodes;
             let i = 0;
@@ -178,54 +181,54 @@ class SearchManager extends EventEmitter {
       
         switch (engine) {
             case "google":
-                this.newTab("https://google.com/search?q=" + text);
+                this.newTab("https://google.com/search?q=" + text, background);
                 break;
             case"'bing":
-                this.newTab("https://bing.com/search?q=" + text);
+                this.newTab("https://bing.com/search?q=" + text, background);
                 break;
             case "duckduckgo":
-                this.newTab("https://duckduckgo.com/?q=" + text);
+                this.newTab("https://duckduckgo.com/?q=" + text, background);
                 break;
             case "yahoo":
-                this.newTab("https://search.yahoo.com/search?p=" + text);
+                this.newTab("https://search.yahoo.com/search?p=" + text, background);
                 break;
             case "wikipedia":
-                this.newTab("https://wikipedia.org/wiki/Special:Search?search=" + text);
+                this.newTab("https://wikipedia.org/wiki/Special:Search?search=" + text, background);
                 break;
             case "yandex":
-                this.newTab("https://yandex.com/search/?text=" + text);
+                this.newTab("https://yandex.com/search/?text=" + text, background);
                 break;
             case "mailru":
-                this.newTab("https://go.mail.ru/search?q=" + text);
+                this.newTab("https://go.mail.ru/search?q=" + text,background);
                 break;
             case "baidu":
-                this.newTab("https://www.baidu.com/s?wd=" + text);
+                this.newTab("https://www.baidu.com/s?wd=" + text, background);
                 break;
             case "naver":
-                this.newTab("https://search.naver.com/search.naver?query=" + text);
+                this.newTab("https://search.naver.com/search.naver?query=" + text, background);
                 break;
             case "qwant":
-                this.newTab("https://www.qwant.com/?q=" + text);
+                this.newTab("https://www.qwant.com/?q=" + text, background);
                 break;
             case "youtube":
-                this.newTab("https://www.youtube.com/results?search_query=" + text);
+                this.newTab("https://www.youtube.com/results?search_query=" + text, background);
                 break;
             case "ecosia":
-                this.newTab("https://www.ecosia.org/search?q=" + text);
+                this.newTab("https://www.ecosia.org/search?q=" + text, background);
                 break;
             case "twitter":
-                this.newTab("https://twitter.com/search?q=" + text);
+                this.newTab("https://twitter.com/search?q=" + text, background);
                 break;
             case "amazon":
-                this.newTab("https://www.amazon.com/s?k=" + text);
+                this.newTab("https://www.amazon.com/s?k=" + text, background);
                 break;
             case "twitch":
-                this.newTab("https://www.twitch.tv/search?term=" + text);
+                this.newTab("https://www.twitch.tv/search?term=" + text, background);
                 break;
         }
     }
       
-    navigateSuggest(text) {
+    navigateSuggest(text, background) {
         if(text !== "" && text !== null) {
             if(isUrl(text)) {
                 this.newTab(text);
@@ -233,7 +236,7 @@ class SearchManager extends EventEmitter {
                 let engines = this.searchEngines.getElementsByClassName("search-engine");
                 for(let i = 0; i < engines.length; i++) {
                     if(engines[i].classList.contains("active")) {
-                        this.searchWith(text, engines[i].name);
+                        this.searchWith(text, engines[i].name, background);
                         break;
                     }
                 }
@@ -241,8 +244,8 @@ class SearchManager extends EventEmitter {
         }
     }
 
-    newTab(url) {
-        ipcRenderer.send("tabManager-addTab", url, true);
+    newTab(url, background) {
+        ipcRenderer.send("tabManager-addTab", url, !background);
         return null;
     }
 

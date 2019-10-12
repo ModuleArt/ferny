@@ -44,6 +44,10 @@
     border-bottom: 1px solid var(--color-border);
 }
 
+body.system-titlebar #titlebar {
+    display: none;
+}
+
 #titlebar-icon {
     padding: 8px;
 }

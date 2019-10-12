@@ -13,6 +13,7 @@ const dragula = require("dragula");
 const applyTheme = require("../modules/applyTheme.js");
 const loadTheme = require("../modules/loadTheme.js");
 const applyWinControls = require("../modules/applyWinControls.js");
+const loadWinControlsModule = require("../modules/loadWinControls.js");
 
 const NotificationManager = require("../modules/NotificationManager/NotificationManager.js");
 const TabRenderer = require("../modules/TabManager/TabRenderer.js");
@@ -419,7 +420,9 @@ ipcRenderer.on("tabRenderer-setHomePage", (event, homePage) => {
 */
 
 function init() {
-  applyWinControls();
+  loadWinControlsModule().then((winControls) => {
+    applyWinControls(winControls.systemTitlebar);
+  });
 
   updateTheme();
 }

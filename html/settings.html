@@ -40,6 +40,10 @@
                 <img name="tab-16" class="theme-icon">
                 <label>Tabs</label>
             </button>
+            <button class="nav-btn" onclick="showCategory('window')">
+                <img name="window-16" class="theme-icon">
+                <label>Window</label>
+            </button>
             <button class="nav-btn" onclick="showCategory('downloads')">
                 <img name="download-16" class="theme-icon">
                 <label>Downloads</label>
@@ -56,6 +60,7 @@
             <hr>
             <div id="theme-manager"></div>
         </div>
+
         <div class="container" id="home-page">
             <label class="title">Home page</label>
             <label class="nav-label">The page that will open when you create new tab or click the home button.</label>
@@ -84,6 +89,7 @@
                 <input type="checkbox" id="home-page-checkbox" class="checkbox">
             </div>
         </div>
+
         <div class="container" id="search-engine">
             <label class="title">Search engine</label>
             <label class="nav-label">Search engine used in the address bar.</label>
@@ -164,6 +170,7 @@
                 <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" name="search-engine" value="twitch">
             </div>
         </div>
+
         <div class="container" id="startup">
             <label class="title">On startup</label>
             <label class="nav-label">This action will be performed when the application starts.</label>
@@ -177,6 +184,7 @@
                 <input type="radio" onclick="requestStartup(this.value)" class="checkbox" name="startup" value="new-tab">
             </div>
         </div>
+
         <div class="container" id="tabs">
             <label class="title">On active tab closed</label>
             <div class="nav-checkbox">
@@ -210,6 +218,17 @@
                 <input type="radio" onclick="requestLastTab(this.value)" class="checkbox" name="lasttab" value="quit">
             </div>
         </div>
+
+        <div class="container" id="window">
+            <label class="title">Window</label>
+            <label class="nav-label">Use the title bar of the operating system. Applies only when a new window was created.</label>
+            <hr>
+            <div class="nav-checkbox">
+                <label>System titlebar</label>
+                <input id="system-titlebar-checkbox" type="checkbox" onclick="requestWinControls(this.checked)">
+            </div>
+        </div>
+
         <div class="container" id="downloads">
             <label class="title">Downloads</label>
             <label class="nav-label">A place to save downloaded files.</label>
@@ -237,6 +256,7 @@
                 <label>Choose folder</label>
             </button>
         </div>
+
         <div class="container" id="clear-browsing-data">
             <label class="title">Clear browsing data</label>
             <label class="nav-label">Cleanup the local storage to free up space.</label>

@@ -94,6 +94,10 @@ body {
     text-align: left;
 }
 
+body.system-titlebar .sidebar {
+    top: 0;
+}
+
 /*
   ####   ####  #    # #####   ##   # #    # ###### #####   ####
  #    # #    # ##   #   #    #  #  # ##   # #      #    # #
@@ -121,6 +125,10 @@ hr {
     overflow-y: auto;
     color: var(--color-top);
     border-left: none;
+}
+
+body.system-titlebar .container {
+    top: 0;
 }
 
 .container.active {

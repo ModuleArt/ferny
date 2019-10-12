@@ -5,23 +5,20 @@ const saveFileToJsonFolder = require("../modules/saveFileToJsonFolder.js");
 
 function loadWinControls() {
     return new Promise(function(resolve, reject) {
+        let defaultValue = {
+            systemTitlebar: true
+        };
         try {
             fs.readFile(ppath + "/json/wincontrols.json", (err, data) => {
-                if(err || data.length <= 0) {
-                    resolve({
-                        systemTitlebar: false
-                    });
+                if(err) {
+                    resolve(defaultValue);
                 } else {
                     resolve(JSON.parse(data));
                 }
             });
         } catch (e) {
-            saveFileToJsonFolder(null, "wincontrols", JSON.stringify({ 
-                systemTitlebar: false
-             })).then((bool) => {
-                resolve({
-                    systemTitlebar: false
-                });
+            saveFileToJsonFolder(null, "wincontrols", JSON.stringify(defaultValue)).then((bool) => {
+                resolve(defaultValue);
             });
         }
     });

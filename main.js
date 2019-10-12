@@ -19,6 +19,7 @@ const loadLastTabModule = require(app.getAppPath() + "/modules/loadLastTab.js");
 const loadStartupModule = require(app.getAppPath() + "/modules/loadStartup.js");
 const loadHomePage = require(app.getAppPath() + "/modules/loadHomePage.js");
 const loadBounds = require(app.getAppPath() + "/modules/loadBounds.js");
+const loadWinControlsModule = require(app.getAppPath() + "/modules/loadWinControls.js");
 
 const TabManager = require(app.getAppPath() + "/modules/TabManager/TabManager.js");
 const Overlay = require(app.getAppPath() + "/modules/Overlay/Overlay.js");
@@ -759,33 +760,35 @@ function saveBounds() {
 function showAboutWindow() {
   if(aboutWindow === null || aboutWindow.isDestroyed()) {
     loadTheme().then((theme) => {
-      aboutWindow = new BrowserWindow({
-        title: "About Ferny",
-        modal: true,
-        parent: mainWindow,
-        width: 480, height: 350,
-        resizable: false,
-        show: false,
-        frame: false,
-        icon: app.getAppPath() + "/imgs/icon.ico",
-        webPreferences: {
-          nodeIntegration: true
-        },
-        backgroundColor: theme.colorBack
-      });
-  
-      aboutWindow.loadFile(app.getAppPath() + "/html/about.html");
-
-      aboutWindow.on("focus", () => {
-        aboutWindow.webContents.send("window-focus");
-      });
+      loadWinControlsModule().then((winControls) => {
+        aboutWindow = new BrowserWindow({
+          title: "About Ferny",
+          modal: true,
+          parent: mainWindow,
+          width: 480, height: 350,
+          resizable: false,
+          show: false,
+          frame: winControls.systemTitlebar,
+          icon: app.getAppPath() + "/imgs/icon.ico",
+          webPreferences: {
+            nodeIntegration: true
+          },
+          backgroundColor: theme.colorBack
+        });
     
-      aboutWindow.on("blur", () => {
-        aboutWindow.webContents.send("window-blur");
-      });
-
-      aboutWindow.once("ready-to-show", () => {
-        aboutWindow.show();
+        aboutWindow.loadFile(app.getAppPath() + "/html/about.html");
+  
+        aboutWindow.on("focus", () => {
+          aboutWindow.webContents.send("window-focus");
+        });
+      
+        aboutWindow.on("blur", () => {
+          aboutWindow.webContents.send("window-blur");
+        });
+  
+        aboutWindow.once("ready-to-show", () => {
+          aboutWindow.show();
+        });
       });
     });
   }
@@ -794,34 +797,36 @@ function showAboutWindow() {
 function showSettingsWindow() {
   if(settingsWindow === null || settingsWindow.isDestroyed()) {
     loadTheme().then((theme) => {
-      settingsWindow = new BrowserWindow({
-        title: "Settings",
-        modal: true,
-        frame: false,
-        parent: mainWindow,
-        width: 640, height: 480,
-        resizable: false,
-        show: false,
-        icon: app.getAppPath() + "/imgs/icon.ico",
-        webPreferences: {
-          nodeIntegration: true
-        },
-        backgroundColor: theme.colorBack
-      });
-  
-      settingsWindow.loadFile(app.getAppPath() + "/html/settings.html");
-
-      settingsWindow.on("focus", () => {
-        settingsWindow.webContents.send("window-focus");
-      });
+      loadWinControlsModule().then((winControls) => {
+        settingsWindow = new BrowserWindow({
+          title: "Settings",
+          modal: true,
+          frame: winControls.systemTitlebar,
+          parent: mainWindow,
+          width: 640, height: 480,
+          resizable: false,
+          show: false,
+          icon: app.getAppPath() + "/imgs/icon.ico",
+          webPreferences: {
+            nodeIntegration: true
+          },
+          backgroundColor: theme.colorBack
+        });
     
-      settingsWindow.on("blur", () => {
-        settingsWindow.webContents.send("window-blur");
-      });
-
-      settingsWindow.once("ready-to-show", () => {
-        settingsWindow.show();
-        settingsWindow.webContents.openDevTools();
+        settingsWindow.loadFile(app.getAppPath() + "/html/settings.html");
+  
+        settingsWindow.on("focus", () => {
+          settingsWindow.webContents.send("window-focus");
+        });
+      
+        settingsWindow.on("blur", () => {
+          settingsWindow.webContents.send("window-blur");
+        });
+  
+        settingsWindow.once("ready-to-show", () => {
+          settingsWindow.show();
+          // settingsWindow.webContents.openDevTools();
+        });
       });
     });
   }
@@ -836,188 +841,190 @@ function showMainWindow() {
       Data.height = 650;
     }
   
-    loadTheme().then(function(theme) {
-      mainWindow = new BrowserWindow({
-        x: Data.x, y: Data.y,
-        width: Data.width, height: Data.height,
-        minWidth: 480, minHeight: 300,
-        frame: false,
-        show: false,
-        icon: app.getAppPath() + "/imgs/icon.ico",
-        webPreferences: {
-          nodeIntegration: true
-        },
-        backgroundColor: theme.colorBack
-      });
-    
-      mainWindow.loadFile(app.getAppPath() + "/html/browser.html");
-    
-      mainWindow.webContents.on("context-menu", (event, params) => {
-        if(params.isEditable) {
-          let searchMenu = Menu.buildFromTemplate([
-            { label: "Cut", icon: app.getAppPath() + "/imgs/icons16/cut.png", accelerator: "CmdOrCtrl+X", enabled: params.editFlags.canCut, click: () => { 
-              mainWindow.webContents.cut(); } },
-            { label: "Copy", icon: app.getAppPath() + "/imgs/icons16/copy.png", accelerator: "CmdOrCtrl+C", enabled: params.editFlags.canCopy, click: () => { 
-              mainWindow.webContents.copy(); } },
-            { label: "Paste", icon: app.getAppPath() + "/imgs/icons16/paste.png", accelerator: "CmdOrCtrl+V", enabled: params.editFlags.canPaste, click: () => { 
-              mainWindow.webContents.paste(); } },
-            { type: "separator" },
-            { label: "Paste and search", icon: app.getAppPath() + "/imgs/icons16/zoom.png", enabled: params.editFlags.canPaste, click: () => { 
-              overlay.performSearch(clipboard.readText()); } },
-            { type: "separator" },
-            { label: "Undo", icon: app.getAppPath() + "/imgs/icons16/undo.png", accelerator: "CmdOrCtrl+Z", enabled: params.editFlags.canUndo, click: () => { 
-              mainWindow.webContents.undo(); } },
-            { label: "Redo", icon: app.getAppPath() + "/imgs/icons16/redo.png", accelerator: "CmdOrCtrl+Shift+Z", enabled: params.editFlags.canRedo, click: () => {
-              mainWindow.webContents.redo(); } },
-            { type: "separator" },
-            { label: "Select all", icon: app.getAppPath() + "/imgs/icons16/select-all.png", accelerator: "CmdOrCtrl+A", enabled: params.editFlags.canSelectAll, click: () => { 
-              mainWindow.webContents.selectAll(); } },
-            { type: "separator" },
-            { label: "Delete", icon: app.getAppPath() + "/imgs/icons16/delete.png", accelerator: "Backspace", enabled: params.editFlags.canDelete, click: () => { 
-              mainWindow.webContents.delete(); } }
-          ]);
-          searchMenu.popup(mainWindow);
-        }
-      });
-    
-      mainWindow.on("focus", () => {
-        mainWindow.webContents.send("window-focus");
-      });
-    
-      mainWindow.on("blur", () => {
-        mainWindow.webContents.send("window-blur");
-      });
-
-      mainWindow.on("resize", () => {
-        setTimeout(() => {
-          overlay.refreshBounds();
-        }, 150);
-        if(tabManager.hasActiveTab()) {
-          tabManager.getActiveTab().activate();
-        }
-      });
-    
-      mainWindow.on("maximize", () => {
-        mainWindow.webContents.send("window-maximize");
-        // if(tabManager.hasActiveTab()) {
-        //   tabManager.getActiveTab().activate();
-        // }
-        // setTimeout(() => {
-        //   overlay.refreshBounds();
-        // }, 150);
-        // overlay.refreshBounds();
-      });
-    
-      mainWindow.on("unmaximize", () => {
-        mainWindow.webContents.send("window-unmaximize");
-        // if(tabManager.hasActiveTab()) {
-        //   tabManager.getActiveTab().activate();
-        // }
-        // overlay.refreshBounds();
-      });
-    
-      mainWindow.once("ready-to-show", () => {
-        initOverlay();
-        initTabManager();
-        initMenu();
-  
-        loadHomePage().then((homePage) => {
-          tabManager.setHomePage(homePage);
+    loadTheme().then((theme) => {
+      loadWinControlsModule().then((winControls) => {
+        mainWindow = new BrowserWindow({
+          x: Data.x, y: Data.y,
+          width: Data.width, height: Data.height,
+          minWidth: 480, minHeight: 300,
+          frame: winControls.systemTitlebar,
+          show: false,
+          icon: app.getAppPath() + "/imgs/icon.ico",
+          webPreferences: {
+            nodeIntegration: true
+          },
+          backgroundColor: theme.colorBack
+        });
+      
+        mainWindow.loadFile(app.getAppPath() + "/html/browser.html");
+      
+        mainWindow.webContents.on("context-menu", (event, params) => {
+          if(params.isEditable) {
+            let searchMenu = Menu.buildFromTemplate([
+              { label: "Cut", icon: app.getAppPath() + "/imgs/icons16/cut.png", accelerator: "CmdOrCtrl+X", enabled: params.editFlags.canCut, click: () => { 
+                mainWindow.webContents.cut(); } },
+              { label: "Copy", icon: app.getAppPath() + "/imgs/icons16/copy.png", accelerator: "CmdOrCtrl+C", enabled: params.editFlags.canCopy, click: () => { 
+                mainWindow.webContents.copy(); } },
+              { label: "Paste", icon: app.getAppPath() + "/imgs/icons16/paste.png", accelerator: "CmdOrCtrl+V", enabled: params.editFlags.canPaste, click: () => { 
+                mainWindow.webContents.paste(); } },
+              { type: "separator" },
+              { label: "Paste and search", icon: app.getAppPath() + "/imgs/icons16/zoom.png", enabled: params.editFlags.canPaste, click: () => { 
+                overlay.performSearch(clipboard.readText()); } },
+              { type: "separator" },
+              { label: "Undo", icon: app.getAppPath() + "/imgs/icons16/undo.png", accelerator: "CmdOrCtrl+Z", enabled: params.editFlags.canUndo, click: () => { 
+                mainWindow.webContents.undo(); } },
+              { label: "Redo", icon: app.getAppPath() + "/imgs/icons16/redo.png", accelerator: "CmdOrCtrl+Shift+Z", enabled: params.editFlags.canRedo, click: () => {
+                mainWindow.webContents.redo(); } },
+              { type: "separator" },
+              { label: "Select all", icon: app.getAppPath() + "/imgs/icons16/select-all.png", accelerator: "CmdOrCtrl+A", enabled: params.editFlags.canSelectAll, click: () => { 
+                mainWindow.webContents.selectAll(); } },
+              { type: "separator" },
+              { label: "Delete", icon: app.getAppPath() + "/imgs/icons16/delete.png", accelerator: "Backspace", enabled: params.editFlags.canDelete, click: () => { 
+                mainWindow.webContents.delete(); } }
+            ]);
+            searchMenu.popup(mainWindow);
+          }
+        });
+      
+        mainWindow.on("focus", () => {
+          mainWindow.webContents.send("window-focus");
+        });
+      
+        mainWindow.on("blur", () => {
+          mainWindow.webContents.send("window-blur");
         });
   
-        mainWindow.show();
-        if(Data.maximize) {
-          mainWindow.maximize();
-        }
-
-        if(process.argv.length >= 2 && process.argv[1] !== ".") {
-          let openFilePath = process.argv[1];
-          tabManager.addTab("file://" + openFilePath, true);
-          mainWindow.webContents.send("notificationManager-addStatusNotif", { text: `Opened with Ferny: "${openFilePath}"`, type: "info" });
-        } else {
-          loadStartupModule().then((startup) => {
-            if(startup == "overlay") {
-              overlay.show();
-            } else if(startup == "new-tab") {
-              tabManager.newTab();
-            }
+        mainWindow.on("resize", () => {
+          setTimeout(() => {
+            overlay.refreshBounds();
+          }, 150);
+          if(tabManager.hasActiveTab()) {
+            tabManager.getActiveTab().activate();
+          }
+        });
+      
+        mainWindow.on("maximize", () => {
+          mainWindow.webContents.send("window-maximize");
+          // if(tabManager.hasActiveTab()) {
+          //   tabManager.getActiveTab().activate();
+          // }
+          // setTimeout(() => {
+          //   overlay.refreshBounds();
+          // }, 150);
+          // overlay.refreshBounds();
+        });
+      
+        mainWindow.on("unmaximize", () => {
+          mainWindow.webContents.send("window-unmaximize");
+          // if(tabManager.hasActiveTab()) {
+          //   tabManager.getActiveTab().activate();
+          // }
+          // overlay.refreshBounds();
+        });
+      
+        mainWindow.once("ready-to-show", () => {
+          initOverlay();
+          initTabManager();
+          initMenu();
+    
+          loadHomePage().then((homePage) => {
+            tabManager.setHomePage(homePage);
           });
-        }
-      });
     
-      mainWindow.on("maximize", () => {
-        mainWindow.webContents.send("action-maximize-window");
-      });
-    
-      mainWindow.on("unmaximize", () => {
-        mainWindow.webContents.send("action-unmaximize-window");
-      });
+          mainWindow.show();
+          if(Data.maximize) {
+            mainWindow.maximize();
+          }
   
-      mainWindow.on("app-command", (event, command) => {
-        if(command == "browser-backward") {
-          if(tabManager.hasActiveTab()) {
-            let activeTab = tabManager.getActiveTab();
-            if(activeTab.canGoBack()) {
-              activeTab.goBack();
-            } else {
-              overlay.show();
-            }
-          }
-        } else if(command == "browser-forward") {
-          if(tabManager.hasActiveTab()) {
-            tabManager.getActiveTab().goForward();
-          }
-        } else if(command == "browser-favorites") {
-          overlay.openBookmarks();
-        } else if(command == "browser-home") {
-          if(tabManager.hasActiveTab()) {
-            tabManager.getActiveTab().goHome();
-          }
-        } else if(command == "browser-refresh") {
-          if(tabManager.hasActiveTab()) {
-            tabManager.getActiveTab().reload();
-          }
-        } else if(command == "browser-stop") {
-          if(tabManager.hasActiveTab()) {
-            tabManager.getActiveTab().stop();
-          }
-        } else if(command == "browser-search") {
-          overlay.show();
-        } 
-      });
-    
-      mainWindow.on("close", function(event) {
-        event.preventDefault();
-    
-        let download = false;
-    
-        for (let i = 0; i < downloads.length; i++) {
-          try {
-            if(downloads[i].item.getState() == "progressing") {
-              download = true;
-              break;
-            }
-          } catch (e) {
-    
-          }
-        }
-    
-        let update = false;
-        
-        if(updateCancellationToken != null) {
-          update = true;
-        }
-    
-        if(update) {
-          mainWindow.webContents.send("notificationManager-addQuestNotif", { text: "App update is in progress! Exit anyway?", ops: [{ text:'Exit', icon:'exit-16', click:'exitAppAnyway()' }] });
-        } else {
-          if(download) {
-            mainWindow.webContents.send("notificationManager-addQuestNotif", { text: "Download is in progress! Exit anyway?", ops: [{ text:'Exit', icon:'exit-16', click:'exitAppAnyway()' }] });
+          if(process.argv.length >= 2 && process.argv[1] !== ".") {
+            let openFilePath = process.argv[1];
+            tabManager.addTab("file://" + openFilePath, true);
+            mainWindow.webContents.send("notificationManager-addStatusNotif", { text: `Opened with Ferny: "${openFilePath}"`, type: "info" });
           } else {
-            saveBounds();
-            app.exit();
+            loadStartupModule().then((startup) => {
+              if(startup == "overlay") {
+                overlay.show();
+              } else if(startup == "new-tab") {
+                tabManager.newTab();
+              }
+            });
           }
-        }
+        });
+      
+        mainWindow.on("maximize", () => {
+          mainWindow.webContents.send("action-maximize-window");
+        });
+      
+        mainWindow.on("unmaximize", () => {
+          mainWindow.webContents.send("action-unmaximize-window");
+        });
+    
+        mainWindow.on("app-command", (event, command) => {
+          if(command == "browser-backward") {
+            if(tabManager.hasActiveTab()) {
+              let activeTab = tabManager.getActiveTab();
+              if(activeTab.canGoBack()) {
+                activeTab.goBack();
+              } else {
+                overlay.show();
+              }
+            }
+          } else if(command == "browser-forward") {
+            if(tabManager.hasActiveTab()) {
+              tabManager.getActiveTab().goForward();
+            }
+          } else if(command == "browser-favorites") {
+            overlay.openBookmarks();
+          } else if(command == "browser-home") {
+            if(tabManager.hasActiveTab()) {
+              tabManager.getActiveTab().goHome();
+            }
+          } else if(command == "browser-refresh") {
+            if(tabManager.hasActiveTab()) {
+              tabManager.getActiveTab().reload();
+            }
+          } else if(command == "browser-stop") {
+            if(tabManager.hasActiveTab()) {
+              tabManager.getActiveTab().stop();
+            }
+          } else if(command == "browser-search") {
+            overlay.show();
+          } 
+        });
+      
+        mainWindow.on("close", function(event) {
+          event.preventDefault();
+      
+          let download = false;
+      
+          for (let i = 0; i < downloads.length; i++) {
+            try {
+              if(downloads[i].item.getState() == "progressing") {
+                download = true;
+                break;
+              }
+            } catch (e) {
+      
+            }
+          }
+      
+          let update = false;
+          
+          if(updateCancellationToken != null) {
+            update = true;
+          }
+      
+          if(update) {
+            mainWindow.webContents.send("notificationManager-addQuestNotif", { text: "App update is in progress! Exit anyway?", ops: [{ text:'Exit', icon:'exit-16', click:'exitAppAnyway()' }] });
+          } else {
+            if(download) {
+              mainWindow.webContents.send("notificationManager-addQuestNotif", { text: "Download is in progress! Exit anyway?", ops: [{ text:'Exit', icon:'exit-16', click:'exitAppAnyway()' }] });
+            } else {
+              saveBounds();
+              app.exit();
+            }
+          }
+        });
       });
     });
   });
@@ -1300,6 +1307,7 @@ function initMenu() {
 
   Menu.setApplicationMenu(null);
   mainWindow.setMenu(sideMenu);
+  mainWindow.setMenuBarVisibility(false);
 }
 
 function toggleFullscreen() {
