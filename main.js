@@ -16,7 +16,7 @@ const ppath = require("persist-path")("Ferny");
 const saveFileToJsonFolder = require(app.getAppPath() + "/modules/saveFileToJsonFolder.js");
 const loadTheme = require(app.getAppPath() + "/modules/loadTheme.js");
 const loadLastTabModule = require(app.getAppPath() + "/modules/loadLastTab.js");
-const loadStartup = require(app.getAppPath() + "/modules/loadStartup.js");
+const loadStartupModule = require(app.getAppPath() + "/modules/loadStartup.js");
 const loadHomePage = require(app.getAppPath() + "/modules/loadHomePage.js");
 const loadBounds = require(app.getAppPath() + "/modules/loadBounds.js");
 
@@ -935,7 +935,7 @@ function showMainWindow() {
           tabManager.addTab("file://" + openFilePath, true);
           mainWindow.webContents.send("notificationManager-addStatusNotif", { text: `Opened with Ferny: "${openFilePath}"`, type: "info" });
         } else {
-          loadStartup().then((startup) => {
+          loadStartupModule().then((startup) => {
             if(startup == "overlay") {
               overlay.show();
             } else if(startup == "new-tab") {

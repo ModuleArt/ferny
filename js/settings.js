@@ -21,6 +21,7 @@ const bytesToSize = require("../modules/bytesToSize.js");
 const applyWinControls = require("../modules/applyWinControls.js");
 const loadLastTabModule = require("../modules/loadLastTab.js");
 const loadSearchEngineModule = require("../modules/loadSearchEngine.js");
+const loadStartupModule = require("../modules/loadStartup.js");
 
 /*
  ###### #    # #    #  ####              ##### #    # ###### #    # ######  ####
@@ -246,8 +247,7 @@ function requestStartup(startup) {
 }
 
 function loadStartup() {
-  loadFileFromJsonFolder(null, "startup").then((data) => {
-    let startup = data.toString();
+  loadStartupModule().then((startup) => {
     let radios = document.getElementsByName("startup");
     for(let i = 0; i < radios.length; i++) {
       if(radios[i].value === startup) {
