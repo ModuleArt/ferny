@@ -114,8 +114,9 @@ main {
     color: var(--color-top);
 }
 
-.block-title img {
+.block-icon {
     vertical-align: middle;
+    margin-left: 4px;
 }
 
 .block-buttons {

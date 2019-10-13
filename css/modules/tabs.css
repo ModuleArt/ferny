@@ -39,6 +39,10 @@
     padding: 1px;
 }
 
+body.system-titlebar .tabman-tabs {
+    max-width: calc(100% - 95px);
+}
+
 /*
  #####  #    # ##### #####  ####  #    #  ####
  #    # #    #   #     #   #    # ##   # #
