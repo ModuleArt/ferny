@@ -69,6 +69,31 @@ class SearchManager extends EventEmitter {
         this.searchInput.oninput = () => {
             this.getSuggestions();
         }
+        this.searchInput.onkeydown = (event) => {
+            if (event.keyCode === 40) {
+                var suggestions = this.searchSuggestContainer.childNodes;
+                let i = 0;
+                while (i < suggestions.length && !suggestions[i].classList.contains("active")) {
+                    i++;    
+                }
+                if (i < suggestions.length - 1) {
+                    this.searchInput.value = suggestions[i].nextSibling.value;
+                    suggestions[i].classList.remove("active");
+                    suggestions[i].nextSibling.classList.add("active");
+                }
+            } else if (event.keyCode === 38) {
+                var suggestions = this.searchSuggestContainer.childNodes;
+                let i = 0;
+                while (i < suggestions.length && !suggestions[i].classList.contains("active")) {
+                    i++;
+                }
+                if (i > 0) {
+                    this.searchInput.value = suggestions[i].previousSibling.value;
+                    suggestions[i].classList.remove("active");
+                    suggestions[i].previousSibling.classList.add("active");
+                }
+            }
+        };
         this.searchInput.onkeyup = (event) => {
             event.preventDefault();
 
@@ -88,32 +113,7 @@ class SearchManager extends EventEmitter {
                     }
                 }
             }
-
-            if (event.keyCode === 40) {
-                var suggestions = this.searchSuggestContainer.childNodes;
-                let i = 0;
-                while (i < suggestions.length && !suggestions[i].classList.contains("active")) {
-                    i++;    
-                }
-                if (i < suggestions.length - 1) {
-                    this.searchInput.value = suggestions[i].nextSibling.value;
-                    suggestions[i].classList.remove("active");
-                    suggestions[i].nextSibling.classList.add("active");
-                }
-            }
-            if (event.keyCode === 38) {
-                var suggestions = this.searchSuggestContainer.childNodes;
-                let i = 0;
-                while (i < suggestions.length && !suggestions[i].classList.contains("active")) {
-                    i++;
-                }
-                if (i > 0) {
-                    this.searchInput.value = suggestions[i].previousSibling.value;
-                    suggestions[i].classList.remove("active");
-                    suggestions[i].previousSibling.classList.add("active");
-                }
-            }
-        }
+        };
 
         loadSearchEngineModule().then((searchEngine) => {
             this.setSearchEngine(searchEngine);
@@ -224,6 +224,15 @@ class SearchManager extends EventEmitter {
                 break;
             case "twitch":
                 this.newTab("https://www.twitch.tv/search?term=" + text, background);
+                break;
+            case "github":
+                this.newTab("https://github.com/search?q=" + text, background);
+                break;
+            case "wolfram":
+                this.newTab("https://www.wolframalpha.com/input/?i=" + text, background);
+                break;
+            case "ebay":
+                this.newTab("https://www.ebay.com/sch/i.html?_nkw=asdf" + text, background);
                 break;
         }
     }

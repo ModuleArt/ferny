@@ -1032,9 +1032,53 @@ function showMainWindow() {
 
 function initMenu() {
   sideMenu = Menu.buildFromTemplate([{ 
-    label: "New tab", icon: app.getAppPath() + "/imgs/icons16/create.png", accelerator: "CmdOrCtrl+T", click: () => { 
-      tabManager.newTab(); 
-    } }, { 
+    label: "Tabs", icon: app.getAppPath() + "/imgs/icons16/tabs.png", submenu: [{ 
+      label: "New tab", icon: app.getAppPath() + "/imgs/icons16/create.png", accelerator: "CmdOrCtrl+T", click: () => { 
+        tabManager.newTab(); 
+      } }, { type: "separator" }, {
+      label: "Switch tab", icon: app.getAppPath() + "/imgs/icons16/numerical.png", submenu: [{ 
+        label: "Next tab", icon: app.getAppPath() + "/imgs/icons16/next.png", accelerator: "CmdOrCtrl+Tab", click: () => { 
+          if(tabManager.hasActiveTab()) {
+            tabManager.getActiveTab().nextTab(); 
+          }
+        } }, { 
+        label: "Previous tab", icon: app.getAppPath() + "/imgs/icons16/prev.png", accelerator: "CmdOrCtrl+Shift+Tab", click: () => { 
+          if(tabManager.hasActiveTab()) {
+            tabManager.getActiveTab().prevTab(); 
+          }
+        } }, { type: "separator" }, { 
+        label: "Tab 1", accelerator: "CmdOrCtrl+1", click: () => { 
+          tabManager.switchTab(1); 
+        } }, { 
+        label: "Tab 2", accelerator: "CmdOrCtrl+2", click: () => { 
+          tabManager.switchTab(2); 
+        } }, { 
+        label: "Tab 3", accelerator: "CmdOrCtrl+3", click: () => { 
+          tabManager.switchTab(3); 
+        } }, { 
+        label: "Tab 4", accelerator: "CmdOrCtrl+4", click: () => { 
+          tabManager.switchTab(4); 
+        } }, { 
+        label: "Tab 5", accelerator: "CmdOrCtrl+5", click: () => { 
+          tabManager.switchTab(5); 
+        } }, { 
+        label: "Tab 6", accelerator: "CmdOrCtrl+6", click: () => { 
+          tabManager.switchTab(6); 
+        } }, { 
+        label: "Tab 7", accelerator: "CmdOrCtrl+7", click: () => { 
+          tabManager.switchTab(7); 
+        } }, { 
+        label: "Tab 8", accelerator: "CmdOrCtrl+8", click: () => { 
+          tabManager.switchTab(8); 
+        } }, { 
+        label: "Tab 9", accelerator: "CmdOrCtrl+9", click: () => { 
+          tabManager.switchTab(9); 
+        } }
+      ] }, { type: "separator" }, {
+      label: "Close all tabs", icon: app.getAppPath() + "/imgs/icons16/close.png", accelerator: "CmdOrCtrl+Q", click: () => { 
+        tabManager.closeAllTabs();
+      } }
+    ]}, { 
     label: "Active tab", icon: app.getAppPath() + "/imgs/icons16/tab.png", submenu: [{ 
       label: "Back", accelerator: "Alt+Left", icon: app.getAppPath() + "/imgs/icons16/back.png", click: () => { 
         if(tabManager.hasActiveTab()) {
@@ -1120,7 +1164,7 @@ function initMenu() {
           overlay.scrollToId("bookmarks-title"); 
         }
       } }, { 
-      label: "Bookmark all tabs", icon: app.getAppPath() + "/imgs/icons16/tab.png", click: () => { 
+      label: "Bookmark all tabs", icon: app.getAppPath() + "/imgs/icons16/tabs.png", click: () => { 
         if(tabManager.hasTabs()) {
           mainWindow.webContents.send("notificationManager-addQuestNotif", { text: "Are you sure to bookmark all opened tabs?", ops: [{ 
             text: "Bookmark tabs", 
@@ -1252,43 +1296,19 @@ function initMenu() {
           overlay.goToSearch();
         }
       } }, { 
-      label: "Switch tab", icon: app.getAppPath() + "/imgs/icons16/numerical.png", submenu: [{ 
-        label: "Next tab", icon: app.getAppPath() + "/imgs/icons16/next.png", accelerator: "CmdOrCtrl+Tab", click: () => { 
-          if(tabManager.hasActiveTab()) {
-            tabManager.getActiveTab().nextTab(); 
-          }
-        } }, { 
-        label: "Previous tab", icon: app.getAppPath() + "/imgs/icons16/prev.png", accelerator: "CmdOrCtrl+Shift+Tab", click: () => { 
-          if(tabManager.hasActiveTab()) {
-            tabManager.getActiveTab().prevTab(); 
-          }
+      label: "Additional hotkeys", icon: app.getAppPath() + "/imgs/icons16/keyboard.png", submenu: [{ 
+        label: "New tab", icon: app.getAppPath() + "/imgs/icons16/create.png", accelerator: "CmdOrCtrl+N", click: () => { 
+          tabManager.newTab(); 
         } }, { type: "separator" }, { 
-        label: "Tab 1", accelerator: "CmdOrCtrl+1", click: () => { 
-          tabManager.switchTab(1); 
+        label: "Reload", icon: app.getAppPath() + "/imgs/icons16/reload.png", accelerator: "CmdOrCtrl+R", click: () => { 
+          if(tabManager.hasActiveTab()) {
+            tabManager.getActiveTab().reload(); 
+          } 
         } }, { 
-        label: "Tab 2", accelerator: "CmdOrCtrl+2", click: () => { 
-          tabManager.switchTab(2); 
-        } }, { 
-        label: "Tab 3", accelerator: "CmdOrCtrl+3", click: () => { 
-          tabManager.switchTab(3); 
-        } }, { 
-        label: "Tab 4", accelerator: "CmdOrCtrl+4", click: () => { 
-          tabManager.switchTab(4); 
-        } }, { 
-        label: "Tab 5", accelerator: "CmdOrCtrl+5", click: () => { 
-          tabManager.switchTab(5); 
-        } }, { 
-        label: "Tab 6", accelerator: "CmdOrCtrl+6", click: () => { 
-          tabManager.switchTab(6); 
-        } }, { 
-        label: "Tab 7", accelerator: "CmdOrCtrl+7", click: () => { 
-          tabManager.switchTab(7); 
-        } }, { 
-        label: "Tab 8", accelerator: "CmdOrCtrl+8", click: () => { 
-          tabManager.switchTab(8); 
-        } }, { 
-        label: "Tab 9", accelerator: "CmdOrCtrl+9", click: () => { 
-          tabManager.switchTab(9); 
+        label: "Reload ignoring cache", icon: app.getAppPath() + "/imgs/icons16/database-reload.png", accelerator: "CmdOrCtrl+Shift+R", click: () => { 
+          if(tabManager.hasActiveTab()) {
+            tabManager.getActiveTab().reloadIgnoringCache();
+          }
         } }
       ] }, { type: "separator" }, { 
       label: "Developer [Danger]", icon: app.getAppPath() + "/imgs/icons16/developer.png", submenu: [{ 

@@ -355,6 +355,7 @@ class TabManager extends EventEmitter {
         m.append(new MenuItem({ type: "separator" }));
         m.append(new MenuItem({ 
             label: "Close all tabs", 
+            accelerator: "CmdOrCtrl+Q",
             icon: this.appPath + "/imgs/icons16/close.png", 
             enabled: this.hasTabs(),
             click: () => { 

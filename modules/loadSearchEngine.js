@@ -7,7 +7,8 @@ function loadSearchEngine() {
     return new Promise((resolve, reject) => {
         let defaultValue = "duckduckgo";
         let possibleValues = ["duckduckgo", "google", "bing", "wikipedia", "yahoo", "yandex", "mailru", 
-            "baidu", "naver", "qwant", "youtube", "youtube", "ecosia", "twitter", "amazon", "twitch"];
+            "baidu", "naver", "qwant", "youtube", "youtube", "ecosia", "twitter", "amazon", "twitch", 
+            "github", "wolfram", "ebay"];
         try {
             fs.readFile(ppath + "/json/search-engine.json", (err, data) => {
                 if(err) {

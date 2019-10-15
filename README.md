@@ -16,7 +16,7 @@
     <img src="https://img.shields.io/codacy/grade/6fac6a3440d7480281c19780ed37ce30">
   </a>
   <a alt="Trello roadmap" href="https://trello.com/b/cb5lXUgS/ferny">
-    <img src="https://img.shields.io/badge/board-trello-%230079BF">
+    <img src="https://img.shields.io/badge/planner-trello-%230079BF">
   </a>
   <a alt="Discord channel" href="https://discord.gg/9q4D8SJ">
     <img alt="Discord" src="https://img.shields.io/discord/625641944105877504?color=%237289DA&label=discord">
