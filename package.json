@@ -91,8 +91,6 @@
     },
     "asar": true,
     "win": {
-      "certificateFile": "",
-      "certificatePassword": "",
       "publish": {
         "provider": "github",
         "repo": "ferny",
