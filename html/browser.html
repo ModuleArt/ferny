@@ -20,9 +20,11 @@
       <button id="stop-btn" class='nav-btn' title="Stop loading this page" onclick="stop()"><img name="cancel-16" class="theme-icon"></button>
       <div class="title-bar-vr"></div>
       <!-- <button id="info-btn" class='nav-btn' title="Website info" onclick="popupInfoContextMenu()" oncontextmenu="popupInfoContextMenu()"><img name="info-16" class="theme-icon"></button> -->
-      <div id="search-div">
-        <label id="target-url"></label>
-        <input type="text" placeholder="Search or type a URL" id="search-input" oninput="goToSearch(this.value, this.selectionStart)" onfocus="focusSearch()">
+      <div id="middle-container">
+        <div id="search-div">
+          <label id="target-url"></label>
+          <input type="text" placeholder="Search or type a URL" id="search-input" oninput="goToSearch(this.value, this.selectionStart)" onfocus="focusSearch()">
+        </div>
       </div>
       <button id="bookmark-btn" class='nav-btn' title="Bookmark this page" onclick="createBookmark()"><img name="add-bookmark-16" class="theme-icon"></button>
       <div class="title-bar-vr"></div>

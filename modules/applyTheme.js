@@ -3,7 +3,7 @@ function setIconsStyle(str) {
   
     for(var i = 0; i < icons.length; i++) {
         icons[i].src = "../imgs/theme-icons/" + str + "/" + icons[i].name + ".png";
-        icons[i].style.opacity = "1";
+        icons[i].classList.add("loaded");
     }
 }
 

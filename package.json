@@ -48,6 +48,7 @@
     "dragula": "^3.7.2",
     "electron-builder-squirrel-windows": "^21.2.0",
     "electron-log": "^2.2.17",
+    "electron-nightly": "^8.0.0-nightly.20191012",
     "electron-updater": "^4.0.6",
     "file-extension": "^4.0.5",
     "get-ssl-certificate": "^2.3.2",
@@ -65,7 +66,6 @@
     "validate.io-uri": "^1.0.0"
   },
   "devDependencies": {
-    "electron": "^6.0.12",
     "electron-builder": "^20.44.4"
   },
   "build": {

@@ -146,15 +146,21 @@
   height: 41px;
 }
 
+#middle-container {
+  flex: 1;
+  text-align: center;
+  margin: 2px;
+}
+
 #search-div {
   width: 100%;
-  flex: 1;
   position: relative;
-  margin: 2px;
   height: 32px;
   border: 1px solid var(--color-border);
   background-color: var(--color-element);
   border-radius: var(--px-radius);
+  max-width: 720px;
+  margin: 0 auto;
 }
 
 #search-input {
@@ -288,14 +294,17 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 46px;
+  width: 48px;
   height: 34px;
   color: var(--color-top);
-  transition: background-color 0.25s;
+  margin-left: -1px;
+  border: 1px solid transparent;
 }
 
 #window-controls .button:hover {
   background-color: var(--color-second);
+  border-color: var(--color-border);
+  opacity: 1 !important;
 }
 
 #window-controls #min-button {
@@ -313,10 +322,13 @@
 #window-controls #close-btn:hover {
   background-color: #E81022;
   color: white;
-  opacity: 1 !important;
 }
 
-.tabman.blur #window-controls .button, .tabman.blur .theme-icon, #window-controls .button:active, #window-controls #close-btn:active {
+.tabman.blur #window-controls .button, .tabman.blur .theme-icon {
+  opacity: 0.5;
+}
+
+#window-controls .button:active {
   opacity: 0.5 !important;
 }
 
@@ -414,6 +426,10 @@ body {
 /* theme icon */
 .theme-icon {
   opacity: 0;
+}
+
+.theme-icon.loaded {
+  opacity: 1;
 }
 
 /*

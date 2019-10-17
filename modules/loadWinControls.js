@@ -6,7 +6,7 @@ const saveFileToJsonFolder = require("../modules/saveFileToJsonFolder.js");
 function loadWinControls() {
     return new Promise(function(resolve, reject) {
         let defaultValue = {
-            systemTitlebar: true
+            systemTitlebar: false
         };
         try {
             fs.readFile(ppath + "/json/wincontrols.json", (err, data) => {

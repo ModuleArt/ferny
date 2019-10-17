@@ -53,6 +53,7 @@ body.system-titlebar #titlebar {
 }
 
 #window-controls #close-btn:hover {
+    border-color: var(--color-border);
     background-color: #E81022;
     color: white;
     opacity: 1 !important;
@@ -88,7 +89,7 @@ body.system-titlebar #titlebar {
     float: right;
     height: 32px;
     display: grid;
-    grid-template-columns: repeat(1, 46px);
+    margin: -1px;
 }
   
 #window-controls.linux {
@@ -132,5 +133,7 @@ body.system-titlebar #titlebar {
     width: 100%;
     height: 100%;
     color: var(--color-top);
-    transition: background-color 0.25s;
+    border: 1px solid transparent;
+    width: 48px;
+    height: 34px;
 }
