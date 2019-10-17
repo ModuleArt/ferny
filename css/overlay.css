@@ -322,6 +322,7 @@ main {
 
 #bookmarks-container.movable .bookmark-move {
     display: block;
+    z-index: 100;
 }
 
 .folder {
@@ -839,6 +840,104 @@ hr {
 
 #settings-btn:focus, #settings-btn:hover {
     border-color: var(--color-border);
+}
+
+/*                                                     
+   ####   ####  #      #      ######  ####  ##### #  ####  #    #  ####  
+  #    # #    # #      #      #      #    #   #   # #    # ##   # #      
+  #      #    # #      #      #####  #        #   # #    # # #  #  ####  
+  #      #    # #      #      #      #        #   # #    # #  # #      # 
+  #    # #    # #      #      #      #    #   #   # #    # #   ## #    # 
+   ####   ####  ###### ###### ######  ####    #   #  ####  #    #  ####  
+*/
+
+#collections {
+    text-align: left;
+    padding: 2px;
+}
+
+.collection {
+    display: inline-block;
+    width: 192px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--px-radius);
+    height: 42px;
+    padding: 12px;
+    margin: 2px;
+    outline: none;
+    text-align: left;
+    background-color: var(--color-element);
+    position: relative;
+}
+
+.collection-divider {
+    display: none;
+    border-top: 1px dashed var(--color-border);
+    margin: 2px;
+}
+
+.collection:hover {
+    background-color: var(--color-second);
+}
+
+.collection:active {
+    background-color: var(--color-border);
+}
+
+.collection:focus {
+    box-shadow: var(--shadow-focus);
+}
+
+.collection-name {
+    position: absolute;
+    left: 42px;
+    top: 10px;
+    vertical-align: middle;
+    color: var(--color-top);
+    margin-left: 8px;
+    overflow: hidden;
+    white-space: nowrap;
+    word-break: keep-all;
+    text-overflow: ellipsis;
+    width: 200px;
+}
+
+.collection-icon {
+    margin-bottom: -1px;
+}
+
+/*                  
+  #    # ###### #####  #   ##   
+  ##  ## #      #    # #  #  #  
+  # ## # #####  #    # # #    # 
+  #    # #      #    # # ###### 
+  #    # #      #    # # #    # 
+  #    # ###### #####  # #    # 
+*/
+
+@media only screen and (min-width: 1400px) {
+    #collections {
+        position: fixed;
+        left: 128px;
+        top: 64px;
+        width: 256px;
+    }
+
+    .collection {
+        display: block;
+        width: 42px;
+        margin: 6px 0;
+    }
+
+    .collection-divider {
+        display: block;
+    }
+}
+
+@media only screen and (min-width: 1400px) and (max-width: 1700px) {
+    main {
+        margin-right: 64px;
+    }
 }
 
 /*

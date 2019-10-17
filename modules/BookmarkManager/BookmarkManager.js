@@ -30,7 +30,7 @@ class BookmarkManager extends EventEmitter {
         this.bookmarkDrag = Dragula([], {
             direction: "vertical",
             moves: (el, container, handle, sibling) => {
-                return handle.classList.contains('bookmark-move');
+                return handle.classList.contains("bookmark-move");
             }
         });
         this.bookmarkDrag.on('drop', (el, target, source, sibling) => {
