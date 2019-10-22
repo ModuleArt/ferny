@@ -285,6 +285,8 @@ class SearchManager extends EventEmitter {
 
         this.searchInput.focus();
 
+        this.getSuggestions();
+
         return null;
     }
 

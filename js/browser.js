@@ -28,8 +28,8 @@ const TabRenderer = require("../modules/TabManager/TabRenderer.js");
 */
 
 function updateTheme() {
-  loadTheme().then(function(theme) {
-    applyTheme(theme);
+  loadTheme().then(({theme, dark}) => {
+    applyTheme(theme, dark);
   });
 }
 
@@ -292,8 +292,8 @@ ipcRenderer.on("action-page-focussearch", (event, arg) => {
   focusSearch();
 });
 
-ipcRenderer.on("window-changeTheme", (event, arg) => {
-  applyTheme(arg);
+ipcRenderer.on("window-updateTheme", (event) => {
+  updateTheme();
 });
 
 ipcRenderer.on("window-blur", (event) => {

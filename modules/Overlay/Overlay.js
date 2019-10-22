@@ -148,9 +148,8 @@ class Overlay extends EventEmitter {
         this.view.webContents.send("downloadManager-clearDownloads");
     }
 
-
-    changeTheme(theme) {
-        this.view.webContents.send("overlay-changeTheme", theme);
+    updateTheme() {
+        this.view.webContents.send("overlay-updateTheme");
     }
 
     removeFolder(id) {

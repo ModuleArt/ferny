@@ -7,7 +7,7 @@
  #    # ######  ### #  ####  # #    # ######
 */
 
-const { ipcMain, app, Menu, MenuItem, BrowserWindow, dialog, clipboard, session } = require("electron");
+const { ipcMain, app, Menu, BrowserWindow, dialog, clipboard, session } = require("electron");
 const { autoUpdater } = require("electron-updater");
 const os = require("os");
 const fs = require("fs");
@@ -265,9 +265,9 @@ ipcMain.on("main-checkForUpdates", (event, arg) => {
   checkForUpdates();
 });
 
-ipcMain.on("main-changeTheme", (event, theme) => {
-  mainWindow.webContents.send("window-changeTheme", theme);
-  overlay.changeTheme(theme);
+ipcMain.on("main-updateTheme", (event) => {
+  mainWindow.webContents.send("window-updateTheme");
+  overlay.updateTheme();
 });
 
 /*
@@ -686,10 +686,13 @@ function initTabManager() {
 
   tabManager.on("bookmark-tab", (title, url) => {
     if(tabManager.hasActiveTab()) {
-      let at = tabManager.getActiveTab();
-      overlay.addBookmark(at.getTitle(), at.getURL());
+      overlay.addBookmark(title, url);
       overlay.scrollToId("bookmarks-title"); 
     }
+  });
+
+  tabManager.on("show-overlay", () => {
+    overlay.show();
   });
 }
 
@@ -788,6 +791,7 @@ function showAboutWindow() {
   
         aboutWindow.once("ready-to-show", () => {
           aboutWindow.show();
+          aboutWindow.webContents.openDevTools();
         });
       });
     });
@@ -841,7 +845,7 @@ function showMainWindow() {
       Data.height = 650;
     }
   
-    loadTheme().then((theme) => {
+    loadTheme().then(({theme, dark}) => {
       loadWinControlsModule().then((winControls) => {
         mainWindow = new BrowserWindow({
           x: Data.x, y: Data.y,
@@ -853,7 +857,7 @@ function showMainWindow() {
           webPreferences: {
             nodeIntegration: true
           },
-          backgroundColor: theme.colorBack
+          backgroundColor: dark ? theme.dark.colorBack : theme.light.colorBack
         });
       
         mainWindow.loadFile(app.getAppPath() + "/html/browser.html");
@@ -935,11 +939,14 @@ function showMainWindow() {
           if(Data.maximize) {
             mainWindow.maximize();
           }
-  
-          if(process.argv.length >= 2 && process.argv[1] !== ".") {
-            let openFilePath = process.argv[1];
-            tabManager.addTab("file://" + openFilePath, true);
-            mainWindow.webContents.send("notificationManager-addStatusNotif", { text: `Opened with Ferny: "${openFilePath}"`, type: "info" });
+
+          if(process.argv.length >= 2 && process.argv[1] != ".") {
+            if(process.argv[1][0] == ".") {
+              tabManager.addTab("file://" + process.argv[1], true); 
+            } else {
+              tabManager.addTab(process.argv[1], true);
+            }
+            mainWindow.webContents.send("notificationManager-addStatusNotif", { text: `Opened with Ferny: "${process.argv[1]}"`, type: "info" });
           } else {
             loadStartupModule().then((startup) => {
               if(startup == "overlay") {
@@ -949,14 +956,6 @@ function showMainWindow() {
               }
             });
           }
-        });
-      
-        mainWindow.on("maximize", () => {
-          mainWindow.webContents.send("action-maximize-window");
-        });
-      
-        mainWindow.on("unmaximize", () => {
-          mainWindow.webContents.send("action-unmaximize-window");
         });
     
         mainWindow.on("app-command", (event, command) => {
@@ -1038,13 +1037,22 @@ function initMenu() {
       } }, { type: "separator" }, {
       label: "Switch tab", icon: app.getAppPath() + "/imgs/icons16/numerical.png", submenu: [{ 
         label: "Next tab", icon: app.getAppPath() + "/imgs/icons16/next.png", accelerator: "CmdOrCtrl+Tab", click: () => { 
-          if(tabManager.hasActiveTab()) {
-            tabManager.getActiveTab().nextTab(); 
+          if(tabManager.hasTabs()) {
+            if(tabManager.hasActiveTab()) {
+              tabManager.getActiveTab().nextTab(); 
+            } else {
+              tabManager.getTabByPosition(0).activate();
+            }
           }
         } }, { 
         label: "Previous tab", icon: app.getAppPath() + "/imgs/icons16/prev.png", accelerator: "CmdOrCtrl+Shift+Tab", click: () => { 
           if(tabManager.hasActiveTab()) {
-            tabManager.getActiveTab().prevTab(); 
+            let activeTab = tabManager.getActiveTab();
+            if(activeTab.getPosition() == 0) {
+              overlay.show();
+            } else {
+              tabManager.getActiveTab().prevTab(); 
+            }
           }
         } }, { type: "separator" }, { 
         label: "Tab 1", accelerator: "CmdOrCtrl+1", click: () => { 
@@ -1073,6 +1081,20 @@ function initMenu() {
         } }, { 
         label: "Tab 9", accelerator: "CmdOrCtrl+9", click: () => { 
           tabManager.switchTab(9); 
+        } }
+      ] }, { type: "separator" }, {
+      label: "Tab group", icon: app.getAppPath() + "/imgs/icons16/folder.png", submenu: [ {
+        enabled: false, label: "Green", accelerator: "CmdOrCtrl+Shift+1", click: () => { 
+
+        } }, {
+        enabled: false, label: "Blue", accelerator: "CmdOrCtrl+Shift+2", click: () => { 
+
+        } }, {
+        enabled: false, label: "Orange", accelerator: "CmdOrCtrl+Shift+3", click: () => { 
+
+        } }, { type: "separator" }, {
+        enabled: false, label: "Incognito", accelerator: "CmdOrCtrl+I", click: () => { 
+
         } }
       ] }, { type: "separator" }, {
       label: "Close all tabs", icon: app.getAppPath() + "/imgs/icons16/close.png", accelerator: "CmdOrCtrl+Q", click: () => { 
@@ -1251,9 +1273,6 @@ function initMenu() {
       enabled: false, label: "Certificate info", icon: app.getAppPath() + "/imgs/icons16/certificate.png", accelerator: "CmdOrCtrl+I", click: () => { 
         // mainWindow.webContents.send('action-page-certificate'); 
       } }, { type: "separator" }, { 
-      label: "Open file", icon: app.getAppPath() + "/imgs/icons16/open.png", accelerator: "CmdOrCtrl+O", click: () => { 
-        openFileDialog(); 
-      } }, { type: "separator" }, { 
       label: "View page source", icon: app.getAppPath() + "/imgs/icons16/code.png", accelerator: "CmdOrCtrl+U", click: () => { 
         if(tabManager.hasActiveTab()) {
           tabManager.getActiveTab().viewPageSource();
@@ -1283,8 +1302,11 @@ function initMenu() {
       } }
     ] }, { 
     label: "More", icon: app.getAppPath() + "/imgs/icons16/more.png", submenu: [{ 
-      enabled: false, label: "Clear browsing data", icon: app.getAppPath() + "/imgs/icons16/broom.png", accelerator: "CmdOrCtrl+Shift+Delete", click: () => { 
+      // enabled: false, label: "Clear browsing data", icon: app.getAppPath() + "/imgs/icons16/broom.png", accelerator: "CmdOrCtrl+Shift+Delete", click: () => { 
         // overlay.openSettings('clear-browsing-data'); 
+      // } }, { type: "separator" }, { 
+      label: "Open files", icon: app.getAppPath() + "/imgs/icons16/open.png", accelerator: "CmdOrCtrl+O", click: () => { 
+        openFileDialog(); 
       } }, { type: "separator" }, { 
       label: "Show overlay", icon: app.getAppPath() + "/imgs/icons16/details.png", accelerator: "F1", click: () => { 
         overlay.show(); 

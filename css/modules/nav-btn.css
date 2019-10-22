@@ -5,10 +5,15 @@
     margin: 2px;
     vertical-align: middle;
     background: none;
-    border: 1px solid var(--color-border);
+    border: 1px solid transparent;
     outline: none;
-    background-color: var(--color-element);
+    background-color: transparent;
     padding: 0;
+}
+
+.nav-btn.with-border {
+    border-color: var(--color-border);
+    background-color: var(--color-element);
 }
 
 .nav-btn label {
@@ -24,14 +29,17 @@
 
 .nav-btn:hover {
     background-color: var(--color-second);
+    border-color: var(--color-border);
 }
 
-.nav-btn:focus, .nav-btn.active {
+.nav-btn:focus {
     box-shadow: var(--shadow-focus);
+    border-color: var(--color-border);
 }
 
 .nav-btn:active, .nav-btn.active {
-    background-color: var(--color-border);
+    background-color: var(--color-titlebar);
+    border-color: var(--color-border);
 }
 
 .nav-btn:disabled {

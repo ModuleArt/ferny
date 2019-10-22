@@ -83,6 +83,7 @@ class HistoryItem extends EventEmitter {
         let color = new GetAvColor(historyIcon);
         color.mostUsed(result => {
             this.node.style.backgroundColor = rgbToRgbaString(result[0]);
+            // this.node.style.background = `linear-gradient(to right, ${rgbToRgbaString(result[0])}, var(--color-element))`;
         });
     }
 

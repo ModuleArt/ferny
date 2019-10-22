@@ -3,7 +3,7 @@
   "productName": "Ferny",
   "companyName": "Module Art",
   "description": "Your favorite web browser",
-  "version": "3.0.4",
+  "version": "3.1.0",
   "license": "GPL-3.0",
   "keywords": [
     "browser",
@@ -48,7 +48,6 @@
     "dragula": "^3.7.2",
     "electron-builder-squirrel-windows": "^21.2.0",
     "electron-log": "^2.2.17",
-    "electron-nightly": "^8.0.0-nightly.20191012",
     "electron-updater": "^4.0.6",
     "file-extension": "^4.0.5",
     "get-ssl-certificate": "^2.3.2",
@@ -66,6 +65,7 @@
     "validate.io-uri": "^1.0.0"
   },
   "devDependencies": {
+    "electron": "^7.0.0",
     "electron-builder": "^20.44.4"
   },
   "build": {
@@ -76,17 +76,18 @@
         "ext": "htm",
         "name": "Web page document [HTM]",
         "description": "Web page document [HTM] - Ferny",
-        "role": "Viewer"
+        "role": "Viewer",
+        "icon": "imgs/file.ico"
       },
       {
         "ext": "html",
         "name": "Web page document [HTML]",
         "description": "Web page document [HTML] - Ferny",
-        "role": "Viewer"
+        "role": "Viewer",
+        "icon": "imgs/file.ico"
       }
     ],
     "nsis": {
-      "oneClick": false,
       "include": "installer.nsh"
     },
     "asar": true,
@@ -102,12 +103,6 @@
       "target": [
         {
           "target": "nsis",
-          "arch": [
-            "x64"
-          ]
-        },
-        {
-          "target": "squirrel",
           "arch": [
             "x64"
           ]

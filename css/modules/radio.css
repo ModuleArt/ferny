@@ -19,19 +19,20 @@ input[type=radio]:hover {
 }
 
 input[type=radio]:active {
-  background-color: var(--color-border);
+  background-color: var(--color-titlebar);
 }
 
 input[type=radio]::after {
   position: absolute;
   left: 4px;
   top: 4px;
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
   content: "";
-  background-color: var(--color-border);
+  background-color: var(--color-titlebar);
   border-radius: var(--px-radius);
   transition: 0.25s;
+  border: 1px solid var(--color-border);
 }
 
 input[type=radio]:active::after {

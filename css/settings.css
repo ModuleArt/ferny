@@ -121,7 +121,7 @@ hr {
     animation: slide-right;
     animation-duration: 0.25s;
     display: none;
-    padding: 32px;
+    padding: 28px;
     overflow-y: auto;
     color: var(--color-top);
     border-left: none;
@@ -178,36 +178,29 @@ body.system-titlebar .container {
 */
 
 .theme {
-    display: inline-block;
-    width: 100%;
-    text-align: left;
+    border-radius: calc(var(--px-radius) + 4px);
+    border: 1px dashed var(--color-border);
+    margin-bottom: 4px;
+    padding: 6px;
+    text-align: center;
 }
   
-.theme button {
-    width: 30%;
-    vertical-align: top;
-    margin: 2px;
-    margin-left: 0;
-}
-  
-.theme div {
-    margin: 2px;
-    padding: 4px;
+.theme-name {
     display: inline-block;
-    width: calc(70% - 10px);
-    height: 33px;
-}
-  
-.theme div label {
-    display: inline-block;
-    vertical-align: top;
-    padding: 1px 8px;
+    margin: 4px 2px;
+    vertical-align: middle;
 }
 
-.theme div img {
-    opacity: var(--opacity-over);
+.theme-description {
+    font-size: 10px;
+    display: inline-block;
+    margin: 6px 4px;
+    vertical-align: middle;
+}
+
+.theme-image {
     vertical-align: top;
-    padding: 4px;
+    margin: 6px;
 }
 
 /*

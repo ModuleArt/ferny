@@ -338,18 +338,26 @@ class TabManager extends EventEmitter {
             label: "Next tab", 
             icon: this.appPath + "/imgs/icons16/next.png", 
             accelerator: "CmdOrCtrl+Tab", 
-            enabled: this.hasActiveTab(),
+            enabled: this.hasTabs(),
             click: () => { 
-                this.getActiveTab().nextTab(); 
+                if(this.hasActiveTab()) {
+                    this.getActiveTab().nextTab(); 
+                } else {
+                    this.getTabByPosition(0).activate();
+                }
             } 
         }));
         m.append(new MenuItem({ 
             label: "Previous tab", 
             icon: this.appPath + "/imgs/icons16/prev.png", 
             accelerator: "CmdOrCtrl+Shift+Tab", 
-            enabled: this.hasActiveTab(),
-            click: () => { 
-                this.getActiveTab().prevTab(); 
+            enabled: this.hasTabs(),
+            click: () => {
+                if(this.getActiveTab().getPosition() == 0) {
+                    this.emit("show-overlay");
+                } else {
+                    this.getActiveTab().prevTab(); 
+                }
             } 
         }));
         m.append(new MenuItem({ type: "separator" }));

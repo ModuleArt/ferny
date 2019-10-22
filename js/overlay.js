@@ -219,8 +219,8 @@ function toggleArrange() {
 */
 
 function updateTheme() {
-  loadTheme().then(function(theme) {
-    applyTheme(theme);
+  loadTheme().then(({ theme, dark }) => {
+    applyTheme(theme, dark);
   });
 }
 
@@ -377,8 +377,8 @@ ipcRenderer.on("historyManager-clearHistory", (event, text) => {
  # #       ####                #   #    # ###### #    # ######  ####
 */
 
-ipcRenderer.on("overlay-changeTheme", (event, theme) => {
-  applyTheme(theme);
+ipcRenderer.on("overlay-updateTheme", (event) => {
+  updateTheme();
 });
 
 /*

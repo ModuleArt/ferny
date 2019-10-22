@@ -35,9 +35,9 @@ const loadWinControlsModule = require("../modules/loadWinControls.js");
 */
 
 function updateTheme() {
-    loadTheme().then(function(theme) {
-        applyTheme(theme);
-    });
+  loadTheme().then(({ theme, dark }) => {
+    applyTheme(theme, dark);
+  });
 }
 
 function loadThemesFromFolder() {
@@ -45,37 +45,25 @@ function loadThemesFromFolder() {
   let themeManager = document.getElementById("theme-manager");
 
   fs.readdir(themesFolder, (err, files) => {
-    files.forEach(file => {
-      fs.readFile(path.join(themesFolder, file), function(err, data) {
+    files.forEach((file) => {
+      fs.readFile(path.join(themesFolder, file), (err, data) => {
         let themeObj = JSON.parse(data);
 
         let theme = document.createElement("div");
         theme.classList.add("theme");
-        theme.style.borderRadius = "calc(" + themeObj.pxRadius + " + 4px)";
         theme.innerHTML = `
-          <div>
-            <label>${themeObj.name} ${themeObj.type}</label>
-            <img src='../imgs/theme-icons/` + themeObj.icons + `/theme-16.png'>
-          </div>
-          <button class='nav-btn' onclick="requestTheme('` + file.split(".")[0] + `')">
+          <label class="theme-name">${themeObj.name}</label>
+          <label class="theme-description">${themeObj.description}</label>
+          <img class="theme-image" src="../previews/${themeObj.image}">
+          <button class='nav-btn with-border' onclick="requestTheme('` + file.split(".")[0] + `', false)">
             <img name='check-16' class='theme-icon'>
-            <label>Apply</label>
-          </button>`;
-
-        let div = theme.getElementsByTagName("div")[0];
-        div.style.backgroundColor = themeObj.colorBack;
-        div.style.borderRadius = "calc(" + themeObj.pxRadius + " + 4px)";
-        div.style.border = "1px solid " + themeObj.colorBorder;
-        div.style.boxShadow = themeObj.shadowFocus;
-
-        let label = div.getElementsByTagName("label")[0];
-        label.style.color = themeObj.colorTop;
-        label.style.backgroundColor = themeObj.colorElement;
-        label.style.border = "1px solid " + themeObj.colorBorder;
-        label.style.borderRadius = themeObj.pxRadius;
-
-        let img = div.getElementsByTagName("img")[0];
-        img.style.opacity = themeObj.opacityOver;
+            <label>Light</label>
+          </button>
+          <button class='nav-btn with-border' onclick="requestTheme('` + file.split(".")[0] + `', true)">
+            <img name='check-16' class='theme-icon'>
+            <label>Dark</label>
+          </button>
+        `;
 
         themeManager.appendChild(theme);
 
@@ -85,12 +73,10 @@ function loadThemesFromFolder() {
   });
 }
 
-function requestTheme(theme) {
-  saveFileToJsonFolder(null, "theme", theme).then(function(bool) {
-    loadTheme(theme).then(function(themeObj) {
-      ipcRenderer.send("main-changeTheme", themeObj);
-      applyTheme(themeObj);
-    });
+function requestTheme(theme, dark) {
+  saveFileToJsonFolder(null, "theme", JSON.stringify({ name: theme, dark:dark })).then((bool) => {
+    ipcRenderer.send("main-updateTheme");
+    updateTheme();
   });
 }
 

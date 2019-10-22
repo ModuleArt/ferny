@@ -149,18 +149,25 @@
 #middle-container {
   flex: 1;
   text-align: center;
-  margin: 2px;
+}
+
+#address-container {
+  width: 100%;
+  max-width: 720px;
+  display: flex;
+  margin: 0 auto;
 }
 
 #search-div {
-  width: 100%;
+  flex: 1;
   position: relative;
   height: 32px;
   border: 1px solid var(--color-border);
   background-color: var(--color-element);
   border-radius: var(--px-radius);
-  max-width: 720px;
-  margin: 0 auto;
+  margin: 2px;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 #search-input {
@@ -325,11 +332,11 @@
 }
 
 .tabman.blur #window-controls .button, .tabman.blur .theme-icon {
-  opacity: 0.5;
+  opacity: var(--opacity-over);
 }
 
 #window-controls .button:active {
-  opacity: 0.5 !important;
+  opacity: var(--opacity-over) !important;
 }
 
 /*

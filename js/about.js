@@ -98,8 +98,8 @@ function checkForUpdates() {
 */
 
 function updateTheme() {
-  loadTheme().then(function(theme) {
-    applyTheme(theme);
+  loadTheme().then(({ theme, dark }) => {
+    applyTheme(theme, dark);
   });
 }
 

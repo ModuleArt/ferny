@@ -1,23 +1,25 @@
-const loadFileFromJsonFolder = require("../modules/loadFileFromJsonFolder.js");
-
 const fs = require("fs");
-const path = require('path');
+const path = require("path");
+
+const loadFileFromJsonFolder = require("../modules/loadFileFromJsonFolder.js");
 
 function loadTheme(name) {
     return new Promise(function(resolve, reject) {
-        let theme = "1-classic";
+        let theme = {
+            name: "ferny",
+            dark: false
+        };
 
-        if(name == null) {
-            name = theme;
+        if(name) {
+            theme.name = name;
         }
 
         loadFileFromJsonFolder(null, "theme").then((data) => {
             if(data.toString().length > 0) {
-                name = data.toString();
-            } 
-            name = path.join(__dirname, "/../themes/", name + ".json").replace("\n", "");
-            fs.readFile(name, (err, objStr) => {
-                resolve(JSON.parse(objStr));
+                theme = JSON.parse(data);
+            }
+            fs.readFile(path.join(__dirname, "/../themes/", theme.name + ".json"), (err, objStr) => {
+                resolve({ theme: JSON.parse(objStr), dark: theme.dark });
             });
         });
     }); 

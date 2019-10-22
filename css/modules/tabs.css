@@ -12,7 +12,7 @@
     left: 0;
     top: 0;
     right: 0;
-    background-color: var(--color-element);
+    background-color: var(--color-titlebar);
     cursor: default;
     font-size: var(--px-font);
     height: 33px;
@@ -112,7 +112,7 @@ body.system-titlebar .tabman-tabs {
     margin-right: 0;
     margin-bottom: 0;
     text-align: left;
-    background-color: var(--color-element);
+    background-color: var(--color-titlebar);
     outline: none;
     transition: opacity 0.25s, transform 0.25s;
 }

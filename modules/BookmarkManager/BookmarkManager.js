@@ -33,7 +33,7 @@ class BookmarkManager extends EventEmitter {
                 return handle.classList.contains("bookmark-move");
             }
         });
-        this.bookmarkDrag.on('drop', (el, target, source, sibling) => {
+        this.bookmarkDrag.on("drop", (el, target, source, sibling) => {
             this.moveBookmark(source.parentNode.name, target.parentNode.name, el.name).then(() => {
                 this.updateBookmarksPositions().then(() => {
                     this.saveBookmarks();
@@ -206,12 +206,13 @@ class BookmarkManager extends EventEmitter {
 
     moveBookmark(fromFolderId, toFolderId, bookmarkId) {
         return new Promise((resolve, reject) => {
-            let fromFolder = this.getFolderById(fromFolderId);
-            let toFolder = this.getFolderById(toFolderId);
-    
-            toFolder.pushBookmark(fromFolder.getBookmarkById(bookmarkId));
-            fromFolder.spliceBookmark(bookmarkId);
-
+            if(fromFolderId !== toFolderId) {
+                let fromFolder = this.getFolderById(fromFolderId);
+                let toFolder = this.getFolderById(toFolderId);
+        
+                toFolder.pushBookmark(fromFolder.getBookmarkById(bookmarkId));
+                fromFolder.spliceBookmark(bookmarkId);
+            }
             resolve();
         });
     }
@@ -240,7 +241,7 @@ class BookmarkManager extends EventEmitter {
             this.isotope = new Isotope(this.folderContainer, {
                 itemSelector: '.folder',
                 masonry: {
-                    columnWidth: 200
+                    columnWidth: 250
                 },
                 transitionDuration: 0
             });

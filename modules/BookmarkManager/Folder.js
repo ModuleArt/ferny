@@ -133,7 +133,7 @@ class Folder extends EventEmitter {
 
     spliceBookmark(id) {
         for(let i = 0; i < this.bookmarks.length; i++) {
-            if(this.bookmarks[i].getId() === id) {
+            if(this.bookmarks[i].getId() == id) {
                 this.bookmarks.splice(i, 1);
                 break;
             }
@@ -218,7 +218,7 @@ class Folder extends EventEmitter {
             nameInput.focus();
 
             let saveBtn = document.createElement("button");
-            saveBtn.classList.add("nav-btn");
+            saveBtn.classList.add("nav-btn", "with-border");
             saveBtn.innerHTML = `<img class="theme-icon" name="save-16"><label>Save</label>`;
             saveBtn.onclick = () => {
                 this.edit(nameInput.value);
@@ -227,7 +227,7 @@ class Folder extends EventEmitter {
             folderEditor.appendChild(saveBtn);
 
             let cancelBtn = document.createElement("button");
-            cancelBtn.classList.add("nav-btn");
+            cancelBtn.classList.add("nav-btn", "with-border");
             cancelBtn.innerHTML = `<img class="theme-icon" name="cancel-16"><label>Cancel</label>`;
             cancelBtn.onclick = () => {
                 this.toggleEditor();
@@ -235,7 +235,7 @@ class Folder extends EventEmitter {
             folderEditor.appendChild(cancelBtn);
 
             let deleteBtn = document.createElement("button");
-            deleteBtn.classList.add("nav-btn");
+            deleteBtn.classList.add("nav-btn", "with-border");
             deleteBtn.innerHTML = `<img class="theme-icon" name="delete-16"><label>Delete</label>`;
             deleteBtn.onclick = () => {
                 this.askForDelete();

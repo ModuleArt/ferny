@@ -40,7 +40,7 @@
     left: 0;
     height: 33px;
     border-bottom: 1px solid var(--color-border);
-    background-color: var(--color-element);
+    background-color: var(--color-titlebar);
     border-bottom: 1px solid var(--color-border);
 }
 
