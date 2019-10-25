@@ -99,6 +99,7 @@ function checkForUpdates() {
 
 function updateTheme() {
   loadTheme().then(({ theme, dark }) => {
+    console.log(theme)
     applyTheme(theme, dark);
   });
 }

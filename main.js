@@ -791,7 +791,7 @@ function showAboutWindow() {
   
         aboutWindow.once("ready-to-show", () => {
           aboutWindow.show();
-          aboutWindow.webContents.openDevTools();
+          // aboutWindow.webContents.openDevTools();
         });
       });
     });
