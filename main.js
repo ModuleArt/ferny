@@ -762,7 +762,14 @@ function saveBounds() {
 
 function showAboutWindow() {
   if(aboutWindow === null || aboutWindow.isDestroyed()) {
-    loadTheme().then((theme) => {
+    loadTheme().then(({theme, dark}) => {
+      let backgroundColor;
+      if(dark) {
+        backgroundColor = theme.dark.colorBack;
+      } else {
+        backgroundColor = theme.light.colorBack;
+      }
+
       loadWinControlsModule().then((winControls) => {
         aboutWindow = new BrowserWindow({
           title: "About Ferny",
@@ -776,7 +783,7 @@ function showAboutWindow() {
           webPreferences: {
             nodeIntegration: true
           },
-          backgroundColor: theme.colorBack
+          backgroundColor: backgroundColor
         });
     
         aboutWindow.loadFile(app.getAppPath() + "/html/about.html");
@@ -800,7 +807,14 @@ function showAboutWindow() {
 
 function showSettingsWindow() {
   if(settingsWindow === null || settingsWindow.isDestroyed()) {
-    loadTheme().then((theme) => {
+    loadTheme().then(({theme, dark}) => {
+      let backgroundColor;
+      if(dark) {
+        backgroundColor = theme.dark.colorBack;
+      } else {
+        backgroundColor = theme.light.colorBack;
+      }
+
       loadWinControlsModule().then((winControls) => {
         settingsWindow = new BrowserWindow({
           title: "Settings",
@@ -814,7 +828,7 @@ function showSettingsWindow() {
           webPreferences: {
             nodeIntegration: true
           },
-          backgroundColor: theme.colorBack
+          backgroundColor: backgroundColor
         });
     
         settingsWindow.loadFile(app.getAppPath() + "/html/settings.html");
@@ -846,18 +860,25 @@ function showMainWindow() {
     }
   
     loadTheme().then(({theme, dark}) => {
+      let backgroundColor;
+      if(dark) {
+        backgroundColor = theme.dark.colorBack;
+      } else {
+        backgroundColor = theme.light.colorBack;
+      }
+
       loadWinControlsModule().then((winControls) => {
         mainWindow = new BrowserWindow({
           x: Data.x, y: Data.y,
           width: Data.width, height: Data.height,
           minWidth: 480, minHeight: 300,
           frame: winControls.systemTitlebar,
-          show: false,
+          // show: false,
           icon: app.getAppPath() + "/imgs/icon.ico",
           webPreferences: {
             nodeIntegration: true
           },
-          backgroundColor: dark ? theme.dark.colorBack : theme.light.colorBack
+          backgroundColor: backgroundColor
         });
       
         mainWindow.loadFile(app.getAppPath() + "/html/browser.html");
@@ -926,7 +947,7 @@ function showMainWindow() {
           // overlay.refreshBounds();
         });
       
-        mainWindow.once("ready-to-show", () => {
+        mainWindow.webContents.once("dom-ready", () => {
           initOverlay();
           initTabManager();
           initMenu();

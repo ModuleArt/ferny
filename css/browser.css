@@ -144,6 +144,7 @@
   border-bottom: 1px solid var(--color-border);
   background-color: var(--color-back);
   height: 41px;
+  z-index: 100;
 }
 
 #middle-container {

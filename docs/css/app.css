@@ -140,20 +140,20 @@ body {
 }
 
 .main .links a.blue {
-    background-color: #3498db;
+    background-color: #2196f3;
     border-color: transparent;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
 }
 
 
 .main .links a.green {
-    background-color: #1abc9c;
+    background-color: #00bcd4;
     border-color: transparent;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
 }
 
 .main .links a.red {
-    background-color: #e74c3c;
+    background-color: #f44336;
     border-color: transparent;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
 }

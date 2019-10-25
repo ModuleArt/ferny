@@ -70,10 +70,6 @@ body.system-titlebar #titlebar {
 #titlebar.blur #titlebar-label {
     opacity: 0.5;
 }
-
-#titlebar.blur #window-controls .button, #titlebar.blur .theme-icon, #window-controls .button:active, #window-controls #close-btn:active {
-    opacity: 0.5 !important;
-}
   
 /*
  #    # # #    #     ####   ####  #    # ##### #####   ####  #       ####
@@ -87,53 +83,78 @@ body.system-titlebar #titlebar {
 #window-controls {
     -webkit-app-region: no-drag;
     float: right;
-    height: 32px;
+    height: 34px;
     display: grid;
     margin: -1px;
-}
+  }
   
-#window-controls.linux {
-    grid-template-columns: repeat(1, 32px);
-}
-  
-#window-controls span {
+  #window-controls span {
     font-family: SegMDL2;
     font-size: 10px;
-}
+  }
   
-#window-controls .nav-btn {
+  #window-controls .nav-btn {
     grid-row: 1 / span 1;
     border-radius: 0;
     width: 34px;
     height: 34px;
-    margin: -1px;
-    border: none;
+    margin: 0;
     background-color: transparent;
     border: 1px solid transparent;
-}
+  }
   
-#window-controls .nav-btn:hover {
+  #window-controls .nav-btn:hover {
     background-color: var(--color-second);
     border-color: var(--color-border);
-}
+  }
   
-#window-controls .nav-btn:focus {
+  #window-controls .nav-btn:focus {
     border-color: var(--color-border);
-}
+  }
   
-#window-controls .nav-btn:active {
+  #window-controls .nav-btn:active {
     background-color: var(--color-border);
-}
+  }
   
-#window-controls .button {
+  #window-controls .button {
     grid-row: 1 / span 1;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%;
-    height: 100%;
-    color: var(--color-top);
-    border: 1px solid transparent;
     width: 48px;
     height: 34px;
-}
+    color: var(--color-top);
+    margin-left: -1px;
+    border: 1px solid transparent;
+  }
+  
+  #window-controls .button:hover {
+    background-color: var(--color-second);
+    border-color: var(--color-border);
+    opacity: 1 !important;
+  }
+  
+  #window-controls #min-button {
+    grid-column: 1;
+  }
+  
+  #window-controls #max-btn, #window-controls #restore-btn {
+    grid-column: 2;
+  }
+  
+  #window-controls #close-btn {
+    grid-column: 3;
+  }
+  
+  #window-controls #close-btn:hover {
+    background-color: #E81022;
+    color: white;
+  }
+  
+  #titlebar.blur #window-controls .button, #titlebar.blur .theme-icon {
+    opacity: var(--opacity-over);
+  }
+  
+  #window-controls .button:active {
+    opacity: var(--opacity-over) !important;
+  }

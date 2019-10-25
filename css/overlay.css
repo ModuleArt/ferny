@@ -423,6 +423,7 @@ main {
     outline: none;
     padding: 0;
     vertical-align: top;
+    background-color: var(--color-element);
 }
 
 .bookmark:focus {
