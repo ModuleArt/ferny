@@ -37,6 +37,7 @@
     overflow-y: hidden;
     margin: -1px;
     padding: 1px;
+    -webkit-app-region: no-drag;
 }
 
 body.system-titlebar .tabman-tabs {
@@ -98,7 +99,6 @@ body.system-titlebar .tabman-tabs {
 */
 
 .tabman-tab {
-    -webkit-app-region: no-drag;
     position: relative;
     color: var(--color-top);
     height: 34px;

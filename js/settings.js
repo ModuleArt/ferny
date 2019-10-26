@@ -45,29 +45,51 @@ function loadThemesFromFolder() {
   let themeManager = document.getElementById("theme-manager");
 
   fs.readdir(themesFolder, (err, files) => {
-    files.forEach((file) => {
-      fs.readFile(path.join(themesFolder, file), (err, data) => {
-        let themeObj = JSON.parse(data);
+    loadFileFromJsonFolder(null, "theme").then((data) => {
+      let loadedTheme = {
+        name: "ferny",
+        dark: false
+      };
+      if(data.toString().length > 0) {
+        loadedTheme = JSON.parse(data);
+      }
 
-        let theme = document.createElement("div");
-        theme.classList.add("theme");
-        theme.innerHTML = `
-          <label class="theme-name">${themeObj.name}</label>
-          <label class="theme-description">${themeObj.description}</label>
-          <img class="theme-image" src="../previews/${themeObj.image}">
-          <button class='nav-btn with-border' onclick="requestTheme('` + file.split(".")[0] + `', false)">
-            <img name='check-16' class='theme-icon'>
-            <label>Light</label>
-          </button>
-          <button class='nav-btn with-border' onclick="requestTheme('` + file.split(".")[0] + `', true)">
-            <img name='check-16' class='theme-icon'>
-            <label>Dark</label>
-          </button>
-        `;
+      files.forEach((file) => {
+        fs.readFile(path.join(themesFolder, file), (err, data) => {
+          let themeObj = JSON.parse(data);
 
-        themeManager.appendChild(theme);
+          let fileName = file.split(".")[0];
 
-        updateTheme();
+          let darkValue = (fileName == loadedTheme.name) && loadedTheme.dark;
+          let lightValue = "";
+          if(darkValue) {
+            darkValue = "checked";
+            lightValue = "";
+          } else {
+            darkValue = "";
+            lightValue = "checked";
+          }
+  
+          let theme = document.createElement("div");
+          theme.classList.add("theme");
+          theme.innerHTML = `
+            <label class="theme-name">${themeObj.name}</label>
+            <label class="theme-description">${themeObj.description}</label>
+            <img class="theme-image" src="../previews/${themeObj.image}">
+            <div class="nav-checkbox">
+              <label>Light</label>
+              <input type="radio" onclick="requestTheme(this.value, false)" class="checkbox" checked name="theme" value="${fileName}" ${lightValue}>
+            </div>
+            <div class="nav-checkbox">
+              <label>Dark</label>
+              <input type="radio" onclick="requestTheme(this.value, true)" class="checkbox" name="theme" value="${fileName}" ${darkValue}>
+            </div>
+          `;
+  
+          themeManager.appendChild(theme);
+  
+          updateTheme();
+        });
       });
     });
   });
@@ -277,7 +299,7 @@ function saveHomePage() {
       on = 0;
     }
   
-    saveFileToJsonFolder(null, "home", JSON.stringify({ url, on })).then(function() {
+    saveFileToJsonFolder(null, "home", JSON.stringify({ url, on })).then(() => {
       ipcRenderer.send("main-addStatusNotif", { text: `Home page saved: "` + url + `"`, type: "success" });
       ipcRenderer.send("tabManager-setHomePage", { url, on });
     });
@@ -286,7 +308,7 @@ function saveHomePage() {
 
 function useHomePage(url) {
   document.getElementById("home-page-input").value = url;
-  ipcRenderer.send("main-addStatusNotif", { text: `Home page saved: "` + url + `"`, type: "success" });
+  saveHomePage();
 }
 
 /*

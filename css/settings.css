@@ -184,6 +184,12 @@ body.system-titlebar .container {
     padding: 6px;
     text-align: center;
 }
+
+.theme .nav-checkbox {
+    display: inline-block;
+    width: calc(50% - 28px);
+    margin: 4px;
+}
   
 .theme-name {
     display: inline-block;
