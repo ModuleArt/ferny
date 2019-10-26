@@ -76,15 +76,13 @@
         "ext": "htm",
         "name": "Web page document [HTM]",
         "description": "Web page document [HTM] - Ferny",
-        "role": "Viewer",
-        "icon": "imgs/file.ico"
+        "role": "Viewer"
       },
       {
         "ext": "html",
         "name": "Web page document [HTML]",
         "description": "Web page document [HTML] - Ferny",
-        "role": "Viewer",
-        "icon": "imgs/file.ico"
+        "role": "Viewer"
       }
     ],
     "nsis": {
