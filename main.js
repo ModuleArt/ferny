@@ -694,6 +694,10 @@ function initTabManager() {
   tabManager.on("show-overlay", () => {
     overlay.show();
   });
+
+  tabManager.on("search-for", (text) => {
+    overlay.performSearch(text);
+  });
 }
 
 /*
@@ -1060,19 +1064,26 @@ function initMenu() {
         label: "Next tab", icon: app.getAppPath() + "/imgs/icons16/next.png", accelerator: "CmdOrCtrl+Tab", click: () => { 
           if(tabManager.hasTabs()) {
             if(tabManager.hasActiveTab()) {
-              tabManager.getActiveTab().nextTab(); 
+              if(tabManager.getActiveTab().getPosition() == tabManager.getTabs().length - 1) {
+                  overlay.show();
+              } else {
+                tabManager.getActiveTab().nextTab(); 
+              }
             } else {
               tabManager.getTabByPosition(0).activate();
             }
           }
         } }, { 
         label: "Previous tab", icon: app.getAppPath() + "/imgs/icons16/prev.png", accelerator: "CmdOrCtrl+Shift+Tab", click: () => { 
-          if(tabManager.hasActiveTab()) {
-            let activeTab = tabManager.getActiveTab();
-            if(activeTab.getPosition() == 0) {
-              overlay.show();
+          if(tabManager.hasTabs()) {
+            if(tabManager.hasActiveTab()) {
+              if(tabManager.getActiveTab().getPosition() == 0) {
+                  overlay.show();
+              } else {
+                tabManager.getActiveTab().prevTab(); 
+              }
             } else {
-              tabManager.getActiveTab().prevTab(); 
+              tabManager.getTabByPosition(tabManager.getTabs().length - 1).activate();
             }
           }
         } }, { type: "separator" }, { 

@@ -166,6 +166,10 @@ class TabManager extends EventEmitter {
             this.emit("bookmark-tab", title, url);
         });
 
+        tab.on("search-for", (text) => {
+            this.emit("search-for", text);
+        });
+
         this.tabs.push(tab);
 
         tab.navigate(url);
@@ -341,7 +345,11 @@ class TabManager extends EventEmitter {
             enabled: this.hasTabs(),
             click: () => { 
                 if(this.hasActiveTab()) {
-                    this.getActiveTab().nextTab(); 
+                    if(this.getActiveTab().getPosition() == this.tabs.length - 1) {
+                        this.emit("show-overlay");
+                    } else {
+                        this.getActiveTab().nextTab(); 
+                    }
                 } else {
                     this.getTabByPosition(0).activate();
                 }
@@ -353,10 +361,14 @@ class TabManager extends EventEmitter {
             accelerator: "CmdOrCtrl+Shift+Tab", 
             enabled: this.hasTabs(),
             click: () => {
-                if(this.getActiveTab().getPosition() == 0) {
-                    this.emit("show-overlay");
+                if(this.hasActiveTab()) {
+                    if(this.getActiveTab().getPosition() == 0) {
+                        this.emit("show-overlay");
+                    } else {
+                        this.getActiveTab().prevTab(); 
+                    }
                 } else {
-                    this.getActiveTab().prevTab(); 
+                    this.getTabByPosition(this.tabs.length - 1).activate();
                 }
             } 
         }));

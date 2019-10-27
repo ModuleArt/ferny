@@ -1,5 +1,5 @@
 const EventEmitter = require("events");
-const { BrowserView, Menu, MenuItem, clipboard } = require("electron");
+const { BrowserView, Menu, MenuItem, clipboard, nativeImage } = require("electron");
 const fileExtension = require("file-extension");
 const parsePath = require("parse-path");
 
@@ -127,14 +127,16 @@ class Tab extends EventEmitter {
         });
 
         this.view.webContents.on("context-menu", (event, params) => {
+            let rmbMenuItems = [];
+
             if(params.isEditable) {
-                let viewMenu = Menu.buildFromTemplate([{ 
+                let editableItems = [{
                     label: "Cut", icon: this.appPath + "/imgs/icons16/cut.png", accelerator: "CmdOrCtrl+X", enabled: params.editFlags.canCut, click: () => { 
                         this.cut();
                     } }, { 
                     label: "Copy", icon: this.appPath + "/imgs/icons16/copy.png", accelerator: "CmdOrCtrl+C", enabled: params.editFlags.canCopy, click: () => { 
                         this.copy();
-                    } }, { 
+                    } }, {
                     label: "Paste", icon: this.appPath + "/imgs/icons16/paste.png", accelerator: "CmdOrCtrl+V", enabled: params.editFlags.canPaste, click: () => { 
                         this.paste();
                     } }, { type: "separator" }, { 
@@ -152,83 +154,109 @@ class Tab extends EventEmitter {
                     } }, { type: "separator" }, { 
                     label: "Delete", icon: this.appPath + "/imgs/icons16/delete.png", accelerator: "Backspace", enabled: params.editFlags.canDelete, click: () => { 
                         this.delete();
-                    } }
-                ]);
-                viewMenu.popup(this.window);
-              } else {
+                    } }, { type: "separator" }
+                ];
+                rmbMenuItems = rmbMenuItems.concat(editableItems);
+            } else {
+                let pageBool = true;
                 if(params.linkURL.length > 0) {
-                    let viewMenu = Menu.buildFromTemplate([{ 
+                    pageBool = false;
+                    let text = params.linkText;
+                    if(text.length > 30) {
+                        text = text.substring(0, 30) + "...";
+                    }
+                    let linkItems = [{
                         label: "Open link in new tab", icon: this.appPath + "/imgs/icons16/tab.png", click: () => { 
                             this.emit("add-tab", params.linkURL, false);
                         } }, { type: "separator" }, { 
-                        label: "Copy link text", icon: this.appPath + "/imgs/icons16/text.png", click: () => { 
+                        label: "Copy link text", icon: this.appPath + "/imgs/icons16/text.png", enabled: (params.linkText > 0), click: () => { 
                             clipboard.writeText(params.linkText); 
                         } }, { 
-                        label: "Copy link address", icon: this.appPath + "/imgs/icons16/copy.png", click: () => { 
+                        label: "Copy link address", icon: this.appPath + "/imgs/icons16/link.png", click: () => { 
                             clipboard.writeText(params.linkURL); 
-                        } }, { type: "separator" }, {
-                        label: "Inspect element", icon: this.appPath + "/imgs/icons16/inspect.png", click: () => {
-                            this.inspectElement(params.x, params.y);
-                        } }
-                    ]);
-                    viewMenu.popup(this.window);
-                } else {
-                    if(params.hasImageContents) {
-                        let viewMenu = Menu.buildFromTemplate([{ 
-                            label: "Open image in new tab", icon: this.appPath + "/imgs/icons16/tab.png", click: () => { 
-                                this.emit("add-tab", params.srcURL, true);
-                            } }, { 
-                            // label: 'Save image as', icon: this.appPath + '/imgs/icons16/save.png', click: () => { 
-                            
-                            // } }, { 
-                            // label: 'Copy image', icon: this.appPath + '/imgs/icons16/copy.png', click: () => { 
-                                
-                            // } }, { 
-                            label: "Copy image address", icon: this.appPath + "/imgs/icons16/link.png", click: () => { 
-                                clipboard.writeText(params.srcURL);
-                            } }, { type: "separator" }, { 
-                            label: "Inspect element", icon: this.appPath + "/imgs/icons16/inspect.png", click: () => {
-                                this.inspectElement(params.x, params.y);
-                            } }
-                        ]);
-                        viewMenu.popup(this.window); 
-                    } else {
-                        if(params.selectionText.length > 0) {
-                            let viewMenu = Menu.buildFromTemplate([{ 
-                                label: "Copy", icon: this.appPath + "/imgs/icons16/copy.png", accelerator: "CmdOrCtrl+C", enabled: params.editFlags.canCopy, click: () => { 
-                                    this.copy();
-                                } }, { type: "separator" }, {
-                                label: "Inspect element", icon: this.appPath + "/imgs/icons16/inspect.png", click: () => {
-                                    this.inspectElement(params.x, params.y);
-                                } }
-                            ]);
-                            viewMenu.popup(this.window);
-                        } else {
-                            let viewMenu = Menu.buildFromTemplate([{ 
-                                label: "Back", icon: this.appPath + "/imgs/icons16/back.png", accelerator: "Alt+Left", enabled: this.view.webContents.canGoBack(), click: () => { 
-                                    this.goBack();
-                                } }, { 
-                                label: "Forward", icon: this.appPath + "/imgs/icons16/forward.png", accelerator: "Alt+Right", enabled: this.view.webContents.canGoForward(), click: () => { 
-                                    this.goForward();
-                                } }, { 
-                                label: "Reload", icon: this.appPath + "/imgs/icons16/reload.png", accelerator: "F5", click: () => { 
-                                    this.reload();
-                                } }, { type: "separator" }, {
-                                label: "Select all", icon: this.appPath + "/imgs/icons16/select-all.png", accelerator: "CmdOrCtrl+A", click: () => { 
-                                    this.selectAll();
-                                } }, { type: "separator" }, {
-                                label: "View page source", icon: this.appPath + "/imgs/icons16/code.png", click: () => {
-                                    this.viewPageSource();
-                                } }, {
-                                label: "Inspect element", icon: this.appPath + "/imgs/icons16/inspect.png", click: () => {
-                                    this.inspectElement(params.x, params.y);
-                                } }
-                            ]);
-                            viewMenu.popup(this.window);
-                        }
-                    }
+                        } }, {
+                        label: "Bookmark link", icon: this.appPath + "/imgs/icons16/star.png", click: () => { 
+                            this.emit("bookmark-tab", params.linkText, params.linkURL);
+                        } }, {
+                        label: `Search for "${text}"`, icon: this.appPath + "/imgs/icons16/zoom.png", enabled: (text.length > 0), click: () => { 
+                            this.emit("search-for", params.linkText);
+                        } }, { type: "separator" }
+                    ];
+                    rmbMenuItems = rmbMenuItems.concat(linkItems);
                 }
-              }
+
+                if(params.hasImageContents) {
+                    pageBool = false;
+                    let imageItems = [{
+                        label: "Open image in new tab", icon: this.appPath + "/imgs/icons16/image.png", click: () => { 
+                            this.emit("add-tab", params.srcURL, true);
+                        } }, { type: "separator" }, { 
+                        label: "Download image", icon: this.appPath + "/imgs/icons16/download.png", click: () => { 
+                            this.view.webContents.downloadURL(params.srcURL);
+                        } }, { 
+                        label: "Copy image", icon: this.appPath + "/imgs/icons16/copy.png", click: () => { 
+                            this.view.webContents.copyImageAt(params.x, params.y);
+                        } }, { 
+                        label: "Copy image address", icon: this.appPath + "/imgs/icons16/link.png", click: () => { 
+                            clipboard.writeText(params.srcURL);
+                        } }, { type: "separator" }
+                    ];
+                    rmbMenuItems = rmbMenuItems.concat(imageItems);
+                }
+
+                if(params.selectionText.length > 0) {
+                    pageBool = false;
+                    let text = params.selectionText;
+                    if(text.length > 30) {
+                        text = text.substring(0, 30) + "...";
+                    }
+                    let textItems = [{
+                        label: "Copy", icon: this.appPath + "/imgs/icons16/copy.png", accelerator: "CmdOrCtrl+C", enabled: params.editFlags.canCopy, click: () => { 
+                            this.copy();
+                        } }, {
+                        label: `Search for "${text}"`, icon: this.appPath + "/imgs/icons16/zoom.png", enabled: params.editFlags.canCopy, click: () => { 
+                            this.emit("search-for", params.selectionText);
+                        } }, { type: "separator" }
+                    ];
+                    rmbMenuItems = rmbMenuItems.concat(textItems);
+                }
+
+                if(pageBool) {
+                    let pageItems = [{
+                        label: "Back", icon: this.appPath + "/imgs/icons16/back.png", accelerator: "Alt+Left", enabled: this.view.webContents.canGoBack(), click: () => { 
+                            this.goBack();
+                        } }, { 
+                        label: "Forward", icon: this.appPath + "/imgs/icons16/forward.png", accelerator: "Alt+Right", enabled: this.view.webContents.canGoForward(), click: () => { 
+                            this.goForward();
+                        } }, { 
+                        label: "Reload", icon: this.appPath + "/imgs/icons16/reload.png", accelerator: "F5", click: () => { 
+                            this.reload();
+                        } }, { type: "separator" }, {
+                        label: "Download page", icon: this.appPath + "/imgs/icons16/download.png", click: () => { 
+                            this.view.webContents.downloadURL(this.getURL());
+                        } }, {
+                        label: "Bookmark page", icon: this.appPath + "/imgs/icons16/star.png", click: () => { 
+                            this.emit("bookmark-tab", this.getTitle(), this.getURL());
+                        } }, { type: "separator" }, {
+                        label: "Select all", icon: this.appPath + "/imgs/icons16/select-all.png", accelerator: "CmdOrCtrl+A", click: () => { 
+                            this.selectAll();
+                        } }, { type: "separator" }, {
+                        label: "View page source", icon: this.appPath + "/imgs/icons16/code.png", click: () => {
+                            this.viewPageSource();
+                        } }
+                    ];
+                    rmbMenuItems = rmbMenuItems.concat(pageItems);
+                }
+            }
+
+            rmbMenuItems.push({
+                label: "Inspect element", icon: this.appPath + "/imgs/icons16/inspect.png", click: () => {
+                    this.inspectElement(params.x, params.y);
+                } }
+            );
+
+            let rmbMenu = Menu.buildFromTemplate(rmbMenuItems);
+            rmbMenu.popup(this.window);
         });
     }
 
