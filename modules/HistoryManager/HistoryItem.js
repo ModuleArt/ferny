@@ -56,11 +56,16 @@ class HistoryItem extends EventEmitter {
             this.setTitle(fileName);
         } else {
             historyIcon.src = "http://www.google.com/s2/favicons?domain=" + url;
+            historyIcon.onerror = () => {
+                historyIcon.src = __dirname + "/../../imgs/icons16/history.png";
+                this.updateHistoryIconColor();
+            };
             this.loadTitle().then((text) => {
                 this.setTitle(text);
             });
         }
         this.node.appendChild(historyIcon);
+        this.updateHistoryIconColor();
 
         let checkbox = document.createElement("input");
         checkbox.type = "checkbox";
@@ -79,11 +84,13 @@ class HistoryItem extends EventEmitter {
             this.copyURL();
         }
         this.node.appendChild(copyBtn);
+    }
 
-        let color = new GetAvColor(historyIcon);
-        color.mostUsed(result => {
-            this.node.style.backgroundColor = rgbToRgbaString(result[0]);
-            // this.node.style.background = `linear-gradient(to right, ${rgbToRgbaString(result[0])}, var(--color-element))`;
+    updateHistoryIconColor() {
+        let icon = this.node.getElementsByClassName("history-icon")[0];
+        let color = new GetAvColor(icon);
+        color.mostUsed((result) => {
+            icon.parentNode.style.backgroundColor = rgbToRgbaString(result[0]);
         });
     }
 
@@ -93,7 +100,9 @@ class HistoryItem extends EventEmitter {
                 url: "http://textance.herokuapp.com/title/" + this.url,
                 async: true,
                 complete: (data) => {
-                    resolve(data.responseText);
+                    if(data.responseText) {
+                        resolve(data.responseText);
+                    }
                 }
             });
         });

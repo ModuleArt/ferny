@@ -188,7 +188,7 @@ body.system-titlebar .container {
 .theme .nav-checkbox {
     display: inline-block;
     width: calc(50% - 28px);
-    margin: 4px;
+    margin: 8px;
 }
   
 .theme-name {
@@ -207,6 +207,7 @@ body.system-titlebar .container {
 .theme-image {
     vertical-align: top;
     margin: 6px;
+    box-shadow: 0 0 4px rgba(0, 0, 0, var(--opacity-over));
 }
 
 /*

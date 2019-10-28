@@ -53,10 +53,8 @@ body.system-titlebar #titlebar {
 }
 
 #window-controls #close-btn:hover {
-    border-color: var(--color-border);
     background-color: #E81022;
     color: white;
-    opacity: 1 !important;
 }
 
 #titlebar-label {

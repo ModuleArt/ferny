@@ -3,7 +3,6 @@
     "name": "Default",
     "description": "Default Ferny theme.",
     "version": "1.0",
-    "image": "ferny.png",
     "pxRadius": "4px",
     "light": {
         "icons": "black",
@@ -16,7 +15,8 @@
         "colorTop": "#000000",
         "colorTitlebar": "#DDDDDD",
         "shadowFocus": "inset 0 0 4px rgba(0, 0, 0, 0.25)",
-        "opacityOver": "0.35"
+        "opacityOver": "0.35",
+        "image": "ferny-light.png"
     },
     "dark": {
         "icons": "white",
@@ -29,7 +29,8 @@
         "colorTop": "#FFFFFF",
         "colorTitlebar": "#171717",
         "shadowFocus": "inset 0 0 4px rgba(0, 0, 0, 1)",
-        "opacityOver": "0.5"
+        "opacityOver": "0.5",
+        "image": "ferny-dark.png"
     }
 }
   

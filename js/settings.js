@@ -74,15 +74,18 @@ function loadThemesFromFolder() {
           theme.classList.add("theme");
           theme.innerHTML = `
             <label class="theme-name">${themeObj.name}</label>
-            <label class="theme-description">${themeObj.description}</label>
-            <img class="theme-image" src="../previews/${themeObj.image}">
+            <label class="theme-description">${themeObj.description}</label><br>
+            <img class="theme-image" src="../previews/${themeObj.light.image}" onclick="requestTheme('${fileName}', false)">
+            <img class="theme-image" src="../previews/${themeObj.dark.image}" onclick="requestTheme('${fileName}', true)">
             <div class="nav-checkbox">
               <label>Light</label>
-              <input type="radio" onclick="requestTheme(this.value, false)" class="checkbox" checked name="theme" value="${fileName}" ${lightValue}>
+              <input id="${fileName}-light-theme-checkbox" type="radio" onclick="requestTheme(this.value, false)" 
+                class="checkbox" checked name="theme" value="${fileName}" ${lightValue}>
             </div>
             <div class="nav-checkbox">
               <label>Dark</label>
-              <input type="radio" onclick="requestTheme(this.value, true)" class="checkbox" name="theme" value="${fileName}" ${darkValue}>
+              <input id="${fileName}-dark-theme-checkbox" type="radio" onclick="requestTheme(this.value, true)" 
+                class="checkbox" name="theme" value="${fileName}" ${darkValue}>
             </div>
           `;
   
@@ -96,6 +99,17 @@ function loadThemesFromFolder() {
 }
 
 function requestTheme(theme, dark) {
+  let cbName = theme;
+  if(dark) {
+    cbName += "-dark-theme-checkbox";
+  } else {
+    cbName += "-light-theme-checkbox"
+  }
+  let cb = document.getElementById(cbName);
+  if(!cb.checked) {
+    cb.checked = true;
+  }
+
   saveFileToJsonFolder(null, "theme", JSON.stringify({ name: theme, dark:dark })).then((bool) => {
     ipcRenderer.send("main-updateTheme");
     updateTheme();
@@ -451,6 +465,12 @@ function init() {
 
   ipcRenderer.send("request-set-cache-size");
 }
+
+document.onkeyup = function(e) {
+  if (e.which == 27) {
+    closeWindow();
+  } 
+};
 
 document.onreadystatechange = () => {
   if (document.readyState === "complete") {

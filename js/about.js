@@ -166,6 +166,12 @@ function init() {
   loadAbout();
 }
 
+document.onkeyup = function(e) {
+  if (e.which == 27) {
+    closeWindow();
+  } 
+};
+
 document.onreadystatechange = () => {
   if (document.readyState === "complete") {
       init();

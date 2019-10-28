@@ -97,6 +97,12 @@ class Tab extends EventEmitter {
             this.emit("add-status-notif", "Certificate error: " + url + " (" + error + ")", "warning");
         });
 
+        this.view.webContents.on("dom-ready", (event) => {
+            this.view.webContents.insertCSS(`
+                html, body { background-color: white; }
+            `);
+        });
+
         this.view.webContents.on("did-start-loading", () => {
             this.window.webContents.send("tabRenderer-updateNavigationButtons", {
                 canGoBack: this.view.webContents.canGoBack(),
