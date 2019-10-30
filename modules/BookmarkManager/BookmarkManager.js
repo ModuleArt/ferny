@@ -1,9 +1,10 @@
 const EventEmitter = require("events");
-const Isotope = require('isotope-layout');
-const Dragula = require('dragula');
+const Isotope = require("isotope-layout");
+const Dragula = require("dragula");
 const fs = require("fs");
-const ppath = require('persist-path')('Ferny');
-const readlPromise = require('readline-promise').default;
+const ppath = require("persist-path")("Ferny");
+const readlPromise = require("readline-promise").default;
+const parseUrl = require("parse-url");
 
 const saveFileToJsonFolder = require("../saveFileToJsonFolder.js");
 const loadFileFromJsonFolder = require("../loadFileFromJsonFolder.js");
@@ -347,6 +348,39 @@ class BookmarkManager extends EventEmitter {
                 }
             }
         });
+    }
+
+    checkIfBookmarked(url) {
+        let domain = parseUrl(url).resource;
+        let exists = false;
+        let id = null;
+
+        for(let i = 0; i < this.folders.length; i++) {
+            for(let j = 0; j < this.folders[i].getBookmarks().length; j++) {
+                let bookmark = parseUrl(this.folders[i].getBookmarks()[j].getURL()).resource;
+                if(bookmark == domain) {
+                    exists = true;
+                    id = this.folders[i].getBookmarks()[j].getId();
+                    break;
+                }
+            }
+        }
+
+        this.emit("update-bookmarked", exists, id);
+    }
+
+    showBookmarkOptions(id) {
+        for(let i = 0; i < this.folders.length; i++) {
+            for(let j = 0; j < this.folders[i].getBookmarks().length; j++) {
+                if(this.folders[i].getBookmarks()[j].getId() == id) {
+                    this.folders[i].getBookmarks()[j].focus();
+                    if(!this.folders[i].getBookmarks()[j].getNode().classList.contains("show-menu")) {
+                        this.folders[i].getBookmarks()[j].toggleOptions();
+                    }
+                    break;
+                }
+            }
+        }
     }
 }
 

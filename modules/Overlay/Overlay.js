@@ -192,6 +192,15 @@ class Overlay extends EventEmitter {
         }
         this.refreshBounds();
     }
+
+    checkIfBookmarked(url) {
+        this.view.webContents.send("bookmarkManager-checkIfBookmarked", url);
+    }
+
+    showBookmarkOptions(id) {
+        this.scrollToId("bookmarks-title");
+        this.view.webContents.send("bookmarkManager-showBookmarkOptions", id);
+    }
 }
 
 module.exports = Overlay;

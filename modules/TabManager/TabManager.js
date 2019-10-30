@@ -170,6 +170,10 @@ class TabManager extends EventEmitter {
             this.emit("search-for", text);
         });
 
+        tab.on("open-history", () => {
+            this.emit("open-history");
+        });
+
         this.tabs.push(tab);
 
         tab.navigate(url);

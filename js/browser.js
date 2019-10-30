@@ -370,6 +370,11 @@ ipcRenderer.on("tabRenderer-updateNavigationButtons", (event, arg) => {
 
 ipcRenderer.on("tabRenderer-updateAddressBar", (event, url) => {
   tabRenderer.updateAddressBar(url);
+  ipcRenderer.send("overlay-checkIfBookmarked", url);
+});
+
+ipcRenderer.on("tabRenderer-updateBookmarkedButton", (event, exists, id) => {
+  tabRenderer.updateBookmarkedButton(exists, id);
 });
 
 ipcRenderer.on("tabRenderer-showPreview", (event, id, dataURL) => {

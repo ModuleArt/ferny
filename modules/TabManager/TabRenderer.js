@@ -17,6 +17,8 @@ class TabRenderer extends EventEmitter {
     addressBar = null;
     targetURL = null;
     tabDrag = null;
+    bookmarkButton = null;
+    bookmarkedButton = null;
 
     constructor() {
         super();
@@ -28,6 +30,8 @@ class TabRenderer extends EventEmitter {
         this.stopButton = document.getElementById("stop-btn");
         this.addressBar = document.getElementById("search-input");
         this.targetURL = document.getElementById("target-url");
+        this.bookmarkButton = document.getElementById("bookmark-btn");
+        this.bookmarkedButton = document.getElementById("bookmarked-btn");
 
         ipcRenderer.send("tabManager-init");
     }
@@ -194,6 +198,19 @@ class TabRenderer extends EventEmitter {
 
     updateAddressBar(url) {
         this.addressBar.value = url;
+    }
+
+    updateBookmarkedButton(exists, id) {
+        if(exists) {
+            this.bookmarkedButton.onclick = () => {
+                ipcRenderer.send("overlay-showBookmarkOptions", id);
+            };
+            this.bookmarkedButton.style.display = "";
+            this.bookmarkButton.style.display = "none";
+        } else {
+            this.bookmarkedButton.style.display = "none";
+            this.bookmarkButton.style.display = "";
+        }
     }
 
     getTabContainer() {

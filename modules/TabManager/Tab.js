@@ -569,6 +569,20 @@ class Tab extends EventEmitter {
             });
             tabHistory.append(historyItem);
         });
+
+        let sep = new MenuItem({ type: "separator" });
+        tabHistory.append(sep);
+
+        let showFullHistory = new MenuItem({
+            label: "Show full history",
+            accelerator: "CmdOrCtrl+H",
+            click: () => {
+                this.emit("open-history");
+            },
+            icon: this.appPath + "/imgs/icons16/history.png"
+        });
+        tabHistory.append(showFullHistory);
+
         tabHistory.popup(this.window);
     }
 }

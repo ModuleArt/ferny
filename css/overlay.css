@@ -394,11 +394,11 @@ main {
     content: "\2205  No bookmarks... Try to create one...";
     color: var(--color-top);
     display: block;
-    margin-top: -1px;;
+    margin: 8px 4px;
     padding: 5px;
     font-size: 12px;
     text-align: center;
-    border-radius: 0 0 calc(var(--px-radius) + 4px) calc(var(--px-radius) + 4px);
+    border-radius: calc(var(--px-radius) + 4px);
     border: 1px solid var(--color-border);
 }
 

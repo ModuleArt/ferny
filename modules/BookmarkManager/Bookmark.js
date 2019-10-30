@@ -247,6 +247,11 @@ class Bookmark extends EventEmitter {
         this.emit("delete", this.id);
         return null;
     }
+
+    focus() {
+        this.node.focus();
+        return null;
+    }
 }
 
 module.exports = Bookmark;

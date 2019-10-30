@@ -94,6 +94,10 @@ bookmarkManager.on("folder-editor-toggled", () => {
   updateTheme();
 });
 
+bookmarkManager.on("update-bookmarked", (exists, id) => {
+  ipcRenderer.send("main-updateBookmarkedButton", exists, id);
+});
+
 /*
  #    # #  ####  #####  ####  #####  #   #
  #    # # #        #   #    # #    #  # #
@@ -349,6 +353,14 @@ ipcRenderer.on("bookmarkManager-removeFolder", (event, id) => {
 
 ipcRenderer.on("bookmarkManager-addFolderWithBookmarks", (event, folderName, bookmarks) => {
   bookmarkManager.addFolderWithBookmarks(folderName, bookmarks);
+});
+
+ipcRenderer.on("bookmarkManager-checkIfBookmarked", (event, url) => {
+  bookmarkManager.checkIfBookmarked(url);
+});
+
+ipcRenderer.on("bookmarkManager-showBookmarkOptions", (event, id) => {
+  bookmarkManager.showBookmarkOptions(id);
 });
 
 /*

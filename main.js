@@ -270,6 +270,10 @@ ipcMain.on("main-updateTheme", (event) => {
   overlay.updateTheme();
 });
 
+ipcMain.on("main-updateBookmarkedButton", (event, exists, id) => {
+  mainWindow.webContents.send("tabRenderer-updateBookmarkedButton", exists, id);
+});
+
 /*
 .####.########...######.....##.....##....###....####.##....##
 ..##..##.....##.##....##....###...###...##.##....##..###...##
@@ -480,6 +484,14 @@ ipcMain.on("overlay-setSearchEngine", (event, engine) => {
   overlay.setSearchEngine(engine);
 });
 
+ipcMain.on("overlay-checkIfBookmarked", (event, url) => {
+  overlay.checkIfBookmarked(url);
+});
+
+ipcMain.on("overlay-showBookmarkOptions", (event, id) => {
+  overlay.showBookmarkOptions(id);
+});
+
 /*
  # #####   ####              #####   ##   #####     #    #   ##   #    #   ##    ####  ###### #####
  # #    # #    #               #    #  #  #    #    ##  ##  #  #  ##   #  #  #  #    # #      #    #
@@ -653,7 +665,7 @@ function initTabManager() {
     }
   });
 
-  tabManager.on("tab-activated", () => {
+  tabManager.on("tab-activated", (url) => {
     mainWindow.webContents.send("overlay-toggleButton", false);
   });
 
@@ -697,6 +709,10 @@ function initTabManager() {
 
   tabManager.on("search-for", (text) => {
     overlay.performSearch(text);
+  });
+
+  tabManager.on("open-history", (text) => {
+    overlay.scrollToId("history-title");
   });
 }
 
@@ -921,6 +937,15 @@ function showMainWindow() {
       
         mainWindow.on("blur", () => {
           mainWindow.webContents.send("window-blur");
+        });
+
+        mainWindow.on("unresponsive", () => {
+          console.log("unresponsive");
+          dialog.showMessageBox(mainWindow, {
+            type: "warning",
+            title: "Ferny not responding",
+            message: "We are working on it..."
+          });
         });
   
         mainWindow.on("resize", () => {

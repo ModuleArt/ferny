@@ -64,14 +64,14 @@
     position: absolute;
     right: 4px;
     top: 4px;
-    background-color: var(--color-element);
-    border: 1px solid var(--color-border);
+    background-color: transparent;
+    border: 1px solid transparent;
     outline: none;
     padding: 0 4px;
-    -webkit-app-region: no-drag;
 }
 
 .notif-close:hover {
+    border-color: var(--color-border);
 	background-color: var(--color-second);
 }
 
@@ -80,6 +80,7 @@
 }
 
 .notif-close:focus {
+    border-color: var(--color-border);
 	box-shadow: var(--shadow-focus);
 }
 

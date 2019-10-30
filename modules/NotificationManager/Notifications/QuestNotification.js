@@ -19,7 +19,7 @@ class QuestNotification extends TextNotification {
 
         for(let i = 0; i < buttons.length; i++) {
             let btn = document.createElement("buttons");
-            btn.classList.add("nav-btn");
+            btn.classList.add("nav-btn", "with-border");
             btn.innerHTML = `<img name='${buttons[i].icon}' class='theme-icon'><label>${buttons[i].text}</label>`;
             btn.onclick = () => {
                 eval(buttons[i].click);
