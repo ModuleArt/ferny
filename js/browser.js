@@ -233,6 +233,10 @@ function reload() {
   ipcRenderer.send("tabManager-reload");
 }
 
+function reloadIgnoringCache() {
+  ipcRenderer.send("tabManager-reloadIgnoringCache");
+}
+
 function stop() {
   ipcRenderer.send("tabManager-stop");
 }

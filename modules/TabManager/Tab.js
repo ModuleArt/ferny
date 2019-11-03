@@ -138,7 +138,7 @@ class Tab extends EventEmitter {
 
             if(params.isEditable) {
                 let editableItems = [{
-                    label: "Cut", icon: this.appPath + "/imgs/old-icons16/cut.png", accelerator: "CmdOrCtrl+X", enabled: params.editFlags.canCut, click: () => { 
+                    label: "Cut", icon: this.appPath + "/imgs/icons16/cut.png", accelerator: "CmdOrCtrl+X", enabled: params.editFlags.canCut, click: () => { 
                         this.cut();
                     } }, { 
                     label: "Copy", icon: this.appPath + "/imgs/icons16/copy.png", accelerator: "CmdOrCtrl+C", enabled: params.editFlags.canCopy, click: () => { 
@@ -156,7 +156,7 @@ class Tab extends EventEmitter {
                     label: "Redo", icon: this.appPath + "/imgs/icons16/redo.png", accelerator: "CmdOrCtrl+Shift+Z", enabled: params.editFlags.canRedo, click: () => {
                         this.redo();
                     } }, { type: "separator" }, { 
-                    label: "Select all", icon: this.appPath + "/imgs/old-icons16/select-all.png", accelerator: "CmdOrCtrl+A", enabled: params.editFlags.canSelectAll, click: () => { 
+                    label: "Select all", icon: this.appPath + "/imgs/icons16/select-all.png", accelerator: "CmdOrCtrl+A", enabled: params.editFlags.canSelectAll, click: () => { 
                         this.selectAll();
                     } }, { type: "separator" }, { 
                     label: "Delete", icon: this.appPath + "/imgs/icons16/delete.png", accelerator: "Backspace", enabled: params.editFlags.canDelete, click: () => { 
@@ -245,7 +245,7 @@ class Tab extends EventEmitter {
                         label: "Bookmark page", icon: this.appPath + "/imgs/icons16/add-bookmark.png", click: () => { 
                             this.emit("bookmark-tab", this.getTitle(), this.getURL());
                         } }, { type: "separator" }, {
-                        label: "Select all", icon: this.appPath + "/imgs/old-icons16/select-all.png", accelerator: "CmdOrCtrl+A", click: () => { 
+                        label: "Select all", icon: this.appPath + "/imgs/icons16/select-all.png", accelerator: "CmdOrCtrl+A", click: () => { 
                             this.selectAll();
                         } }, { type: "separator" }, {
                         label: "View page source", icon: this.appPath + "/imgs/icons16/code.png", click: () => {
@@ -396,7 +396,7 @@ class Tab extends EventEmitter {
             label: "Reload", icon: this.appPath + "/imgs/icons16/reload.png", accelerator: "F5", click: () => { 
                 this.reload(); 
             } }, {
-            label: "Reload ignoring cache", icon: this.appPath + "/imgs/old-icons16/database-reload.png", accelerator: "CmdOrCtrl+Shift+F5", click: () => { 
+            label: "Reload ignoring cache", icon: this.appPath + "/imgs/icons16/db-reload.png", accelerator: "CmdOrCtrl+Shift+F5", click: () => { 
                 this.reloadIgnoringCache(); 
             } }, { type: "separator" }, { 
             label: "Duplicate", icon: this.appPath + "/imgs/icons16/copy.png", accelerator: "CmdOrCtrl+Shift+D", click: () => { 
