@@ -287,6 +287,19 @@ ipcRenderer.on("notificationManager-refreshZoomNotif", (event, zoomFactor) => {
   notificationManager.refreshZoomNotif(zoomFactor);
 });
 
+/*                                                            
+  # #####   ####               ####   ####  #    #  ####   ####  #      ###### 
+  # #    # #    #             #    # #    # ##   # #      #    # #      #      
+  # #    # #         #####    #      #    # # #  #  ####  #    # #      #####  
+  # #####  #                  #      #    # #  # #      # #    # #      #      
+  # #      #    #             #    # #    # #   ## #    # #    # #      #      
+  # #       ####               ####   ####  #    #  ####   ####  ###### ###### 
+*/
+
+ipcRenderer.on("console-log", (event, text) => {
+  console.log(text);
+});
+
 /*
  # #####   ####              #    # # #    # #####   ####  #    #
  # #    # #    #             #    # # ##   # #    # #    # #    #

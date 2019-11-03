@@ -25,21 +25,6 @@ const TabManager = require(app.getAppPath() + "/modules/TabManager/TabManager.js
 const Overlay = require(app.getAppPath() + "/modules/Overlay/Overlay.js");
 
 /*
-  ####  # #    #  ####  #      ######    # #    #  ####  #####   ##   #    #  ####  ######
- #      # ##   # #    # #      #         # ##   # #        #    #  #  ##   # #    # #
-  ####  # # #  # #      #      #####     # # #  #  ####    #   #    # # #  # #      #####
-      # # #  # # #  ### #      #         # #  # #      #   #   ###### #  # # #      #
- #    # # #   ## #    # #      #         # #   ## #    #   #   #    # #   ## #    # #
-  ####  # #    #  ####  ###### ######    # #    #  ####    #   #    # #    #  ####  ######
-*/
-
-const gotTheLock = app.requestSingleInstanceLock();
-
-if(!gotTheLock) {
-  app.quit();
-}
-
-/*
  #    #   ##   #####  #   ##   #####  #      ######  ####
  #    #  #  #  #    # #  #  #  #    # #      #      #
  #    # #    # #    # # #    # #####  #      #####   ####
@@ -65,6 +50,41 @@ let tabManager = null;
 let overlay = null;
 
 /*
+  ####  # #    #  ####  #      ######    # #    #  ####  #####   ##   #    #  ####  ######
+ #      # ##   # #    # #      #         # ##   # #        #    #  #  ##   # #    # #
+  ####  # # #  # #      #      #####     # # #  #  ####    #   #    # # #  # #      #####
+      # # #  # # #  ### #      #         # #  # #      #   #   ###### #  # # #      #
+ #    # # #   ## #    # #      #         # #   ## #    #   #   #    # #   ## #    # #
+  ####  # #    #  ####  ###### ######    # #    #  ####    #   #    # #    #  ####  ######
+*/
+
+const gotTheLock = app.requestSingleInstanceLock();
+
+if(!gotTheLock) {
+  app.quit();
+} else {
+  app.on("second-instance", (event, argv, workingDirectory) => {
+    if(argv.length > 1) {
+      for(let i = 1; i < argv.length; i++) {
+        if(argv[i].substr(0, 2) == "--") {
+          if(argv[i] == "--new-tab") {
+            tabManager.newTab();
+          } else if(argv[i] == "--overlay") {
+            overlay.show();
+          }
+        } else {
+          tabManager.addTab("file://" + argv[i], true); 
+        }
+      }
+    }
+    if(mainWindow != null) {
+      mainWindow.focus();
+      mainWindow.webContents.send("console-log", argv);
+    }
+  });
+}
+
+/*
    ##   #####  #####
   #  #  #    # #    #
  #    # #    # #    #
@@ -79,7 +99,23 @@ app.on("window-all-closed", () => {
   }
 });
 
-app.on("ready", function() {
+app.on("ready", () => {
+  app.setUserTasks([{
+      program: process.execPath,
+      arguments: "--new-tab",
+      iconPath: process.execPath,
+      iconIndex: 0,
+      title: "New tab",
+      description: "Open a new browser tab"
+    }, {
+      program: process.execPath,
+      arguments: "--overlay",
+      iconPath: process.execPath,
+      iconIndex: 0,
+      title: "Show overlay",
+      description: "Open the overlay tab"
+    }]);
+
   autoUpdater.logger = require("electron-log");
   autoUpdater.logger.transports.file.level = "info";
   autoUpdater.autoDownload = false;
@@ -1009,13 +1045,12 @@ function showMainWindow() {
             mainWindow.maximize();
           }
 
-          if(process.argv.length >= 2 && process.argv[1] != ".") {
-            if(process.argv[1][0] == ".") {
-              tabManager.addTab("file://" + process.argv[1], true); 
-            } else {
-              tabManager.addTab(process.argv[1], true);
+          if(process.argv.length > 1) {
+            for(let i = 1; i < process.argv.length; i++) {
+              if(process.argv[i].substr(0, 2) != "--") {
+                tabManager.addTab("file://" + process.argv[i], true); 
+              }
             }
-            mainWindow.webContents.send("notificationManager-addStatusNotif", { text: `Opened with Ferny: "${process.argv[1]}"`, type: "info" });
           } else {
             loadStartupModule().then((startup) => {
               if(startup == "overlay") {
@@ -1316,7 +1351,7 @@ function initMenu() {
           tabManager.getActiveTab().paste(); 
         }
       } }, { type: "separator" }, { 
-      label: "Paste and match style", icon: app.getAppPath() + "/imgs/icons16/paste-special.png", accelerator: "CmdOrCtrl+Shift+V", click: () => { 
+      label: "Paste as plain text", icon: app.getAppPath() + "/imgs/icons16/paste-special.png", accelerator: "CmdOrCtrl+Shift+V", click: () => { 
         if(tabManager.hasActiveTab()) {
           tabManager.getActiveTab().pasteAndMatchStyle(); 
         }
