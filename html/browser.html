@@ -27,11 +27,11 @@
             <input type="text" placeholder="Search or type a URL" id="search-input" oninput="goToSearch(this.value, this.selectionStart)" onfocus="focusSearch()">
           </div>
           <button id="bookmark-btn" class="nav-btn" title="Bookmark this page" onclick="createBookmark()"><img name="add-bookmark-16" class="theme-icon"></button>
-          <button style="display: none" id="bookmarked-btn" class="nav-btn" title="Show bookmark options for this tab"><img src="../imgs/new-icons16/bookmarks.png"></button>
+          <button style="display: none" id="bookmarked-btn" class="nav-btn" title="Show bookmark options for this tab"><img src="../imgs/icons16/bookmarks.png"></button>
         </div>
       </div>
       <div class="title-bar-vr"></div>
-      <button id="home-btn" class="nav-btn" title="Go home" onclick="goHome()" style="display: none;"><img name="home-16" class="theme-icon"></button>
+      <button id="home-btn" class="nav-btn" title="Go home" onclick="goHome()" style="display: none;"><img name="home-16" class="theme-icon" oncontextmenu="popupHomePageOptions()"></button>
       <button id="menu-btn" class="nav-btn" title="Menu" onclick="requestSideMenu()"><img name="menu-16" class="theme-icon"></button>
     </div>
     
@@ -39,7 +39,7 @@
       <button id="overlay-btn" class="overlay-button" onclick="showOverlay()" oncontextmenu="showOverlayButtonMenu()" title="Overlay"><img name="blocks-12" class="theme-icon"></button>
       <div class="tabman-tabs" id="tabman-tabs" onmousewheel="tabsWheel(event)"></div>
       <div class="tabman-buttons">
-        <button title="New tab" onclick="newTab()" oncontextmenu="newBackgroundTab()" ondrop="newTabDrop(event)" ondragover="prevDef(event)"><img name="create-12" class="theme-icon"></button>
+        <button title="New tab&#xARight click to create tab in background" onclick="newTab()" oncontextmenu="newBackgroundTab()" ondrop="newTabDrop(event)" ondragover="prevDef(event)"><img name="create-12" class="theme-icon"></button>
         <button title="Tabs list" onclick="showTabList()"><img name="down-12" class="theme-icon"></button>
       </div>
       <div id="window-controls"></div>

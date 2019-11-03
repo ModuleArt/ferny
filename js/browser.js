@@ -171,6 +171,10 @@ function popupTabHistory() {
   ipcRenderer.send("tabManager-popupTabHistory");
 }
 
+function popupHomePageOptions() {
+  ipcRenderer.send("main-popupHomePageOptions");
+}
+
 /*
  ###### #    # #    #  ####               ####  #    # ###### #####  #        ##   #   #
  #      #    # ##   # #    #             #    # #    # #      #    # #       #  #   # #

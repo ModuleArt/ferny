@@ -33,7 +33,7 @@ class Bookmark extends EventEmitter {
         bookmarkIcon.classList.add("bookmark-icon");
         bookmarkIcon.src = "http://www.google.com/s2/favicons?domain=" + url;
         bookmarkIcon.onerror = () => {
-            bookmarkIcon.src = __dirname + "/../../imgs/icons16/star.png";
+            bookmarkIcon.src = __dirname + "/../../imgs/old-icons16/star.png";
             this.updateBookmarkColor()
         };
         this.node.appendChild(bookmarkIcon);
@@ -67,6 +67,9 @@ class Bookmark extends EventEmitter {
 
         let bookmarkMenu = document.createElement("div");
         bookmarkMenu.classList.add("bookmark-menu");
+        bookmarkMenu.oncontextmenu = (event) => {
+            event.stopPropagation();
+        };
         this.node.appendChild(bookmarkMenu);
 
         let copyBtn = document.createElement("button");
@@ -199,6 +202,9 @@ class Bookmark extends EventEmitter {
             bookmarkEditor.onclick = (event) => {
                 event.stopPropagation();
             } 
+            bookmarkEditor.oncontextmenu = (event) => {
+                event.stopPropagation();
+            };
             this.node.appendChild(bookmarkEditor);
 
             let nameInput = document.createElement("input");

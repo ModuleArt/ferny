@@ -1,7 +1,8 @@
 const EventEmitter = require("events");
-const { BrowserView, Menu, MenuItem, clipboard, nativeImage } = require("electron");
+const { BrowserView, Menu, MenuItem, clipboard } = require("electron");
 const fileExtension = require("file-extension");
 const parsePath = require("parse-path");
+const parseUrl = require("parse-url");
 
 const extToImagePath = require(__dirname + "/../extToImagePath.js");
 
@@ -137,25 +138,25 @@ class Tab extends EventEmitter {
 
             if(params.isEditable) {
                 let editableItems = [{
-                    label: "Cut", icon: this.appPath + "/imgs/icons16/cut.png", accelerator: "CmdOrCtrl+X", enabled: params.editFlags.canCut, click: () => { 
+                    label: "Cut", icon: this.appPath + "/imgs/old-icons16/cut.png", accelerator: "CmdOrCtrl+X", enabled: params.editFlags.canCut, click: () => { 
                         this.cut();
                     } }, { 
                     label: "Copy", icon: this.appPath + "/imgs/icons16/copy.png", accelerator: "CmdOrCtrl+C", enabled: params.editFlags.canCopy, click: () => { 
                         this.copy();
                     } }, {
-                    label: "Paste", icon: this.appPath + "/imgs/icons16/paste.png", accelerator: "CmdOrCtrl+V", enabled: params.editFlags.canPaste, click: () => { 
+                    label: "Paste", icon: this.appPath + "/imgs/old-icons16/paste.png", accelerator: "CmdOrCtrl+V", enabled: params.editFlags.canPaste, click: () => { 
                         this.paste();
                     } }, { type: "separator" }, { 
-                    label: "Paste and match style", icon: this.appPath + "/imgs/icons16/paste-special.png", accelerator: "CmdOrCtrl+Shift+V", enabled: params.editFlags.canPaste, click: () => { 
+                    label: "Paste and match style", icon: this.appPath + "/imgs/old-icons16/paste-special.png", accelerator: "CmdOrCtrl+Shift+V", enabled: params.editFlags.canPaste, click: () => { 
                         this.pasteAndMatchStyle();
                     } }, { type: "separator" }, { 
-                    label: "Undo", icon: this.appPath + "/imgs/icons16/undo.png", accelerator: "CmdOrCtrl+Z", enabled: params.editFlags.canUndo, click: () => { 
+                    label: "Undo", icon: this.appPath + "/imgs/old-icons16/undo.png", accelerator: "CmdOrCtrl+Z", enabled: params.editFlags.canUndo, click: () => { 
                         this.undo();
                     } }, { 
-                    label: "Redo", icon: this.appPath + "/imgs/icons16/redo.png", accelerator: "CmdOrCtrl+Shift+Z", enabled: params.editFlags.canRedo, click: () => {
+                    label: "Redo", icon: this.appPath + "/imgs/old-icons16/redo.png", accelerator: "CmdOrCtrl+Shift+Z", enabled: params.editFlags.canRedo, click: () => {
                         this.redo();
                     } }, { type: "separator" }, { 
-                    label: "Select all", icon: this.appPath + "/imgs/icons16/select-all.png", accelerator: "CmdOrCtrl+A", enabled: params.editFlags.canSelectAll, click: () => { 
+                    label: "Select all", icon: this.appPath + "/imgs/old-icons16/select-all.png", accelerator: "CmdOrCtrl+A", enabled: params.editFlags.canSelectAll, click: () => { 
                         this.selectAll();
                     } }, { type: "separator" }, { 
                     label: "Delete", icon: this.appPath + "/imgs/icons16/delete.png", accelerator: "Backspace", enabled: params.editFlags.canDelete, click: () => { 
@@ -175,13 +176,13 @@ class Tab extends EventEmitter {
                         label: "Open link in new tab", icon: this.appPath + "/imgs/icons16/tab.png", click: () => { 
                             this.emit("add-tab", params.linkURL, false);
                         } }, { type: "separator" }, { 
-                        label: "Copy link text", icon: this.appPath + "/imgs/icons16/text.png", enabled: (params.linkText > 0), click: () => { 
+                        label: "Copy link text", icon: this.appPath + "/imgs/old-icons16/text.png", enabled: (params.linkText > 0), click: () => { 
                             clipboard.writeText(params.linkText); 
                         } }, { 
                         label: "Copy link address", icon: this.appPath + "/imgs/icons16/link.png", click: () => { 
                             clipboard.writeText(params.linkURL); 
                         } }, {
-                        label: "Bookmark link", icon: this.appPath + "/imgs/icons16/star.png", click: () => { 
+                        label: "Bookmark link", icon: this.appPath + "/imgs/icons16/add-bookmark.png", click: () => { 
                             this.emit("bookmark-tab", params.linkText, params.linkURL);
                         } }, {
                         label: `Search for "${text}"`, icon: this.appPath + "/imgs/icons16/zoom.png", enabled: (text.length > 0), click: () => { 
@@ -194,7 +195,7 @@ class Tab extends EventEmitter {
                 if(params.hasImageContents) {
                     pageBool = false;
                     let imageItems = [{
-                        label: "Open image in new tab", icon: this.appPath + "/imgs/icons16/image.png", click: () => { 
+                        label: "Open image in new tab", icon: this.appPath + "/imgs/old-icons16/image.png", click: () => { 
                             this.emit("add-tab", params.srcURL, true);
                         } }, { type: "separator" }, { 
                         label: "Download image", icon: this.appPath + "/imgs/icons16/download.png", click: () => { 
@@ -241,10 +242,10 @@ class Tab extends EventEmitter {
                         label: "Download page", icon: this.appPath + "/imgs/icons16/download.png", click: () => { 
                             this.view.webContents.downloadURL(this.getURL());
                         } }, {
-                        label: "Bookmark page", icon: this.appPath + "/imgs/icons16/star.png", click: () => { 
+                        label: "Bookmark page", icon: this.appPath + "/imgs/icons16/add-bookmark.png", click: () => { 
                             this.emit("bookmark-tab", this.getTitle(), this.getURL());
                         } }, { type: "separator" }, {
-                        label: "Select all", icon: this.appPath + "/imgs/icons16/select-all.png", accelerator: "CmdOrCtrl+A", click: () => { 
+                        label: "Select all", icon: this.appPath + "/imgs/old-icons16/select-all.png", accelerator: "CmdOrCtrl+A", click: () => { 
                             this.selectAll();
                         } }, { type: "separator" }, {
                         label: "View page source", icon: this.appPath + "/imgs/icons16/code.png", click: () => {
@@ -256,7 +257,7 @@ class Tab extends EventEmitter {
             }
 
             rmbMenuItems.push({
-                label: "Inspect element", icon: this.appPath + "/imgs/icons16/inspect.png", click: () => {
+                label: "Inspect element", icon: this.appPath + "/imgs/old-icons16/inspect.png", click: () => {
                     this.inspectElement(params.x, params.y);
                 } }
             );
@@ -395,22 +396,22 @@ class Tab extends EventEmitter {
             label: "Reload", icon: this.appPath + "/imgs/icons16/reload.png", accelerator: "F5", click: () => { 
                 this.reload(); 
             } }, {
-            label: "Reload ignoring cache", icon: this.appPath + "/imgs/icons16/database-reload.png", accelerator: "CmdOrCtrl+Shift+F5", click: () => { 
+            label: "Reload ignoring cache", icon: this.appPath + "/imgs/old-icons16/database-reload.png", accelerator: "CmdOrCtrl+Shift+F5", click: () => { 
                 this.reloadIgnoringCache(); 
             } }, { type: "separator" }, { 
             label: "Duplicate", icon: this.appPath + "/imgs/icons16/copy.png", accelerator: "CmdOrCtrl+Shift+D", click: () => { 
                 this.duplicate(); 
             } }, { 
-            label: "Copy URL", icon: this.appPath + "/imgs/icons16/copy-link.png", accelerator: "CmdOrCtrl+Shift+C", click: () => { 
+            label: "Copy URL", icon: this.appPath + "/imgs/icons16/link.png", accelerator: "CmdOrCtrl+Shift+C", click: () => { 
                 this.copyURL(); 
             } }, { 
             label: "Go home", icon: this.appPath + "/imgs/icons16/home.png", accelerator: "CmdOrCtrl+Shift+H", click: () => { 
                 this.goHome(); 
             } }, { 
-            label: "Bookmark tab", icon: this.appPath + "/imgs/icons16/star.png", accelerator: "CmdOrCtrl+Shift+B", click: () => { 
+            label: "Bookmark tab", icon: this.appPath + "/imgs/icons16/add-bookmark.png", accelerator: "CmdOrCtrl+Shift+B", click: () => { 
                 this.emit("bookmark-tab", this.getTitle(), this.getURL());
             } }, { type: "separator" }, { 
-            label: "Move tab", icon: this.appPath + "/imgs/icons16/divider-horizontal.png", submenu: [{
+            label: "Move tab", icon: this.appPath + "/imgs/icons16/move-horizontal.png", submenu: [{
                 label: "Move left", accelerator: "CmdOrCtrl+Shift+PageUp", icon: this.appPath + "/imgs/icons16/prev.png", click: () => {
                     this.moveLeft();
                 } }, {
@@ -442,9 +443,20 @@ class Tab extends EventEmitter {
         });
 
         this.view.webContents.history.forEach((value, index) => {
+            let subtext = value;
+            if(subtext.length > 30) {
+                subtext = subtext.substring(0, 30) + "...";
+            }
+
+            let parsedUrl = parseUrl(value);
+            let text = parsedUrl.resource + parsedUrl.pathname;
+            if(text.length > 30) {
+                text = text.substring(0, 30) + "...";
+            }
+
             let historyItem = new MenuItem({
-                label: value.split("/")[2].replace("www.", ""),
-                sublabel: value,
+                label: text,
+                sublabel: subtext,
                 click: () => {
                     this.navigate(value);
                 },
@@ -559,9 +571,20 @@ class Tab extends EventEmitter {
         let tabHistory = Menu.buildFromTemplate([]);
 
         this.view.webContents.history.forEach((value, index) => {
+            let subtext = value;
+            if(subtext.length > 30) {
+                subtext = subtext.substring(0, 30) + "...";
+            }
+
+            let parsedUrl = parseUrl(value);
+            let text = parsedUrl.resource + parsedUrl.pathname;
+            if(text.length > 30) {
+                text = text.substring(0, 30) + "...";
+            }
+
             let historyItem = new MenuItem({
-                label: value.split("/")[2].replace("www.", ""),
-                sublabel: value,
+                label: text,
+                sublabel: subtext,
                 click: () => {
                     this.navigate(value);
                 },

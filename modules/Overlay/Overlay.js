@@ -29,22 +29,22 @@ class Overlay extends EventEmitter {
             // console.log(params);
             if(params.isEditable) {
                 let editMenu = Menu.buildFromTemplate([{ 
-                    label: "Cut", icon: this.appPath + "/imgs/icons16/cut.png", accelerator: "CmdOrCtrl+X", enabled: params.editFlags.canCut, click: () => { 
+                    label: "Cut", icon: this.appPath + "/imgs/old-icons16/cut.png", accelerator: "CmdOrCtrl+X", enabled: params.editFlags.canCut, click: () => { 
                         this.view.webContents.cut();
                     } }, { 
                     label: "Copy", icon: this.appPath + "/imgs/icons16/copy.png", accelerator: "CmdOrCtrl+C", enabled: params.editFlags.canCopy, click: () => { 
                         this.view.webContents.copy();
                     } }, { 
-                    label: "Paste", icon: this.appPath + "/imgs/icons16/paste.png", accelerator: "CmdOrCtrl+V", enabled: params.editFlags.canPaste, click: () => { 
+                    label: "Paste", icon: this.appPath + "/imgs/old-icons16/paste.png", accelerator: "CmdOrCtrl+V", enabled: params.editFlags.canPaste, click: () => { 
                         this.view.webContents.paste();
                     } }, { type: "separator" }, { 
-                    label: "Undo", icon: this.appPath + "/imgs/icons16/undo.png", accelerator: "CmdOrCtrl+Z", enabled: params.editFlags.canUndo, click: () => { 
+                    label: "Undo", icon: this.appPath + "/imgs/old-icons16/undo.png", accelerator: "CmdOrCtrl+Z", enabled: params.editFlags.canUndo, click: () => { 
                         this.view.webContents.undo();
                     } }, { 
-                    label: "Redo", icon: this.appPath + "/imgs/icons16/redo.png", accelerator: "CmdOrCtrl+Shift+Z", enabled: params.editFlags.canRedo, click: () => {
+                    label: "Redo", icon: this.appPath + "/imgs/old-icons16/redo.png", accelerator: "CmdOrCtrl+Shift+Z", enabled: params.editFlags.canRedo, click: () => {
                         this.view.webContents.redo();
                     } }, { type: "separator" }, { 
-                    label: "Select all", icon: this.appPath + "/imgs/icons16/select-all.png", accelerator: "CmdOrCtrl+A", enabled: params.editFlags.canSelectAll, click: () => { 
+                    label: "Select all", icon: this.appPath + "/imgs/old-icons16/select-all.png", accelerator: "CmdOrCtrl+A", enabled: params.editFlags.canSelectAll, click: () => { 
                         this.view.webContents.selectAll();
                     } }, { type: "separator" }, { 
                     label: "Delete", icon: this.appPath + "/imgs/icons16/delete.png", accelerator: "Backspace", enabled: params.editFlags.canDelete, click: () => { 
@@ -52,7 +52,7 @@ class Overlay extends EventEmitter {
                     } }
                 ]);
 
-                if(params.y < 200) {
+                if(params.y < 320) {
                     let mi = new MenuItem({
                         label: "Paste and search", 
                         icon: appPath + "/imgs/icons16/zoom.png", 
@@ -99,7 +99,7 @@ class Overlay extends EventEmitter {
 
     showButtonMenu() {
         let buttonMenu = Menu.buildFromTemplate([{ 
-            label: "Show overlay", icon: this.appPath + "/imgs/icons16/details.png", click: () => { 
+            label: "Show overlay", icon: this.appPath + "/imgs/icons16/overlay.png", accelerator: "F1", click: () => { 
                 this.show(); 
             } }, { type: "separator" }, { 
             label: "Bookmarks", icon: this.appPath + "/imgs/icons16/bookmarks.png", accelerator: "CmdOrCtrl+B", click: () => { 
@@ -108,7 +108,7 @@ class Overlay extends EventEmitter {
             label: "History", icon: this.appPath + "/imgs/icons16/history.png", accelerator: "CmdOrCtrl+H", click: () => { 
                 this.scrollToId("history-title"); 
             } }, { 
-            label: "Downloads", icon: this.appPath + "/imgs/icons16/downloads.png", accelerator: "CmdOrCtrl+D", click: () => { 
+            label: "Downloads", icon: this.appPath + "/imgs/icons16/download.png", accelerator: "CmdOrCtrl+D", click: () => { 
                 this.scrollToId("downloads-title"); 
             } }
           ]);
