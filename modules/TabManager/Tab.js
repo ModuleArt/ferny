@@ -239,8 +239,8 @@ class Tab extends EventEmitter {
                         label: "Reload", icon: this.appPath + "/imgs/icons16/reload.png", accelerator: "F5", click: () => { 
                             this.reload();
                         } }, { type: "separator" }, {
-                        label: "Download page", icon: this.appPath + "/imgs/icons16/download.png", click: () => { 
-                            this.view.webContents.downloadURL(this.getURL());
+                        label: "Download page", icon: this.appPath + "/imgs/icons16/download.png", accelerator: "CmdOrCtrl+Shift+S", click: () => { 
+                            this.downloadPage();
                         } }, {
                         label: "Bookmark page", icon: this.appPath + "/imgs/icons16/add-bookmark.png", click: () => { 
                             this.emit("bookmark-tab", this.getTitle(), this.getURL());
@@ -607,6 +607,10 @@ class Tab extends EventEmitter {
         tabHistory.append(showFullHistory);
 
         tabHistory.popup(this.window);
+    }
+
+    downloadPage() {
+        this.view.webContents.downloadURL(this.getURL());
     }
 }
 

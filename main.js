@@ -1349,6 +1349,11 @@ function initMenu() {
       enabled: false, label: "Certificate info", icon: app.getAppPath() + "/imgs/icons16/license.png", click: () => { 
         // mainWindow.webContents.send('action-page-certificate'); 
       } }, { type: "separator" }, { 
+      label: "Download page", icon: app.getAppPath() + "/imgs/icons16/download.png", accelerator: "CmdOrCtrl+Shift+S", click: () => { 
+        if(tabManager.hasActiveTab()) {
+          tabManager.getActiveTab().downloadPage();
+        }
+      } }, { 
       label: "View page source", icon: app.getAppPath() + "/imgs/icons16/code.png", accelerator: "CmdOrCtrl+U", click: () => { 
         if(tabManager.hasActiveTab()) {
           tabManager.getActiveTab().viewPageSource();
