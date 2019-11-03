@@ -144,16 +144,16 @@ class Tab extends EventEmitter {
                     label: "Copy", icon: this.appPath + "/imgs/icons16/copy.png", accelerator: "CmdOrCtrl+C", enabled: params.editFlags.canCopy, click: () => { 
                         this.copy();
                     } }, {
-                    label: "Paste", icon: this.appPath + "/imgs/old-icons16/paste.png", accelerator: "CmdOrCtrl+V", enabled: params.editFlags.canPaste, click: () => { 
+                    label: "Paste", icon: this.appPath + "/imgs/icons16/paste.png", accelerator: "CmdOrCtrl+V", enabled: params.editFlags.canPaste, click: () => { 
                         this.paste();
                     } }, { type: "separator" }, { 
-                    label: "Paste and match style", icon: this.appPath + "/imgs/old-icons16/paste-special.png", accelerator: "CmdOrCtrl+Shift+V", enabled: params.editFlags.canPaste, click: () => { 
+                    label: "Paste and match style", icon: this.appPath + "/imgs/icons16/paste-special.png", accelerator: "CmdOrCtrl+Shift+V", enabled: params.editFlags.canPaste, click: () => { 
                         this.pasteAndMatchStyle();
                     } }, { type: "separator" }, { 
-                    label: "Undo", icon: this.appPath + "/imgs/old-icons16/undo.png", accelerator: "CmdOrCtrl+Z", enabled: params.editFlags.canUndo, click: () => { 
+                    label: "Undo", icon: this.appPath + "/imgs/icons16/undo.png", accelerator: "CmdOrCtrl+Z", enabled: params.editFlags.canUndo, click: () => { 
                         this.undo();
                     } }, { 
-                    label: "Redo", icon: this.appPath + "/imgs/old-icons16/redo.png", accelerator: "CmdOrCtrl+Shift+Z", enabled: params.editFlags.canRedo, click: () => {
+                    label: "Redo", icon: this.appPath + "/imgs/icons16/redo.png", accelerator: "CmdOrCtrl+Shift+Z", enabled: params.editFlags.canRedo, click: () => {
                         this.redo();
                     } }, { type: "separator" }, { 
                     label: "Select all", icon: this.appPath + "/imgs/old-icons16/select-all.png", accelerator: "CmdOrCtrl+A", enabled: params.editFlags.canSelectAll, click: () => { 

@@ -923,15 +923,15 @@ function showMainWindow() {
                 mainWindow.webContents.cut(); } },
               { label: "Copy", icon: app.getAppPath() + "/imgs/icons16/copy.png", accelerator: "CmdOrCtrl+C", enabled: params.editFlags.canCopy, click: () => { 
                 mainWindow.webContents.copy(); } },
-              { label: "Paste", icon: app.getAppPath() + "/imgs/old-icons16/paste.png", accelerator: "CmdOrCtrl+V", enabled: params.editFlags.canPaste, click: () => { 
+              { label: "Paste", icon: app.getAppPath() + "/imgs/icons16/paste.png", accelerator: "CmdOrCtrl+V", enabled: params.editFlags.canPaste, click: () => { 
                 mainWindow.webContents.paste(); } },
               { type: "separator" },
               { label: "Paste and search", icon: app.getAppPath() + "/imgs/icons16/zoom.png", enabled: params.editFlags.canPaste, click: () => { 
                 overlay.performSearch(clipboard.readText()); } },
               { type: "separator" },
-              { label: "Undo", icon: app.getAppPath() + "/imgs/old-icons16/undo.png", accelerator: "CmdOrCtrl+Z", enabled: params.editFlags.canUndo, click: () => { 
+              { label: "Undo", icon: app.getAppPath() + "/imgs/icons16/undo.png", accelerator: "CmdOrCtrl+Z", enabled: params.editFlags.canUndo, click: () => { 
                 mainWindow.webContents.undo(); } },
-              { label: "Redo", icon: app.getAppPath() + "/imgs/old-icons16/redo.png", accelerator: "CmdOrCtrl+Shift+Z", enabled: params.editFlags.canRedo, click: () => {
+              { label: "Redo", icon: app.getAppPath() + "/imgs/icons16/redo.png", accelerator: "CmdOrCtrl+Shift+Z", enabled: params.editFlags.canRedo, click: () => {
                 mainWindow.webContents.redo(); } },
               { type: "separator" },
               { label: "Select all", icon: app.getAppPath() + "/imgs/old-icons16/select-all.png", accelerator: "CmdOrCtrl+A", enabled: params.editFlags.canSelectAll, click: () => { 
@@ -1305,22 +1305,22 @@ function initMenu() {
           tabManager.getActiveTab().copy(); 
         }
       } }, { 
-      label: "Paste", icon: app.getAppPath() + "/imgs/old-icons16/paste.png", accelerator: "CmdOrCtrl+V", click: () => { 
+      label: "Paste", icon: app.getAppPath() + "/imgs/icons16/paste.png", accelerator: "CmdOrCtrl+V", click: () => { 
         if(tabManager.hasActiveTab()) {
           tabManager.getActiveTab().paste(); 
         }
       } }, { type: "separator" }, { 
-      label: "Paste and match style", icon: app.getAppPath() + "/imgs/old-icons16/paste-special.png", accelerator: "CmdOrCtrl+Shift+V", click: () => { 
+      label: "Paste and match style", icon: app.getAppPath() + "/imgs/icons16/paste-special.png", accelerator: "CmdOrCtrl+Shift+V", click: () => { 
         if(tabManager.hasActiveTab()) {
           tabManager.getActiveTab().pasteAndMatchStyle(); 
         }
       } }, { type: "separator" }, { 
-      label: "Undo", icon: app.getAppPath() + "/imgs/old-icons16/undo.png", accelerator: "CmdOrCtrl+Z", click: () => { 
+      label: "Undo", icon: app.getAppPath() + "/imgs/icons16/undo.png", accelerator: "CmdOrCtrl+Z", click: () => { 
         if(tabManager.hasActiveTab()) {
           tabManager.getActiveTab().undo();
         } 
       } }, { 
-      label: "Redo", icon: app.getAppPath() + "/imgs/old-icons16/redo.png", accelerator: "CmdOrCtrl+Shift+Z", click: () => { 
+      label: "Redo", icon: app.getAppPath() + "/imgs/icons16/redo.png", accelerator: "CmdOrCtrl+Shift+Z", click: () => { 
         if(tabManager.hasActiveTab()) {
           tabManager.getActiveTab().redo(); 
         }

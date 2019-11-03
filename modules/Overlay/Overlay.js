@@ -35,13 +35,13 @@ class Overlay extends EventEmitter {
                     label: "Copy", icon: this.appPath + "/imgs/icons16/copy.png", accelerator: "CmdOrCtrl+C", enabled: params.editFlags.canCopy, click: () => { 
                         this.view.webContents.copy();
                     } }, { 
-                    label: "Paste", icon: this.appPath + "/imgs/old-icons16/paste.png", accelerator: "CmdOrCtrl+V", enabled: params.editFlags.canPaste, click: () => { 
+                    label: "Paste", icon: this.appPath + "/imgs/icons16/paste.png", accelerator: "CmdOrCtrl+V", enabled: params.editFlags.canPaste, click: () => { 
                         this.view.webContents.paste();
                     } }, { type: "separator" }, { 
-                    label: "Undo", icon: this.appPath + "/imgs/old-icons16/undo.png", accelerator: "CmdOrCtrl+Z", enabled: params.editFlags.canUndo, click: () => { 
+                    label: "Undo", icon: this.appPath + "/imgs/icons16/undo.png", accelerator: "CmdOrCtrl+Z", enabled: params.editFlags.canUndo, click: () => { 
                         this.view.webContents.undo();
                     } }, { 
-                    label: "Redo", icon: this.appPath + "/imgs/old-icons16/redo.png", accelerator: "CmdOrCtrl+Shift+Z", enabled: params.editFlags.canRedo, click: () => {
+                    label: "Redo", icon: this.appPath + "/imgs/icons16/redo.png", accelerator: "CmdOrCtrl+Shift+Z", enabled: params.editFlags.canRedo, click: () => {
                         this.view.webContents.redo();
                     } }, { type: "separator" }, { 
                     label: "Select all", icon: this.appPath + "/imgs/old-icons16/select-all.png", accelerator: "CmdOrCtrl+A", enabled: params.editFlags.canSelectAll, click: () => { 
