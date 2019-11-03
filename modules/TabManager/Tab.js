@@ -257,7 +257,7 @@ class Tab extends EventEmitter {
             }
 
             rmbMenuItems.push({
-                label: "Inspect element", icon: this.appPath + "/imgs/old-icons16/inspect.png", click: () => {
+                label: "Inspect element", icon: this.appPath + "/imgs/icons16/inspect.png", click: () => {
                     this.inspectElement(params.x, params.y);
                 } }
             );

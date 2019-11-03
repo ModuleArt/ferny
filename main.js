@@ -333,7 +333,7 @@ ipcMain.on('request-set-cache-size', (event, arg) => {
 
 ipcMain.on('request-info-contextmenu', (event, arg) => {
   let infoMenu = Menu.buildFromTemplate([
-    { label: 'Certificate info', accelerator: 'CmdOrCtrl+I', icon: app.getAppPath() + '/imgs/icons16/certificate.png', click: () => { mainWindow.webContents.send('action-page-certificate'); } }
+    { label: 'Certificate info', icon: app.getAppPath() + '/imgs/icons16/certificate.png', click: () => { mainWindow.webContents.send('action-page-certificate'); } }
   ]);
   infoMenu.popup(mainWindow);
 });
@@ -1346,7 +1346,7 @@ function initMenu() {
       enabled: false, label: "Find in page", icon: app.getAppPath() + "/imgs/icons16/zoom.png", accelerator: "CmdOrCtrl+F", click: () => { 
         // mainWindow.webContents.send('action-page-findinpage'); 
       } }, { type: "separator" }, { 
-      enabled: false, label: "Certificate info", icon: app.getAppPath() + "/imgs/old-icons16/certificate.png", accelerator: "CmdOrCtrl+I", click: () => { 
+      enabled: false, label: "Certificate info", icon: app.getAppPath() + "/imgs/icons16/license.png", click: () => { 
         // mainWindow.webContents.send('action-page-certificate'); 
       } }, { type: "separator" }, { 
       label: "View page source", icon: app.getAppPath() + "/imgs/icons16/code.png", accelerator: "CmdOrCtrl+U", click: () => { 
@@ -1354,7 +1354,7 @@ function initMenu() {
           tabManager.getActiveTab().viewPageSource();
         }
       } }, { 
-      label: "Developer tools", icon: app.getAppPath() + "/imgs/old-icons16/tools.png", accelerator: "F12", click: () => { 
+      label: "Developer tools", icon: app.getAppPath() + "/imgs/icons16/tool.png", accelerator: "F12", click: () => { 
         if(tabManager.hasActiveTab()) {
           tabManager.getActiveTab().openDevTools();
         }
@@ -1373,7 +1373,7 @@ function initMenu() {
       enabled: false, label: "Welcome", icon: app.getAppPath() + "/imgs/old-icons16/startup.png", accelerator: "F7", click: () => { 
         // showWelcomeWindow(); 
       } }, { type: "separator" }, { 
-      label: "Report an issue", icon: app.getAppPath() + "/imgs/old-icons16/bug.png", accelerator: "CmdOrCtrl+Shift+I", click: () => { 
+      label: "Report an issue", icon: app.getAppPath() + "/imgs/icons16/bug-report.png", accelerator: "CmdOrCtrl+Shift+I", click: () => { 
         tabManager.addTab("https://github.com/ModuleArt/ferny/issues", true);
       } }
     ] }, { 
@@ -1394,7 +1394,7 @@ function initMenu() {
           overlay.goToSearch();
         }
       } }, { 
-      label: "Additional hotkeys", icon: app.getAppPath() + "/imgs/old-icons16/keyboard.png", submenu: [{ 
+      label: "Additional hotkeys", icon: app.getAppPath() + "/imgs/icons16/key.png", submenu: [{ 
         label: "New tab", icon: app.getAppPath() + "/imgs/icons16/create.png", accelerator: "CmdOrCtrl+N", click: () => { 
           tabManager.newTab(); 
         } }, { type: "separator" }, { 
@@ -1407,10 +1407,20 @@ function initMenu() {
           if(tabManager.hasActiveTab()) {
             tabManager.getActiveTab().reloadIgnoringCache();
           }
+        } }, { type: "separator" }, { 
+        label: "Redo", icon: app.getAppPath() + "/imgs/icons16/redo.png", accelerator: "CmdOrCtrl+Y", click: () => { 
+          if(tabManager.hasActiveTab()) {
+            tabManager.getActiveTab().redo(); 
+          }
+        } }, { type: "separator" }, { 
+        label: "Developer tools", icon: app.getAppPath() + "/imgs/icons16/tool.png", accelerator: "CmdOrCtrl+Shift+I", click: () => { 
+          if(tabManager.hasActiveTab()) {
+            tabManager.getActiveTab().openDevTools();
+          }
         } }
       ] }, { type: "separator" }, { 
-      label: "Developer [Danger]", icon: app.getAppPath() + "/imgs/old-icons16/developer.png", submenu: [{ 
-        label: "Developer mode (Main window)", icon: app.getAppPath() + "/imgs/old-icons16/web.png", accelerator: "CmdOrCtrl+Shift+F12", click: () => { 
+      label: "Developer [Danger]", icon: app.getAppPath() + "/imgs/icons16/code.png", submenu: [{ 
+        label: "Developer mode (Main window)", icon: app.getAppPath() + "/imgs/icons16/window.png", accelerator: "CmdOrCtrl+Shift+F12", click: () => { 
           mainWindow.webContents.openDevTools(); 
         } }, { 
         label: "Developer mode (Overlay)", icon: app.getAppPath() + "/imgs/icons16/overlay.png", accelerator: "CmdOrCtrl+Shift+F11", click: () => { 
