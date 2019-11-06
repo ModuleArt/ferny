@@ -232,7 +232,10 @@ class SearchManager extends EventEmitter {
                 this.newTab("https://www.wolframalpha.com/input/?i=" + text, background);
                 break;
             case "ebay":
-                this.newTab("https://www.ebay.com/sch/i.html?_nkw=asdf" + text, background);
+                this.newTab("https://www.ebay.com/sch/i.html?_nkw=" + text, background);
+                break;
+            case "startpage":
+                this.newTab("https://www.startpage.com/do/dsearch?query=" + text, background);
                 break;
         }
     }

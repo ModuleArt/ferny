@@ -9,6 +9,10 @@
   vertical-align: middle;
 }
 
+.nav-checkbox img {
+  margin-right: 8px;
+}
+
 input[type=checkbox] {
   margin-left: 4px;
   margin-top: 0;

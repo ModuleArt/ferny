@@ -438,7 +438,9 @@ ipcRenderer.on("settings-setDownloadsFolder", (event, path) => {
 });
 
 ipcRenderer.on("settings-showCategory", (event, categoryId) => {
-  showCategory(categoryId);
+  if(categoryId) {
+    showCategory(categoryId);
+  }
 });
 
 /*

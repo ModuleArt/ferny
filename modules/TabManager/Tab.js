@@ -176,7 +176,7 @@ class Tab extends EventEmitter {
                         label: "Open link in new tab", icon: this.appPath + "/imgs/icons16/tab.png", click: () => { 
                             this.emit("add-tab", params.linkURL, false);
                         } }, { type: "separator" }, { 
-                        label: "Copy link text", icon: this.appPath + "/imgs/old-icons16/text.png", enabled: (params.linkText > 0), click: () => { 
+                        label: "Copy link text", icon: this.appPath + "/imgs/icons16/text.png", enabled: (params.linkText > 0), click: () => { 
                             clipboard.writeText(params.linkText); 
                         } }, { 
                         label: "Copy link address", icon: this.appPath + "/imgs/icons16/link.png", click: () => { 
@@ -195,7 +195,7 @@ class Tab extends EventEmitter {
                 if(params.hasImageContents) {
                     pageBool = false;
                     let imageItems = [{
-                        label: "Open image in new tab", icon: this.appPath + "/imgs/old-icons16/image.png", click: () => { 
+                        label: "Open image in new tab", icon: this.appPath + "/imgs/icons16/image.png", click: () => { 
                             this.emit("add-tab", params.srcURL, true);
                         } }, { type: "separator" }, { 
                         label: "Download image", icon: this.appPath + "/imgs/icons16/download.png", click: () => { 

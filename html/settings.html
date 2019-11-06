@@ -184,6 +184,11 @@
                 <label>Ebay</label>
                 <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" name="search-engine" value="ebay">
             </div>
+            <div class="nav-checkbox">
+                <img src="../imgs/engines/startpage.png">
+                <label>Startpage</label>
+                <input type="radio" onclick="requestSearchEngine(this.value)" class="checkbox" name="search-engine" value="startpage">
+            </div>
         </div>
 
         <div class="container" id="startup">
@@ -249,18 +254,22 @@
             <label class="nav-label">A place to save downloaded files.</label>
             <hr>
             <div class="nav-checkbox">
+                <img class="theme-icon" name="about-16">
                 <label>Always ask you where to save files</label>
                 <input type="radio" onclick="requestDownloadsFolder(this.value)" class="checkbox" name="downloads-folder" value="?ask?">
             </div>
             <div class="nav-checkbox">
+                <img class="theme-icon" name="download-16">
                 <label>Downloads folder</label>
                 <input type="radio" onclick="requestDownloadsFolder(this.value)" class="checkbox" checked name="downloads-folder" value="?downloads?">
             </div>
             <div class="nav-checkbox">
+                <img class="theme-icon" name="desktop-16">
                 <label>Desktop folder</label>
                 <input type="radio" onclick="requestDownloadsFolder(this.value)" class="checkbox" checked name="downloads-folder" value="?desktop?">
             </div>
             <div class="nav-checkbox">
+                <img class="theme-icon" name="folder-16">
                 <label>Custom directory</label>
                 <input type="radio" id="custom-folder-radio" onclick="requestDownloadsFolder(this.value)" class="checkbox" name="downloads-folder" value="?custom-folder?">
             </div>

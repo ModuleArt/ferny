@@ -332,7 +332,7 @@
   color: white;
 }
 
-.tabman.blur #window-controls .button, .tabman.blur .theme-icon {
+body.blur #window-controls .button, body.blur .tabman .theme-icon {
   opacity: var(--opacity-over);
 }
 

@@ -114,7 +114,8 @@ app.on("ready", () => {
       iconIndex: 0,
       title: "Show overlay",
       description: "Open the overlay tab"
-    }]);
+    }
+  ]);
 
   autoUpdater.logger = require("electron-log");
   autoUpdater.logger.transports.file.level = "info";
@@ -930,8 +931,8 @@ function showMainWindow() {
     if(Data.maximize) {
       Data.x = null;
       Data.y = null;
-      Data.width = 1000;
-      Data.height = 650;
+      Data.width = 1150;
+      Data.height = 680;
     }
   
     loadTheme().then(({theme, dark}) => {
@@ -1045,7 +1046,8 @@ function showMainWindow() {
             mainWindow.maximize();
           }
 
-          if(process.argv.length > 1) {
+          mainWindow.webContents.send("console-log", process.argv);
+          if(process.argv.length > 1 && process.argv[1] != ".") {
             for(let i = 1; i < process.argv.length; i++) {
               if(process.argv[i].substr(0, 2) != "--") {
                 tabManager.addTab("file://" + process.argv[i], true); 
@@ -1204,7 +1206,7 @@ function initMenu() {
         enabled: false, label: "Orange", accelerator: "CmdOrCtrl+Shift+3", click: () => { 
 
         } }, { type: "separator" }, {
-        enabled: false, label: "Incognito", accelerator: "CmdOrCtrl+I", click: () => { 
+        enabled: false, label: "Incognito", icon: app.getAppPath() + "/imgs/icons16/incognito.png", accelerator: "CmdOrCtrl+I", click: () => { 
 
         } }
       ] }, { type: "separator" }, {
@@ -1270,7 +1272,7 @@ function initMenu() {
           }
         } } 
     ] }, { type: "separator" }, {
-      label: "Close to the right", icon: app.getAppPath() + "/imgs/icons16/swipe-right.png", click: () => { 
+      label: "Close tabs to the right", icon: app.getAppPath() + "/imgs/icons16/swipe-right.png", click: () => { 
         if(tabManager.hasActiveTab()) {
           tabManager.getActiveTab().closeToTheRight(); 
         }
@@ -1410,9 +1412,9 @@ function initMenu() {
       label: "About", icon: app.getAppPath() + "/imgs/icons16/info.png", accelerator: "F2", click: () => { 
         showAboutWindow();
       } }, { 
-      enabled: false, label: "Welcome", icon: app.getAppPath() + "/imgs/old-icons16/startup.png", accelerator: "F7", click: () => { 
-        // showWelcomeWindow(); 
-      } }, { type: "separator" }, { 
+      // enabled: false, label: "Welcome", icon: app.getAppPath() + "/imgs/old-icons16/startup.png", accelerator: "F7", click: () => { 
+      //   showWelcomeWindow(); 
+      // } }, { type: "separator" }, { 
       label: "Report an issue", icon: app.getAppPath() + "/imgs/icons16/bug-report.png", accelerator: "CmdOrCtrl+Shift+I", click: () => { 
         tabManager.addTab("https://github.com/ModuleArt/ferny/issues", true);
       } }

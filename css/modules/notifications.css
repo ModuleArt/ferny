@@ -1,3 +1,7 @@
+body.blur .notif-close {
+    opacity: var(--opacity-over);
+}
+
 .notif-panel {
     position: absolute;
     left: 0;

@@ -72,6 +72,7 @@ body {
 #body-container {
     overflow: auto;
     padding: 64px;
+    padding-top: 32px;
     position: absolute;
     left: 0;
     right: 0;
@@ -793,6 +794,7 @@ hr {
     word-break: keep-all;
     text-overflow: ellipsis;
     cursor: text;
+    text-align: left;
 }
 
 /*
@@ -836,6 +838,11 @@ hr {
     text-align: left;
     background-color: var(--color-element);
     position: relative;
+
+    /* height: 40px;
+    border-radius: 20px;
+    border: none;
+    box-shadow: 0 0 4px rgba(0, 0, 0, var(--opacity-over)); */
 }
 
 .collection-divider {
@@ -924,7 +931,7 @@ hr {
     #collections {
         position: fixed;
         left: 128px;
-        top: 64px;
+        top: 32px;
         width: 256px;
     }
 

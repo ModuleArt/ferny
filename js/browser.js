@@ -318,11 +318,11 @@ ipcRenderer.on("window-updateTheme", (event) => {
 });
 
 ipcRenderer.on("window-blur", (event) => {
-  document.getElementById("tabman").classList.add("blur");
+  document.body.classList.add("blur");
 });
 
 ipcRenderer.on("window-focus", (event) => {
-  document.getElementById("tabman").classList.remove("blur");
+  document.body.classList.remove("blur");
 });
 
 ipcRenderer.on("window-maximize", (event) => {

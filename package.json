@@ -77,17 +77,22 @@
         "ext": "htm",
         "name": "Web page document [HTM]",
         "description": "Web page document [HTM] - Ferny",
-        "role": "Viewer"
+        "role": "Viewer",
+        "icon": "imgs/file.ico"
       },
       {
         "ext": "html",
         "name": "Web page document [HTML]",
         "description": "Web page document [HTML] - Ferny",
-        "role": "Viewer"
+        "role": "Viewer",
+        "icon": "imgs/file.ico"
       }
     ],
     "nsis": {
-      "include": "installer.nsh"
+      "include": "installer.nsh",
+      "installerIcon": "imgs/install.ico",
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
     },
     "asar": true,
     "win": {
