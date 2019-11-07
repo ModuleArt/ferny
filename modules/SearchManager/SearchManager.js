@@ -38,32 +38,6 @@ class SearchManager extends EventEmitter {
         });
 
         this.searchSuggestContainer = searchSuggestContainer;
-        this.searchSuggestContainer.onmousewheel = (event) => {
-            event.preventDefault();
-            if (event.deltaY < 0) {
-                var suggestions = this.searchSuggestContainer.childNodes;
-                let i = 0;
-                while (i < suggestions.length && !suggestions[i].classList.contains("active")) {
-                    i++;
-                }
-                if (i > 0) {
-                    this.searchInput.value = suggestions[i].previousSibling.value;
-                    suggestions[i].classList.remove("active");
-                    suggestions[i].previousSibling.classList.add("active");
-                }
-            } else if (event.deltaY > 0) {
-                var suggestions = this.searchSuggestContainer.childNodes;
-                let i = 0;
-                while (i < suggestions.length && !suggestions[i].classList.contains("active")) {
-                    i++;
-                }
-                if (i < suggestions.length - 1) {
-                    document.getElementById("search-input").value = suggestions[i].nextSibling.value;
-                    suggestions[i].classList.remove("active");
-                    suggestions[i].nextSibling.classList.add("active");
-                }
-            }
-        }
 
         this.searchInput = searchInput;
         this.searchInput.oninput = () => {
@@ -144,6 +118,12 @@ class SearchManager extends EventEmitter {
                 firstInput.onclick = () => {
                     this.navigateSuggest(firstInput.value);
                 };
+                firstInput.onauxclick = (event) => {
+                    event.preventDefault();
+                    if(event.which === 2) {
+                        this.navigateSuggest(firstInput.value, true);
+                    }
+                };
                 this.searchSuggestContainer.appendChild(firstInput);
 
                 if (suggestions != null && suggestions.length > 0) {
@@ -157,8 +137,11 @@ class SearchManager extends EventEmitter {
                                 s.onclick = () => {
                                     this.navigateSuggest(s.value);
                                 };
-                                s.oncontextmenu = () => {
-                                    this.navigateSuggest(s.value, true);
+                                s.onauxclick = (event) => {
+                                    event.preventDefault();
+                                    if(event.which === 2) {
+                                        this.navigateSuggest(s.value, true);
+                                    }
                                 };
                                 this.searchSuggestContainer.appendChild(s);
                             }

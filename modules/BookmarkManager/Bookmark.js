@@ -41,19 +41,19 @@ class Bookmark extends EventEmitter {
         
         this.node.onclick = () => {
             this.open();
-        }
+        };
         this.node.onauxclick = (event) => {
             event.preventDefault();
             if(event.which === 2) {
                 ipcRenderer.send("tabManager-addTab", url, false);
             }
-        }
+        };
         this.node.oncontextmenu = () => {
             this.toggleOptions();
-        }
+        };
         this.node.onkeyup = (event) => {
             event.preventDefault();
-        }
+        };
 
         let optionsBtn = document.createElement("button");
         optionsBtn.classList.add("bookmark-options");

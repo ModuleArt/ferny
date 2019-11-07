@@ -1411,10 +1411,10 @@ function initMenu() {
       } }, { type: "separator" }, { 
       label: "About", icon: app.getAppPath() + "/imgs/icons16/info.png", accelerator: "F2", click: () => { 
         showAboutWindow();
-      } }, { 
+      // } }, { 
       // enabled: false, label: "Welcome", icon: app.getAppPath() + "/imgs/old-icons16/startup.png", accelerator: "F7", click: () => { 
       //   showWelcomeWindow(); 
-      // } }, { type: "separator" }, { 
+      } }, { type: "separator" }, { 
       label: "Report an issue", icon: app.getAppPath() + "/imgs/icons16/bug-report.png", accelerator: "CmdOrCtrl+Shift+I", click: () => { 
         tabManager.addTab("https://github.com/ModuleArt/ferny/issues", true);
       } }

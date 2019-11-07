@@ -200,7 +200,7 @@
 }
 
 #search-input:active {
-  background-color: var(--color-border);
+  background-color: var(--color-titlebar);
 }
 
 #search-input.show-target {
@@ -339,73 +339,6 @@ body.blur #window-controls .button, body.blur .tabman .theme-icon {
 #window-controls .button:active {
   opacity: var(--opacity-over) !important;
 }
-
-/*
-..######..##.....##..######....######...########..######..########.####..#######..##....##..######.
-.##....##.##.....##.##....##..##....##..##.......##....##....##.....##..##.....##.###...##.##....##
-.##.......##.....##.##........##........##.......##..........##.....##..##.....##.####..##.##......
-..######..##.....##.##...####.##...####.######....######.....##.....##..##.....##.##.##.##..######.
-.......##.##.....##.##....##..##....##..##.............##....##.....##..##.....##.##..####.......##
-.##....##.##.....##.##....##..##....##..##.......##....##....##.....##..##.....##.##...###.##....##
-..######...#######...######....######...########..######.....##....####..#######..##....##..######.
-*/
-
-#search-suggest {
-  animation-name: anim-suggest;
-  animation-duration: 0.25s;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: calc(100% + 4px);
-  border-radius: 0 0 calc(var(--px-radius) + 4px) calc(var(--px-radius) + 4px);
-  background-color: var(--color-back);
-  border: 1px solid var(--color-border);
-  transition: 0.25s;
-}
-
-#search-suggest.hide {
-  opacity: 0;
-  transform: translateY(-40px);
-}
-
-#search-suggest-container {
-  text-align: center;
-  border-bottom: 1px solid var(--color-border);
-}
-
-#search-suggest-container input {
-  outline: none;
-  width: 100%;
-  display: block;
-  margin: 0;
-  border: none;
-  border-top: 1px solid transparent;
-  border-bottom: 1px solid transparent;
-  background-color: transparent;
-  border-radius: 0;
-  height: 28px;
-  color: var(--color-top);
-}
-
-#search-suggest-container input:first-child {
-  border-top: none;
-}
-
-#search-suggest-container input:last-child {
-  border-bottom: none;
-}
-
-#search-suggest-container input.active {
-  border-color: var(--color-border);
-  box-shadow: none;
-  background-color: var(--color-element);
-}
-
-#search-engines {
-  display: block;
-  margin: 2px;
-  text-align: center;
-} 
 
 /*
 .########...#######..########..##....##

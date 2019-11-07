@@ -22,7 +22,7 @@ input[type=text] {
   }
   
   input[type=text]:active {
-    background-color: var(--color-border);
+    background-color: var(--color-titlebar);
   }
   
   input[type=text]:disabled {

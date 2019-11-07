@@ -214,7 +214,10 @@ function newTab() {
 }
 
 function newBackgroundTab() {
-  ipcRenderer.send("tabManager-newBackgroundTab");
+  event.preventDefault();
+  if(event.which === 2) {
+    ipcRenderer.send("tabManager-newBackgroundTab");
+  }
 }
 
 function showTabList() {

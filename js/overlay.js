@@ -442,7 +442,13 @@ ipcRenderer.on("downloadManager-clearDownloads", (event, text) => {
 function init() {
   updateTheme();
 
-  document.getElementById('search-input').focus();
+  document.getElementById("search-input").focus();
+
+  document.body.onmousedown = function(e) { 
+    if (e.button === 1) {
+      return false; 
+    }
+  }
 }
 
 document.onreadystatechange = () => {
