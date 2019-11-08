@@ -161,6 +161,10 @@ class SearchManager extends EventEmitter {
             }
             text = suggestions[i].value;
         }
+
+        if(!background) {
+            this.clearSearch();
+        }
       
         switch (engine) {
             case "google":
@@ -278,6 +282,10 @@ class SearchManager extends EventEmitter {
 
     clearSearch() {
         this.searchInput.value = "";
+
+        this.searchSuggestContainer.innerHTML = "";
+        this.searchSuggest.style.display = "none";
+        this.searchSuggest.classList.add("hide");
 
         return null;
     }

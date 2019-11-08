@@ -830,9 +830,9 @@ hr {
     display: inline-block;
     width: calc(25% - 7px);
     border: 1px solid var(--color-border);
-    border-radius: calc(var(--px-radius) + 4px);
-    height: 42px;
-    padding: 12px;
+    border-radius: var(--px-radius);
+    height: 32px;
+    padding: 7px 16px;
     margin: 2px;
     outline: none;
     text-align: left;
@@ -857,7 +857,7 @@ hr {
 
 .collection.active::before {
     position: absolute;
-    top: 16px;
+    top: 11px;
     left: auto;
     right: 12px;
     content: "";
@@ -880,8 +880,8 @@ hr {
     transition: left 0.25s;
     opacity: var(--opacity-over);
     position: absolute;
-    left: 42px;
-    top: 10px;
+    left: 50px;
+    top: 5px;
     vertical-align: middle;
     color: var(--color-top);
     margin-left: 8px;
@@ -897,19 +897,19 @@ hr {
 }
 
 .collection.green {
-    background-color: rgba(11, 232, 129, 0.2);
+    background-color: rgba(11, 232, 129, 0.25);
 }
 
 .collection.blue {
-    background-color: rgba(15, 188, 249, 0.2);
+    background-color: rgba(15, 188, 249, 0.25);
 }
 
 .collection.orange {
-    background-color: rgba(255, 168, 1, 0.2);
+    background-color: rgba(255, 168, 1, 0.25);
 }
 
 .collection.red {
-    background-color: rgba(255, 63, 52, 0.2);
+    background-color: rgba(255, 63, 52, 0.25);
 }
 
 /*                  
@@ -937,7 +937,7 @@ hr {
 
     .collection {
         display: block;
-        width: 42px;
+        width: 50px;
         margin: 6px 0;
     }
 

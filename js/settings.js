@@ -199,6 +199,10 @@ function loadDownloadsFolder() {
   });
 }
 
+function openDownloadsFolder() {
+  ipcRenderer.send("main-openDownloadsFolder");
+}
+
 /*
  ###### #    # #    #  ####              #####   ##   #####      ####  #       ####   ####  ###### #####
  #      #    # ##   # #    #               #    #  #  #    #    #    # #      #    # #      #      #    #

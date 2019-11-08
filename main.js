@@ -7,7 +7,7 @@
  #    # ######  ### #  ####  # #    # ######
 */
 
-const { ipcMain, app, Menu, BrowserWindow, dialog, clipboard, session } = require("electron");
+const { ipcMain, app, Menu, BrowserWindow, dialog, clipboard, session, shell } = require("electron");
 const { autoUpdater } = require("electron-updater");
 const os = require("os");
 const fs = require("fs");
@@ -245,6 +245,10 @@ app.on("ready", () => {
  # #      #    #             #    # #    # # #   ##
  # #       ####              #    # #    # # #    #
 */
+
+ipcMain.on("main-openDownloadsFolder", (event) => {
+  openDownloadsFolder();
+});
 
 ipcMain.on("main-bookmarkAllTabs", (event) => {
   let arr = [];
@@ -813,6 +817,22 @@ function saveDownloadCounter() {
   }
 }
 
+function openDownloadsFolder() {
+  if(downloadsFolder !== "?ask?") {
+    if(downloadsFolder === "?downloads?") {
+      shell.openExternal(app.getPath("downloads"));
+    } else {
+      if(downloadsFolder === "?desktop?") {
+        shell.openExternal(app.getPath("desktop"));
+      } else {
+        shell.openExternal(downloadsFolder);
+      }
+    }
+  } else {
+    shell.openExternal(app.getPath("downloads"));
+  }
+}
+
 /*
 .########.##.....##.##....##..######..########.####..#######..##....##..######.
 .##.......##.....##.###...##.##....##....##.....##..##.....##.###...##.##....##
@@ -1314,9 +1334,14 @@ function initMenu() {
     label: "History", accelerator: "CmdOrCtrl+H", icon: app.getAppPath() + "/imgs/icons16/history.png", click: () => { 
       overlay.scrollToId("history-title");
     } }, { 
-    label: "Downloads", accelerator: "CmdOrCtrl+D", icon: app.getAppPath() + "/imgs/icons16/download.png", click: () => { 
-      overlay.scrollToId("downloads-title"); 
-    } }, { type: "separator" }, { 
+    label: "Downloads", icon: app.getAppPath() + "/imgs/icons16/download.png", submenu: [{
+      label: "Downloads", accelerator: "CmdOrCtrl+D", icon: app.getAppPath() + "/imgs/icons16/download.png", click: () => { 
+        overlay.scrollToId("downloads-title"); 
+      } }, { type: "separator" }, { 
+      label: "Open folder", icon: app.getAppPath() + "/imgs/icons16/folder.png", click: () => { 
+        openDownloadsFolder();
+      } }
+    ] }, { type: "separator" }, { 
     label: "Zoom", icon: app.getAppPath() + "/imgs/icons16/zoom.png", submenu: [{ 
       label: "Zoom in", icon: app.getAppPath() + "/imgs/icons16/zoom-in.png", accelerator: "CmdOrCtrl+=", click: () => { 
         if(tabManager.hasActiveTab()) {
