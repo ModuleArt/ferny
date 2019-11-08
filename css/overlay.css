@@ -194,7 +194,6 @@ main {
   
 #clear-search-btn:focus {
     box-shadow: var(--shadow-focus);
-    transform: scale(1);
 }
   
 #clear-search-btn:active {
@@ -855,7 +854,7 @@ hr {
     box-shadow: var(--shadow-focus);
 }
 
-.collection.active::before {
+.collection::before {
     position: absolute;
     top: 11px;
     left: auto;
@@ -865,6 +864,7 @@ hr {
     height: 8px;
     border-radius: 50%;
     background-color: var(--color-top);
+    display: none;
 }
 
 .collection.active .collection-name {
@@ -872,7 +872,16 @@ hr {
 }
 
 .collection:hover .collection-name {
-    left: 50px;
+    opacity: 1;
+}
+
+.collection:hover::before {
+    display: block;
+    opacity: var(--opacity-over);
+}
+
+.collection.active::before {
+    display: block;
     opacity: 1;
 }
 

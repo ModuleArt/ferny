@@ -351,17 +351,20 @@ class BookmarkManager extends EventEmitter {
     }
 
     checkIfBookmarked(url) {
-        let domain = parseUrl(url).resource;
         let exists = false;
         let id = null;
 
-        for(let i = 0; i < this.folders.length; i++) {
-            for(let j = 0; j < this.folders[i].getBookmarks().length; j++) {
-                let bookmark = parseUrl(this.folders[i].getBookmarks()[j].getURL()).resource;
-                if(bookmark == domain) {
-                    exists = true;
-                    id = this.folders[i].getBookmarks()[j].getId();
-                    break;
+        if(url.length > 0) {
+            let domain = parseUrl(url).resource;
+    
+            for(let i = 0; i < this.folders.length; i++) {
+                for(let j = 0; j < this.folders[i].getBookmarks().length; j++) {
+                    let bookmark = parseUrl(this.folders[i].getBookmarks()[j].getURL()).resource;
+                    if(bookmark == domain) {
+                        exists = true;
+                        id = this.folders[i].getBookmarks()[j].getId();
+                        break;
+                    }
                 }
             }
         }

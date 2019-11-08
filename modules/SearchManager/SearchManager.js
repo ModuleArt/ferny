@@ -71,9 +71,9 @@ class SearchManager extends EventEmitter {
         this.searchInput.onkeyup = (event) => {
             event.preventDefault();
 
-            this.updateClearSearchButton();
-
             if (this.searchInput.value.length > 0) {
+                this.updateClearSearchButton();
+                
                 if (event.keyCode === 13) {
                     var suggestions = this.searchSuggestContainer.childNodes;
                     if(suggestions.length > 0) {
@@ -86,6 +86,8 @@ class SearchManager extends EventEmitter {
                         this.navigateSuggest(this.searchInput.value);
                     }
                 }
+            } else {
+                this.clearSearch();
             }
         };
 
@@ -286,6 +288,8 @@ class SearchManager extends EventEmitter {
         this.searchSuggestContainer.innerHTML = "";
         this.searchSuggest.style.display = "none";
         this.searchSuggest.classList.add("hide");
+
+        this.updateClearSearchButton();
 
         return null;
     }
