@@ -58,20 +58,20 @@
                         <label>Tab groups</label>
                     </div>
                     <div class="collection-divider"></div>
-                    <button class="collection green active">
+                    <button class="collection green active" onclick="switchTabGroup(0)" id="group-0">
                         <img class="theme-icon collection-icon" name="one-16">
                         <label class="collection-name">Green</label>
                     </button>
-                    <button class="collection blue">
+                    <button class="collection blue" onclick="switchTabGroup(1)" id="group-1">
                         <img class="theme-icon collection-icon" name="two-16">
                         <label class="collection-name">Blue</label>
                     </button>
-                    <button class="collection orange">
+                    <button class="collection orange" onclick="switchTabGroup(2)" id="group-2">
                         <img class="theme-icon collection-icon" name="three-16">
                         <label class="collection-name">Orange</label>
                     </button>
                     <div class="collection-divider"></div>
-                    <button class="collection red">
+                    <button class="collection red" disabled style="opacity: var(--opacity-over);">
                         <img class="theme-icon collection-icon" name="incognito-16">
                         <label class="collection-name">Incognito</label>
                     </button>

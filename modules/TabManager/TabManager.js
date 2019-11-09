@@ -19,6 +19,8 @@ class TabManager extends EventEmitter {
     homePage = "https://google.com";
     tabClosedAction = "overlay";
 
+    tabGroup = 0;
+
     constructor(window, appPath) {
         super();
 
@@ -50,7 +52,7 @@ class TabManager extends EventEmitter {
     addTab(url, active) {
         let id = this.tabCounter++;
 
-        let tab = new Tab(this.window, id, this.appPath);
+        let tab = new Tab(this.window, id, this.appPath, this.tabGroup);
 
         tab.on("close", (closedTab) => {
             let pos = closedTab.getPosition();
@@ -174,6 +176,10 @@ class TabManager extends EventEmitter {
             this.emit("open-history");
         });
 
+        tab.on("group-changed", () => {
+            this.updateTabGroups();
+        });
+
         this.tabs.push(tab);
 
         tab.navigate(url);
@@ -229,7 +235,14 @@ class TabManager extends EventEmitter {
 
     hasTabs() {
         if(this.tabs.length > 0) {
-            return true;
+            let groupHasTabs = false;
+            for(let i = 0; i < this.tabs.length; i++) {
+                if(this.tabs[i].getGroup() == this.tabGroup) {
+                    groupHasTabs = true;
+                    break
+                }
+            }
+            return groupHasTabs;
         } else {
             return false;
         }
@@ -302,7 +315,7 @@ class TabManager extends EventEmitter {
     }
 
     unactivateAllTabs() {
-        this.window.send("tabRenderer-unactivateAllTabs");
+        this.window.webContents.send("tabRenderer-unactivateAllTabs");
 
         return null;
     }
@@ -313,10 +326,14 @@ class TabManager extends EventEmitter {
         if(arr.length > 0) {
             arr.forEach((item, index) => {
                 let num = index + 1;
+                let text = item.title;
+                if(text.length > 30) {
+                    text = text.substring(0, 30) + "...";
+                }
                 if (index < 9) {
                     let mi = new MenuItem({
-                        type: 'checkbox',
-                        label: item.title,
+                        type: "checkbox",
+                        label: text,
                         checked: item.active,
                         accelerator: "CmdOrCtrl+" + num,
                         click: () => { this.getTabById(item.id).activate(); }
@@ -324,8 +341,8 @@ class TabManager extends EventEmitter {
                     m.append(mi);
                 } else {
                     let mi = new MenuItem({
-                        type: 'checkbox',
-                        label: item.title + " [" + num + "]",
+                        type: "checkbox",
+                        label: text + " [" + num + "]",
                         checked: item.active,
                         click: () => { this.getTabById(item.id).activate(); }
                     });
@@ -349,7 +366,7 @@ class TabManager extends EventEmitter {
             enabled: this.hasTabs(),
             click: () => { 
                 if(this.hasActiveTab()) {
-                    if(this.getActiveTab().getPosition() == this.tabs.length - 1) {
+                    if(this.getActiveTab().getPosition() == this.getMaxPosition()) {
                         this.emit("show-overlay");
                     } else {
                         this.getActiveTab().nextTab(); 
@@ -372,7 +389,7 @@ class TabManager extends EventEmitter {
                         this.getActiveTab().prevTab(); 
                     }
                 } else {
-                    this.getTabByPosition(this.tabs.length - 1).activate();
+                    this.getTabByPosition(this.getMaxPosition()).activate();
                 }
             } 
         }));
@@ -393,12 +410,10 @@ class TabManager extends EventEmitter {
     }
 
     updateTabsPositions(arr) {
-        for(let i = 0; i < this.tabs.length; i++) {
+        for(let i = 0; i < arr.length; i++) {
             let tab = this.getTabById(arr[i]);
-            if(tab == null) {
-                i--;
-            } else {
-                tab.setPosition(i);
+            if (tab) {
+                this.getTabById(arr[i]).setPosition(i);
             }
         }
 
@@ -416,9 +431,46 @@ class TabManager extends EventEmitter {
     }
 
     closeAllTabs() {
+        let closeableTabs = [];
+
         for(let i = this.tabs.length - 1; i >= 0; i--) {
-            this.tabs[i].close();
+            if(this.tabs[i].getGroup() == this.tabGroup) {
+                closeableTabs.push(this.tabs[i]);
+            }
         }
+
+        for(let i = closeableTabs.length - 1; i >= 0; i--) {
+            closeableTabs[i].close();
+        }
+
+        return null;
+    }
+
+    updateTabGroups() {
+        this.tabs.forEach((tab) => {
+            tab.setVisibility(tab.getGroup() == this.tabGroup);
+        });
+        this.window.webContents.send("tabRenderer-updateTabsPositions");
+
+        return null;
+    }
+
+    switchTabGroup(tabGroupId) {
+        this.tabGroup = tabGroupId;
+        this.updateTabGroups();
+
+        this.emit("tab-group-switched", this.tabGroup);
+        return null;
+    }
+
+    getMaxPosition() {
+        let maxPosition = -1;
+        for(let i = 0; i < this.tabs.length; i++) {
+            if(this.tabs[i].getPosition() > maxPosition) {
+                maxPosition = this.tabs[i].getPosition();
+            }
+        }
+        return maxPosition;
     }
 }
 

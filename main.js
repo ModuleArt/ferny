@@ -668,6 +668,10 @@ ipcMain.on("tabManager-popupTabHistory", (event) => {
   }
 });
 
+ipcMain.on("tabManager-switchTabGroup", (event, number) => {
+  tabManager.switchTabGroup(number);
+});
+
 /*
  ###### #    # #    #  ####               ####  #    # ###### #####  #        ##   #   #
  #      #    # ##   # #    #             #    # #    # #      #    # #       #  #   # #
@@ -771,6 +775,10 @@ function initTabManager() {
 
   tabManager.on("open-history", (text) => {
     overlay.scrollToId("history-title");
+  });
+
+  tabManager.on("tab-group-switched", (tabGroup) => {
+    overlay.switchTabGroup(tabGroup);
   });
 }
 
@@ -1165,7 +1173,7 @@ function initMenu() {
         label: "Next tab", icon: app.getAppPath() + "/imgs/icons16/next.png", accelerator: "CmdOrCtrl+Tab", click: () => { 
           if(tabManager.hasTabs()) {
             if(tabManager.hasActiveTab()) {
-              if(tabManager.getActiveTab().getPosition() == tabManager.getTabs().length - 1) {
+              if(tabManager.getActiveTab().getPosition() == tabManager.getMaxPosition()) {
                   overlay.show();
               } else {
                 tabManager.getActiveTab().nextTab(); 
@@ -1184,7 +1192,7 @@ function initMenu() {
                 tabManager.getActiveTab().prevTab(); 
               }
             } else {
-              tabManager.getTabByPosition(tabManager.getTabs().length - 1).activate();
+              tabManager.getTabByPosition(tabManager.getMaxPosition()).activate();
             }
           }
         } }, { type: "separator" }, { 

@@ -5,7 +5,7 @@ const saveFileToJsonFolder = require("../modules/saveFileToJsonFolder.js");
 
 function loadTabClosed() {
     return new Promise((resolve, reject) => {
-        let defaultValue = "overlay";
+        let defaultValue = "prev-tab";
         let possibleValues = ["overlay", "next-tab", "prev-tab"];
         try {
             fs.readFile(ppath + "/json/tabclosed.json", (err, data) => {

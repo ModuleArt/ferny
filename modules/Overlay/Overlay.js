@@ -201,6 +201,10 @@ class Overlay extends EventEmitter {
         this.scrollToId("bookmarks-title");
         this.view.webContents.send("bookmarkManager-showBookmarkOptions", id);
     }
+
+    switchTabGroup(tabGroupId) {
+        this.view.webContents.send("overlay-switchTabGroup", tabGroupId);
+    }
 }
 
 module.exports = Overlay;

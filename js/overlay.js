@@ -298,6 +298,19 @@ function collapseDownloads() {
   downloadManager.setLimiter(true);
 }
 
+/*                                                                                           
+  ###### #    # #    #  ####              #####   ##   #####      ####  #####   ####  #    # #####   ####  
+  #      #    # ##   # #    #               #    #  #  #    #    #    # #    # #    # #    # #    # #      
+  #####  #    # # #  # #         #####      #   #    # #####     #      #    # #    # #    # #    #  ####  
+  #      #    # #  # # #                    #   ###### #    #    #  ### #####  #    # #    # #####       # 
+  #      #    # #   ## #    #               #   #    # #    #    #    # #   #  #    # #    # #      #    # 
+  #       ####  #    #  ####                #   #    # #####      ####  #    #  ####   ####  #       ####  
+*/
+
+function switchTabGroup(number) {
+  ipcRenderer.send("tabManager-switchTabGroup", number);
+}
+
 /*
  # #####   ####               ####  ######   ##   #####   ####  #    #
  # #    # #    #             #      #       #  #  #    # #    # #    #
@@ -428,6 +441,33 @@ ipcRenderer.on("downloadManager-setDownloadStatusFailed", (event, download) => {
 
 ipcRenderer.on("downloadManager-clearDownloads", (event, text) => {
   downloadManager.clearDownloads();
+});
+
+/*                                                             
+  # #####   ####              #####   ##   #####      ####  #####   ####  #    # #####   ####  
+  # #    # #    #               #    #  #  #    #    #    # #    # #    # #    # #    # #      
+  # #    # #         #####      #   #    # #####     #      #    # #    # #    # #    #  ####  
+  # #####  #                    #   ###### #    #    #  ### #####  #    # #    # #####       # 
+  # #      #    #               #   #    # #    #    #    # #   #  #    # #    # #      #    # 
+  # #       ####                #   #    # #####      ####  #    #  ####   ####  #       ####  
+*/
+
+ipcRenderer.on("overlay-switchTabGroup", (event, tabGroupId) => {
+  let groups = [
+    document.getElementById("group-0"),
+    document.getElementById("group-1"),
+    document.getElementById("group-2")
+  ];
+
+  let group = document.getElementById("group-" + tabGroupId);
+
+  for(let i = 0; i < groups.length; i++) {
+    if(groups[i] == group) {
+      groups[i].classList.add("active");
+    } else {
+      groups[i].classList.remove("active");
+    }
+  }
 });
 
 /*

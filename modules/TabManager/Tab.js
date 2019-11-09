@@ -12,13 +12,15 @@ class Tab extends EventEmitter {
     window = null;
     previewTimeout = null;
     position = null;
+    group = null;
 
-    constructor(window, id, appPath) {
+    constructor(window, id, appPath, group) {
         super();
 
         this.id = id;
         this.window = window;
         this.appPath = appPath;
+        this.group = group;
 
         this.view = new BrowserView({
             webPreferences: {
@@ -611,6 +613,23 @@ class Tab extends EventEmitter {
 
     downloadPage() {
         this.view.webContents.downloadURL(this.getURL());
+        return null;
+    }
+
+    setGroup(group) {
+        this.group = group;
+        this.emit("group-changed");
+    }
+
+    getGroup() {
+        return this.group;
+    }
+
+    setVisibility(bool) {
+        if(!bool) {
+            this.position = "-1";
+        }
+        this.window.webContents.send("tabRenderer-setTabVisibility", this.id, bool);
     }
 }
 

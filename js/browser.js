@@ -438,6 +438,14 @@ ipcRenderer.on("tabRenderer-setHomePage", (event, homePage) => {
   }
 });
 
+ipcRenderer.on("tabRenderer-setTabVisibility", (event, id, bool) => {
+  tabRenderer.setTabVisibility(id, bool);
+});
+
+ipcRenderer.on("tabRenderer-updateTabsPositions", (event) => {
+  tabRenderer.updateTabsPositions();
+});
+
 /*
 .####.##....##.####.########
 ..##..###...##..##.....##...

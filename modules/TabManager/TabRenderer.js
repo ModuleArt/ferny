@@ -259,20 +259,26 @@ class TabRenderer extends EventEmitter {
         let tabs = this.tabContainer.getElementsByClassName("tabman-tab");
         let arr = [];
         for(let i = 0; i < tabs.length; i++) {
-            arr.push(tabs[i].name);
+            if(!tabs[i].classList.contains("invisible")) {
+                arr.push(tabs[i].name);
+            }
         }
-        ipcRenderer.send("tabManager-updateTabsPositions", arr);
+        if(arr.length > 0) {
+            ipcRenderer.send("tabManager-updateTabsPositions", arr);
+        }
     }
 
     showTabList() {
         let tabs = this.tabContainer.childNodes;
         let arr = [];
         tabs.forEach((item, index) => {
-            arr.push({ 
-                id: item.name, 
-                title: item.getElementsByClassName("tabman-tab-title")[0].innerHTML, 
-                active: item.classList.contains("active") 
-            });
+            if(!item.classList.contains("invisible")) {
+                arr.push({ 
+                    id: item.name, 
+                    title: item.getElementsByClassName("tabman-tab-title")[0].innerHTML, 
+                    active: item.classList.contains("active")
+                });
+            }
         });
         ipcRenderer.send("tabManager-showTabList", arr);
     }
@@ -289,7 +295,6 @@ class TabRenderer extends EventEmitter {
     }
 
     moveTabBefore(id, beforeId) {
-        console.log(id + " / " + beforeId)
         let tab = document.getElementById("tab-" + id);
         let beforeTab = document.getElementById("tab-" + beforeId);
 
@@ -306,6 +311,15 @@ class TabRenderer extends EventEmitter {
         this.updateTabsPositions();
 
         return null;
+    }
+
+    setTabVisibility(id, bool) {
+        let tab = this.getTabById(id);
+        if(bool) {
+            tab.classList.remove("invisible");
+        } else {
+            tab.classList.add("invisible");
+        }
     }
 }
 

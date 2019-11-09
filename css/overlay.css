@@ -867,7 +867,7 @@ hr {
     display: none;
 }
 
-.collection.active .collection-name {
+.collection.active .collection-name, .collection.active .collection-icon {
     opacity: 1;
 }
 
@@ -903,6 +903,7 @@ hr {
 
 .collection-icon {
     margin-bottom: -1px;
+    opacity: var(--opacity-over);
 }
 
 .collection.green {
@@ -958,7 +959,7 @@ hr {
         width: 192px;
     }
 
-    .collection.active::before {
+    .collection::before {
         left: -20px;
         right: auto;
     }
