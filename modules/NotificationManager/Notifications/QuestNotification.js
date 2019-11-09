@@ -1,3 +1,5 @@
+"use strict";
+
 const rgbToRgbaString = require(__dirname + "/../../rgbToRgbaString.js");
 
 const TextNotification = require(__dirname + "/TextNotification.js");

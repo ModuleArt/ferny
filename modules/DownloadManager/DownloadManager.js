@@ -1,6 +1,4 @@
-if (!document) {
-    throw Error("DownloadManager module must be called in renderer process");
-}
+"use strict";
 
 const EventEmitter = require("events");
 const ppath = require("persist-path")("Ferny");

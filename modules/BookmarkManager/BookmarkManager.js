@@ -1,3 +1,5 @@
+"use strict";
+
 const EventEmitter = require("events");
 const Isotope = require("isotope-layout");
 const Dragula = require("dragula");

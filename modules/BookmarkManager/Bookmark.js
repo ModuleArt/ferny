@@ -1,3 +1,5 @@
+"use strict";
+
 const EventEmitter = require("events");
 const { ipcRenderer, clipboard } = require("electron");
 const GetAvColor = require("color.js");

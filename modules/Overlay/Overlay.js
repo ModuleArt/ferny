@@ -1,5 +1,7 @@
+"use strict";
+
 const EventEmitter = require("events");
-const { BrowserView, Menu, MenuItem, clipboard } = require('electron');
+const { BrowserView, Menu, MenuItem, clipboard } = require("electron");
 
 class Overlay extends EventEmitter {
     window = null;

@@ -1,3 +1,5 @@
+"use strict";
+
 const EventEmitter = require("events");
 const fileExtension = require("file-extension");
 const GetAvColor = require("color.js");

@@ -1,3 +1,5 @@
+"use strict";
+
 const EventEmitter = require("events");
 const { BrowserView, Menu, MenuItem, clipboard } = require("electron");
 const fileExtension = require("file-extension");

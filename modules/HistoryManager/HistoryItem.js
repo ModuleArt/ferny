@@ -1,3 +1,5 @@
+"use strict";
+
 const EventEmitter = require("events");
 const jquery = require("jquery");
 const GetAvColor = require("color.js");

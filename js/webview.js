@@ -1,3 +1,5 @@
+"use strict";
+
 const { ipcRenderer } = require("electron");
 
 document.addEventListener("wheel", webviewMouseWheel);
