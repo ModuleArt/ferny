@@ -779,6 +779,7 @@ function initTabManager() {
 
   tabManager.on("tab-group-switched", (tabGroup) => {
     overlay.switchTabGroup(tabGroup);
+    overlay.show();
   });
 }
 
@@ -1165,7 +1166,7 @@ function showMainWindow() {
 
 function initMenu() {
   sideMenu = Menu.buildFromTemplate([{ 
-    label: "Tabs", icon: app.getAppPath() + "/imgs/icons16/blocks.png", submenu: [{ 
+    label: "Tab group", icon: app.getAppPath() + "/imgs/icons16/blocks.png", submenu: [{ 
       label: "New tab", icon: app.getAppPath() + "/imgs/icons16/create.png", accelerator: "CmdOrCtrl+T", click: () => { 
         tabManager.newTab(); 
       } }, { type: "separator" }, {
@@ -1224,15 +1225,15 @@ function initMenu() {
           tabManager.switchTab(9); 
         } }
       ] }, { type: "separator" }, {
-      label: "Tab group", icon: app.getAppPath() + "/imgs/icons16/folder.png", submenu: [ {
-        enabled: false, label: "Green", accelerator: "CmdOrCtrl+Shift+1", click: () => { 
-
+      label: "Switch tab group", icon: app.getAppPath() + "/imgs/icons16/blocks.png", submenu: [ {
+        label: "Green", icon: app.getAppPath() + "/imgs/icons16/one.png", accelerator: "CmdOrCtrl+Shift+1", click: () => { 
+          tabManager.switchTabGroup(0);
         } }, {
-        enabled: false, label: "Blue", accelerator: "CmdOrCtrl+Shift+2", click: () => { 
-
+        label: "Blue", accelerator: "CmdOrCtrl+Shift+2", click: () => { 
+          tabManager.switchTabGroup(1);
         } }, {
-        enabled: false, label: "Orange", accelerator: "CmdOrCtrl+Shift+3", click: () => { 
-
+        label: "Orange", accelerator: "CmdOrCtrl+Shift+3", click: () => { 
+          tabManager.switchTabGroup(2);
         } }, { type: "separator" }, {
         enabled: false, label: "Incognito", icon: app.getAppPath() + "/imgs/icons16/incognito.png", accelerator: "CmdOrCtrl+I", click: () => { 
 

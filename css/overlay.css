@@ -867,7 +867,7 @@ hr {
     display: none;
 }
 
-.collection.active .collection-name, .collection.active .collection-icon {
+.collection.active .collection-name {
     opacity: 1;
 }
 
@@ -903,7 +903,6 @@ hr {
 
 .collection-icon {
     margin-bottom: -1px;
-    opacity: var(--opacity-over);
 }
 
 .collection.green {
@@ -920,6 +919,12 @@ hr {
 
 .collection.red {
     background-color: rgba(255, 63, 52, 0.25);
+}
+
+.collection.active {
+    background-color: transparent;
+    border-style: dashed;
+    box-shadow: none;
 }
 
 /*                  

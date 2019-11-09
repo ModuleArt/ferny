@@ -118,7 +118,7 @@ body.system-titlebar .tabman-tabs {
 }
 
 .tabman-tab.invisible {
-    opacity: var(--opacity-over);
+    display: none;
 }
 
 .tabman-tab.active {

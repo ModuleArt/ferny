@@ -95,21 +95,23 @@ class TabManager extends EventEmitter {
         });
 
         tab.on("close-to-the-right", (position) => {
-            for(let i = 0; i < this.tabs.length; i++) {
-                if(this.tabs[i].getPosition() > position) {
-                    this.tabs[i].close();
-                    i--;
+            let closableTabs = [];
+            for(let i = this.tabs.length - 1; i >= 0; i--) {
+                if(this.tabs[i].getGroup() == this.tabGroup && this.tabs[i].getPosition() > position) {
+                    closableTabs.push(this.tabs[i]);
                 }
             }
+            this.closeMultipleTabs(closableTabs);
         });
 
         tab.on("close-others", (id) => {
-            for(let i = 0; i < this.tabs.length; i++) {
-                if(this.tabs[i].getId() != id) {
-                    this.tabs[i].close();
-                    i--;
+            let closableTabs = [];
+            for(let i = this.tabs.length - 1; i >= 0; i--) {
+                if(this.tabs[i].getGroup() == this.tabGroup && this.tabs[i].getId() != id) {
+                    closableTabs.push(this.tabs[i]);
                 }
             }
+            this.closeMultipleTabs(closableTabs);
         });
 
         tab.on("next-tab", (position) => {
@@ -207,6 +209,8 @@ class TabManager extends EventEmitter {
         if(this.hasActiveTab()) {
             this.getActiveTab().activate();
         }
+
+        return null;
     }
 
     getWidth() {
@@ -219,18 +223,26 @@ class TabManager extends EventEmitter {
 
     setLeft(left) {
         this.left = left;
+
+        return null;
     }
 
     setRight(right) {
         this.right = right;
+
+        return null;
     }
 
     setTop(top) {
         this.top = top;
+
+        return null;
     }
 
     setBottom(bottom) {
         this.bottom = bottom;
+
+        return null
     }
 
     hasTabs() {
@@ -265,6 +277,8 @@ class TabManager extends EventEmitter {
                 return this.tabs[i];
             }
         }
+
+        return null;
     }
 
     getTabById(id) {
@@ -273,6 +287,8 @@ class TabManager extends EventEmitter {
                 return this.tabs[i];
             }
         }
+
+        return null;
     }
 
     getTabByPosition(pos) {
@@ -281,6 +297,8 @@ class TabManager extends EventEmitter {
                 return this.tabs[i];
             }
         }
+
+        return null;
     }
 
     destroyTabById(id) {
@@ -431,19 +449,23 @@ class TabManager extends EventEmitter {
     }
 
     closeAllTabs() {
-        let closeableTabs = [];
+        let closableTabs = [];
 
         for(let i = this.tabs.length - 1; i >= 0; i--) {
             if(this.tabs[i].getGroup() == this.tabGroup) {
-                closeableTabs.push(this.tabs[i]);
+                closableTabs.push(this.tabs[i]);
             }
         }
 
-        for(let i = closeableTabs.length - 1; i >= 0; i--) {
-            closeableTabs[i].close();
-        }
+        this.closeMultipleTabs(closableTabs);
 
         return null;
+    }
+
+    closeMultipleTabs(closableTabs) {
+        for(let i = closableTabs.length - 1; i >= 0; i--) {
+            closableTabs[i].close();
+        }
     }
 
     updateTabGroups() {
