@@ -1025,15 +1025,6 @@ function showMainWindow() {
         mainWindow.on("blur", () => {
           mainWindow.webContents.send("window-blur");
         });
-
-        mainWindow.on("unresponsive", () => {
-          console.log("unresponsive");
-          dialog.showMessageBox(mainWindow, {
-            type: "warning",
-            title: "Ferny not responding",
-            message: "We are working on it..."
-          });
-        });
   
         mainWindow.on("resize", () => {
           setTimeout(() => {
@@ -1046,21 +1037,10 @@ function showMainWindow() {
       
         mainWindow.on("maximize", () => {
           mainWindow.webContents.send("window-maximize");
-          // if(tabManager.hasActiveTab()) {
-          //   tabManager.getActiveTab().activate();
-          // }
-          // setTimeout(() => {
-          //   overlay.refreshBounds();
-          // }, 150);
-          // overlay.refreshBounds();
         });
       
         mainWindow.on("unmaximize", () => {
           mainWindow.webContents.send("window-unmaximize");
-          // if(tabManager.hasActiveTab()) {
-          //   tabManager.getActiveTab().activate();
-          // }
-          // overlay.refreshBounds();
         });
       
         mainWindow.webContents.once("dom-ready", () => {

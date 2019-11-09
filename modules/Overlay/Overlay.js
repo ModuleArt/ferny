@@ -76,12 +76,21 @@ class Overlay extends EventEmitter {
 
     refreshBounds() {
         let size = this.window.getSize();
-        this.view.setBounds({ 
-            x: 0,
-            y: this.top, 
-            width: size[0],
-            height: size[1] - this.top 
-        });
+        if(this.window.isMaximized() && process.platform == "win32") {
+            this.view.setBounds({ 
+                x: 0,
+                y: this.top, 
+                width: size[0] - 16,
+                height: size[1] - this.top - 16
+            });
+        } else {
+            this.view.setBounds({ 
+                x: 0,
+                y: this.top, 
+                width: size[0],
+                height: size[1] - this.top 
+            });
+        }
     }
 
     show() {

@@ -71,8 +71,12 @@ class TabManager extends EventEmitter {
 
         tab.on("activate", (activatedTab) => {
             setTimeout(() => {
-                activatedTab.setBounds(this.left, this.top, this.getWidth(), this.getHeight());
-            }, 100);
+                if(this.window.isMaximized() && process.platform == "win32") {
+                    activatedTab.setBounds(this.left - 16, this.top, this.getWidth(), this.getHeight() - 16);
+                } else {
+                    activatedTab.setBounds(this.left, this.top, this.getWidth(), this.getHeight());
+                }
+            }, 150);
             this.emit("tab-activated");
         });
 
