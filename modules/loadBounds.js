@@ -5,8 +5,8 @@ function loadBounds() {
         let Data = {
             x: null,
             y: null,
-            width: 1000,
-            height: 600,
+            width: 1150,
+            height: 680,
             maximize: false
         };
 

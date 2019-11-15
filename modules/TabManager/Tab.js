@@ -29,11 +29,11 @@ class Tab extends EventEmitter {
                 preload: appPath + "/js/webview.js"
             }
         });
-        this.view.setBackgroundColor("#FFFFFF");
-        // this.view.setAutoResize({
-        //     width: true,
-        //     height: true
-        // });
+        // this.view.setBackgroundColor("#FFFFFF");
+        this.view.setAutoResize({
+            width: true,
+            height: true
+        });
 
         this.view.webContents.on("page-title-updated", (event, title, explicitSet) => {
             this.window.webContents.send("tabRenderer-setTabTitle", { id: this.id, title });

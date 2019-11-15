@@ -20,10 +20,10 @@ class Overlay extends EventEmitter {
                 nodeIntegration: true
             }
         });
-        // this.view.setAutoResize({
-        //     width: true,
-        //     height: true
-        // });
+        this.view.setAutoResize({
+            width: true,
+            height: true
+        });
         // this.view.setBackgroundColor("#66CD00");
         this.view.webContents.loadFile(this.appPath + "/html/overlay.html");
 

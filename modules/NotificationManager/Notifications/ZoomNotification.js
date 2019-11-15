@@ -18,15 +18,15 @@ class ZoomNotification extends TextNotification {
         let buttonsContainer = document.createElement("div");
         buttonsContainer.classList.add("notif-buttons");
         buttonsContainer.innerHTML = `
-            <button class="nav-btn" onclick="zoomIn()">
+            <button class="nav-btn with-border" onclick="zoomIn()">
                 <img class="nav-btn-icon theme-icon" name="zoom-in-16">
                 <label class="nav-btn-label">Zoom in</label>
             </button>
-            <button class="nav-btn" onclick="zoomOut()">
+            <button class="nav-btn with-border" onclick="zoomOut()">
                 <img class="nav-btn-icon theme-icon" name="zoom-out-16">
                 <label class="nav-btn-label">Zoom out</label>
             </button>
-            <button class="nav-btn" onclick="zoomToActualSize()">
+            <button class="nav-btn with-border" onclick="zoomToActualSize()">
                 <img class="nav-btn-icon theme-icon" name="actual-zoom-16">
                 <label class="nav-btn-label">Reset</label>
             </button>

@@ -554,7 +554,7 @@ main {
 
 .history-item {
     margin: 4px;
-    width: 192px;
+    width: calc(20% - 8px);
     border-radius: calc(var(--px-radius) + 4px);
     border: 1px solid var(--color-border);
     background-color: var(--color-element);
@@ -724,7 +724,7 @@ main {
     display: inline-block;
     position: relative;
     margin: 4px;
-    width: 192px;
+    width: calc(20% - 8px);
     border-radius: calc(var(--px-radius) + 4px);
     border: 1px solid var(--color-border);
     background-color: var(--color-element);
@@ -936,8 +936,29 @@ hr {
   #    # ###### #####  # #    # 
 */
 
-@media only screen and (max-width: 800px) {
+@media only screen and (max-width: 1000px) {
+    .history-item, .download-item {
+        width: calc(25% - 8px);
+    }
+}
+
+@media only screen and (max-width: 700px) {
     .collection-name {
+        display: none;
+    }
+
+    #body-container {
+        padding: 32px;
+        padding-top: 0;
+    }
+
+    .history-item, .download-item  {
+        width: calc(50% - 8px);
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    #clear-search-btn {
         display: none;
     }
 }

@@ -978,7 +978,7 @@ function showMainWindow() {
         mainWindow = new BrowserWindow({
           x: Data.x, y: Data.y,
           width: Data.width, height: Data.height,
-          minWidth: 480, minHeight: 300,
+          minWidth: 400, minHeight: 240,
           frame: winControls.systemTitlebar,
           // show: false,
           icon: app.getAppPath() + "/imgs/icon.ico",
@@ -1027,20 +1027,32 @@ function showMainWindow() {
         });
   
         mainWindow.on("resize", () => {
-          setTimeout(() => {
-            overlay.refreshBounds();
-          }, 150);
-          if(tabManager.hasActiveTab()) {
-            tabManager.getActiveTab().activate();
-          }
+          // setTimeout(() => {
+          //   overlay.refreshBounds();
+          // }, 150);
+          // if(tabManager.hasActiveTab()) {
+          //   tabManager.getActiveTab().activate();
+          // }
         });
       
         mainWindow.on("maximize", () => {
           mainWindow.webContents.send("window-maximize");
+          if(tabManager.hasActiveTab()) {
+            tabManager.getActiveTab().activate();
+          } else {
+            overlay.refreshBounds();
+          }
         });
       
         mainWindow.on("unmaximize", () => {
           mainWindow.webContents.send("window-unmaximize");
+          setTimeout(() => {
+            if(tabManager.hasActiveTab()) {
+              tabManager.getActiveTab().activate();
+            } else {
+              overlay.refreshBounds();
+            }
+          }, 250);
         });
       
         mainWindow.webContents.once("dom-ready", () => {
