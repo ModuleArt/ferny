@@ -216,6 +216,7 @@
   height: 16px;
   background-color: var(--color-border);
   margin: 10px 2px;
+  vertical-align: middle;
 }
 
 /*

@@ -3,6 +3,7 @@
   <head>	
     <link rel="stylesheet" href="../css/modules/webkit.css">
     <link rel="stylesheet" href="../css/modules/animations.css">
+    <link rel="stylesheet" href="../css/modules/input.css">
     <link rel="stylesheet" href="../css/modules/nav-btn.css">
     <link rel="stylesheet" href="../css/modules/tabs.css">
     <link rel="stylesheet" href="../css/modules/overlay-button.css">
@@ -29,6 +30,12 @@
           <button id="bookmark-btn" class="nav-btn" title="Bookmark this page" onclick="createBookmark()"><img name="add-bookmark-16" class="theme-icon"></button>
           <button style="display: none" id="bookmarked-btn" class="nav-btn" title="Show bookmark options for this tab"><img src="../imgs/icons16/bookmarks.png"></button>
         </div>
+      </div>
+      <div id="find-container">
+        <div class="title-bar-vr"></div>
+        <input id="find-input" type="text" placeholder="Find in page">
+        <button id="find-prev-btn" class="nav-btn with-border" title="Find previous" onclick="stop()"><img name="up-16" class="theme-icon"></button>
+        <button id="find-next-btn" class="nav-btn with-border" title="Find next" onclick="stop()"><img name="down-16" class="theme-icon"></button>
       </div>
       <div class="title-bar-vr"></div>
       <button id="home-btn" class="nav-btn" title="Go home" onclick="goHome()" style="display: none;"><img name="home-16" class="theme-icon" oncontextmenu="popupHomePageOptions()"></button>

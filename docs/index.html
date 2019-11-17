@@ -6,7 +6,7 @@
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <meta name="theme-color" content="#1C1F21">
         <title>Ferny - A privacy-focused, chromium-based web browser with a greatfull user experience</title>
-        <link rel="shortcut icon" type="image/png" href="imgs/ferny/ferny64.png"/>
+        <link rel="shortcut icon" type="image/png" href="imgs/ferny/beta320.png"/>
         <link rel="stylesheet" href="slick/slick.css">
         <link rel="stylesheet" href="slick/slick-theme.css">
         <link rel="stylesheet" href="css/header.css">
@@ -23,7 +23,7 @@
         <header id="header"></header>
         <center class="main">
             <div class="title">
-                <img src="imgs/ferny/ferny256.png">
+                <img src="imgs/ferny/icon256.png">
                 <label>Ferny</label>
                 <span>Web Browser</span>
             </div>
@@ -72,9 +72,30 @@
                 <img src="imgs/ferny/history.png">
                 <img src="imgs/ferny/settings.png">
             </div>
-            <label class="main-title">What's New</label>
-            <div class="features">
-
+            <label class="main-title">Roadmap</label>
+            <div class="roadmap">
+                <div class="dash"></div>
+                <div class="image">
+                    <img src="imgs/ferny/beta141.png">
+                    <label class="title">Beta 1.4</label>
+                </div>
+                <div class="line"></div>
+                <div class="image">
+                    <img src="imgs/ferny/beta200.png">
+                    <label class="title">Beta 2.0</label>
+                </div>
+                <div class="line"></div>
+                <div class="image">
+                    <img src="imgs/ferny/beta310.png">
+                    <label class="title">Beta 3.1</label>
+                </div>
+                <div class="line"></div>
+                <div class="image">
+                    <img src="imgs/ferny/beta320.png">
+                    <label class="title">Beta 3.2</label>
+                </div>
+                <div class="line"></div>
+                <div class="arrow"></div>
             </div>
             <!-- <label class="main-title">Features</label>
             <div class="features">
@@ -145,8 +166,29 @@
                     </div>
                 </div>
             </div> -->
-            <label class="main-title">GitHub</label>
+            <label class="main-title">Shields</label>
             <div class="github-btns">
+                <a href="https://github.com/ModuleArt/ferny/releases" title="Total downloads">
+                    <img src="https://img.shields.io/github/downloads/ModuleArt/ferny/total">
+                </a>
+                <a href="https://github.com/ModuleArt/ferny/releases" title="GitHub release (latest by date including pre-releases)">
+                    <img src="https://img.shields.io/github/v/release/moduleart/ferny?include_prereleases">
+                </a>
+                <a href="https://app.fossa.com/projects/git%2Bgithub.com%2FModuleArt%2Fferny?ref=badge_shield" title="FOSSA Status">
+                    <img src="https://app.fossa.com/api/projects/git%2Bgithub.com%2FModuleArt%2Fferny.svg?type=shield"/>
+                </a>
+                <a href="https://app.codacy.com/manual/Beelink/ferny/dashboard" title="Codacy grade">
+                    <img src="https://img.shields.io/codacy/grade/6fac6a3440d7480281c19780ed37ce30">
+                </a>
+                <a href="https://trello.com/b/cb5lXUgS/ferny" title="Trello roadmap">
+                    <img src="https://img.shields.io/badge/planner-trello-%230079BF">
+                </a>
+                <a href="https://discord.gg/9q4D8SJ" title="Discord channel">
+                    <img alt="Discord" src="https://img.shields.io/discord/625641944105877504?color=%237289DA&label=discord">
+                </a>
+                <a href="https://www.patreon.com/moduleart" title="Buy ma a coffee">
+                    <img alt="Patreon" src="https://img.shields.io/badge/donate-patreon-%23E85B46">
+                </a><br><br>
                 <div class="button">
                     <a class="github-button" href="https://github.com/ModuleArt/ferny/subscription" data-icon="octicon-eye" data-size="large" data-show-count="true" aria-label="Watch ModuleArt/ferny on GitHub">Watch</a>
                 </div>
@@ -159,6 +201,325 @@
             </div>
             <label class="main-title">Release notes</label>
             <div class="updates">
+                    <div class="update show" class="show">
+                            <a href="https://github.com/ModuleArt/ferny/releases/tag/v3.1.0" title="GitHub release"><img src="imgs/icons/github.png"></a>
+                            <label class="date">November 9 / 2019</label>
+                            <button onclick="toggleUpdate(this)">
+                                <img src="imgs/icons/expand.png">
+                                <span>Beta v3.1.0 "Collections Update"</span>
+                            </button>
+                            <label class="text">
+                                Tabs:<br>
+                                - Added tab groups system<br>
+                                - Next-tab and prev-tab shortcuts are working for the overlay now<br>
+                                - Added tab cycling (Ctrl + Tab, Ctrl + Shift + Tab)<br>
+                                - Removed horizontal scrollbar<br><br>
+                                Themes 2.0:<br>
+                                - More saturated colors<br>
+                                - New color of window titlebar<br>
+                                - Removed borders from some buttons<br>
+                                - Added theme description<br>
+                                - Settings: Checkboxes for themes<br><br>
+                                Native:<br>
+                                - Ferny can be set as default web browser<br>
+                                - Added htm/html file icon<br>
+                                - Open with Ferny for http/https and others<br>
+                                - Electron 7.1.1 stable<br>
+                                - Faster app startup<br>
+                                - Added "Windows tasks"<br><br>
+                                Bookmarks:<br>
+                                - Removed url preview<br>
+                                - New blocks layout<br><br>
+                                Window controls:<br>
+                                - Added borders to buttons<br>
+                                - Removed fade-out animation<br><br>
+                                New browser context menu items:<br>
+                                - Download page (Ctrl + Shift + S)<br>
+                                - Bookmark this page<br>
+                                - Search for selected text<br>
+                                - Download images<br>
+                                - Copy image<br>
+                                - Bookmark this link<br>
+                                - Search for link text<br><br>
+                                Toolbar:<br>
+                                - Added show-full-history to tab history<br>
+                                - Bookmark button show you if page is already bookmarked<br>
+                                - Short address bar<br><br>
+                                Appearance:<br>
+                                - Removed all old themes<br>
+                                - Skinny scrollbars<br>
+                                - White page background color<br>
+                                - A lot of new icons<br><br>
+                                Search engines:<br>
+                                - Fixed ebay search<br>
+                                - Added startage<br><br>
+                                Bug fixes:<br>
+                                - App crashes after creating of new tab<br>
+                                - About window: No title bar<br>
+                                - About window: Empty icons<br>
+                                - Bookmarks: Can't move bookmarks<br>
+                                - Bookmarks: Duplicated bookmarks after moves<br>
+                                - History: Undefined titles and icons<br>
+                                - Windows: Auxclick not working<br>
+                                - Windows: Incorrect overlay/browser-view size<br><br>
+                                Installer:<br>
+                                - Added icon<br>
+                                - Added installation folder chooser
+                            </label>
+                    </div>
+                <div class="update show" class="show">
+                    <a href="https://github.com/ModuleArt/ferny/releases/tag/v3.0.4" title="GitHub release"><img src="imgs/icons/github.png"></a>
+                    <label class="date">October 15 / 2019</label>
+                    <button onclick="toggleUpdate(this)">
+                        <img src="imgs/icons/expand.png">
+                        <span>Beta v3.0.4</span>
+                    </button>
+                    <label class="text">
+                        Side menu:<br>
+                        - Added "Reload ingnoring cache" icon<br>
+                        - New hotkey for "Reload ignoring cache" (Ctrl + Shift + F5)<br>
+                        - Menu items rearranged<br>
+                        - Repaired "Bookmark all tabs"<br>
+                        - Added additional hotkeys<br>
+                        - Added "Close all tabs" (Ctrl + Q)<br><br>
+                        Webview right click:<br>
+                        - Added "Copy link text"<br><br>
+                        Notifications:<br>
+                        - Faster auto hide (2.5 sec)<br>
+                        - Added "Opened with ferny" notification<br><br>
+                        New search engines:<br>
+                        - Twitter<br>
+                        - Amazon<br>
+                        - Twitch<br>
+                        - Wolfram Alpha<br>
+                        - GitHub<br>
+                        - Ebay<br><br>
+                        Settings:<br>
+                        - Added system titlebar option<br>
+                        - Removed ugly themes<br><br>
+                        Main window:<br>
+                        - Decreased minimum window size<br>
+                        - Added delay to target url preview (0.5 sec)<br><br>
+                        Bug fixes:<br>
+                        - Incorrect size of drag zone<br>
+                        - Some broken notifications<br>
+                        - Incorrect position of window controls<br>
+                        - Broken last-tab closed action<br>
+                        - Broken search-engine option<br>
+                        - Broken tab-closed action<br>
+                        - Broken on-startup action<br>
+                        - Wrong titlebar height<br>
+                        - Bad window size<br>
+                        - No fullscreen for overlay
+                    </label>
+                </div>
+                <div class="update show" class="show">
+                    <a href="https://github.com/ModuleArt/ferny/releases/tag/v3.0.3" title="GitHub release"><img src="imgs/icons/github.png"></a>
+                    <label class="date">October 9 / 2019</label>
+                    <button onclick="toggleUpdate(this)">
+                        <img src="imgs/icons/expand.png">
+                        <span>Beta v3.0.3</span>
+                    </button>
+                    <label class="text">
+                        Changes:<br>
+                        • Toolbar: Added back button right click history<br>
+                        • Engine: Electron v6.0.12<br>
+                        • Updator: Ask user if he wants to download an update<br>
+                        • History: Added date and time<br>
+                        • App commands: If can't go back go to the overlay<br>
+                        • Hotkeys: New hotkey for overlay (F1)<br><br>
+                        Design:<br>
+                        • New look of scrollbars<br>
+                        • Added borders to all windows<br>
+                        • Increased checkboxes corners rounding<br>
+                        • Added close-others icon<br><br>
+                        New themes:<br>
+                        • Twitchy-dark<br>
+                        • Contrast-light<br><br>
+                        Overlay:<br>
+                        • Added right click menu for all text fields<br>
+                        • Added paste and search for address bar<br><br>
+                        Bookmarks:<br>
+                        • On-bookmark-added -> Open bookmark editor<br>
+                        • On-folder-added -> Open folder editor<br>
+                        • Hidden folder header on editing<br>
+                        • Custom bookmark icon for invalid urls<br><br>
+                        About window:<br>
+                        • Added info text<br>
+                        • Added some links<br>
+                        • Improved look and feel<br><br>
+                        Settings:<br>
+                        • More compact themes preview<br>
+                        • Save home page on checkbox clicked<br>
+                        • Home: added buttons: use duckduckgo, use google, use bing, use yahoo<br><br>
+                        Bug fixes:<br>
+                        • Smooth showing ot the overlay on startup<br>
+                        • Broken tabs<br>
+                        • Incorrect downloads folder<br>
+                        • Sometimes new bookmarks disappear<br>
+                        • Some notifications are broken<br>
+                        • Invalid overlay size
+                    </label>
+                </div>
+                <div class="update show" class="show">
+                    <a href="https://github.com/ModuleArt/ferny/releases/tag/v3.0.2" title="GitHub release"><img src="imgs/icons/github.png"></a>
+                    <label class="date">October 5 / 2019</label>
+                    <button onclick="toggleUpdate(this)">
+                        <img src="imgs/icons/expand.png">
+                        <span>Beta v3.0.2</span>
+                    </button>
+                    <label class="text">
+                        Tab menu:<br>
+                        • Added tab history<br>
+                        • Added move left (Ctrl + Shift + PageUp)<br>
+                        • Added move right (Ctrl + Shift + PageDown)<br>
+                        • Added move to start (Ctrl + Shift + Home)<br>
+                        • Added move to end (Ctrl + Shift + End)<br>
+                        • Bookmark tab<br><br>
+                        Settings:<br>
+                        • Add search-engine option<br>
+                        • Add downloads-folder option<br>
+                        • Slide-right tab animation<br>
+                        • Compact themes preview<br><br>
+                        About window:<br>
+                        • Stylish titlebar<br><br>
+                        Engine:<br>
+                        • Electron v6.0.11<br><br>
+                        Bug fixes:<br>
+                        • Notification: cant exit app if update downloaded<br>
+                        • Windows: broken settings window controls<br>
+                        • "Open with ferny"<br>
+                        • Empty tab title if url is file<br>
+                        • Remove ability to check for update if update is downloading<br>
+                        • Broken download counter
+                    </label>
+                </div>
+                <div class="update show" class="show">
+                    <a href="https://github.com/ModuleArt/ferny/releases/tag/v3.0.1" title="GitHub release"><img src="imgs/icons/github.png"></a>
+                    <label class="date">October 1 / 2019</label>
+                    <button onclick="toggleUpdate(this)">
+                        <img src="imgs/icons/expand.png">
+                        <span>Beta v3.0.1</span>
+                    </button>
+                    <label class="text">
+                        Changes:<br>
+                        • Added ecosia search engine<br>
+                        • Linux: added app icon<br><br>
+                        Settings window:<br>
+                        • Added stylish titlebar<br>
+                        • Added padding to side panel<br><br>
+                        Bug fixes:<br>
+                        • Resize window bug<br>
+                        • Maximize / restore down window bug
+                    </label>
+                </div>
+                <div class="update show" class="show">
+                    <a href="https://github.com/ModuleArt/ferny/releases/tag/v3.0.0" title="GitHub release"><img src="imgs/icons/github.png"></a>
+                    <label class="date">September 29 / 2019</label>
+                    <button onclick="toggleUpdate(this)">
+                        <img src="imgs/icons/expand.png">
+                        <span>Beta v3.0.0 "Beta3 Update"</span>
+                    </button>
+                    <label class="text">
+                        Major changes:<br>
+                        • Brand new user interface<br>
+                        • New tab manager<br>
+                        • Sidebar replaced by the overlay<br>
+                        • New bookmark manager<br>
+                        • Linux build<br><br>
+                        Minor changes:<br>
+                        • Paste and search<br>
+                        • Added app commands<br>
+                        • Paste and match style<br>
+                        • 14 new themes<br>
+                        • Electron 6.0.10<br>
+                        • Search moved to the overlay<br>
+                        • New look of notifications<br>
+                        • Added history checkboxes<br><br>
+                        Temporary removed:<br>
+                        • Bookmarks bar<br>
+                        • Find in page<br>
+                        • Certeficate info<br>
+                        • Welcome window<br>
+                        • Picture in picture<br>
+                        • Tabs preview
+                    </label>
+                </div>
+                <div class="update show" class="show">
+                    <a href="https://github.com/ModuleArt/ferny/releases/tag/v2.1.0" title="GitHub release"><img src="imgs/icons/github.png"></a>
+                    <label class="date">August 10 / 2019</label>
+                    <button onclick="toggleUpdate(this)">
+                        <img src="imgs/icons/expand.png">
+                        <span>Beta v2.1.0 "Module Update"</span>
+                    </button>
+                    <label class="text">
+                        Better file support.<br><br>
+                        Design improvements:<br>
+                        • New tab button<br>
+                        • Delete icon<br>
+                        • Hotkeys window text<br>
+                        • Window controls<br>
+                        • Sidebar active tab indicator<br>
+                        • Tabs list button<br>
+                        • Hotkeys window titlebar<br>
+                        • Certificate info window titlebar<br>
+                        • Removed settings theme preview<br>
+                        • Darker colored borders<br><br>
+                        Bookmarks bar:<br>
+                        • Folder context menu<br>
+                        • Folder editor<br><br>
+                        Added custom action when the last tab is closed:<br>
+                        • Do nothing<br>
+                        • Open new tab<br>
+                        • Quit app<br><br>
+                        Tabs list button:<br>
+                        • Next tab<br>
+                        • Previous tab<br>
+                        • Switch tab hotkeys<br><br>
+                        GPL-3 license.<br><br>
+                        New supported file types:<br>
+                        • Images: PNG, GIF, JPEG, JPG<br>
+                        • Audio: MP3, M4A, WAV, OGG<br>
+                        • Text: TXT, JS, JSON, SQL, CSS, Markdown, License, PHP<br><br>
+                        New hotkeys:<br>
+                        • Next tab (Ctrl+Tab)<br>
+                        • Previous tab (Ctrl+Shift+Tab)<br>
+                        • Quit Ferny (Ctrl+Shift+Q)<br>
+                        • Reload ignoring page (Ctrl+F5)<br><br>
+                        Improved stability:<br>
+                        • Storage verification<br>
+                        • Electron 6.0.1 (Stable branch)<br><br>
+                        Tab preview on hover.<br><br>
+                        Increased launch speed.<br><br>
+                        Welcome screen:<br>
+                        • Modern theme<br>
+                        • Open settings button<br>
+                        • Mouse wheel actions<br>
+                        • Platform<br><br>
+                        New search suggestions module.<br><br>
+                        About:<br>
+                        • License<br>
+                        • Platform<br><br>
+                        Fixed broken hotkeys.<br><br>
+                        Module code system (Better performance):<br>
+                        • applyBgColor, applyBorderRadius<br>
+                        • extToImagePath<br>
+                        • saveFileToJsonFolder<br>
+                        • epochToDate, epochToTime,<br>
+                        • loadBgColor, loadBorderRadius<br>
+                        • applyWinControls<br><br>
+                        Downloads:<br>
+                        • Fixed colored left border<br>
+                        • File extension name<br>
+                        • File type icons: Exe, Ttf, Doc, Docx, Rar, 7z, Zip, Tar, Wim, Xls, Xlsx, Ppt, Pptx, Bmp, Db, Z, Iso, Vcd, Dmg, Dat, Csv, Asp, Ico, Apk, Cs, Cpp, Py, Otf, Psd, Tif, Tiff, Svg, Xhtml, Jsp, Rss, Pps, Swift, Vb, Xlr, Mp4, Avi, Dll, Mpg, Mpeg, Pdf, Flv, Mov, Png, Gif, Jpeg, Jpg, Mp3, M4a, Wav, Ogg, Txt, Js, Json, Sql, Css, Md, License, Php<br><br>
+                        Linux ready:<br>
+                        • Window controls<br>
+                        • File system<br><br>
+                        New themes:<br>
+                        • Material<br>
+                        • Elementary
+                    </label>
+                </div>
                 <div class="update show" class="show">
                     <a href="https://github.com/ModuleArt/ferny/releases/tag/v2.0.0" title="GitHub release"><img src="imgs/icons/github.png"></a>
                     <label class="date">July 31 / 2019</label>
@@ -251,7 +612,7 @@
                         • Fixed about app incorrect URLs.
                     </label>
                 </div>
-                <div class="update show">
+                <div class="update">
                     <a href="https://github.com/ModuleArt/ferny/releases/tag/v1.5.0" title="GitHub release"><img src="imgs/icons/github.png"></a>
                     <label class="date">July 10 / 2019</label>
                     <button onclick="toggleUpdate(this)">
@@ -284,7 +645,7 @@
                         • Fixed history loading.
                     </label>
                 </div>
-                <div class="update show">
+                <div class="update">
                     <a href="https://github.com/ModuleArt/ferny/releases/tag/v1.4.4" title="GitHub release"><img src="imgs/icons/github.png"></a>
                     <label class="date">June 26 / 2019</label>
                     <button onclick="toggleUpdate(this)">
@@ -299,7 +660,7 @@
                         • Fixed update progress bar.
                     </label>
                 </div>
-                <div class="update show">
+                <div class="update">
                     <a href="https://github.com/ModuleArt/ferny/releases/tag/v1.4.3" title="GitHub release"><img src="imgs/icons/github.png"></a>
                     <label class="date">June 25 / 2019</label>
                     <button onclick="toggleUpdate(this)">

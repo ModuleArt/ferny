@@ -1025,15 +1025,6 @@ function showMainWindow() {
         mainWindow.on("blur", () => {
           mainWindow.webContents.send("window-blur");
         });
-  
-        mainWindow.on("resize", () => {
-          // setTimeout(() => {
-          //   overlay.refreshBounds();
-          // }, 150);
-          // if(tabManager.hasActiveTab()) {
-          //   tabManager.getActiveTab().activate();
-          // }
-        });
       
         mainWindow.on("maximize", () => {
           mainWindow.webContents.send("window-maximize");

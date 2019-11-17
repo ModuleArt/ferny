@@ -107,7 +107,7 @@ body {
 .main .description {
     font-size: 16px;
     display: block;
-    margin: 48px 0;
+    margin: 64px 0;
     opacity: 0.5;
 }
 
@@ -188,7 +188,7 @@ body {
 */
 
 .main .screenshots {
-    margin: 48px 0;
+    margin: 64px 0;
     margin-bottom: 96px;
 }
 
@@ -238,6 +238,69 @@ body {
     outline: none;
 }
 
+/*                             
+  #####   ####    ##   #####  #    #   ##   #####  
+  #    # #    #  #  #  #    # ##  ##  #  #  #    # 
+  #    # #    # #    # #    # # ## # #    # #    # 
+  #####  #    # ###### #    # #    # ###### #####  
+  #   #  #    # #    # #    # #    # #    # #      
+  #    #  ####  #    # #####  #    # #    # #      
+*/
+
+.main .roadmap {
+    margin: 64px 0;
+}
+
+.main .roadmap .line {
+    display: inline-block;
+    vertical-align: middle;
+    background-color: white;
+    width: 100px;
+    height: 4px;
+    margin: 8px;
+    border-radius: 2px;
+}
+
+.main .roadmap .dash {
+    display: inline-block;
+    vertical-align: middle;
+    width: 100px;
+    border-bottom: 4px dotted white;
+    margin: 8px;
+}
+
+.main .roadmap .arrow {
+    border: solid white;
+    border-width: 0 4px 4px 0;
+    display: inline-block;
+    padding: 8px;
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    vertical-align: middle;
+    margin-left: -32px;
+    margin-right: 8px;
+    border-radius: 2px;
+}
+
+.main .roadmap .image {
+    vertical-align: middle;
+    display: inline-block;
+    margin: 4px;
+    position: relative;
+    margin-bottom: 16px;
+}
+
+.main .roadmap .title {
+    position: absolute;
+    top: 72px;
+    left: 0;
+    width: 64px;
+}
+
+.main .roadmap img {
+    
+}
+
 /*
 .########.########....###....########.##.....##.########..########..######.
 .##.......##.........##.##......##....##.....##.##.....##.##.......##....##
@@ -249,7 +312,7 @@ body {
 */
 
 .main .features {
-    margin: 48px 0;
+    margin: 64px 0;
     display: flex;
     flex-direction: column;
 }
@@ -406,12 +469,18 @@ body {
 */
 
 .main .github-btns {
-    margin: 48px 0;
+    margin: 64px 0;
+}
+
+.main .github-btns a {
+    text-decoration: none;
+    margin: 4px;
 }
 
 .main .github-btns .button {
     display: inline-block;
     margin: 4px 8px;
+    vertical-align: middle;
 }
 
 /*
