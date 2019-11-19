@@ -310,6 +310,9 @@ class Tab extends EventEmitter {
         this.window.webContents.send("tabRenderer-updateAddressBar", this.getURL());
         this.view.webContents.focus();
 
+        this.stopFindInPage(false);
+        this.window.webContents.send("findInPage-updateFindInPage");
+
         this.emit("activate", this);
 
         return null;
@@ -632,6 +635,20 @@ class Tab extends EventEmitter {
             this.position = "-1";
         }
         this.window.webContents.send("tabRenderer-setTabVisibility", this.id, bool);
+    }
+
+    findInPage(text, forward) {
+        this.view.webContents.findInPage(text, {
+            forward: forward
+        });
+    }
+
+    stopFindInPage(keepSelection) {
+        if(keepSelection) {
+            this.view.webContents.stopFindInPage("keepSelection");
+        } else {
+            this.view.webContents.stopFindInPage("clearSelection");
+        }
     }
 }
 

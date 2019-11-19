@@ -1,16 +1,34 @@
 #find-container {
     margin: 0;
     padding: 0;
+    display: none;
+}
+
+#find-container.show {
+    display: flex;
 }
 
 #find-input {
-    margin: 2px 0;
+    border-radius: var(--px-radius) 0 0 var(--px-radius);
+    width: 128px;
 }
 
-#find-prev-btn {
-    margin: 2px -5px;
+#find-prev-btn, #find-next-btn {
+    margin-left: -3px;
+    border-radius: 0;
 }
 
-#find-next-btn {
+#find-close-btn {
+    margin-left: -3px;
+    border-radius:  0 var(--px-radius) var(--px-radius) 0;
+}
 
+@media only screen and (max-width: 600px) {
+    #find-input {
+        width: 80px;
+    }
+
+    #find-prev-btn {
+        display: none;
+    }
 }

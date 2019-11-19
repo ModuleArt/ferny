@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="../css/modules/input.css">
     <link rel="stylesheet" href="../css/modules/nav-btn.css">
     <link rel="stylesheet" href="../css/modules/tabs.css">
+    <link rel="stylesheet" href="../css/modules/find.css">
     <link rel="stylesheet" href="../css/modules/overlay-button.css">
     <link rel="stylesheet" href="../css/modules/notifications.css">
     <link rel="stylesheet" href="../node_modules/dragula/dist/dragula.css">
@@ -33,9 +34,10 @@
       </div>
       <div id="find-container">
         <div class="title-bar-vr"></div>
-        <input id="find-input" type="text" placeholder="Find in page">
-        <button id="find-prev-btn" class="nav-btn with-border" title="Find previous" onclick="stop()"><img name="up-16" class="theme-icon"></button>
-        <button id="find-next-btn" class="nav-btn with-border" title="Find next" onclick="stop()"><img name="down-16" class="theme-icon"></button>
+        <input id="find-input" type="text" placeholder="Find in page" oninput="findNext()" onkeyup="findInputKeyUp()">
+        <button id="find-prev-btn" class="nav-btn with-border" title="Find previous" onclick="findPrev()"><img name="up-16" class="theme-icon"></button>
+        <button id="find-next-btn" class="nav-btn with-border" title="Find next" onclick="findNext()"><img name="down-16" class="theme-icon"></button>
+        <button id="find-close-btn" class="nav-btn with-border" title="Find next" onclick="closeFindPanel()"><img name="cancel-16" class="theme-icon"></button>
       </div>
       <div class="title-bar-vr"></div>
       <button id="home-btn" class="nav-btn" title="Go home" onclick="goHome()" style="display: none;"><img name="home-16" class="theme-icon" oncontextmenu="popupHomePageOptions()"></button>

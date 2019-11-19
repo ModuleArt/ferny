@@ -48,7 +48,7 @@
                     <label>v3.0.3 (x64) .appimg</label>
                 </div>
                 <div class="button">
-                    <a href="https://github.com/ModuleArt/arrowbrowser/releases">Releases</a>
+                    <a href="https://github.com/ModuleArt/arrowbrowser">GitHub</a>
                     <label>GitHub</label>
                 </div>
                 <div class="button">
@@ -74,28 +74,38 @@
             </div>
             <label class="main-title">Roadmap</label>
             <div class="roadmap">
-                <div class="dash"></div>
-                <div class="image">
-                    <img src="imgs/ferny/beta141.png">
-                    <label class="title">Beta 1.4</label>
-                </div>
-                <div class="line"></div>
-                <div class="image">
+                <div class="roadmap-dash"></div>
+                <div class="roadmap-item">
                     <img src="imgs/ferny/beta200.png">
-                    <label class="title">Beta 2.0</label>
+                    <label class="roadmap-title">Beta 3.0</label><br>
+                    <label class="roadmap-desc">
+                        New bookmark manager<br>
+                        New interface<br>
+                        Overlay
+                    </label>
                 </div>
-                <div class="line"></div>
-                <div class="image">
+                <div class="roadmap-line"></div>
+                <div class="roadmap-item">
                     <img src="imgs/ferny/beta310.png">
-                    <label class="title">Beta 3.1</label>
+                    <label class="roadmap-title">Beta 3.1</label><br>
+                    <label class="roadmap-desc">
+                        Open with Ferny<br>
+                        Themes 2.0<br>
+                        Tab groups
+                    </label>
                 </div>
-                <div class="line"></div>
-                <div class="image">
+                <div class="roadmap-line"></div>
+                <div class="roadmap-item">
                     <img src="imgs/ferny/beta320.png">
-                    <label class="title">Beta 3.2</label>
+                    <label class="roadmap-title">Beta 3.2</label><br>
+                    <label class="roadmap-desc">
+                        Interface adaptivity<br>
+                        Incognito mode<br>
+                        Find in page
+                    </label>
                 </div>
-                <div class="line"></div>
-                <div class="arrow"></div>
+                <div class="roadmap-line"></div>
+                <div class="roadmap-arrow"></div>
             </div>
             <!-- <label class="main-title">Features</label>
             <div class="features">
@@ -166,9 +176,18 @@
                     </div>
                 </div>
             </div> -->
-            <label class="main-title">Shields</label>
-            <div class="github-btns">
-                <a href="https://github.com/ModuleArt/ferny/releases" title="Total downloads">
+            <!-- <label class="main-title">GitHub</label>
+            <div class="links">
+                <div class="button">
+                    <a href="https://github.com/ModuleArt/arrowbrowser/releases">Watch</a>
+                </div>
+                <div class="button">
+                    <a href="https://github.com/ModuleArt/arrowbrowser/releases">Star</a>
+                </div>
+                <div class="button">
+                    <a href="https://github.com/ModuleArt/arrowbrowser/releases">Releases</a>
+                </div> -->
+                <!-- <a href="https://github.com/ModuleArt/ferny/releases" title="Total downloads">
                     <img src="https://img.shields.io/github/downloads/ModuleArt/ferny/total">
                 </a>
                 <a href="https://github.com/ModuleArt/ferny/releases" title="GitHub release (latest by date including pre-releases)">
@@ -188,8 +207,8 @@
                 </a>
                 <a href="https://www.patreon.com/moduleart" title="Buy ma a coffee">
                     <img alt="Patreon" src="https://img.shields.io/badge/donate-patreon-%23E85B46">
-                </a><br><br>
-                <div class="button">
+                </a><br><br> -->
+                <!-- <div class="button">
                     <a class="github-button" href="https://github.com/ModuleArt/ferny/subscription" data-icon="octicon-eye" data-size="large" data-show-count="true" aria-label="Watch ModuleArt/ferny on GitHub">Watch</a>
                 </div>
                 <div class="button">
@@ -198,75 +217,75 @@
                 <div class="button">
                     <a class="github-button" href="https://github.com/ModuleArt/ferny/issues" data-icon="octicon-issue-opened" data-size="large" data-show-count="true" aria-label="Issue ModuleArt/ferny on GitHub">Issue</a>
                 </div>
-            </div>
+            </div> -->
             <label class="main-title">Release notes</label>
             <div class="updates">
-                    <div class="update show" class="show">
-                            <a href="https://github.com/ModuleArt/ferny/releases/tag/v3.1.0" title="GitHub release"><img src="imgs/icons/github.png"></a>
-                            <label class="date">November 9 / 2019</label>
-                            <button onclick="toggleUpdate(this)">
-                                <img src="imgs/icons/expand.png">
-                                <span>Beta v3.1.0 "Collections Update"</span>
-                            </button>
-                            <label class="text">
-                                Tabs:<br>
-                                - Added tab groups system<br>
-                                - Next-tab and prev-tab shortcuts are working for the overlay now<br>
-                                - Added tab cycling (Ctrl + Tab, Ctrl + Shift + Tab)<br>
-                                - Removed horizontal scrollbar<br><br>
-                                Themes 2.0:<br>
-                                - More saturated colors<br>
-                                - New color of window titlebar<br>
-                                - Removed borders from some buttons<br>
-                                - Added theme description<br>
-                                - Settings: Checkboxes for themes<br><br>
-                                Native:<br>
-                                - Ferny can be set as default web browser<br>
-                                - Added htm/html file icon<br>
-                                - Open with Ferny for http/https and others<br>
-                                - Electron 7.1.1 stable<br>
-                                - Faster app startup<br>
-                                - Added "Windows tasks"<br><br>
-                                Bookmarks:<br>
-                                - Removed url preview<br>
-                                - New blocks layout<br><br>
-                                Window controls:<br>
-                                - Added borders to buttons<br>
-                                - Removed fade-out animation<br><br>
-                                New browser context menu items:<br>
-                                - Download page (Ctrl + Shift + S)<br>
-                                - Bookmark this page<br>
-                                - Search for selected text<br>
-                                - Download images<br>
-                                - Copy image<br>
-                                - Bookmark this link<br>
-                                - Search for link text<br><br>
-                                Toolbar:<br>
-                                - Added show-full-history to tab history<br>
-                                - Bookmark button show you if page is already bookmarked<br>
-                                - Short address bar<br><br>
-                                Appearance:<br>
-                                - Removed all old themes<br>
-                                - Skinny scrollbars<br>
-                                - White page background color<br>
-                                - A lot of new icons<br><br>
-                                Search engines:<br>
-                                - Fixed ebay search<br>
-                                - Added startage<br><br>
-                                Bug fixes:<br>
-                                - App crashes after creating of new tab<br>
-                                - About window: No title bar<br>
-                                - About window: Empty icons<br>
-                                - Bookmarks: Can't move bookmarks<br>
-                                - Bookmarks: Duplicated bookmarks after moves<br>
-                                - History: Undefined titles and icons<br>
-                                - Windows: Auxclick not working<br>
-                                - Windows: Incorrect overlay/browser-view size<br><br>
-                                Installer:<br>
-                                - Added icon<br>
-                                - Added installation folder chooser
-                            </label>
-                    </div>
+                <div class="update show" class="show">
+                    <a href="https://github.com/ModuleArt/ferny/releases/tag/v3.1.0" title="GitHub release"><img src="imgs/icons/github.png"></a>
+                    <label class="date">November 9 / 2019</label>
+                    <button onclick="toggleUpdate(this)">
+                        <img src="imgs/icons/expand.png">
+                        <span>Beta v3.1.0 "Collections Update"</span>
+                    </button>
+                    <label class="text">
+                        Tabs:<br>
+                        - Added tab groups system<br>
+                        - Next-tab and prev-tab shortcuts are working for the overlay now<br>
+                        - Added tab cycling (Ctrl + Tab, Ctrl + Shift + Tab)<br>
+                        - Removed horizontal scrollbar<br><br>
+                        Themes 2.0:<br>
+                        - More saturated colors<br>
+                        - New color of window titlebar<br>
+                        - Removed borders from some buttons<br>
+                        - Added theme description<br>
+                        - Settings: Checkboxes for themes<br><br>
+                        Native:<br>
+                        - Ferny can be set as default web browser<br>
+                        - Added htm/html file icon<br>
+                        - Open with Ferny for http/https and others<br>
+                        - Electron 7.1.1 stable<br>
+                        - Faster app startup<br>
+                        - Added "Windows tasks"<br><br>
+                        Bookmarks:<br>
+                        - Removed url preview<br>
+                        - New blocks layout<br><br>
+                        Window controls:<br>
+                        - Added borders to buttons<br>
+                        - Removed fade-out animation<br><br>
+                        New browser context menu items:<br>
+                        - Download page (Ctrl + Shift + S)<br>
+                        - Bookmark this page<br>
+                        - Search for selected text<br>
+                        - Download images<br>
+                        - Copy image<br>
+                        - Bookmark this link<br>
+                        - Search for link text<br><br>
+                        Toolbar:<br>
+                        - Added show-full-history to tab history<br>
+                        - Bookmark button show you if page is already bookmarked<br>
+                        - Short address bar<br><br>
+                        Appearance:<br>
+                        - Removed all old themes<br>
+                        - Skinny scrollbars<br>
+                        - White page background color<br>
+                        - A lot of new icons<br><br>
+                        Search engines:<br>
+                        - Fixed ebay search<br>
+                        - Added startage<br><br>
+                        Bug fixes:<br>
+                        - App crashes after creating of new tab<br>
+                        - About window: No title bar<br>
+                        - About window: Empty icons<br>
+                        - Bookmarks: Can't move bookmarks<br>
+                        - Bookmarks: Duplicated bookmarks after moves<br>
+                        - History: Undefined titles and icons<br>
+                        - Windows: Auxclick not working<br>
+                        - Windows: Incorrect overlay/browser-view size<br><br>
+                        Installer:<br>
+                        - Added icon<br>
+                        - Added installation folder chooser
+                    </label>
+                </div>
                 <div class="update show" class="show">
                     <a href="https://github.com/ModuleArt/ferny/releases/tag/v3.0.4" title="GitHub release"><img src="imgs/icons/github.png"></a>
                     <label class="date">October 15 / 2019</label>

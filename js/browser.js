@@ -271,6 +271,71 @@ function goHome() {
   ipcRenderer.send("tabManager-goHome");
 }
 
+/*                                                                                                     
+  ###### #    # #    #  ####              ###### # #    # #####     # #    #    #####    ##    ####  ###### 
+  #      #    # ##   # #    #             #      # ##   # #    #    # ##   #    #    #  #  #  #    # #      
+  #####  #    # # #  # #         #####    #####  # # #  # #    #    # # #  #    #    # #    # #      #####  
+  #      #    # #  # # #                  #      # #  # # #    #    # #  # #    #####  ###### #  ### #      
+  #      #    # #   ## #    #             #      # #   ## #    #    # #   ##    #      #    # #    # #      
+  #       ####  #    #  ####              #      # #    # #####     # #    #    #      #    #  ####  ###### 
+*/
+
+function findNext() {
+  document.getElementById("find-container").classList.add("show");
+  let findInput = document.getElementById("find-input");
+  findInput.focus();
+  if(findInput.value.length > 0) {
+    ipcRenderer.send("tabManager-findInPage", findInput.value, true);
+  }
+}
+
+function findPrev() {
+  document.getElementById("find-container").classList.add("show");
+  let findInput = document.getElementById("find-input");
+  findInput.focus();
+  if(findInput.value.length > 0) {
+    ipcRenderer.send("tabManager-findInPage", findInput.value, false);
+  }
+}
+
+function findInputKeyUp() {
+  let findInput = document.getElementById("find-input");
+  if(findInput.value.length <= 0) {
+    ipcRenderer.send("tabManager-stopFindInPage", false);
+  }
+}
+
+function closeFindPanel() {
+  document.getElementById("find-container").classList.remove("show");
+  ipcRenderer.send("tabManager-stopFindInPage", true);
+}
+
+/*                                                          
+  # #####   ####              ###### # #    # #####     # #    #    #####    ##    ####  ###### 
+  # #    # #    #             #      # ##   # #    #    # ##   #    #    #  #  #  #    # #      
+  # #    # #         #####    #####  # # #  # #    #    # # #  #    #    # #    # #      #####  
+  # #####  #                  #      # #  # # #    #    # #  # #    #####  ###### #  ### #      
+  # #      #    #             #      # #   ## #    #    # #   ##    #      #    # #    # #      
+  # #       ####              #      # #    # #####     # #    #    #      #    #  ####  ###### 
+*/
+
+ipcRenderer.on("findInPage-findNext", (event) => {
+  findNext();
+});
+
+ipcRenderer.on("findInPage-findPrev", (event) => {
+  findPrev();
+});
+
+ipcRenderer.on("findInPage-updateFindInPage", (event) => {
+  if(document.getElementById("find-container").classList.contains("show")) {
+    let findInput = document.getElementById("find-input");
+    if(findInput.value.length > 0) {
+      findNext();
+    }
+  }
+});
+
 /*
  # #####   ####              #    #  ####  ##### # ######
  # #    # #    #             ##   # #    #   #   # #
@@ -465,6 +530,29 @@ function init() {
 
   updateTheme();
 }
+
+document.onkeyup = function(e) {
+  if(document.getElementById("find-input") == document.activeElement) {
+    if (e.which == 27) {
+      closeFindPanel();
+    } 
+    if (e.which == 13) {
+      if (e.shiftKey) {
+        findPrev();
+      } else {
+        findNext();
+      }
+    } 
+    if (e.which == 38) {
+      e.preventDefault();
+      findPrev();
+    }
+    if (e.which == 40) {
+      e.preventDefault();
+      findNext();
+    }
+  }
+};
 
 document.onreadystatechange = () => {
   if (document.readyState == "complete") {

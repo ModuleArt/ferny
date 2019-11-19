@@ -64,6 +64,7 @@ body {
 .main-title {
     font-size: 28px;
     display: block;
+    padding-top: 48px;
 }
 
 /*
@@ -247,29 +248,29 @@ body {
   #    #  ####  #    # #####  #    # #    # #      
 */
 
-.main .roadmap {
+.roadmap {
     margin: 64px 0;
 }
 
-.main .roadmap .line {
+.roadmap-line {
     display: inline-block;
     vertical-align: middle;
     background-color: white;
     width: 100px;
     height: 4px;
-    margin: 8px;
+    margin: 16px;
     border-radius: 2px;
 }
 
-.main .roadmap .dash {
+.roadmap-dash {
     display: inline-block;
     vertical-align: middle;
     width: 100px;
     border-bottom: 4px dotted white;
-    margin: 8px;
+    margin: 16px;
 }
 
-.main .roadmap .arrow {
+.roadmap-arrow {
     border: solid white;
     border-width: 0 4px 4px 0;
     display: inline-block;
@@ -277,12 +278,12 @@ body {
     transform: rotate(-45deg);
     -webkit-transform: rotate(-45deg);
     vertical-align: middle;
-    margin-left: -32px;
+    margin-left: -40px;
     margin-right: 8px;
     border-radius: 2px;
 }
 
-.main .roadmap .image {
+.roadmap-item {
     vertical-align: middle;
     display: inline-block;
     margin: 4px;
@@ -290,15 +291,20 @@ body {
     margin-bottom: 16px;
 }
 
-.main .roadmap .title {
-    position: absolute;
-    top: 72px;
-    left: 0;
-    width: 64px;
+.roadmap-title {
+    display: block;
+    margin: 8px;
+    margin-bottom: 0;
 }
 
-.main .roadmap img {
-    
+.roadmap-desc {
+    font-size: 12px;
+    opacity: 0.5;
+}
+
+.roadmap img {
+    vertical-align: middle;
+    display: inline-block;
 }
 
 /*
@@ -492,6 +498,37 @@ body {
 .##.....##.##.......##.....##..##..##.....##
 .##.....##.########.########..####.##.....##
 */
+
+@media only screen and (max-width: 1000px) {
+    .roadmap-item {
+        width: calc(100% - 8px);
+    }
+
+    .roadmap-line {
+        width: 4px;
+        height: 16px;
+    }
+
+    .roadmap-dash {
+        border-bottom: none;
+        border-left: 4px dotted white;
+        height: 16px;
+        width: 4px;
+    }
+
+    .roadmap-desc, .roadmap-title {
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .roadmap-desc {
+        margin-top: 16px;
+    }
+
+    .roadmap-arrow {
+        transform: rotate(45deg);
+    }
+}
 
 @media only screen and (max-width: 700px) {
     .main .update {

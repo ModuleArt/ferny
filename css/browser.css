@@ -403,46 +403,6 @@ hr {
 }
 
 /*
-.########.####.##....##.########.
-.##........##..###...##.##.....##
-.##........##..####..##.##.....##
-.######....##..##.##.##.##.....##
-.##........##..##..####.##.....##
-.##........##..##...###.##.....##
-.##.......####.##....##.########.
-*/
-
-#find-panel {
-  padding: 2px;
-  border-top: 1px solid var(--color-border);
-  animation-name: anim-find;
-  animation-duration: 0.25s;
-  transition: 0.25s;
-  text-align: left;
-  background-color: var(--color-back);
-}
-
-#find-panel.hide {
-  opacity: 0;
-  transform: translateY(40px);
-}
-
-#find-input {
-  display: inline-block;
-  width: 200px;
-}
-
-#find-panel .close-btn {
-  float: right;
-}
-
-.find-panel-icon {
-  padding: 8px;
-  display: inline-block;
-  vertical-align: middle;
-}
-
-/*
 .########..##........#######...######..##....##....########.####.########.##.......########
 .##.....##.##.......##.....##.##....##.##...##........##.....##.....##....##.......##......
 .##.....##.##.......##.....##.##.......##..##.........##.....##.....##....##.......##......
