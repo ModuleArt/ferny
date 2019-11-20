@@ -3,6 +3,7 @@
 const EventEmitter = require("events");
 const { ipcRenderer } = require("electron");
 const GetAvColor = require("color.js");
+const parseUrl = require("parse-url");
 
 const rgbToRgbaString = require("../rgbToRgbaString.js");
 
@@ -196,6 +197,13 @@ class TabRenderer extends EventEmitter {
 
     updateAddressBar(url) {
         this.addressBar.value = url;
+        if(parseUrl(url).protocol == "https") {
+            document.getElementById("secure-icon").style.display = "";
+            document.getElementById("not-secure-icon").style.display = "none";
+        } else {
+            document.getElementById("secure-icon").style.display = "none";
+            document.getElementById("not-secure-icon").style.display = "";
+        }
     }
 
     updateBookmarkedButton(exists, id) {

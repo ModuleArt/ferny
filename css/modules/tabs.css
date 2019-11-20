@@ -131,6 +131,12 @@ body.system-titlebar .tabman-tabs {
     border-bottom: 1px solid var(--color-border);
 }
 
+.tabman-tab.gu-mirror {
+    border-bottom: 1px solid var(--color-border);
+    opacity: 1;
+    box-shadow: 0 0 4px rgba(0, 0, 0, var(--opacity-over));
+}
+
 .tabman-tab:focus {
     box-shadow: var(--shadow-focus);
     border-bottom: 1px solid var(--color-border);

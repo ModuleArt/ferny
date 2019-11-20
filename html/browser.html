@@ -24,12 +24,14 @@
       <!-- <button id="info-btn" class="nav-btn" title="Website info" onclick="popupInfoContextMenu()" oncontextmenu="popupInfoContextMenu()"><img name="info-16" class="theme-icon"></button> -->
       <div id="middle-container">
         <div id="address-container">
+          <div id="not-secure-icon" title="Your connection to this site is not secure"><img name="warning-16" class="theme-icon"></div>
+          <div style="display: none" id="secure-icon" title="Connection is secure"><img src="../imgs/icons16/lock.png"></div>
           <div id="search-div">
             <label id="target-url"></label>
             <input type="text" placeholder="Search or type a URL" id="search-input" oninput="goToSearch(this.value, this.selectionStart)" onfocus="focusSearch()">
           </div>
-          <button id="bookmark-btn" class="nav-btn" title="Bookmark this page" onclick="createBookmark()"><img name="add-bookmark-16" class="theme-icon"></button>
-          <button style="display: none" id="bookmarked-btn" class="nav-btn" title="Show bookmark options for this tab"><img src="../imgs/icons16/bookmarks.png"></button>
+          <button id="bookmark-btn" class="nav-btn with-border" title="Bookmark this page" onclick="createBookmark()"><img name="add-bookmark-16" class="theme-icon"></button>
+          <button style="display: none" id="bookmarked-btn" class="nav-btn with-border" title="Show bookmark options for this tab"><img src="../imgs/icons16/bookmarks.png"></button>
         </div>
       </div>
       <div id="find-container">
@@ -45,7 +47,7 @@
     </div>
     
     <div class="tabman" id="tabman">
-      <button id="overlay-btn" class="overlay-button" onclick="showOverlay()" oncontextmenu="showOverlayButtonMenu()" title="Overlay"><img name="blocks-12" class="theme-icon"></button>
+      <button id="overlay-btn" class="overlay-button" onclick="showOverlay()" oncontextmenu="showOverlayButtonMenu()" title="Overlay"><img name="overlay-12" class="theme-icon"></button>
       <div class="tabman-tabs" id="tabman-tabs" onmousewheel="tabsWheel(event)"></div>
       <div class="tabman-buttons">
         <button title="New tab" onclick="newTab()" onauxclick="newBackgroundTab(event)" ondrop="newTabDrop(event)" ondragover="prevDef(event)"><img name="create-12" class="theme-icon"></button>
