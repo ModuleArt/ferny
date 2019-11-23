@@ -47,7 +47,7 @@ class TabRenderer extends EventEmitter {
         tab.classList.add("tabman-tab");
         tab.id = "tab-" + id;
         tab.name = id;
-        tab.title = title + "\n" + url;
+        // tab.title = title + "\n" + url;
         tab.innerHTML = `
             <img class='tabman-tab-icon' src='../imgs/icon16.png'>
             <label class='tabman-tab-title'>` + title + `</label>
@@ -79,15 +79,14 @@ class TabRenderer extends EventEmitter {
                 ipcRenderer.send("tabManager-navigate", "file://" + event.dataTransfer.files[0].path);
             }
         };
-        // tab.onmouseenter = (event) => {
-        //     ipcRenderer.send("tabManager-showPreview", id);
-        // }
-        // tab.onmouseleave = (event) => {
-        //     ipcRenderer.send("tabManager-hidePreview", id);
-        // }
+        tab.onmouseenter = (event) => {
+            ipcRenderer.send("tabManager-requestTabPreview", id);
+        };
+        tab.onmouseleave = (event) => {
+            document.getElementById("tab-preview").classList.remove("show");
+        };
         tab.oncontextmenu = (event) => {
             ipcRenderer.send("tabManager-showTabMenu", id);
-            ipcRenderer.send("tabManager-hidePreview", id);
         };
 
         let closeButton = document.createElement('button');
@@ -135,6 +134,7 @@ class TabRenderer extends EventEmitter {
 
     closeTab(id) {
         this.tabContainer.removeChild(this.getTabById(id));
+        this.hideTabPreview();
 
         this.updateTabsPositions();
 
@@ -153,7 +153,6 @@ class TabRenderer extends EventEmitter {
     setTabTitle(id, title) {
         let tab = this.getTabById(id);
         tab.getElementsByClassName("tabman-tab-title")[0].innerHTML = title;
-        tab.title = title;
 
         return null;
     }
@@ -196,13 +195,15 @@ class TabRenderer extends EventEmitter {
     }
 
     updateAddressBar(url) {
-        this.addressBar.value = url;
-        if(parseUrl(url).protocol == "https") {
-            document.getElementById("secure-icon").style.display = "";
-            document.getElementById("not-secure-icon").style.display = "none";
-        } else {
-            document.getElementById("secure-icon").style.display = "none";
-            document.getElementById("not-secure-icon").style.display = "";
+        if(url) {
+            this.addressBar.value = url;
+            if(parseUrl(url).protocol == "https") {
+                document.getElementById("secure-icon").style.display = "";
+                document.getElementById("not-secure-icon").style.display = "none";
+            } else {
+                document.getElementById("secure-icon").style.display = "none";
+                document.getElementById("not-secure-icon").style.display = "";
+            }
         }
     }
 
@@ -223,34 +224,8 @@ class TabRenderer extends EventEmitter {
         return this.tabContainer;
     }
 
-    showPreview(id, dataURL) {
-        let tab = this.getTabById(id);
-        if(tab != null) {
-            let div = tab.getElementsByClassName('tabman-tab-preview')[0];
-            if(div == null) {
-                div = document.createElement('div');
-                div.classList.add("tabman-tab-preview");
-    
-                let img = document.createElement('img');
-                img.src = dataURL;
-                div.appendChild(img);
-            
-                tab.appendChild(div);
-            } else {
-                let img = div.getElementsByTagName('img')[0];
-                img.src = dataURL;
-            }
-        }
-    }
-
-    hidePreview(id) {
-        let tab = this.getTabById(id);
-        if(tab != null) {
-            let div = tab.getElementsByClassName('tabman-tab-preview')[0];
-            if(div != null) {
-                tab.removeChild(div);
-            }
-        }
+    hideTabPreview() {
+        document.getElementById("tab-preview").classList.remove("show");
     }
 
     scrollLeft() {
@@ -326,6 +301,16 @@ class TabRenderer extends EventEmitter {
         } else {
             tab.classList.add("invisible");
         }
+    }
+
+    showTabPreview(id, title, url) {
+        let tab = this.getTabById(id);
+        
+        document.getElementById("tab-preview").classList.add("show");
+        document.getElementById("tab-preview").style.left = tab.offsetLeft - this.tabContainer.scrollLeft + 4 + "px";
+
+        document.getElementById("tab-preview-title").innerHTML = title;
+        document.getElementById("tab-preview-url").innerHTML = url;
     }
 }
 

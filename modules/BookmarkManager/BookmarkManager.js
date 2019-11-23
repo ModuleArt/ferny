@@ -1,7 +1,6 @@
 "use strict";
 
 const EventEmitter = require("events");
-const Isotope = require("isotope-layout");
 const Dragula = require("dragula");
 const fs = require("fs");
 const ppath = require("persist-path")("Ferny");
@@ -20,7 +19,7 @@ class BookmarkManager extends EventEmitter {
     folderCounter = 0;
     folders = [];
     bookmarkCounter = 0;
-    isotope = null;
+    editMode = false;
     folderDrag = null;
     defaultFolder = null;
     bookmarkDrag = null;
@@ -99,20 +98,9 @@ class BookmarkManager extends EventEmitter {
             this.emit("bookmark-added");
         });
         folder.on("append-bookmark", () => {
-            if(this.isotope != null) {
-                this.isotope.arrange();
-            }
             this.emit("bookmark-appended");
         });
-        folder.on("bookmark-options-toggled", () => {
-            if(this.isotope != null) {
-                this.isotope.arrange();
-            }
-        });
         folder.on("bookmark-editor-toggled", () => {
-            if(this.isotope != null) {
-                this.isotope.arrange();
-            }
             this.emit("bookmark-editor-toggled");
         });
         folder.on("ask-for-delete", (id, name) => {
@@ -120,9 +108,6 @@ class BookmarkManager extends EventEmitter {
         });
         folder.on("delete", (id) => {
             this.removeFolder(id);
-            if(this.isotope != null) {
-                this.isotope.arrange();
-            }
             this.saveFolders();
             this.emit("folder-deleted");
         });
@@ -131,9 +116,6 @@ class BookmarkManager extends EventEmitter {
             this.emit("folder-edited");
         });
         folder.on("bookmark-deleted", () => {
-            if(this.isotope != null) {
-                this.isotope.arrange();
-            }
             folder.updateBookmarksPositions().then(() => {
                 this.saveBookmarks();
             });
@@ -144,9 +126,6 @@ class BookmarkManager extends EventEmitter {
             this.emit("bookmark-edited");
         });
         folder.on("toggle-editor", () => {
-            if(this.isotope != null) {
-                this.isotope.arrange();
-            }
             this.emit("folder-editor-toggled");
         });
 
@@ -169,11 +148,6 @@ class BookmarkManager extends EventEmitter {
         }
 
         this.bookmarkDrag.containers.push(folder.getNode().getElementsByClassName('folder-container')[0]);
-        
-        if(this.isotope != null) {
-            this.isotope.reloadItems();
-            this.isotope.arrange();
-        }
 
         this.emit("folder-appended");
         return null;
@@ -240,15 +214,7 @@ class BookmarkManager extends EventEmitter {
     }
 
     toggleArrange() {
-        if(this.isotope == null) {
-            this.isotope = new Isotope(this.folderContainer, {
-                itemSelector: '.folder',
-                masonry: {
-                    columnWidth: 250
-                },
-                transitionDuration: 0
-            });
-
+        if(!this.editMode) {
             if(this.folderDrag != null) {
                 this.folderDrag.destroy();
                 this.folderDrag = null;
@@ -258,12 +224,11 @@ class BookmarkManager extends EventEmitter {
 
             document.getElementById("bookmarks-arrange-btn").style.display = "none";
             document.getElementById("bookmarks-move-btn").style.display = "";
-        } else {
-            this.isotope.destroy();
-            this.isotope = null;
 
+            this.editMode = true;
+        } else {
             this.folderDrag = Dragula([this.folderContainer], {
-                direction: "horizontal",
+                direction: "vertical",
                 moves: (el, container, handle, sibling) => {
                     return handle.classList.contains('folder-move');
                 }
@@ -278,6 +243,8 @@ class BookmarkManager extends EventEmitter {
 
             document.getElementById("bookmarks-arrange-btn").style.display = "";
             document.getElementById("bookmarks-move-btn").style.display = "none";
+
+            this.editMode = false;
         }
 
         return null;

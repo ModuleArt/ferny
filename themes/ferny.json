@@ -3,7 +3,7 @@
     "name": "Default",
     "description": "Default Ferny theme.",
     "version": "1.0",
-    "pxRadius": "8px",
+    "pxRadius": "4px",
     "light": {
         "icons": "black",
         "colorAccent": "#2864DC",

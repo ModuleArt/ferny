@@ -11,9 +11,6 @@
     <body>
         <div id="body-container">
             <main>
-                <button id="settings-btn" class="nav-btn" onclick="openSettings()" title="Settings">
-                    <img name="settings-16" class="theme-icon">
-                </button>    
                 <div class="block-title" id="search-title">
                     <img class="theme-icon block-icon" name="search-16">
                     <label>Search</label>
@@ -58,20 +55,20 @@
                         <label>Tab groups</label>
                     </div>
                     <div class="collection-divider"></div>
-                    <button class="collection green active" onclick="switchTabGroup(0)" id="group-0">
+                    <button class="collection green active" onclick="switchTabGroup(0)" id="group-0" title="Switch to Green tab group">
                         <img class="theme-icon collection-icon" name="one-16">
                         <label class="collection-name">Green</label>
                     </button>
-                    <button class="collection blue" onclick="switchTabGroup(1)" id="group-1">
+                    <button class="collection blue" onclick="switchTabGroup(1)" id="group-1" title="Switch to Blue tab group">
                         <img class="theme-icon collection-icon" name="two-16">
                         <label class="collection-name">Blue</label>
                     </button>
-                    <button class="collection orange" onclick="switchTabGroup(2)" id="group-2">
+                    <button class="collection orange" onclick="switchTabGroup(2)" id="group-2" title="Switch to Orange tab group">
                         <img class="theme-icon collection-icon" name="three-16">
                         <label class="collection-name">Orange</label>
                     </button>
                     <div class="collection-divider"></div>
-                    <button class="collection red" disabled style="opacity: var(--opacity-over);">
+                    <button class="collection red" disabled style="opacity: var(--opacity-over);" title="Switch to Incognito mode">
                         <img class="theme-icon collection-icon" name="incognito-16">
                         <label class="collection-name">Incognito</label>
                     </button>

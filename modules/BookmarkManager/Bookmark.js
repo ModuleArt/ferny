@@ -187,8 +187,7 @@ class Bookmark extends EventEmitter {
         if(bookmarkEditor != null) {
             this.node.removeChild(bookmarkEditor);
         }
-
-        this.emit("toggle-options");
+        
         return null;
     }
 

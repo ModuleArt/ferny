@@ -72,12 +72,29 @@ body {
 #body-container {
     overflow: auto;
     padding: 64px;
-    padding-top: 32px;
+    padding-top: 0;
     position: absolute;
     left: 0;
     right: 0;
     bottom: 0;
     top: 0;
+}
+
+#body-container::before, #body-container::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 16px;
+    height: 40px;
+    background: linear-gradient(var(--color-back), transparent);
+    z-index: 1000;
+}
+
+#body-container::after {
+    top: auto;
+    bottom: 0;
+    background: linear-gradient(transparent, var(--color-back));
 }
 
 main {
@@ -330,23 +347,23 @@ main {
 }
 
 .folder {
-    width: 242px;
     margin: 4px;
     display: inline-block;
     position: relative;
     vertical-align: top;
     text-align: left;
+    width: calc(100% - 8px);
 }
 
 .folder-header {
     height: 32px;
     position: relative;
-    border-bottom: 1px solid var(--color-border);
-    margin: 4px;
+    border-bottom: 1px dashed var(--color-border);
+    margin: 8px 0;
 }
 
 .folder-header .nav-btn {
-    animation: slide-left;
+    animation: append-center;
     animation-duration: 0.25s;
     position: absolute;
     top: -2px;
@@ -391,6 +408,10 @@ main {
     right: 94px;
 }
 
+.folder-container {
+    margin: -4px;
+}
+
 .folder-container:empty::before {
     content: "\2205  No bookmarks... Try to create one...";
     color: var(--color-top);
@@ -428,8 +449,7 @@ main {
 
 .bookmark {
     border: 1px solid var(--color-border);
-    width: 113px;
-    height: 48px;
+    height: 32px;
     margin: 4px;
     border-radius: calc(var(--px-radius) + 4px);
     position: relative;
@@ -437,6 +457,8 @@ main {
     padding: 0;
     vertical-align: top;
     background-color: var(--color-element);
+    width: calc(20% - 8px);
+    text-align: left;
 }
 
 .bookmark:focus {
@@ -444,29 +466,30 @@ main {
 }
 
 .bookmark-icon {
+    padding: 7px;
     position: absolute;
-    top: 9px;
-    left: 47px;
+    left: 0;
+    top: 0;
 }
 
 .bookmark-name {
     color: var(--color-top);
-    top: 28px;
+    top: 5px;
     transition: font-size 0.25s, top 0.25s;
     position: absolute;
     overflow: hidden;
     white-space: nowrap;
     word-break: keep-all;
     text-overflow: ellipsis;
-    right: 4px;
-    left: 4px;
-    font-size: 10px;
+    right: 32px;
+    left: 32px;
 }
 
 .bookmark-move {
     position: absolute;
-    top: 9px;
-    left: 47px;
+    top: 0;
+    left: 0;
+    padding: 7px;
     display: none;
 }
 
@@ -477,14 +500,14 @@ main {
 .bookmark-options {
     transform: scale(0);
     position: absolute;
-    right: -1px;
-    top: -1px;
+    right: 4px;
+    top: 4px;
     width: 22px;
     height: 22px;
     background: none;
     border: 1px solid var(--color-border);
     padding: 0 2px;
-    border-radius: 0 calc(var(--px-radius) + 4px) 0 calc(var(--px-radius) + 4px);
+    border-radius: 50%;
     outline: none;
     transition: transform 0.25s;
     background-color: var(--color-element);
@@ -507,9 +530,9 @@ main {
 }
 
 .bookmark-menu {
+    margin-top: 30px;
     display: none;
     text-align: center;
-    margin-top: 44px;
     padding: 2px;
 }
 
@@ -529,7 +552,7 @@ main {
     display: block;
     padding: 2px;
     text-align: center;
-    margin-top: 44px;
+    margin-top: 30px;
 }
 
 .bookmark-editor input, .folder-editor input, .bookmark-editor button {
@@ -814,21 +837,6 @@ hr {
     text-align: left;
 }
 
-/*
- #    # ###### #    # #    #    #####  ##### #    #
- ##  ## #      ##   # #    #    #    #   #   ##   #
- # ## # #####  # #  # #    #    #####    #   # #  #
- #    # #      #  # # #    #    #    #   #   #  # #
- #    # #      #   ## #    #    #    #   #   #   ##
- #    # ###### #    #  ####     #####    #   #    #
-*/
-
-#settings-btn {
-    position: fixed;
-    left: 4px;
-    bottom: 4px;
-}
-
 /*                                                     
    ####   ####  #      #      ######  ####  ##### #  ####  #    #  ####  
   #    # #    # #      #      #      #    #   #   # #    # ##   # #      
@@ -885,14 +893,6 @@ hr {
     display: none;
 }
 
-.collection.active .collection-name {
-    opacity: 1;
-}
-
-.collection:hover .collection-name {
-    opacity: 1;
-}
-
 .collection:hover::before {
     display: block;
     opacity: var(--opacity-over);
@@ -905,9 +905,9 @@ hr {
 
 .collection-name {
     transition: left 0.25s;
-    opacity: var(--opacity-over);
     position: absolute;
     left: 50px;
+    right: 32px;
     top: 5px;
     vertical-align: middle;
     color: var(--color-top);
@@ -916,7 +916,6 @@ hr {
     white-space: nowrap;
     word-break: keep-all;
     text-overflow: ellipsis;
-    width: 100px;
 }
 
 .collection-icon {
@@ -955,22 +954,18 @@ hr {
 */
 
 @media only screen and (max-width: 1000px) {
-    .history-item, .download-item {
+    .history-item, .download-item, .bookmark {
         width: calc(25% - 8px);
     }
 }
 
 @media only screen and (max-width: 700px) {
-    .collection-name {
-        display: none;
-    }
-
     #body-container {
         padding: 32px;
         padding-top: 0;
     }
 
-    .history-item, .download-item  {
+    .history-item, .download-item, .bookmark  {
         width: calc(50% - 8px);
     }
 }
@@ -985,7 +980,7 @@ hr {
     #collections {
         position: fixed;
         left: 128px;
-        top: 32px;
+        top: 0;
         width: 256px;
     }
 

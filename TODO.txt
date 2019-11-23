@@ -1,0 +1,17 @@
+DONE: 
+- new about hotkey (ctrl + shift + f1)
+- adaptivity:
+    - toolbar
+    - bookmarks
+    - history
+    - downloads
+- added tab previews
+- better looking of draggable elements
+- address bar:
+    - added secure icon
+    - bookmark button merged with search input
+- added find in page
+- overlay: 
+    - removed settings button
+    - added menu button
+    - new horizontal bookmarks

@@ -6,7 +6,7 @@ const { BrowserView, Menu, MenuItem, clipboard } = require("electron");
 class Overlay extends EventEmitter {
     window = null;
     view = null;
-    top = 34;
+    top = 75;
     appPath = null;
 
     constructor(window, appPath) {
@@ -199,7 +199,7 @@ class Overlay extends EventEmitter {
         if(bool) {
             this.top = 0;
         } else {
-            this.top = 34;
+            this.top = 75;
         }
         this.refreshBounds();
     }
@@ -215,6 +215,38 @@ class Overlay extends EventEmitter {
 
     switchTabGroup(tabGroupId) {
         this.view.webContents.send("overlay-switchTabGroup", tabGroupId);
+    }
+
+    cut() {
+        this.view.webContents.cut();
+    }
+
+    copy() {
+        this.view.webContents.copy();
+    }
+
+    paste() {
+        this.view.webContents.paste();
+    }
+
+    pasteAndMatchStyle() {
+        this.view.webContents.pasteAndMatchStyle();
+    }
+
+    undo() {
+        this.view.webContents.undo();
+    }
+
+    redo() {
+        this.view.webContents.redo();
+    }
+
+    selectAll() {
+        this.view.webContents.selectAll();
+    }
+
+    delete() {
+        this.view.webContents.delete();
     }
 }
 

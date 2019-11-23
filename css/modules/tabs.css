@@ -178,12 +178,11 @@ body.system-titlebar .tabman-tabs {
     overflow: hidden;
     position: absolute;
     top: 6px;
-    left: 30px;
+    left: 32px;
     right: 28px;
     white-space: nowrap;
     word-break: keep-all;
     text-overflow: ellipsis;
-    /* opacity: var(--opacity-over); */
 }
 
 .tabman-tab.active .tabman-tab-title {
@@ -267,26 +266,46 @@ body.system-titlebar .tabman-tabs {
    #   #    # #####     #      #    # ######   ##   # ###### #    #
 */
 
-.tabman-tab-preview {
+#tab-preview {
     z-index: 1000;
     position: absolute;
-    left: -1px;
-    right: -1px;
-    top: -1px;
-    max-height: 75px;
+    display: none;
+    left: 0;
+    width: 248px;
+    top: 37px;
+    height: 32px;
     background-color: var(--color-element);
     text-align: center;
     border: 1px solid var(--color-border);
-    animation: slide-down;
+    animation: append-center;
     animation-duration: 0.25s;
+    text-align: left;
+    border-radius: var(--px-radius);
+    box-shadow: 0 0 4px rgba(0, 0, 0, var(--opacity-over));
 }
 
-.tabman-tab-preview img {
-    max-height: 75px;
-    max-width: 256px;
-    margin: -1px;
-    border: 1px solid var(--color-border);
-    vertical-align: middle;
+#tab-preview.show {
+    display: inline-block;
+}
+
+#tab-preview-title, #tab-preview-url {
+    overflow: hidden;
+    position: absolute;
+    left: 4px;
+    right: 4px;
+    white-space: nowrap;
+    word-break: keep-all;
+    text-overflow: ellipsis;
+    font-size: 10px;
+}
+
+#tab-preview-title {
+    top: 1px;
+}
+
+#tab-preview-url {
+    top: 14px;
+    opacity: var(--opacity-over);
 }
 
 /*

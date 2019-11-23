@@ -354,20 +354,6 @@ class Tab extends EventEmitter {
         return this.view.webContents.getTitle();
     }
 
-    showPreview() {
-        let image = this.view.webContents.capturePage();
-        this.previewTimeout = setTimeout(() => {
-            image.then((nativeImage) => {
-                this.window.webContents.send("tabRenderer-showPreview", this.id, nativeImage.toDataURL());
-            });
-        }, 1000);
-    }
-
-    hidePreview() {
-        clearTimeout(this.previewTimeout);
-        this.window.webContents.send("tabRenderer-hidePreview", this.id);
-    }
-
     closeOthers() {
         this.emit("close-others", this.id);
     }
@@ -649,6 +635,10 @@ class Tab extends EventEmitter {
         } else {
             this.view.webContents.stopFindInPage("clearSelection");
         }
+    }
+
+    requestTabPreview() {
+        this.window.webContents.send("tabRenderer-showTabPreview", this.id, this.getTitle(), this.getURL());
     }
 }
 

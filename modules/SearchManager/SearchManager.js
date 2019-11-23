@@ -108,28 +108,28 @@ class SearchManager extends EventEmitter {
 
     getSuggestions() {    
         if (this.searchInput.value.length > 0) {
+            this.searchSuggest.style.display = "";
+            this.searchSuggest.classList.remove("hide");
+
+            this.searchSuggestContainer.innerHTML = "";
+
+            let firstInput = document.createElement("input");
+            firstInput.tabIndex = -1;
+            firstInput.classList.add("active");
+            firstInput.type = "button";
+            firstInput.value = this.searchInput.value;
+            firstInput.onclick = () => {
+                this.navigateSuggest(firstInput.value);
+            };
+            firstInput.onauxclick = (event) => {
+                event.preventDefault();
+                if(event.which === 2) {
+                    this.navigateSuggest(firstInput.value, true);
+                }
+            };
+            this.searchSuggestContainer.appendChild(firstInput);
+
             autoSuggest(this.searchInput.value, (err, suggestions) => {
-                this.searchSuggest.style.display = "";
-                this.searchSuggest.classList.remove("hide");
-
-                this.searchSuggestContainer.innerHTML = "";
-
-                let firstInput = document.createElement("input");
-                firstInput.tabIndex = -1;
-                firstInput.classList.add("active");
-                firstInput.type = "button";
-                firstInput.value = this.searchInput.value;
-                firstInput.onclick = () => {
-                    this.navigateSuggest(firstInput.value);
-                };
-                firstInput.onauxclick = (event) => {
-                    event.preventDefault();
-                    if(event.which === 2) {
-                        this.navigateSuggest(firstInput.value, true);
-                    }
-                };
-                this.searchSuggestContainer.appendChild(firstInput);
-
                 if (suggestions != null && suggestions.length > 0) {
                     if (this.searchSuggestContainer.childNodes.length < 5) {
                         for (let i = 0; i < 5; i++) {

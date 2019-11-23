@@ -15,6 +15,10 @@
   <body>
     <div id="drag-zone"></div>
 
+    <button id="settings-btn" class="nav-btn" onclick="requestSideMenu()" title="Menu">
+      <img name="menu-16" class="theme-icon">
+    </button>    
+
     <div id="titlebar">
       <button id="back-btn" class="nav-btn" title="Go back&#xARight click to show tab history" onclick="goBack()" oncontextmenu="popupTabHistory()"><img name="back-16" class="theme-icon"></button>
       <button id="forward-btn" class="nav-btn" title="Go forward" onclick="goForward()"><img name="forward-16" class="theme-icon"></button>
@@ -52,6 +56,10 @@
       <div class="tabman-buttons">
         <button title="New tab" onclick="newTab()" onauxclick="newBackgroundTab(event)" ondrop="newTabDrop(event)" ondragover="prevDef(event)"><img name="create-12" class="theme-icon"></button>
         <button title="Tabs list" onclick="showTabList()"><img name="down-12" class="theme-icon"></button>
+      </div>
+      <div id="tab-preview">
+        <label id="tab-preview-title"></label>
+        <label id="tab-preview-url"></label>
       </div>
       <div id="window-controls"></div>
     </div>

@@ -202,6 +202,10 @@ function removeFolder(id) {
   ipcRenderer.send("overlay-removeFolder", id);
 }
 
+function showOverlayMenu() {
+  ipcRenderer.send("overlay-showMenu");
+}
+
 /*
  ###### #    # #    #  ####              #####   ##   #####     #    #   ##   #    #   ##    ####  ###### #####
  #      #    # ##   # #    #               #    #  #  #    #    ##  ##  #  #  ##   #  #  #  #    # #      #    #
@@ -468,14 +472,6 @@ ipcRenderer.on("tabRenderer-updateBookmarkedButton", (event, exists, id) => {
   tabRenderer.updateBookmarkedButton(exists, id);
 });
 
-ipcRenderer.on("tabRenderer-showPreview", (event, id, dataURL) => {
-  tabRenderer.showPreview(id, dataURL);
-});
-
-ipcRenderer.on("tabRenderer-hidePreview", (event, id) => {
-  tabRenderer.hidePreview(id);
-});
-
 ipcRenderer.on("tabRenderer-unactivateAllTabs", (event) => {
   tabRenderer.unactivateAllTabs();
 });
@@ -511,6 +507,10 @@ ipcRenderer.on("tabRenderer-setTabVisibility", (event, id, bool) => {
 
 ipcRenderer.on("tabRenderer-updateTabsPositions", (event) => {
   tabRenderer.updateTabsPositions();
+});
+
+ipcRenderer.on("tabRenderer-showTabPreview", (event, id, title, url) => {
+  tabRenderer.showTabPreview(id, title, url);
 });
 
 /*

@@ -82,9 +82,6 @@ class Folder extends EventEmitter {
     }
 
     appendBookmark(bookmark) {
-        bookmark.on("toggle-options", () => {
-            this.emit("bookmark-options-toggled");
-        });
         bookmark.on("toggle-editor", () => {
             this.emit("bookmark-editor-toggled");
         });
