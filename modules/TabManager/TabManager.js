@@ -23,11 +23,12 @@ class TabManager extends EventEmitter {
 
     tabGroup = 0;
 
-    constructor(window, appPath) {
+    constructor(window, appPath, theme) {
         super();
 
         this.window = window;
         this.appPath = appPath;
+        this.theme = theme;
 
         this.left = 0; 
         this.right = 0; 
@@ -54,7 +55,7 @@ class TabManager extends EventEmitter {
     addTab(url, active) {
         let id = this.tabCounter++;
 
-        let tab = new Tab(this.window, id, this.appPath, this.tabGroup);
+        let tab = new Tab(this.window, id, this.appPath, this.tabGroup, this.theme);
 
         tab.on("close", (closedTab) => {
             let pos = closedTab.getPosition();

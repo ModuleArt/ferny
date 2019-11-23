@@ -38,16 +38,16 @@ class HistoryItem extends EventEmitter {
         `;        
         this.node.onclick = () => {
             this.open();
-        }
+        };
         this.node.onauxclick = (event) => {
             event.preventDefault();
             if(event.which === 2) {
                 ipcRenderer.send("tabManager-addTab", url, false);
             }
-        }
+        };
         this.node.onkeyup = (event) => {
             event.preventDefault();
-        }
+        };
 
         let historyIcon = document.createElement("img");
         historyIcon.classList.add("history-icon");
@@ -61,9 +61,11 @@ class HistoryItem extends EventEmitter {
                 historyIcon.src = __dirname + "/../../imgs/old-icons16/history.png";
                 this.updateHistoryIconColor();
             };
-            this.loadTitle().then((text) => {
-                this.setTitle(text);
-            });
+            if(title.substring(0, 4) == "http") {
+                this.loadTitle().then((text) => {
+                    this.setTitle(text);
+                });
+            }
         }
         this.node.appendChild(historyIcon);
         this.updateHistoryIconColor();
@@ -91,7 +93,11 @@ class HistoryItem extends EventEmitter {
         let icon = this.node.getElementsByClassName("history-icon")[0];
         let color = new GetAvColor(icon);
         color.mostUsed((result) => {
-            icon.parentNode.style.backgroundColor = rgbToRgbaString(result[0]);
+            if(Array.isArray(result)) {
+                icon.parentNode.style.backgroundColor = rgbToRgbaString(result[0]);
+            } else {
+                icon.parentNode.style.backgroundColor = rgbToRgbaString(result);
+            }
         });
     }
 

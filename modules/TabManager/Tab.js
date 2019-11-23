@@ -15,14 +15,19 @@ class Tab extends EventEmitter {
     previewTimeout = null;
     position = null;
     group = null;
+    incognito = false;
 
-    constructor(window, id, appPath, group) {
+    constructor(window, id, appPath, group, theme) {
         super();
 
         this.id = id;
         this.window = window;
         this.appPath = appPath;
         this.group = group;
+
+        if(group == "incognito") {
+            this.incognito = true;
+        }
 
         this.view = new BrowserView({
             webPreferences: {
@@ -96,7 +101,27 @@ class Tab extends EventEmitter {
 
         this.view.webContents.on("dom-ready", (event) => {
             this.view.webContents.insertCSS(`
-                html, body { background-color: white; }
+                html, body { 
+                    background-color: white; 
+                }
+
+                ::-webkit-scrollbar {
+                    width: 12px;
+                    height: 12px;
+                    background-color: ${theme.colorBack};
+                }
+                
+                ::-webkit-scrollbar-thumb {
+                    border: 4px solid ${theme.colorBack};
+                    background-color: ${theme.colorBorder};
+                    border-radius: 6px;
+                    min-width: 32px;
+                    min-height: 32px;
+                }
+
+                ::-webkit-scrollbar-corner {
+                    background-color: ${theme.colorBack};
+                }
             `);
         });
 
@@ -280,7 +305,13 @@ class Tab extends EventEmitter {
     }
 
     navigate(url) {
-        this.view.webContents.loadURL(url);
+        if(this.incognito) {
+            this.view.webContents.loadURL(url, {
+                extraHeaders: 'pragma: no-cache\n'
+            });
+        } else {
+            this.view.webContents.loadURL(url);
+        }
     }
 
     close() {

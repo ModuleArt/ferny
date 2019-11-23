@@ -174,7 +174,11 @@ class TabRenderer extends EventEmitter {
 
             let color = new GetAvColor(img);
             color.mostUsed((result) => {
-                tab.style.backgroundColor = rgbToRgbaString(result[0]);
+                if(Array.isArray(result)) {
+                    tab.style.backgroundColor = rgbToRgbaString(result[0]);
+                } else {
+                    tab.style.backgroundColor = rgbToRgbaString(result);
+                }
             });
         }
 

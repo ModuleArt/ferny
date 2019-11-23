@@ -110,7 +110,11 @@ class Bookmark extends EventEmitter {
         let icon = this.node.getElementsByClassName("bookmark-icon")[0];
         let color = new GetAvColor(icon);
         color.mostUsed((result) => {
-            icon.parentNode.style.backgroundColor = rgbToRgbaString(result[0]);
+            if(Array.isArray(result)) {
+                icon.parentNode.style.backgroundColor = rgbToRgbaString(result[0]);
+            } else {
+                icon.parentNode.style.backgroundColor = rgbToRgbaString(result);
+            }
         });
     }
 

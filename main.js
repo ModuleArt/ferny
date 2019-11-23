@@ -712,8 +712,8 @@ function initOverlay() {
  #       ####  #    #  ####                #   #    # #####     #    # #    # #    # #    #  ####  ###### #    #
 */
 
-function initTabManager() {
-  tabManager = new TabManager(mainWindow, app.getAppPath());
+function initTabManager(theme) {
+  tabManager = new TabManager(mainWindow, app.getAppPath(), theme);
 
   tabManager.on("active-tab-closed", (tabClosed, pos) => {
     if(tabClosed === "overlay") {
@@ -1369,11 +1369,13 @@ function showMainWindow() {
     }
   
     loadTheme().then(({theme, dark}) => {
-      let backgroundColor;
+      let backgroundColor, borderColor;
       if(dark) {
         backgroundColor = theme.dark.colorBack;
+        borderColor = theme.dark.colorBorder;
       } else {
         backgroundColor = theme.light.colorBack;
+        borderColor = theme.light.colorBorder;
       }
 
       loadWinControlsModule().then((winControls) => {
@@ -1450,7 +1452,7 @@ function showMainWindow() {
       
         mainWindow.webContents.once("dom-ready", () => {
           initOverlay();
-          initTabManager();
+          initTabManager({ colorBack: backgroundColor, colorBorder: borderColor });
           initMenu();
     
           loadHomePage().then((homePage) => {

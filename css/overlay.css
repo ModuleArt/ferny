@@ -84,16 +84,17 @@ body {
     content: "";
     position: fixed;
     top: 0;
-    left: 0;
+    left: 16px;
     right: 16px;
     height: 40px;
     background: linear-gradient(var(--color-back), transparent);
+    pointer-events: none;
     z-index: 1000;
 }
 
 #body-container::after {
     top: auto;
-    bottom: 0;
+    bottom: 1px;
     background: linear-gradient(transparent, var(--color-back));
 }
 
@@ -863,17 +864,12 @@ hr {
     text-align: left;
     background-color: var(--color-element);
     position: relative;
-
-    /* height: 40px;
-    border-radius: 20px;
-    border: none;
-    box-shadow: 0 0 4px rgba(0, 0, 0, var(--opacity-over)); */
 }
 
 .collection-divider {
     display: none;
     border-top: 1px dashed var(--color-border);
-    margin: 2px;
+    margin: 6px 0;
 }
 
 .collection:focus {

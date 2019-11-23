@@ -445,7 +445,8 @@ ipcRenderer.on("overlay-switchTabGroup", (event, tabGroupId) => {
   let groups = [
     document.getElementById("group-0"),
     document.getElementById("group-1"),
-    document.getElementById("group-2")
+    document.getElementById("group-2"),
+    document.getElementById("group-incognito")
   ];
 
   let group = document.getElementById("group-" + tabGroupId);

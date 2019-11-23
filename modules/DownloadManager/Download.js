@@ -45,7 +45,11 @@ class Download extends EventEmitter {
 
         let color = new GetAvColor(this.node.getElementsByClassName("download-icon")[0]);
         color.mostUsed(result => {
-            this.node.style.backgroundColor = rgbToRgbaString(result[0]);
+            if(Array.isArray(result)) {
+                this.node.style.backgroundColor = rgbToRgbaString(result[0]);
+            } else {
+                this.node.style.backgroundColor = rgbToRgbaString(result);
+            }
         });
     }
 
