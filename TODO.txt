@@ -15,3 +15,4 @@ DONE:
     - removed settings button
     - added menu button
     - new horizontal bookmarks
+- removed jquery

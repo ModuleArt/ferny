@@ -15,7 +15,7 @@
         "colorTop": "#000000",
         "colorTitlebar": "#DDDDDD",
         "shadowFocus": "inset 0 0 4px rgba(0, 0, 0, 0.25)",
-        "opacityOver": "0.25",
+        "opacityOver": "0.5",
         "image": "ferny-light.png"
     },
     "dark": {

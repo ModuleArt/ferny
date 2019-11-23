@@ -54,7 +54,6 @@
     "get-title-at-url": "^1.1.6",
     "is-dark-color": "^1.2.0",
     "is-directory": "^0.3.1",
-    "jquery": "^3.4.1",
     "parse-path": "^4.0.1",
     "parse-url": "^5.0.1",
     "persist-path": "^1.0.2",

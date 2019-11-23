@@ -628,7 +628,9 @@ class Tab extends EventEmitter {
     }
 
     requestTabPreview() {
-        this.window.webContents.send("tabRenderer-showTabPreview", this.id, this.getTitle(), this.getURL());
+        if(this.getTitle().length > 0 && this.getURL().length > 0) {
+            this.window.webContents.send("tabRenderer-showTabPreview", this.id, this.getTitle(), this.getURL());
+        }
     }
 }
 

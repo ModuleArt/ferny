@@ -1,7 +1,6 @@
 "use strict";
 
 const EventEmitter = require("events");
-const jquery = require("jquery");
 const GetAvColor = require("color.js");
 const { ipcRenderer, clipboard } = require("electron");
 const parsePath = require("parse-path");
@@ -98,15 +97,14 @@ class HistoryItem extends EventEmitter {
 
     loadTitle() {
         return new Promise((resolve, reject) => {
-            jquery.ajax({
-                url: "http://textance.herokuapp.com/title/" + this.url,
-                async: true,
-                complete: (data) => {
-                    if(data.responseText) {
-                        resolve(data.responseText);
-                    }
+            let xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState == XMLHttpRequest.DONE) {
+                    resolve(xhr.responseText);
                 }
-            });
+            }
+            xhr.open("GET", "http://textance.herokuapp.com/title/" + this.url, true);
+            xhr.send(null);
         });
     }
 
