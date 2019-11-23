@@ -1,7 +1,7 @@
 "use strict";
 
 const EventEmitter = require("events");
-const { Menu, MenuItem } = require('electron');
+const { Menu, MenuItem } = require("electron");
 
 const loadTabClosedModule = require("../loadTabClosed.js");
 
@@ -192,11 +192,7 @@ class TabManager extends EventEmitter {
 
         tab.navigate(url);
 
-        this.window.webContents.send("tabRenderer-addTab", { 
-            id: id,
-            url: url,
-            active: active
-        });
+        this.window.webContents.send("tabRenderer-addTab", { id, url, active });
 
         if(active) {
             tab.activate();
@@ -248,7 +244,7 @@ class TabManager extends EventEmitter {
     setBottom(bottom) {
         this.bottom = bottom;
 
-        return null
+        return null;
     }
 
     hasTabs() {
@@ -257,7 +253,7 @@ class TabManager extends EventEmitter {
             for(let i = 0; i < this.tabs.length; i++) {
                 if(this.tabs[i].getGroup() == this.tabGroup) {
                     groupHasTabs = true;
-                    break
+                    break;
                 }
             }
             return groupHasTabs;

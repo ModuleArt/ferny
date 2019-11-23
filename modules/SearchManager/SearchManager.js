@@ -44,7 +44,7 @@ class SearchManager extends EventEmitter {
         this.searchInput = searchInput;
         this.searchInput.oninput = () => {
             this.getSuggestions();
-        }
+        };
         this.searchInput.onkeydown = (event) => {
             if (event.keyCode === 40) {
                 var suggestions = this.searchSuggestContainer.childNodes;

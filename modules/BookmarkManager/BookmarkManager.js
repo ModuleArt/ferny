@@ -147,7 +147,7 @@ class BookmarkManager extends EventEmitter {
             this.folderContainer.appendChild(folder.getNode());
         }
 
-        this.bookmarkDrag.containers.push(folder.getNode().getElementsByClassName('folder-container')[0]);
+        this.bookmarkDrag.containers.push(folder.getNode().getElementsByClassName("folder-container")[0]);
 
         this.emit("folder-appended");
         return null;
@@ -196,7 +196,7 @@ class BookmarkManager extends EventEmitter {
 
     updateFoldersPositions() {
         return new Promise((resolve, reject) => {
-            let divs = this.folderContainer.getElementsByClassName('folder');
+            let divs = this.folderContainer.getElementsByClassName("folder");
             for(let i = 0; i < divs.length; i++) {
                 this.getFolderById(divs[i].name).setPosition(i);
             }
@@ -220,7 +220,7 @@ class BookmarkManager extends EventEmitter {
                 this.folderDrag = null;
             }
 
-            this.folderContainer.classList.remove('movable');
+            this.folderContainer.classList.remove("movable");
 
             document.getElementById("bookmarks-arrange-btn").style.display = "none";
             document.getElementById("bookmarks-move-btn").style.display = "";
@@ -230,7 +230,7 @@ class BookmarkManager extends EventEmitter {
             this.folderDrag = Dragula([this.folderContainer], {
                 direction: "vertical",
                 moves: (el, container, handle, sibling) => {
-                    return handle.classList.contains('folder-move');
+                    return handle.classList.contains("folder-move");
                 }
             });
             this.folderDrag.on("drop", (el, target, source, sibling) => {
@@ -239,7 +239,7 @@ class BookmarkManager extends EventEmitter {
                 });
             });
 
-            this.folderContainer.classList.add('movable');
+            this.folderContainer.classList.add("movable");
 
             document.getElementById("bookmarks-arrange-btn").style.display = "";
             document.getElementById("bookmarks-move-btn").style.display = "none";

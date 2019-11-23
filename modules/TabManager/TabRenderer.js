@@ -47,7 +47,6 @@ class TabRenderer extends EventEmitter {
         tab.classList.add("tabman-tab");
         tab.id = "tab-" + id;
         tab.name = id;
-        // tab.title = title + "\n" + url;
         tab.innerHTML = `
             <img class='tabman-tab-icon' src='../imgs/icon16.png'>
             <label class='tabman-tab-title'>` + title + `</label>
@@ -89,7 +88,7 @@ class TabRenderer extends EventEmitter {
             ipcRenderer.send("tabManager-showTabMenu", id);
         };
 
-        let closeButton = document.createElement('button');
+        let closeButton = document.createElement("button");
         closeButton.title = "Close tab";
         closeButton.onclick = (event) => {
             event.stopPropagation();
@@ -174,7 +173,7 @@ class TabRenderer extends EventEmitter {
             let img = tab.getElementsByClassName("tabman-tab-icon")[0];
 
             let color = new GetAvColor(img);
-            color.mostUsed(result => {
+            color.mostUsed((result) => {
                 tab.style.backgroundColor = rgbToRgbaString(result[0]);
             });
         }

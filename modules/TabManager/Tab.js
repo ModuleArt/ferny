@@ -29,7 +29,6 @@ class Tab extends EventEmitter {
                 preload: appPath + "/js/webview.js"
             }
         });
-        // this.view.setBackgroundColor("#FFFFFF");
         this.view.setAutoResize({
             width: true,
             height: true
@@ -62,13 +61,6 @@ class Tab extends EventEmitter {
             this.window.webContents.send("tabRenderer-updateAddressBar", url);
 
             if(parsePath(url).protocol === "file") {
-                // if(isDirectory(url)) {
-                //     console.log(url);
-                //     this.window.webContents.send("tabRenderer-setTabIcon", { id: this.id, icon: __dirname + "/imgs/icons16/folder.png" });
-                // } else {
-                //     console.log("else")
-                    
-                // }
                 let fileName = url.replace(/^.*[\\\/]/, "");
                 this.window.webContents.send("tabRenderer-setTabTitle", { id: this.id, title: fileName });
                 this.window.webContents.send("tabRenderer-setTabIcon", { id: this.id, icon: extToImagePath(fileExtension(url)) });
@@ -624,9 +616,7 @@ class Tab extends EventEmitter {
     }
 
     findInPage(text, forward) {
-        this.view.webContents.findInPage(text, {
-            forward: forward
-        });
+        this.view.webContents.findInPage(text, { forward });
     }
 
     stopFindInPage(keepSelection) {

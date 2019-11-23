@@ -45,7 +45,7 @@ class Folder extends EventEmitter {
         let addBookmarkBtn = document.createElement("button");
         addBookmarkBtn.classList.add("nav-btn", "add-bookmark-btn");
         addBookmarkBtn.title = "Create bookmark here";
-        addBookmarkBtn.innerHTML = `<img class='theme-icon' name='add-bookmark-16'>`;
+        addBookmarkBtn.innerHTML = "<img class='theme-icon' name='add-bookmark-16'>";
         addBookmarkBtn.onclick = () => {
             this.newBookmark();
         }
@@ -218,7 +218,7 @@ class Folder extends EventEmitter {
 
             let saveBtn = document.createElement("button");
             saveBtn.classList.add("nav-btn", "with-border");
-            saveBtn.innerHTML = `<img class="theme-icon" name="save-16"><label>Save</label>`;
+            saveBtn.innerHTML = "<img class='theme-icon' name='save-16'><label>Save</label>";
             saveBtn.onclick = () => {
                 this.edit(nameInput.value);
                 this.toggleEditor();
