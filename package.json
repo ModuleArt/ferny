@@ -64,7 +64,7 @@
     "validate.io-uri": "^1.0.0"
   },
   "devDependencies": {
-    "electron": "^7.1.1",
+    "electron": "^7.2.4",
     "electron-builder": "^20.44.4"
   },
   "build": {
